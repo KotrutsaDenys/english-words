@@ -280,15 +280,18 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
     </div>
     <div class="group">
       <h2>Вимова</h2>
-      <div class="toggle"><span>Озвучувати слово автоматично</span><input type="checkbox" class="switch" id="autoplay" aria-label="Озвучувати слово автоматично"></div>
-      <label class="lbl" for="voice">Голос</label>
-      <div class="voice-row">
-        <select class="field" id="voice"></select>
-        <button class="say" id="voiceTest" aria-label="Прослухати голос"></button>
-      </div>
-      <p class="note" id="voiceNote" style="margin-top:8px"></p>
+      <p class="note">Емма озвучує всі слова й приклади зі словника британською вимовою. Торкнись, щоб послухати.</p>
+      <div class="seg" id="segVoice"></div>
       <label class="lbl">Швидкість</label>
       <div class="seg" id="segRate"></div>
+      <div class="toggle" style="margin-top:14px"><span>Озвучувати слово автоматично</span><input type="checkbox" class="switch" id="autoplay" aria-label="Озвучувати слово автоматично"></div>
+      <label class="lbl" for="voice" id="voiceLbl">Голос iPhone для слів, доданих на сайті</label>
+      <div class="voice-row">
+        <select class="field" id="voice"></select>
+        <button class="say" id="voiceTest" aria-label="Прослухати голос iPhone"></button>
+      </div>
+      <p class="note" id="voiceNote" style="margin-top:8px"></p>
+      <button class="btn" id="offlineAudio" style="width:100%;margin-top:10px">Завантажити всі записи для офлайну</button>
     </div>
     <div class="group">
       <h2>Теми для нових слів</h2>
@@ -306,7 +309,7 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
     <div class="group">
       <button class="btn btn-danger" id="resetAll" style="width:100%">Скинути весь прогрес</button>
     </div>
-    <p class="version">Версія 1 від 24.10.2026</p>
+    <p class="version">Версія 2 від 24.10.2026</p>
   </section>
   </main>
 </div>
@@ -323,6 +326,7 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="/words.js"></script>
+<script src="/audio.js"></script>
 <script>
 (function(){
 'use strict';
@@ -346,10 +350,11 @@ function save(key, value){
 
 const CATS = window.CATEGORIES;
 const BASE = window.WORDS;
-const DEFAULT_SETTINGS = { newPerDay:10, dir:'en', autoplay:true, voice:'', rate:0.9, cats:{site:true,talk:true,irish:true,verbs:true,travel:true,mine:true} };
+const DEFAULT_SETTINGS = { newPerDay:10, dir:'en', autoplay:true, voiceSrc:'emma', voice:'', rate:1, cats:{site:true,talk:true,irish:true,verbs:true,travel:true,mine:true} };
 
 let settings = Object.assign({}, DEFAULT_SETTINGS, load(KEYS.settings, {}));
 settings.cats = Object.assign({}, DEFAULT_SETTINGS.cats, settings.cats || {});
+if(![0.75, 0.9, 1].includes(settings.rate)) settings.rate = settings.rate < 0.8 ? 0.75 : settings.rate < 0.95 ? 0.9 : 1;
 let progress = load(KEYS.progress, {});
 let custom = load(KEYS.custom, []);
 let log = load(KEYS.log, {});
@@ -452,25 +457,84 @@ function pickVoice(){
          voices.find(v => /en[-_]GB/i.test(v.lang)) || voices[0];
 }
 function speakable(text){ return text.replace(/\.\.\.|…/g, ' ').replace(/\s+/g,' ').trim(); }
-function speak(text){
+function speakDevice(text){
   if(!synth || !text) return;
-  synth.cancel();
+  stopAudio();
   const u = new SpeechSynthesisUtterance(speakable(text));
   const v = pickVoice();
   if(v){ u.voice = v; u.lang = v.lang; } else { u.lang = 'en-GB'; }
-  u.rate = settings.rate;
+  u.rate = Math.max(0.5, settings.rate * 0.95);
   synth.speak(u);
 }
 if(synth){ loadVoices(); synth.addEventListener ? synth.addEventListener('voiceschanged', loadVoices) : (synth.onvoiceschanged = loadVoices); }
 
+/* Записи з британською вимовою (public/audio, генерує tools/make_audio.py) */
+const AUD = window.AUDIO || { voices:[], files:{} };
+const VOICE_NAMES = { emma:'Емма' };
+const player = new Audio();
+player.preload = 'auto';
+try{ player.preservesPitch = true; player.webkitPreservesPitch = true; }catch(e){}
+const blobs = new Map();
+let playing = '';
+
+function textFor(w, kind){ return kind === 'x' ? (w.sayEx || w.ex) : (w.say || w.en); }
+function clipUrl(w, kind, voice){
+  voice = voice || settings.voiceSrc;
+  if(!w || !AUD.voices.includes(voice)) return null;
+  const f = AUD.files[w.id];
+  const h = f && (kind === 'x' ? f[1] : f[0]);
+  return h ? '/audio/' + voice + '/' + w.id + '-' + h + '.mp3' : null;
+}
+function stopAudio(){
+  try{ player.pause(); }catch(e){}
+  if(synth) synth.cancel();
+}
+function preloadUrl(url){
+  if(!url || blobs.has(url)) return Promise.resolve();
+  blobs.set(url, null);
+  return fetch(url).then(r => r.ok ? r.blob() : null).then(b => {
+    if(!b){ blobs.delete(url); return; }
+    blobs.set(url, URL.createObjectURL(b));
+    while(blobs.size > 40){
+      const [oldUrl, oldBlob] = blobs.entries().next().value;
+      if(oldBlob === player.src) break;
+      blobs.delete(oldUrl);
+      if(oldBlob) URL.revokeObjectURL(oldBlob);
+    }
+  }).catch(() => { blobs.delete(url); });
+}
+function preloadWord(w){
+  if(!w) return;
+  preloadUrl(clipUrl(w, 'w'));
+  if(w.ex) preloadUrl(clipUrl(w, 'x'));
+}
+function playUrl(url, fallbackText){
+  stopAudio();
+  playing = url;
+  player.src = blobs.get(url) || url;
+  player.defaultPlaybackRate = settings.rate;
+  player.playbackRate = settings.rate;
+  const p = player.play();
+  if(p && p.catch) p.catch(err => { if(err && err.name !== 'AbortError' && playing === url) speakDevice(fallbackText); });
+}
+player.addEventListener('error', () => { if(playing){ const t = player.dataset.fallback; playing = ''; if(t) speakDevice(t); } });
+function sayWord(w, kind){
+  const text = textFor(w, kind);
+  if(!text) return;
+  const url = clipUrl(w, kind);
+  player.dataset.fallback = text;
+  if(url) playUrl(url, text); else speakDevice(text);
+}
+if(navigator.audioSession){ try{ navigator.audioSession.type = 'playback'; }catch(e){} }
+
 const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
-function sayBtn(text, small, label){
+function sayBtn(w, kind, small, label){
   const b = document.createElement('button');
   b.type = 'button';
   b.className = 'say' + (small ? ' sm' : '');
   b.innerHTML = SPEAKER;
-  b.setAttribute('aria-label', label || ('Послухати: ' + text));
-  b.addEventListener('click', e => { e.stopPropagation(); speak(text); });
+  b.setAttribute('aria-label', label || 'Послухати');
+  b.addEventListener('click', e => { e.stopPropagation(); sayWord(w, kind); });
   return b;
 }
 
@@ -598,7 +662,7 @@ function renderCard(){
   const word = el('h2', 'word' + (showUkFirst ? ' uk' : ''), showUkFirst ? current.uk : current.en);
   word.lang = showUkFirst ? 'uk' : 'en';
   front.appendChild(word);
-  if(!showUkFirst) front.appendChild(sayBtn(current.en, false, 'Послухати слово'));
+  if(!showUkFirst) front.appendChild(sayBtn(current, 'w', false, 'Послухати слово'));
   requestAnimationFrame(() => fitWord(word));
 
   $('back').hidden = true;
@@ -610,7 +674,9 @@ function renderCard(){
   $('ivHard').textContent = inDays(nextInterval(p, 1));
   $('ivGood').textContent = inDays(nextInterval(p, 2));
 
-  if(!showUkFirst && settings.autoplay) speak(current.en);
+  preloadWord(current);
+  preloadWord(byId(queue[pos + 1]));
+  if(!showUkFirst && settings.autoplay) sayWord(current, 'w');
 }
 
 function reveal(){
@@ -621,16 +687,16 @@ function reveal(){
   if(showUkFirst){
     const t = el('p', 'trans en');
     const s = el('span', null, current.en); s.lang = 'en';
-    t.append(s, sayBtn(current.en, true, 'Послухати слово'));
+    t.append(s, sayBtn(current, 'w', true, 'Послухати слово'));
     back.appendChild(t);
-    if(settings.autoplay) speak(current.en);
+    if(settings.autoplay) sayWord(current, 'w');
   }else{
     back.appendChild(el('p', 'trans', current.uk));
   }
   if(current.ex){
     const ex = el('p', 'ex');
     const s = el('span', null, current.ex); s.lang = 'en';
-    ex.append(s, sayBtn(current.ex, true, 'Послухати приклад'));
+    ex.append(s, sayBtn(current, 'x', true, 'Послухати приклад'));
     back.appendChild(ex);
   }
   if(current.exUk) back.appendChild(el('p', 'ex-uk', current.exUk));
@@ -721,13 +787,14 @@ function renderList(){
       if(w.ex){
         const ex = el('p', 'ex');
         const s = el('span', null, w.ex); s.lang = 'en';
-        ex.append(s, sayBtn(w.ex, true, 'Послухати приклад'));
+        ex.append(s, sayBtn(w, 'x', true, 'Послухати приклад'));
         body.appendChild(ex);
         if(w.exUk) body.appendChild(el('p', 'ex-uk', w.exUk));
       }
       const acts = el('div', 'item-actions');
       const listen = el('button', 'link-btn', 'Послухати слово');
-      listen.addEventListener('click', () => speak(w.en));
+      listen.addEventListener('click', () => sayWord(w, 'w'));
+      preloadWord(w);
       acts.appendChild(listen);
       const p = progress[w.id];
       if(p){
@@ -857,14 +924,47 @@ function renderVoices(){
     sel.appendChild(new Option(v.name + ' (' + accent + ')', v.voiceURI, false, cur && v.voiceURI === cur.voiceURI));
   });
   $('voiceNote').textContent = voices.some(v => /IE/i.test(v.lang))
-    ? 'Ірландський голос корисний, щоб звикати до місцевої вимови.'
-    : 'Більше голосів: Параметри iPhone → Універсальний доступ → Усний контент → Голоси → Англійська.';
+    ? 'Тут є й ірландський голос: корисно, щоб звикати до місцевої вимови.'
+    : '';
 }
+const SAMPLE_ID = 'site-hand';
+function renderVoiceSrc(){
+  const opts = AUD.voices.map(v => [v, VOICE_NAMES[v] || v]).concat([['device','iPhone']]);
+  seg('segVoice', opts, settings.voiceSrc, v => {
+    settings.voiceSrc = v; saveSettings(); renderVoiceSrc();
+    sayWord(byId(SAMPLE_ID), 'x');
+  });
+  $('voiceLbl').textContent = settings.voiceSrc === 'device' ? 'Голос iPhone' : 'Голос iPhone для слів, доданих на сайті';
+  $('offlineAudio').hidden = settings.voiceSrc === 'device' || !AUD.voices.length;
+}
+let offlineBusy = false;
+$('offlineAudio').addEventListener('click', async () => {
+  if(offlineBusy) return;
+  const urls = [];
+  allWords().forEach(w => { const a = clipUrl(w, 'w'), b = clipUrl(w, 'x'); if(a) urls.push(a); if(b) urls.push(b); });
+  if(!urls.length) return;
+  offlineBusy = true;
+  const btn = $('offlineAudio');
+  let done = 0, failed = 0;
+  const worker = async () => {
+    while(urls.length){
+      const u = urls.pop();
+      try{ const r = await fetch(u); if(!r.ok) failed++; else await r.arrayBuffer(); }catch(e){ failed++; }
+      done++;
+      if(done % 10 === 0) btn.textContent = 'Завантажую… ' + done;
+    }
+  };
+  await Promise.all([worker(), worker(), worker(), worker()]);
+  offlineBusy = false;
+  btn.textContent = 'Завантажити всі записи для офлайну';
+  toast(failed ? 'Не вдалося завантажити ' + failed + '. Спробуй ще раз з інтернетом.' : 'Готово: записи працюватимуть і без інтернету');
+});
 function renderSettings(){
   seg('segNew', [[5,'5'],[10,'10'],[15,'15'],[20,'20']], settings.newPerDay, v => { settings.newPerDay = v; saveSettings(); renderSettings(); });
   seg('segDir', [['en','Англ → укр'],['uk','Укр → англ'],['mix','Змішано']], settings.dir, v => { settings.dir = v; saveSettings(); renderSettings(); });
-  seg('segRate', [[0.7,'Повільно'],[0.9,'Нормально'],[1.0,'Швидко']], settings.rate, v => { settings.rate = v; saveSettings(); renderSettings(); speak('Can you give me a hand?'); });
+  seg('segRate', [[0.75,'Повільно'],[0.9,'Середньо'],[1,'Звичайно']], settings.rate, v => { settings.rate = v; saveSettings(); renderSettings(); sayWord(byId(SAMPLE_ID), 'x'); });
   $('autoplay').checked = settings.autoplay;
+  renderVoiceSrc();
   renderVoices();
   const box = $('catToggles'); box.innerHTML = '';
   Object.entries(CATS).forEach(([k, name]) => {
@@ -885,9 +985,9 @@ function renderSettings(){
   });
 }
 $('autoplay').addEventListener('change', e => { settings.autoplay = e.target.checked; saveSettings(); });
-$('voice').addEventListener('change', e => { settings.voice = e.target.value; saveSettings(); speak('Can you give me a hand?'); });
+$('voice').addEventListener('change', e => { settings.voice = e.target.value; saveSettings(); speakDevice('Can you give me a hand?'); });
 $('voiceTest').innerHTML = SPEAKER;
-$('voiceTest').addEventListener('click', () => speak('Can you give me a hand with these slabs?'));
+$('voiceTest').addEventListener('click', () => speakDevice('Can you give me a hand with these slabs?'));
 
 function backupData(){ return { app:'english-words', version:1, saved:new Date().toISOString(), progress, custom, log, settings }; }
 $('backupSave').addEventListener('click', async () => {
@@ -948,7 +1048,7 @@ function showTab(name){
   if(name === 'dict'){ renderChips(); renderList(); }
   if(name === 'report') renderReport();
   if(name === 'settings') renderSettings();
-  if(synth && name !== 'learn') synth.cancel();
+  if(name !== 'learn') stopAudio();
   window.scrollTo(0, 0);
 }
 document.querySelectorAll('[data-tab]').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));

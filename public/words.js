@@ -1,5 +1,6 @@
 // Стартовий набір слів. Поля: id (не змінювати, на ньому тримається прогрес),
-// cat (тема), en (англійською), uk (переклад), ex (приклад), exUk (переклад прикладу).
+// cat (тема), en (англійською), uk (переклад), ex (приклад), exUk (переклад прикладу),
+// say / sayEx (необов'язково) — як вимовляти для озвучки, якщо пишеться не так, як читається.
 // Нові слова додавати в кінець відповідної теми з новим унікальним id.
 window.CATEGORIES = {
   site: 'Будівництво',
@@ -45,7 +46,7 @@ window.WORDS = [
   { id: 'site-set', cat: 'site', en: 'to set', uk: 'схоплюватися, застигати', ex: 'This plaster sets fast.', exUk: 'Ця штукатурка швидко схоплюється.' },
   { id: 'site-render', cat: 'site', en: 'render', uk: 'фасадна штукатурка', ex: 'The outside walls need render.', exUk: 'Зовнішнім стінам потрібна фасадна штукатурка.' },
   { id: 'site-insulation', cat: 'site', en: 'insulation', uk: 'утеплювач', ex: 'The insulation goes behind the slabs.', exUk: 'Утеплювач іде за гіпсокартон.' },
-  { id: 'site-hivis', cat: 'site', en: 'hi-vis vest', uk: 'світловідбивний жилет', ex: 'Wear your hi-vis on site.', exUk: "На об'єкті носи світловідбивний жилет." },
+  { id: 'site-hivis', cat: 'site', en: 'hi-vis vest', uk: 'світловідбивний жилет', ex: 'Wear your hi-vis on site.', exUk: "На об'єкті носи світловідбивний жилет.", say: 'high-viz vest', sayEx: 'Wear your high-viz on site.' },
   { id: 'site-hardhat', cat: 'site', en: 'hard hat', uk: 'каска', ex: 'You need a hard hat here.', exUk: 'Тут потрібна каска.' },
   { id: 'site-site', cat: 'site', en: 'site', uk: "об'єкт, будмайданчик", ex: 'What time do we start on site?', exUk: "О котрій починаємо на об'єкті?" },
   { id: 'site-foreman', cat: 'site', en: 'foreman', uk: 'бригадир, виконроб', ex: 'Ask the foreman where to start.', exUk: 'Запитай у бригадира, з чого почати.' },
@@ -102,8 +103,8 @@ window.WORDS = [
 
   // Ірландські вирази
   { id: 'irish-grand', cat: 'irish', en: 'grand', uk: 'нормально, добре', ex: "How are you? Grand, thanks.", exUk: 'Як ти? Нормально, дякую.' },
-  { id: 'irish-craic', cat: 'irish', en: 'the craic', uk: 'веселощі, атмосфера', ex: 'The craic was great last night.', exUk: 'Учора ввечері було дуже весело.' },
-  { id: 'irish-whatscraic', cat: 'irish', en: "What's the craic?", uk: 'Як справи? Що нового?', ex: "Hey lads, what's the craic?", exUk: 'Привіт, хлопці, що нового?' },
+  { id: 'irish-craic', cat: 'irish', en: 'the craic', uk: 'веселощі, атмосфера', ex: 'The craic was great last night.', exUk: 'Учора ввечері було дуже весело.', say: 'the crack', sayEx: 'The crack was great last night.' },
+  { id: 'irish-whatscraic', cat: 'irish', en: "What's the craic?", uk: 'Як справи? Що нового?', ex: "Hey lads, what's the craic?", exUk: 'Привіт, хлопці, що нового?', say: "What's the crack?", sayEx: "Hey lads, what's the crack?" },
   { id: 'irish-sound', cat: 'irish', en: 'sound', uk: 'нормальний, надійний (про людину)', ex: "Paddy's sound, you can trust him.", exUk: 'Педді нормальний, йому можна довіряти.' },
   { id: 'irish-fairplay', cat: 'irish', en: 'Fair play!', uk: 'Молодець! Респект!', ex: 'You finished it all? Fair play!', exUk: 'Ти все закінчив? Молодець!' },
   { id: 'irish-yourman', cat: 'irish', en: 'your man', uk: 'той чоловік (про когось конкретного)', ex: 'Your man in the blue van is looking for you.', exUk: 'Тебе шукає той чоловік із синього буса.' },
@@ -117,8 +118,8 @@ window.WORDS = [
   { id: 'irish-messages', cat: 'irish', en: 'the messages', uk: 'покупки, продукти', ex: "I'm going to get the messages.", exUk: 'Піду куплю продукти.' },
   { id: 'irish-banjaxed', cat: 'irish', en: 'banjaxed', uk: 'зламаний', ex: 'The mixer is banjaxed.', exUk: 'Міксер зламався.' },
   { id: 'irish-lashing', cat: 'irish', en: "It's lashing", uk: 'Ллє як з відра', ex: "Take your coat, it's lashing.", exUk: 'Візьми куртку, надворі злива.' },
-  { id: 'irish-after', cat: 'irish', en: "I'm after ...ing", uk: 'Я щойно ...', ex: "I'm after finishing the wall.", exUk: 'Я щойно закінчив стіну.' },
-  { id: 'irish-cmere', cat: 'irish', en: "C'mere", uk: 'Слухай (сюди)', ex: "C'mere, can you help me?", exUk: 'Слухай, можеш мені допомогти?' },
+  { id: 'irish-after', cat: 'irish', en: "I'm after ...ing", uk: 'Я щойно ...', ex: "I'm after finishing the wall.", exUk: 'Я щойно закінчив стіну.', say: "I'm after finishing" },
+  { id: 'irish-cmere', cat: 'irish', en: "C'mere", uk: 'Слухай (сюди)', ex: "C'mere, can you help me?", exUk: 'Слухай, можеш мені допомогти?', say: 'Kuh-meer', sayEx: 'Kuh-meer, can you help me?' },
   { id: 'irish-surelook', cat: 'irish', en: 'Sure look', uk: 'Ну що поробиш', ex: "We're late again. Sure look, it's Monday.", exUk: 'Знову запізнюємося. Ну що поробиш, понеділок.' },
   { id: 'irish-goway', cat: 'irish', en: 'Go way!', uk: 'Та ну! Не може бути!', ex: 'He won the lotto? Go way!', exUk: 'Він виграв у лотерею? Та ну!' },
   { id: 'irish-lads', cat: 'irish', en: 'the lads', uk: 'хлопці, компанія', ex: 'Are you coming out with the lads?', exUk: 'Підеш гуляти з хлопцями?' },
@@ -165,12 +166,12 @@ window.WORDS = [
   { id: 'travel-bill', cat: 'travel', en: 'Could I get the bill, please?', uk: 'Можна рахунок?', ex: 'Excuse me, could I get the bill, please?', exUk: 'Перепрошую, можна рахунок?' },
   { id: 'travel-table', cat: 'travel', en: 'a table for two', uk: 'столик на двох', ex: 'Have you got a table for two?', exUk: 'У вас є столик на двох?' },
   { id: 'travel-howmuch', cat: 'travel', en: 'How much is it?', uk: 'Скільки це коштує?', ex: 'How much is it for one night?', exUk: 'Скільки коштує одна ніч?' },
-  { id: 'travel-nearest', cat: 'travel', en: 'Where is the nearest ...?', uk: 'Де найближчий ...?', ex: 'Where is the nearest pharmacy?', exUk: 'Де найближча аптека?' },
+  { id: 'travel-nearest', cat: 'travel', en: 'Where is the nearest ...?', uk: 'Де найближчий ...?', ex: 'Where is the nearest pharmacy?', exUk: 'Де найближча аптека?', say: 'Where is the nearest...?' },
   { id: 'travel-directions', cat: 'travel', en: 'directions', uk: 'як пройти, маршрут', ex: 'Can you give me directions to the station?', exUk: 'Підкажете, як пройти до вокзалу?' },
   { id: 'travel-lost', cat: 'travel', en: 'to get lost', uk: 'заблукати', ex: 'We got lost in the old town.', exUk: 'Ми заблукали в старому місті.' },
   { id: 'travel-sightseeing', cat: 'travel', en: 'sightseeing', uk: "огляд пам'яток", ex: 'We went sightseeing all day.', exUk: "Ми цілий день оглядали пам'ятки." },
   { id: 'travel-exchange', cat: 'travel', en: 'currency exchange', uk: 'обмін валют', ex: 'Is there a currency exchange here?', exUk: 'Тут є обмін валют?' },
-  { id: 'travel-booking', cat: 'travel', en: 'booking', uk: 'бронювання', ex: 'I have a booking under the name Denys.', exUk: "У мене бронювання на ім'я Денис." },
+  { id: 'travel-booking', cat: 'travel', en: 'booking', uk: 'бронювання', ex: 'I have a booking under the name Denys.', exUk: "У мене бронювання на ім'я Денис.", sayEx: 'I have a booking under the name Deniss.' },
   { id: 'travel-departures', cat: 'travel', en: 'departures', uk: 'виліт (зона, табло)', ex: 'Departures are upstairs.', exUk: 'Зона вильоту нагорі.' },
   { id: 'travel-arrivals', cat: 'travel', en: 'arrivals', uk: 'приліт (зона, табло)', ex: "I'll meet you at arrivals.", exUk: 'Зустріну тебе в зоні прильоту.' },
   { id: 'travel-miss', cat: 'travel', en: 'to miss', uk: 'запізнитися на (транспорт)', ex: "Hurry up or we'll miss the bus.", exUk: 'Швидше, бо запізнимося на автобус.' }

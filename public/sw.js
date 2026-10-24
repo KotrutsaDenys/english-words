@@ -1,6 +1,8 @@
-// Мережа першою: онлайн завжди свіжа версія після коміту, офлайн працює з кешу.
-const CACHE = 'ew-v1';
-const CORE = ['/', '/words.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
+// Сторінка й дані: мережа першою, щоб після коміту одразу була свіжа версія.
+// Записи вимови: кеш першим, бо назва файлу містить хеш і вміст не змінюється.
+const CACHE = 'ew-v2';
+const AUDIO_CACHE = 'ew-audio-v1';
+const CORE = ['/', '/words.js', '/audio.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', event => {
@@ -10,34 +12,45 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE && k !== AUDIO_CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
 
+function cacheFirst(req, cacheName) {
+  return caches.match(req).then(hit => hit || fetch(req).then(res => {
+    if (res.ok && res.status === 200) {
+      const copy = res.clone();
+      caches.open(cacheName).then(c => c.put(req, copy)).catch(() => {});
+    }
+    return res;
+  }));
+}
+
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  // Запити частинами (так браузер іноді тягне аудіо) віддаємо браузеру напряму
+  if (req.headers.has('range')) return;
   const url = new URL(req.url);
 
   if (FONT_HOSTS.includes(url.hostname)) {
-    event.respondWith(
-      caches.match(req).then(hit => hit || fetch(req).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(req, copy));
-        return res;
-      }))
-    );
+    event.respondWith(cacheFirst(req, CACHE));
     return;
   }
 
   if (url.origin !== self.location.origin) return;
 
+  if (url.pathname.startsWith('/audio/')) {
+    event.respondWith(cacheFirst(req, AUDIO_CACHE));
+    return;
+  }
+
   event.respondWith(
     fetch(req).then(res => {
-      if (res.ok && !res.redirected) {
+      if (res.ok && res.status === 200 && !res.redirected) {
         const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(req, copy));
+        caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
       }
       return res;
     }).catch(() =>
