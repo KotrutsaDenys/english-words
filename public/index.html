@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>English Words</title>
 <meta name="description" content="Особистий тренажер англійських слів: інтервальне повторення FSRS, вправи на пригадування і британська вимова.">
-<meta name="theme-color" content="#E6EAE8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121A1F" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#E4E8E5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10171C" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -22,7 +22,7 @@
 <body>
 <div class="app">
   <header class="top">
-    <h1 class="brand">English Words</h1>
+    <h1 class="brand"><span class="brand-mark" aria-hidden="true"></span>English Words</h1>
     <div class="streak" id="streak"></div>
   </header>
 
@@ -31,7 +31,10 @@
   <section id="screen-learn" data-screen="learn">
     <div class="tape" id="tape" role="progressbar" aria-label="Прогрес за сьогодні" aria-valuemin="0">
       <span class="tape-case" aria-hidden="true"></span>
-      <div class="tape-track"><div class="tape-fill" id="tapeFill"></div></div>
+      <div class="tape-track" id="tapeTrack">
+        <div class="tape-fill" id="tapeFill"><div class="tape-scale" id="tapeScale"></div></div>
+        <span class="tape-hook" id="tapeHook" aria-hidden="true"></span>
+      </div>
     </div>
     <div class="tape-meta"><span id="tapeDone"></span><span id="tapeLeft"></span></div>
     <div id="learnHome" class="plan"></div>
@@ -60,7 +63,7 @@
         </div>
       </form>
     </div>
-    <input class="field" id="search" type="search" placeholder="Пошук англійською або українською" aria-label="Пошук у словнику" autocapitalize="none" autocorrect="off">
+    <input class="field search" id="search" type="search" placeholder="Пошук англійською або українською" aria-label="Пошук у словнику" autocapitalize="none" autocorrect="off">
     <div class="seg small" id="segStatus" style="margin-top:12px" role="group" aria-label="Стан слова"></div>
     <div class="chips" id="chips" role="group" aria-label="Теми"></div>
     <div class="dict-meta"><span id="dictCount"></span><button class="link-btn" id="addOpen">Додати слово</button></div>
@@ -74,9 +77,10 @@
       <span id="backupText"></span>
       <button class="btn" id="backupNow">Зберегти копію</button>
     </div>
-    <p class="report" id="reportText"></p>
+    <div class="docket"><dl id="docket"></dl></div>
     <div class="stack"><button class="btn btn-primary" id="copyReport">Скопіювати звіт</button></div>
     <h3 class="h3">Пам'ять</h3>
+    <div id="gaugeBox"></div>
     <p class="insight" id="retention"></p>
     <h3 class="h3">Відповіді за 14 днів</h3>
     <div class="chart" id="chart" role="img"></div>
@@ -85,6 +89,7 @@
     <div class="chart short" id="forecast" role="img" style="--cols:7"></div>
     <div class="chart-legend cols" id="forecastLegend" style="--cols:7"></div>
     <h3 class="h3">Словник</h3>
+    <div class="vocab-bar" id="vocabBar" role="img"></div>
     <dl class="rows" id="totals"></dl>
     <div id="hardBox" hidden>
       <h3 class="h3">Найважчі слова</h3>
@@ -139,9 +144,9 @@
       <h2>Резервна копія</h2>
       <p class="note2">Прогрес зберігається тільки на цьому телефоні. Збережи копію у Файли, щоб не втратити його при зміні телефона.</p>
       <p class="note2" id="lastBackup"></p>
-      <div class="btn-row">
-        <button class="btn" id="backupSave">Зберегти копію</button>
-        <button class="btn" id="backupLoad">Відновити з копії</button>
+      <div class="stack" style="margin-top:0">
+        <button class="btn" id="backupSave">Зберегти копію у Файли</button>
+        <button class="btn btn-quiet" id="backupLoad">Відновити з копії</button>
       </div>
       <input type="file" id="backupFile" accept="application/json,.json" hidden>
     </div>
@@ -156,15 +161,15 @@
         <p><b>Своя асоціація.</b> Для слів, які постійно вилітають, придумай власну зачіпку. Своя тримається найкраще.</p>
         <p><b>Щодня потроху.</b> 10–15 хвилин щодня дають більше, ніж година раз на тиждень, а сон між повтореннями закріплює вивчене.</p>
       </details>
-      <details class="more" style="border-top:0">
+      <details class="more">
         <summary>Нагадування</summary>
         <p>Найпростіше: у Нагадуваннях на iPhone створи щоденне нагадування на зручний час, наприклад на дорогу з роботи, і встав у нього адресу сайту.</p>
       </details>
     </div>
-    <div class="group">
+    <div class="group bare">
       <button class="btn btn-danger" id="resetAll" style="width:100%">Скинути весь прогрес</button>
     </div>
-    <p class="version">Версія 3 від 24.10.2026</p>
+    <p class="version">Версія 4 від 24.10.2026</p>
   </section>
   </main>
 </div>

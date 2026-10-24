@@ -164,7 +164,7 @@ try:
                 shot(page, f'{scheme}-{tab}')
                 if SHOTS:
                     page.screenshot(path=os.path.join(SHOTS, f'{scheme}-{tab}-full.png'), full_page=True)
-            print(scheme, 'report:', page.inner_text('#reportText').replace('\n', ' | '))
+            print(scheme, 'report:', page.inner_text('#docket').replace('\n', ' | '))
             ctx.close()
 
         # Перенесення прогресу з версії 2
@@ -183,7 +183,7 @@ try:
         assert page.evaluate('localStorage.getItem("ew.progress")') is None
         home = page.inner_text('#learnHome')
         print('migration home:', home.replace('\n', ' | '))
-        assert 'Повторити' in home and 'Довчити' in home
+        assert 'повторення' in home and 'довчити' in home
         print('migration streak:', page.inner_text('#streak'))
         ctx.close()
         b.close()

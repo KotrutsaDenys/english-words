@@ -148,9 +148,28 @@ function sayWord(w, kind, rate) {
 }
 if (navigator.audioSession) { try { navigator.audioSession.type = 'playback'; } catch (e) {} }
 
+const SVG = (body, w) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
 const ICON = {
-  speaker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
-  mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>'
+  speaker: SVG('<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>'),
+  mic: SVG('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>'),
+  check: SVG('<path d="m5 12.5 4.5 4.5L19 7.5"/>', 3),
+  cross: SVG('<path d="M7 7l10 10M17 7 7 17"/>', 3),
+  bang: SVG('<path d="M12 6v8M12 18h.01"/>', 3),
+  flame: SVG('<path d="M12 21c4 0 6.5-2.6 6.5-6.3 0-3.6-2.6-6.1-4.5-8.7-.4 2.2-1.6 3.7-3 4.6.1-2.7-1.1-5.1-3-6.6C8 7.3 5.5 9.9 5.5 14.7 5.5 18.4 8 21 12 21z"/>'),
+  // значки вправ
+  intro: SVG('<path d="M12 3.5l2.2 5.3 5.3 2.2-5.3 2.2L12 18.5l-2.2-5.3L4.5 11l5.3-2.2z"/>'),
+  choose: SVG('<rect x="4" y="4.5" width="16" height="4.5" rx="1.5"/><rect x="4" y="13" width="16" height="4.5" rx="1.5"/><path d="m7 15.2 1.3 1.3 2.4-2.6"/>'),
+  listen: SVG('<path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3.5" y="13.5" width="4" height="6" rx="1.5"/><rect x="16.5" y="13.5" width="4" height="6" rx="1.5"/>'),
+  flip: SVG('<rect x="5" y="4" width="14" height="16" rx="2.5"/><path d="M9 12h6M12 9l3 3-3 3"/>'),
+  type: SVG('<rect x="3" y="6.5" width="18" height="11" rx="2.5"/><path d="M7 10.5h.01M10.5 10.5h.01M14 10.5h.01M17 10.5h.01M8 14h8"/>'),
+  cloze: SVG('<path d="M4 8h5M15 8h5M4 16h16"/><path d="M10 9.5h4" stroke-dasharray="1.5 2"/>'),
+  build: SVG('<rect x="3.5" y="13" width="7.5" height="6" rx="1.5"/><rect x="13" y="13" width="7.5" height="6" rx="1.5"/><rect x="8.2" y="5" width="7.5" height="6" rx="1.5"/>'),
+  dictation: SVG('<path d="M6 9.5a6 6 0 1 1 9.4 4.9c-1.4 1-2.4 2.1-2.4 3.6a2.5 2.5 0 0 1-4.6 1.4"/><path d="M9.5 10a2.5 2.5 0 0 1 5 0"/>'),
+  speak: SVG('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>')
+};
+const EX_ICON = {
+  intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
+  type_en: 'type', cloze: 'cloze', dictation: 'dictation', build_phrase: 'build', build_sentence: 'build', speak: 'speak'
 };
 function sayBtn(w, kind, small, label) {
   const b = el('button', 'say' + (small ? ' sm' : ''));
@@ -178,15 +197,31 @@ function streak() {
 }
 function renderStreak() {
   const s = streak();
-  $('streak').innerHTML = s > 0 ? 'Серія <b>' + days(s) + '</b>' : '';
+  $('streak').innerHTML = s > 0 ? ICON.flame + '<span><b>' + days(s) + '</b> поспіль</span>' : '';
 }
 function renderTape(done, total, label, remUnits) {
+  const track = $('tapeTrack');
   const fill = $('tapeFill');
-  const track = fill.parentElement;
+  const scale = $('tapeScale');
   const pct = total > 0 ? Math.min(100, done / total * 100) : 0;
   const w = track.clientWidth || 300;
-  fill.style.setProperty('--step', (total > 0 ? Math.max(4, w / total) : 12) + 'px');
+  const step = total > 0 ? w / total : 12;
+  scale.style.width = w + 'px';
+  scale.style.setProperty('--step', Math.max(3, step) + 'px');
+  scale.style.setProperty('--step5', Math.max(15, step * 5) + 'px');
+  const every = [5, 10, 20, 25, 50, 100].find(n => n * step >= 26) || 100;
+  const key = total + ':' + w;
+  if (scale.dataset.key !== key) {
+    scale.dataset.key = key;
+    scale.innerHTML = '';
+    if (total > 0) for (let k = every; k < total; k += every) {
+      const n = el('span', 'tape-num', String(k));
+      n.style.left = (k * step) + 'px';
+      scale.appendChild(n);
+    }
+  }
   fill.style.width = pct + '%';
+  $('tapeHook').style.left = pct + '%';
   $('tape').setAttribute('aria-valuemax', String(total));
   $('tape').setAttribute('aria-valuenow', String(done));
   $('tapeDone').innerHTML = total > 0 ? (label || 'Вправи') + ' <b>' + done + ' з ' + total + '</b>' : 'На сьогодні нічого';
@@ -214,6 +249,79 @@ function updateTape() {
 }
 function estimateMinutes(units) { return Math.max(1, Math.ceil(units * 10 / 60)); }
 
+const WEEKDAYS = ['неділя', 'понеділок', 'вівторок', 'середа', 'четвер', "п'ятниця", 'субота'];
+const WD_SHORT = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+function greeting() {
+  const d = new Date();
+  const h = d.getHours();
+  const hello = h < 5 ? 'Доброї ночі' : h < 12 ? 'Добрий ранок' : h < 18 ? 'Добрий день' : h < 23 ? 'Добрий вечір' : 'Доброї ночі';
+  const t = today();
+  return hello + ', ' + WEEKDAYS[new Date(t * 86400000).getUTCDay()] + ' ' + C.fmtDate(t).slice(0, 5);
+}
+function joinUk(parts) {
+  if (parts.length < 2) return parts.join('');
+  return parts.slice(0, -1).join(', ') + ' і ' + parts[parts.length - 1];
+}
+function planSentence(cnt) {
+  const parts = [];
+  if (cnt.learning) parts.push(cnt.learning + ' ' + C.plural(cnt.learning, 'слово', 'слова', 'слів') + ' довчити');
+  if (cnt.reviews) parts.push(cnt.reviews + ' ' + C.plural(cnt.reviews, 'повторення', 'повторення', 'повторень'));
+  if (cnt.fresh) parts.push(cnt.fresh + ' ' + C.plural(cnt.fresh, 'нове слово', 'нові слова', 'нових слів'));
+  const s = joinUk(parts);
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function studied(d) { const l = log[C.dayKey(d)]; return !!(l && (l.r > 0 || l.c > 0)); }
+function weekSection() {
+  const t = today();
+  const wd = new Date(t * 86400000).getUTCDay();
+  const monday = t - ((wd + 6) % 7);
+  const sec = el('section', 'section');
+  const s = streak();
+  const title = el('h3', 'section-title', 'Цей тиждень');
+  title.appendChild(el('span', null, s ? 'серія ' + days(s) : 'серія ще не почата'));
+  sec.appendChild(title);
+  const row = el('div', 'week');
+  for (let d = monday; d < monday + 7; d++) {
+    const done = studied(d);
+    const cell = el('div', 'day' + (done ? ' done' : '') + (d === t ? ' today' : ''));
+    const dot = el('i');
+    if (done) dot.innerHTML = ICON.check;
+    dot.setAttribute('aria-hidden', 'true');
+    cell.append(dot, document.createTextNode(WD_SHORT[(d - monday + 1) % 7]));
+    cell.setAttribute('aria-label', C.fmtDate(d) + (done ? ': було заняття' : d > t ? '' : ': без заняття'));
+    row.appendChild(cell);
+  }
+  sec.appendChild(row);
+  return sec;
+}
+function vocabBar(box, legend, tt) {
+  box.innerHTML = '';
+  const total = Math.max(1, tt.all);
+  [['k', tt.known], ['l', tt.learning], ['x', tt.leech]].forEach(([c, n]) => {
+    if (!n) return;
+    const i = el('i', c); i.style.width = (n / total * 100) + '%'; box.appendChild(i);
+  });
+  box.setAttribute('aria-label', 'Знаю ' + tt.known + ', вчу ' + tt.learning + ', важких ' + tt.leech + ', нових ' + tt.new);
+  if (!legend) return;
+  legend.innerHTML = '';
+  [['k', 'знаю', tt.known], ['l', 'вчу', tt.learning], ['x', 'важкі', tt.leech], ['n', 'ще не вчив', tt.new]].forEach(([c, label, n]) => {
+    if (!n && c === 'x') return;
+    const li = el('li');
+    li.append(el('i', c), el('b', null, String(n)), document.createTextNode(' ' + label));
+    legend.appendChild(li);
+  });
+}
+function vocabSection() {
+  const tt = totals();
+  const sec = el('section', 'section');
+  const title = el('h3', 'section-title', 'Мій словник');
+  title.appendChild(el('span', null, words(tt.all)));
+  const bar = el('div', 'vocab-bar'); bar.setAttribute('role', 'img');
+  const legend = el('ul', 'legend');
+  sec.append(title, bar, legend);
+  vocabBar(bar, legend, tt);
+  return sec;
+}
 function renderLearn() {
   const active = session && current;
   $('stage').hidden = !active;
@@ -227,20 +335,15 @@ function renderLearn() {
   const plan = new C.Session(envFor());
   const cnt = plan.counts();
   const total = cnt.reviews + cnt.learning + cnt.fresh;
+  home.appendChild(el('p', 'greet', greeting()));
+  const st = el('div', 'stack');
   if (total) {
-    home.appendChild(el('h2', null, l.r ? 'Продовжимо?' : words(total) + ' на сьогодні'));
-    const ul = el('ul', 'plan-list');
-    const row = (a, b) => { const li = el('li'); li.append(el('span', null, a), el('b', null, b)); ul.appendChild(li); };
-    if (cnt.reviews) row('Повторити', words(cnt.reviews));
-    if (cnt.learning) row('Довчити почате', words(cnt.learning));
-    if (cnt.fresh) row('Нові', words(cnt.fresh));
-    row('Приблизно', mins(estimateMinutes(plan.remainingUnits())));
-    home.appendChild(ul);
-    const st = el('div', 'stack');
+    home.appendChild(el('h2', 'hero', (l.r ? 'Ще ' : '') + (l.r ? planSentence(cnt).charAt(0).toLowerCase() + planSentence(cnt).slice(1) : planSentence(cnt))));
+    home.appendChild(el('p', 'hero-sub', 'Приблизно ' + mins(estimateMinutes(plan.remainingUnits())) + '.'));
+    if (cnt.reviews >= 40 && cnt.fresh) home.appendChild(el('p', 'tip', 'Повторень сьогодні багато. Нічого страшного, якщо зробиш лише їх, а нові слова почекають до завтра.'));
     const go = el('button', 'btn btn-primary', l.r ? 'Продовжити' : 'Почати');
     go.addEventListener('click', () => startSession());
     st.appendChild(go);
-    if (cnt.reviews >= 40 && cnt.fresh) home.appendChild(el('p', 'tip', 'Повторень сьогодні багато. Нічого страшного, якщо зробиш лише їх, а нові слова почекають до завтра.'));
     if (cnt.reviews && cnt.fresh) {
       const quick = el('button', 'btn', 'Тільки повторення, без нових');
       quick.addEventListener('click', () => startSession(null, true));
@@ -248,36 +351,38 @@ function renderLearn() {
     }
     home.appendChild(st);
     keys.enter = () => go.click();
-    // наперед завантажити перші записи
     plan.reviews.slice(0, 3).concat(plan.newIds.slice(0, 2)).forEach(id => preloadWord(byId(id)));
-    return;
-  }
-  const left = C.orderNew(allWords(), cards, settings.cats).length;
-  const misses = (l.miss || []).filter(id => byId(id));
-  home.appendChild(el('h2', null, l.r ? 'На сьогодні все' : 'Карток на сьогодні немає'));
-  if (l.r) {
-    const acc = l.r ? Math.round((l.r - (l.a || 0)) / l.r * 100) : 0;
-    home.appendChild(el('p', null, 'Нових слів: ' + (l.n || 0) + '. Повторено: ' + (l.rv || 0) + '. Точність: ' + acc + '%. Час: ' + mins(Math.max(1, Math.round((l.ms || 0) / 60000))) + '.'));
   } else {
-    home.appendChild(el('p', null, left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Налаштуваннях.'));
+    const left = C.orderNew(allWords(), cards, settings.cats).length;
+    const misses = (l.miss || []).filter(id => byId(id));
+    if (l.r) {
+      home.appendChild(el('h2', 'hero', 'Готово на сьогодні'));
+      const acc = Math.round((l.r - (l.a || 0)) / l.r * 100);
+      const ul = el('ul', 'done-list');
+      [['Час', mins(Math.max(1, Math.round((l.ms || 0) / 60000)))], ['Нових слів', String(l.n || 0)], ['Повторено', String(l.rv || 0)], ['Точність', acc + '%']]
+        .forEach(([a, b]) => { const li = el('li'); li.append(el('span', null, a), el('b', null, b)); ul.appendChild(li); });
+      home.appendChild(ul);
+      const rep = el('button', 'btn btn-primary', 'Скопіювати звіт');
+      rep.addEventListener('click', copyReport);
+      st.appendChild(rep);
+    } else {
+      home.appendChild(el('h2', 'hero', 'Сьогодні вільно'));
+      home.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Налаштуваннях.'));
+    }
+    if (misses.length) {
+      const pr = el('button', 'btn', 'Потренувати помилки (' + misses.length + ')');
+      pr.addEventListener('click', () => startSession(misses));
+      st.appendChild(pr);
+    }
+    if (left) {
+      const more = el('button', 'btn', 'Ще 5 нових слів');
+      more.addEventListener('click', () => { todayLog().x = (todayLog().x || 0) + 5; persist(); startSession(); });
+      st.appendChild(more);
+    }
+    home.appendChild(st);
   }
-  const st = el('div', 'stack');
-  if (l.r) {
-    const rep = el('button', 'btn btn-primary', 'Скопіювати звіт');
-    rep.addEventListener('click', copyReport);
-    st.appendChild(rep);
-  }
-  if (misses.length) {
-    const pr = el('button', 'btn', 'Потренувати сьогоднішні помилки (' + misses.length + ')');
-    pr.addEventListener('click', () => startSession(misses));
-    st.appendChild(pr);
-  }
-  if (left) {
-    const more = el('button', 'btn', 'Ще 5 нових слів');
-    more.addEventListener('click', () => { todayLog().x = (todayLog().x || 0) + 5; persist(); startSession(); });
-    st.appendChild(more);
-  }
-  home.appendChild(st);
+  home.appendChild(weekSection());
+  home.appendChild(vocabSection());
 }
 
 function startSession(practiceIds, reviewOnly) {
@@ -308,9 +413,21 @@ function frame(item) {
   card.innerHTML = '';
   card.onclick = null;
   const head = el('div', 'ex-head');
-  const label = el('span', 'ex-label', C.EXERCISES[item.exercise] || '');
-  if (item.card && C.isLeech(item.card)) label.appendChild(el('span', 'badge', 'важке слово'));
-  head.append(label, el('span', null, session && session.practice ? 'Тренування' : (CATS[item.word.cat] || '')));
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic' + (item.exercise === 'intro' ? ' new' : ''));
+  ic.innerHTML = ICON[EX_ICON[item.exercise]] || '';
+  label.append(ic, document.createTextNode(C.EXERCISES[item.exercise] || ''));
+  const right = el('span', 'ex-right');
+  if (item.card && C.isLeech(item.card)) right.appendChild(el('span', 'badge', 'важке слово'));
+  if (item.card && item.card.st === 'learn') {
+    const steps = el('span', 'steps');
+    steps.setAttribute('aria-label', 'Крок ' + item.card.step + ' з ' + C.LEARN_STEPS);
+    for (let k = 1; k <= C.LEARN_STEPS; k++) steps.appendChild(el('i', k < item.card.step ? 'on' : ''));
+    right.appendChild(steps);
+  } else if (!(item.card && C.isLeech(item.card))) {
+    right.appendChild(document.createTextNode(session && session.practice ? 'Тренування' : (CATS[item.word.cat] || '')));
+  }
+  head.append(label, right);
   card.appendChild(head);
   const body = el('div', 'prompt');
   card.appendChild(body);
@@ -420,9 +537,11 @@ function mnemonicBlock(w, openByDefault) {
 function details(w, opts) {
   opts = opts || {};
   const d = el('div', 'details');
-  if (opts.verdict) d.appendChild(opts.verdict);
-  const info = opts.verdict ? nextInfo() : '';
-  if (info) d.appendChild(el('p', 'next-info', info));
+  if (opts.verdict) {
+    const info = nextInfo();
+    if (info) opts.verdict.querySelector('.vbody').appendChild(el('span', 'next-info', info));
+    d.appendChild(opts.verdict);
+  }
   if (opts.yours) d.appendChild(opts.yours);
   if (opts.en !== false) {
     const t = el('p', 'trans en');
@@ -451,9 +570,15 @@ function nextInfo() {
   return '';
 }
 function verdict(kind, text, sub) {
-  const v = el('p', 'verdict ' + kind);
-  v.appendChild(document.createTextNode(text));
-  if (sub) v.appendChild(el('small', null, sub));
+  const v = el('div', 'verdict ' + kind);
+  v.setAttribute('role', 'status');
+  const ic = el('span', 'vi');
+  ic.innerHTML = kind === 'right' ? ICON.check : kind === 'typo' ? ICON.bang : kind === 'info' ? ICON.speaker : ICON.cross;
+  const body = el('span', 'vbody');
+  const t = el('span', 'vt', text);
+  if (sub) t.appendChild(el('small', null, sub));
+  body.appendChild(t);
+  v.append(ic, body);
   return v;
 }
 
@@ -567,8 +692,8 @@ function mcq(item, prompt, field) {
     finish(ok ? 3 : 1);
     btns.forEach((x, i) => {
       x.disabled = true;
-      if (opts[i].id === w.id) x.classList.add('right');
-      else if (x === b) x.classList.add('wrong');
+      if (opts[i].id === w.id) { x.classList.add('right'); x.firstChild.innerHTML = ICON.check; }
+      else if (x === b) { x.classList.add('wrong'); x.firstChild.innerHTML = ICON.cross; }
       else x.classList.add('dim');
     });
     sayWord(w, 'w');
@@ -877,7 +1002,7 @@ RENDER.speak = item => {
     if (ui.revealed) return;
     ui.revealed = true;
     sayWord(w, 'w');
-    const v = heard ? verdict('typo', 'Почула: «' + heard + '»') : verdict('right', 'Порівняй зі своєю відповіддю');
+    const v = heard ? verdict('info', 'Почула: «' + heard + '»', ' порівняй з правильним') : verdict('info', 'Порівняй зі своєю відповіддю');
     $('card').appendChild(details(w, { verdict: v, uk: false }));
     const grade = g => { finish(g); nextItem(); };
     const bs = [
@@ -1085,25 +1210,29 @@ function totals() {
   all.forEach(w => { by[C.statusOf(cards[w.id])]++; });
   return { all: all.length, ...by };
 }
-function reportText() {
+function reportRows() {
   const l = todayLog();
   const tt = totals();
   const acc = l.r ? Math.round((l.r - (l.a || 0)) / l.r * 100) : 0;
   const s = streak();
   return [
-    'Англійська, ' + C.fmtDate(today()),
-    'Час: ' + mins(Math.round((l.ms || 0) / 60000)),
-    'Нових слів: ' + (l.n || 0),
-    'Повторено: ' + (l.rv || 0),
-    'Відповідей: ' + (l.r || 0) + (l.r ? ', точність ' + acc + '%' : ''),
-    'Серія: ' + (s ? days(s) + ' поспіль' : 'ще не почата'),
-    'Вчу: ' + words(tt.learning + tt.leech) + ', знаю: ' + tt.known
-  ].join('\n');
+    ['Час', mins(Math.round((l.ms || 0) / 60000))],
+    ['Нових слів', String(l.n || 0)],
+    ['Повторено', String(l.rv || 0)],
+    ['Відповідей', (l.r || 0) + (l.r ? ', точність ' + acc + '%' : '')],
+    ['Серія', s ? days(s) + ' поспіль' : 'ще не почата'],
+    ['Вчу', words(tt.learning + tt.leech)],
+    ['Знаю', words(tt.known)]
+  ];
+}
+function reportText() {
+  return ['Англійська, ' + C.fmtDate(today())].concat(reportRows().map(([a, b]) => a + ': ' + b)).join('\n');
 }
 function renderReport() {
   const t = today();
   $('reportTitle').textContent = 'Звіт за ' + C.fmtDate(t);
-  $('reportText').textContent = reportText();
+  const docket = $('docket'); docket.innerHTML = '';
+  reportRows().forEach(([a, b]) => { const d = el('div'); d.append(el('dt', null, a), el('dd', null, b)); docket.appendChild(d); });
 
   const hasProgress = Object.keys(cards).length > 0;
   const lastB = meta.lastBackup;
@@ -1116,8 +1245,15 @@ function renderReport() {
   const target = Math.round(settings.retention * 100);
   const rt = $('retention');
   rt.innerHTML = '';
+  const gb = $('gaugeBox'); gb.innerHTML = '';
   if (rv >= 15) {
     const pct = Math.round(ok / rv * 100);
+    const g = el('div', 'gauge'); g.setAttribute('role', 'img');
+    g.setAttribute('aria-label', 'Згадуєш ' + pct + '%, ціль ' + target + '%');
+    const fillG = el('i'); fillG.style.width = pct + '%';
+    const mark = el('span', 'mark'); mark.style.left = target + '%'; mark.title = 'Ціль ' + target + '%';
+    g.append(fillG, mark);
+    gb.appendChild(g);
     rt.append(document.createTextNode('На повтореннях ти згадуєш '), el('b', null, pct + '%'), document.createTextNode(' слів (ціль ' + target + '%). '));
     rt.appendChild(document.createTextNode(pct < target - 7
       ? 'Забуваєш більше, ніж треба: краще вчити щодня і брати менше нових слів.'
@@ -1157,9 +1293,10 @@ function renderReport() {
 
   const tt = totals();
   const rows = [
-    ['Слів у словнику', tt.all], ['Ще не вчив', tt.new], ['Вчу', tt.learning],
-    ['Знаю (міцно на 3+ тижні)', tt.known], ['Важкі', tt.leech], ['Свої слова', custom.length]
+    ['Знаю (міцно на 3+ тижні)', tt.known], ['Вчу', tt.learning], ['Важкі', tt.leech],
+    ['Ще не вчив', tt.new], ['Свої слова', custom.length], ['Усього', tt.all]
   ];
+  vocabBar($('vocabBar'), null, tt);
   const dl = $('totals'); dl.innerHTML = '';
   rows.forEach(([k, v]) => { const d = el('div'); d.append(el('dt', null, k), el('dd', null, String(v))); dl.appendChild(d); });
 
