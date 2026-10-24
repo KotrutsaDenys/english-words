@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>English Words</title>
-<meta name="description" content="Особистий тренажер англійських слів з інтервальним повторенням і британською вимовою.">
+<meta name="description" content="Особистий тренажер англійських слів: інтервальне повторення FSRS, вправи на пригадування і британська вимова.">
 <meta name="theme-color" content="#E6EAE8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121A1F" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,183 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap">
-<style>
-:root{
-  --plaster:#E6EAE8;
-  --surface:#FAFBFA;
-  --ink:#1B2730;
-  --muted:#56656D;
-  --line:#C6CFCB;
-  --hivis:#F2D60C;
-  --on-hivis:#1B2730;
-  --orange:#C2410C;
-  --ok:#23714A;
-  --shadow:0 1px 0 rgba(27,39,48,.05), 0 14px 30px -20px rgba(27,39,48,.45);
-  --display:'Unbounded', ui-rounded, system-ui, -apple-system, sans-serif;
-  --text:'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  color-scheme:light dark;
-}
-@media (prefers-color-scheme: dark){
-  :root{
-    --plaster:#121A1F;
-    --surface:#1B262D;
-    --ink:#E3E9E6;
-    --muted:#93A3AB;
-    --line:#2E3C44;
-    --orange:#FF8247;
-    --ok:#5CC68B;
-    --shadow:0 1px 0 rgba(0,0,0,.25), 0 16px 30px -20px rgba(0,0,0,.9);
-  }
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--plaster);color:var(--ink);font-family:var(--text);-webkit-text-size-adjust:100%}
-body{min-height:100vh;min-height:100dvh;line-height:1.45}
-button,input,select{font:inherit;color:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
-:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
-[hidden]{display:none !important}
-
-.app{max-width:520px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 96px)}
-.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:2px 2px 18px}
-.brand{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em;margin:0}
-.streak{font-size:14px;color:var(--muted);font-weight:600;white-space:nowrap}
-.streak b{color:var(--ink);font-weight:800}
-
-/* Рулетка: прогрес дня */
-.tape{display:flex;align-items:center;height:30px}
-.tape-case{flex:none;width:30px;height:30px;border-radius:9px;background:var(--ink);position:relative;z-index:1}
-.tape-case::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--hivis)}
-.tape-track{flex:1;height:18px;position:relative;margin-left:-1px;border-block:1px dashed var(--line)}
-.tape-fill{position:absolute;left:0;top:-1px;bottom:-1px;width:0;background-color:var(--hivis);
-  background-image:repeating-linear-gradient(to right,var(--on-hivis) 0 1.5px,transparent 1.5px var(--step,12px));
-  background-size:100% 42%;background-repeat:repeat-x;transition:width .4s cubic-bezier(.2,.8,.2,1)}
-.tape-fill::after{content:"";position:absolute;right:-4px;top:-4px;bottom:-4px;width:5px;border-radius:1.5px;background:var(--ink)}
-.tape-meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted);margin-top:10px;font-weight:600}
-.tape-meta b{color:var(--ink)}
-
-/* Головна навчання */
-.plan h2{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.12;letter-spacing:-.02em;margin:26px 0 10px}
-.plan p{margin:0;color:var(--muted);font-size:17px}
-.plan-list{list-style:none;padding:0;margin:14px 0 0;font-size:17px}
-.plan-list li{display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line)}
-.plan-list li:last-child{border-bottom:1px solid var(--line)}
-.plan-list b{font-weight:800}
-.stack{display:grid;gap:10px;margin-top:22px}
-
-/* Картка */
-.card{position:relative;background:var(--surface);border-radius:24px;box-shadow:var(--shadow);padding:20px 22px 22px;min-height:min(56vh,420px);display:flex;flex-direction:column;margin-top:18px;-webkit-tap-highlight-color:transparent;outline-offset:3px}
-.card-cat{font-size:13px;color:var(--muted);font-weight:700}
-.front{flex:1;display:flex;flex-direction:column;justify-content:center;padding:18px 0 6px}
-.word{font-family:var(--display);font-weight:700;font-size:44px;line-height:1.08;letter-spacing:-.02em;margin:0;overflow-wrap:break-word}
-.word.uk{font-family:var(--text);font-weight:800;letter-spacing:-.01em}
-.say{flex:none;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:transparent;display:inline-grid;place-items:center;color:var(--ink)}
-.say svg{width:20px;height:20px}
-.say.sm{width:34px;height:34px;vertical-align:middle;margin-left:6px}
-.say.sm svg{width:16px;height:16px}
-.front .say{margin-top:16px}
-.back{border-top:1px solid var(--line);padding-top:14px;animation:reveal .22s ease-out}
-@keyframes reveal{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.trans{font-size:24px;font-weight:800;line-height:1.25;margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.trans.en{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:-.01em}
-.ex{font-size:17px;line-height:1.45;margin:14px 0 0}
-.ex-uk{color:var(--muted);font-size:15px;margin:4px 0 0}
-.hint{color:var(--muted);font-size:14px;text-align:center;margin:10px 0 0}
-
-/* Кнопки */
-.btn{border-radius:14px;min-height:54px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 12px;font-weight:800;font-size:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center}
-.btn small{font-weight:600;font-size:12px;color:var(--muted)}
-.btn-primary{background:var(--hivis);border-color:var(--hivis);color:var(--on-hivis)}
-.btn-primary small{color:var(--on-hivis);opacity:.7}
-.btn-again{color:var(--orange);border-color:currentColor}
-.btn-quiet{background:transparent}
-.btn-danger{color:var(--orange);background:transparent;border-color:currentColor}
-.btn-row{display:flex;gap:10px}
-.btn-row .btn{flex:1}
-.actions{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px;margin-top:14px}
-.reveal-btn{width:100%;margin-top:14px}
-.btn:active{transform:translateY(1px)}
-
-/* Словник */
-.field{width:100%;font-size:17px;padding:13px 15px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);-webkit-appearance:none;appearance:none}
-.field:focus{border-color:var(--ink);outline:none}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 2px;margin:0 -16px;padding-inline:16px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{border-radius:999px;padding:8px 14px;border:1.5px solid var(--line);background:transparent;font-weight:700;font-size:14px;white-space:nowrap}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--plaster);border-color:var(--ink)}
-.dict-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:14px;font-weight:600;margin:2px 0 12px}
-.link-btn{background:none;border:0;padding:6px 0;font-weight:800;color:var(--ink);text-decoration:underline;text-decoration-color:var(--hivis);text-decoration-thickness:3px;text-underline-offset:4px}
-.list{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-.item + .item{border-top:1px solid var(--line)}
-.item-head{display:flex;gap:12px;align-items:center;width:100%;padding:13px 16px;background:none;border:0;text-align:left}
-.item-text{min-width:0;flex:1}
-.item-en{display:block;font-weight:800;font-size:17px}
-.item-uk{display:block;color:var(--muted);font-size:15px}
-.status{flex:none;font-size:12px;font-weight:800;padding:4px 9px;border-radius:8px;border:1.5px solid var(--line);color:var(--muted)}
-.status.learning{background:var(--hivis);border-color:var(--hivis);color:var(--on-hivis)}
-.status.known{border-color:currentColor;color:var(--ok)}
-.item-body{padding:0 16px 16px}
-.item-body .ex{margin-top:0}
-.item-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-top:10px}
-.item-actions .link-btn{white-space:nowrap}
-.item-actions .opt{font-size:14px}
-.empty{padding:28px 18px;text-align:center;color:var(--muted)}
-.panel{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:16px;margin:0 0 14px}
-.panel h2{font-size:18px;font-weight:800;margin:0 0 4px}
-label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
-.opt{color:var(--muted);font-weight:500}
-
-/* Звіт */
-.report{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:18px 18px 16px;font-size:17px;line-height:1.65;white-space:pre-line;margin:0}
-.report-title{font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:6px 0 14px}
-.h3{font-size:16px;font-weight:800;margin:28px 0 12px}
-.chart{display:grid;grid-template-columns:repeat(14,1fr);gap:5px;align-items:end;height:120px;padding:0 2px;border-bottom:1.5px solid var(--ink)}
-.bar{background:var(--hivis);border-radius:5px 5px 0 0;min-height:3px;position:relative}
-.bar.zero{background:var(--line)}
-.bar.today{box-shadow:inset 0 0 0 2px var(--ink)}
-.chart-legend{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;font-weight:600;margin-top:6px}
-.rows{margin:0;padding:0}
-.rows div{display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);font-size:16px}
-.rows div:last-child{border-bottom:1px solid var(--line)}
-.rows dt{color:var(--muted);font-weight:600}
-.rows dd{margin:0;font-weight:800}
-
-/* Налаштування */
-.group{margin:0 0 24px}
-.group h2{font-size:16px;font-weight:800;margin:0 0 4px}
-.group p.note{margin:0 0 10px;color:var(--muted);font-size:14px}
-.seg{display:flex;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:4px;gap:4px}
-.seg button{flex:1;border:0;border-radius:10px;padding:10px 4px;font-weight:800;font-size:15px;background:transparent;min-height:44px}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--plaster)}
-.toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:16px;font-weight:600}
-.toggle:last-child{border-bottom:1px solid var(--line)}
-.switch{appearance:none;-webkit-appearance:none;flex:none;width:52px;height:32px;border-radius:999px;background:var(--line);position:relative;margin:0;transition:background .2s}
-.switch::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
-.switch:checked{background:var(--ink)}
-.switch:checked::after{transform:translateX(20px);background:var(--hivis)}
-.voice-row{display:flex;gap:10px;align-items:center}
-.voice-row .field{flex:1;padding-right:36px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat}
-.version{color:var(--muted);font-size:13px;text-align:center;margin-top:28px}
-
-/* Нижня навігація */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--plaster);border-top:1px solid var(--line);padding:6px 8px calc(env(safe-area-inset-bottom) + 6px)}
-@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
-  .tabs{background:color-mix(in srgb,var(--plaster) 86%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
-}
-.tabs-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.tab{background:none;border:0;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;min-height:52px}
-.tab .ic{width:50px;height:30px;border-radius:999px;display:grid;place-items:center}
-.tab svg{width:22px;height:22px}
-.tab[aria-current="page"]{color:var(--ink)}
-.tab[aria-current="page"] .ic{background:var(--hivis);color:var(--on-hivis)}
-
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 86px);transform:translate(-50%,8px);background:var(--ink);color:var(--plaster);padding:11px 16px;border-radius:12px;font-weight:700;font-size:15px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:10;width:max-content;max-width:calc(100% - 32px);text-align:center}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-
-@media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation:none !important;transition:none !important}
-}
-</style>
+<link rel="stylesheet" href="/app.css">
 </head>
 <body>
 <div class="app">
@@ -202,30 +26,18 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
     <div class="streak" id="streak"></div>
   </header>
 
-  <!-- Вчити -->
   <main>
+  <!-- Вчити -->
   <section id="screen-learn" data-screen="learn">
     <div class="tape" id="tape" role="progressbar" aria-label="Прогрес за сьогодні" aria-valuemin="0">
       <span class="tape-case" aria-hidden="true"></span>
       <div class="tape-track"><div class="tape-fill" id="tapeFill"></div></div>
     </div>
     <div class="tape-meta"><span id="tapeDone"></span><span id="tapeLeft"></span></div>
-
     <div id="learnHome" class="plan"></div>
-
-    <div id="session" hidden>
-      <article class="card" id="card" tabindex="0" aria-live="polite">
-        <div class="card-cat" id="cardCat"></div>
-        <div class="front" id="front"></div>
-        <div class="back" id="back" hidden></div>
-        <p class="hint" id="hint">Торкнись картки, щоб побачити переклад</p>
-      </article>
-      <button class="btn btn-primary reveal-btn" id="revealBtn">Показати переклад</button>
-      <div class="actions" id="actions" hidden>
-        <button class="btn btn-again" data-grade="0">Не знаю<small id="ivAgain">знову</small></button>
-        <button class="btn" data-grade="1">Важко<small id="ivHard"></small></button>
-        <button class="btn btn-primary" data-grade="2">Знаю<small id="ivGood"></small></button>
-      </div>
+    <div id="stage" hidden>
+      <article class="card" id="card" aria-live="polite"></article>
+      <div class="foot" id="foot"></div>
     </div>
   </section>
 
@@ -235,7 +47,7 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
       <h2>Нове слово</h2>
       <form id="addForm" autocomplete="off">
         <label class="lbl" for="fEn">Англійською</label>
-        <input class="field" id="fEn" required autocapitalize="none" spellcheck="false" placeholder="наприклад, wheelbarrow">
+        <input class="field" id="fEn" required autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="наприклад, wheelbarrow">
         <label class="lbl" for="fUk">Переклад</label>
         <input class="field" id="fUk" required placeholder="наприклад, тачка">
         <label class="lbl" for="fEx">Приклад <span class="opt">(необов'язково)</span></label>
@@ -248,7 +60,8 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
         </div>
       </form>
     </div>
-    <input class="field" id="search" type="search" placeholder="Пошук англійською або українською" aria-label="Пошук у словнику">
+    <input class="field" id="search" type="search" placeholder="Пошук англійською або українською" aria-label="Пошук у словнику" autocapitalize="none" autocorrect="off">
+    <div class="seg small" id="segStatus" style="margin-top:12px" role="group" aria-label="Стан слова"></div>
     <div class="chips" id="chips" role="group" aria-label="Теми"></div>
     <div class="dict-meta"><span id="dictCount"></span><button class="link-btn" id="addOpen">Додати слово</button></div>
     <ul class="list" id="list"></ul>
@@ -257,30 +70,55 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
   <!-- Звіт -->
   <section id="screen-report" data-screen="report" hidden>
     <h2 class="report-title" id="reportTitle"></h2>
+    <div class="callout" id="backupCallout" hidden>
+      <span id="backupText"></span>
+      <button class="btn" id="backupNow">Зберегти копію</button>
+    </div>
     <p class="report" id="reportText"></p>
     <div class="stack"><button class="btn btn-primary" id="copyReport">Скопіювати звіт</button></div>
+    <h3 class="h3">Пам'ять</h3>
+    <p class="insight" id="retention"></p>
     <h3 class="h3">Відповіді за 14 днів</h3>
     <div class="chart" id="chart" role="img"></div>
     <div class="chart-legend"><span id="chartFrom"></span><span>сьогодні</span></div>
+    <h3 class="h3">Повторення на тиждень уперед</h3>
+    <div class="chart short" id="forecast" role="img" style="--cols:7"></div>
+    <div class="chart-legend cols" id="forecastLegend" style="--cols:7"></div>
     <h3 class="h3">Словник</h3>
     <dl class="rows" id="totals"></dl>
+    <div id="hardBox" hidden>
+      <h3 class="h3">Найважчі слова</h3>
+      <ul class="list" id="hardList"></ul>
+    </div>
   </section>
 
   <!-- Налаштування -->
   <section id="screen-settings" data-screen="settings" hidden>
     <div class="group">
       <h2>Нових слів на день</h2>
-      <p class="note">Повторення показуються завжди, це лише ліміт нових.</p>
+      <p class="note2">Повторення показуються завжди, це лише ліміт нових.</p>
       <div class="seg" id="segNew"></div>
     </div>
     <div class="group">
-      <h2>Що показувати першим</h2>
-      <p class="note">«Змішано» тренує і впізнавання, і пригадування.</p>
-      <div class="seg" id="segDir"></div>
+      <h2>Як вчити</h2>
+      <p class="note2">Вправи змушують згадувати самому, тому слова тримаються довше. Картки швидші, але слабші.</p>
+      <div class="seg" id="segMode"></div>
+      <div class="toggle" style="margin-top:12px"><span>Вправи з письмом<span class="opt">написати слово, вставити в речення, диктант</span></span><input type="checkbox" class="switch" id="typing" aria-label="Вправи з письмом"></div>
+      <div class="toggle"><span>Вправи на говоріння<span class="opt">сказати слово вголос</span></span><input type="checkbox" class="switch" id="speaking" aria-label="Вправи на говоріння"></div>
+    </div>
+    <div class="group">
+      <h2>Тривалість заняття</h2>
+      <p class="note2">Коротке заняття закінчиться раніше, а початі нові слова все одно довчиш.</p>
+      <div class="seg" id="segLen"></div>
+    </div>
+    <div class="group">
+      <h2>Наскільки міцно пам'ятати</h2>
+      <p class="note2" id="retNote"></p>
+      <div class="seg" id="segRet"></div>
     </div>
     <div class="group">
       <h2>Вимова</h2>
-      <p class="note">Емма озвучує всі слова й приклади зі словника британською вимовою. Торкнись, щоб послухати.</p>
+      <p class="note2">Емма озвучує всі слова й приклади зі словника британською вимовою.</p>
       <div class="seg" id="segVoice"></div>
       <label class="lbl">Швидкість</label>
       <div class="seg" id="segRate"></div>
@@ -290,7 +128,7 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
         <select class="field" id="voice"></select>
         <button class="say" id="voiceTest" aria-label="Прослухати голос iPhone"></button>
       </div>
-      <p class="note" id="voiceNote" style="margin-top:8px"></p>
+      <p class="note2" id="voiceNote" style="margin-top:8px"></p>
       <button class="btn" id="offlineAudio" style="width:100%;margin-top:10px">Завантажити всі записи для офлайну</button>
     </div>
     <div class="group">
@@ -299,7 +137,8 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
     </div>
     <div class="group">
       <h2>Резервна копія</h2>
-      <p class="note">Прогрес зберігається тільки на цьому телефоні. Збережи копію у Файли, щоб не втратити його при зміні телефона.</p>
+      <p class="note2">Прогрес зберігається тільки на цьому телефоні. Збережи копію у Файли, щоб не втратити його при зміні телефона.</p>
+      <p class="note2" id="lastBackup"></p>
       <div class="btn-row">
         <button class="btn" id="backupSave">Зберегти копію</button>
         <button class="btn" id="backupLoad">Відновити з копії</button>
@@ -307,9 +146,25 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
       <input type="file" id="backupFile" accept="application/json,.json" hidden>
     </div>
     <div class="group">
+      <details class="more">
+        <summary>Як це працює</summary>
+        <p><b>Повторення вчасно.</b> Алгоритм FSRS (той самий, що в Anki) рахує для кожного слова, коли ти от-от його забудеш, і показує саме тоді. Що краще знаєш слово, то рідше воно з'являється.</p>
+        <p><b>Згадати, а не перечитати.</b> Найміцніше пам'ять тримає те, що довелося дістати з голови. Тому більшість вправ просять написати, скласти чи сказати.</p>
+        <p><b>Від легкого до важкого.</b> Нове слово спершу впізнаєш, потім вибираєш, потім згадуєш сам. Коли слово міцнішає, вправи стають складнішими: речення, диктант, говоріння.</p>
+        <p><b>Вголос.</b> Сказане вголос запам'ятовується краще, ніж прочитане про себе. Повторюй за Еммою.</p>
+        <p><b>У реченні.</b> Приклади показують, як слово вживають, а «склади речення» тренує порядок слів.</p>
+        <p><b>Своя асоціація.</b> Для слів, які постійно вилітають, придумай власну зачіпку. Своя тримається найкраще.</p>
+        <p><b>Щодня потроху.</b> 10–15 хвилин щодня дають більше, ніж година раз на тиждень, а сон між повтореннями закріплює вивчене.</p>
+      </details>
+      <details class="more" style="border-top:0">
+        <summary>Нагадування</summary>
+        <p>Найпростіше: у Нагадуваннях на iPhone створи щоденне нагадування на зручний час, наприклад на дорогу з роботи, і встав у нього адресу сайту.</p>
+      </details>
+    </div>
+    <div class="group">
       <button class="btn btn-danger" id="resetAll" style="width:100%">Скинути весь прогрес</button>
     </div>
-    <p class="version">Версія 2 від 24.10.2026</p>
+    <p class="version">Версія 3 від 24.10.2026</p>
   </section>
   </main>
 </div>
@@ -327,751 +182,8 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 
 <script src="/words.js"></script>
 <script src="/audio.js"></script>
-<script>
-(function(){
-'use strict';
-
-const $ = id => document.getElementById(id);
-function el(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; }
-let toastTimer;
-function toast(msg){
-  const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-/* ---------- Сховище ---------- */
-const KEYS = { progress:'ew.progress', custom:'ew.custom', log:'ew.log', settings:'ew.settings' };
-function load(key, fallback){
-  try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }catch(e){ return fallback; }
-}
-function save(key, value){
-  try{ localStorage.setItem(key, JSON.stringify(value)); }catch(e){ toast('Не вдалося зберегти. Перевір, чи не вимкнене сховище в Safari.'); }
-}
-
-const CATS = window.CATEGORIES;
-const BASE = window.WORDS;
-const DEFAULT_SETTINGS = { newPerDay:10, dir:'en', autoplay:true, voiceSrc:'emma', voice:'', rate:1, cats:{site:true,talk:true,irish:true,verbs:true,travel:true,mine:true} };
-
-let settings = Object.assign({}, DEFAULT_SETTINGS, load(KEYS.settings, {}));
-settings.cats = Object.assign({}, DEFAULT_SETTINGS.cats, settings.cats || {});
-if(![0.75, 0.9, 1].includes(settings.rate)) settings.rate = settings.rate < 0.8 ? 0.75 : settings.rate < 0.95 ? 0.9 : 1;
-let progress = load(KEYS.progress, {});
-let custom = load(KEYS.custom, []);
-let log = load(KEYS.log, {});
-
-function allWords(){ return custom.concat(BASE); }
-function byId(id){ return allWords().find(w => w.id === id); }
-
-/* ---------- Дати ---------- */
-function dayNum(d){ d = d || new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset()*60000) / 86400000); }
-function dayKey(n){ const d = new Date(n*86400000); return d.toISOString().slice(0,10); }
-function fmtDate(n){ const [y,m,d] = dayKey(n).split('-'); return d + '.' + m + '.' + y; }
-function today(){ return dayNum(); }
-function todayLog(){
-  const k = dayKey(today());
-  if(!log[k]) log[k] = { n:0, r:0, a:0, c:0, x:0 };
-  return log[k];
-}
-
-/* ---------- Українська множина ---------- */
-function plural(n, one, few, many){
-  const a = Math.abs(n) % 100, b = a % 10;
-  if(a > 10 && a < 15) return many;
-  if(b === 1) return one;
-  if(b >= 2 && b <= 4) return few;
-  return many;
-}
-function days(n){ return n + ' ' + plural(n,'день','дні','днів'); }
-function words(n){ return n + ' ' + plural(n,'слово','слова','слів'); }
-function cards(n){ return n + ' ' + plural(n,'картка','картки','карток'); }
-function inDays(n){ if(n <= 0) return 'знову'; if(n === 1) return 'завтра'; return 'через ' + days(n); }
-
-/* ---------- Інтервальне повторення ---------- */
-const KNOWN_IV = 21;
-function nextInterval(p, grade){
-  if(grade === 0) return 0;
-  if(!p || p.reps === 0) return grade === 1 ? 1 : 2;
-  if(grade === 1) return Math.min(365, Math.max(p.iv + 1, Math.round(p.iv * 1.2)));
-  return Math.min(365, Math.max(p.iv + 1, Math.round(p.iv * p.ef)));
-}
-function statusOf(id){
-  const p = progress[id];
-  if(!p) return 'new';
-  return p.iv >= KNOWN_IV ? 'known' : 'learning';
-}
-
-function newCandidates(){
-  const pool = allWords().filter(w => !progress[w.id] && settings.cats[w.cat] !== false);
-  // свої слова першими, далі по черзі з кожної теми
-  const mine = pool.filter(w => w.cat === 'mine');
-  const groups = {};
-  pool.filter(w => w.cat !== 'mine').forEach(w => { (groups[w.cat] = groups[w.cat] || []).push(w); });
-  const order = Object.keys(CATS).filter(c => groups[c]);
-  const mixed = [];
-  let i = 0, added = true;
-  while(added){
-    added = false;
-    for(const c of order){ if(groups[c][i]){ mixed.push(groups[c][i]); added = true; } }
-    i++;
-  }
-  return mine.concat(mixed);
-}
-function newAllowance(){
-  const l = todayLog();
-  return Math.max(0, settings.newPerDay + (l.x || 0) - l.n);
-}
-function dueReviews(){
-  const t = today();
-  return allWords().filter(w => progress[w.id] && progress[w.id].due <= t);
-}
-function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
-
-function buildQueue(){
-  const reviews = shuffle(dueReviews().map(w => w.id));
-  const fresh = newCandidates().slice(0, newAllowance()).map(w => w.id);
-  const q = [];
-  let r = 0, n = 0;
-  while(r < reviews.length || n < fresh.length){
-    if(r < reviews.length) q.push(reviews[r++]);
-    if(r < reviews.length) q.push(reviews[r++]);
-    if(n < fresh.length) q.push(fresh[n++]);
-  }
-  return q;
-}
-
-/* ---------- Вимова ---------- */
-const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
-let voices = [];
-function loadVoices(){
-  if(!synth) return;
-  const all = synth.getVoices();
-  let list = all.filter(v => /^en[-_](GB|IE)/i.test(v.lang));
-  if(!list.length) list = all.filter(v => /^en/i.test(v.lang));
-  voices = list.sort((a,b) => (a.lang > b.lang ? 1 : a.lang < b.lang ? -1 : a.name.localeCompare(b.name)));
-  renderVoices();
-}
-function pickVoice(){
-  if(!voices.length) return null;
-  return voices.find(v => v.voiceURI === settings.voice) ||
-         voices.find(v => /en[-_]GB/i.test(v.lang) && /daniel/i.test(v.name)) ||
-         voices.find(v => /en[-_]GB/i.test(v.lang)) || voices[0];
-}
-function speakable(text){ return text.replace(/\.\.\.|…/g, ' ').replace(/\s+/g,' ').trim(); }
-function speakDevice(text){
-  if(!synth || !text) return;
-  stopAudio();
-  const u = new SpeechSynthesisUtterance(speakable(text));
-  const v = pickVoice();
-  if(v){ u.voice = v; u.lang = v.lang; } else { u.lang = 'en-GB'; }
-  u.rate = Math.max(0.5, settings.rate * 0.95);
-  synth.speak(u);
-}
-if(synth){ loadVoices(); synth.addEventListener ? synth.addEventListener('voiceschanged', loadVoices) : (synth.onvoiceschanged = loadVoices); }
-
-/* Записи з британською вимовою (public/audio, генерує tools/make_audio.py) */
-const AUD = window.AUDIO || { voices:[], files:{} };
-const VOICE_NAMES = { emma:'Емма' };
-const player = new Audio();
-player.preload = 'auto';
-try{ player.preservesPitch = true; player.webkitPreservesPitch = true; }catch(e){}
-const blobs = new Map();
-let playing = '';
-
-function textFor(w, kind){ return kind === 'x' ? (w.sayEx || w.ex) : (w.say || w.en); }
-function clipUrl(w, kind, voice){
-  voice = voice || settings.voiceSrc;
-  if(!w || !AUD.voices.includes(voice)) return null;
-  const f = AUD.files[w.id];
-  const h = f && (kind === 'x' ? f[1] : f[0]);
-  return h ? '/audio/' + voice + '/' + w.id + '-' + h + '.mp3' : null;
-}
-function stopAudio(){
-  try{ player.pause(); }catch(e){}
-  if(synth) synth.cancel();
-}
-function preloadUrl(url){
-  if(!url || blobs.has(url)) return Promise.resolve();
-  blobs.set(url, null);
-  return fetch(url).then(r => r.ok ? r.blob() : null).then(b => {
-    if(!b){ blobs.delete(url); return; }
-    blobs.set(url, URL.createObjectURL(b));
-    while(blobs.size > 40){
-      const [oldUrl, oldBlob] = blobs.entries().next().value;
-      if(oldBlob === player.src) break;
-      blobs.delete(oldUrl);
-      if(oldBlob) URL.revokeObjectURL(oldBlob);
-    }
-  }).catch(() => { blobs.delete(url); });
-}
-function preloadWord(w){
-  if(!w) return;
-  preloadUrl(clipUrl(w, 'w'));
-  if(w.ex) preloadUrl(clipUrl(w, 'x'));
-}
-function playUrl(url, fallbackText){
-  stopAudio();
-  playing = url;
-  player.src = blobs.get(url) || url;
-  player.defaultPlaybackRate = settings.rate;
-  player.playbackRate = settings.rate;
-  const p = player.play();
-  if(p && p.catch) p.catch(err => { if(err && err.name !== 'AbortError' && playing === url) speakDevice(fallbackText); });
-}
-player.addEventListener('error', () => { if(playing){ const t = player.dataset.fallback; playing = ''; if(t) speakDevice(t); } });
-function sayWord(w, kind){
-  const text = textFor(w, kind);
-  if(!text) return;
-  const url = clipUrl(w, kind);
-  player.dataset.fallback = text;
-  if(url) playUrl(url, text); else speakDevice(text);
-}
-if(navigator.audioSession){ try{ navigator.audioSession.type = 'playback'; }catch(e){} }
-
-const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
-function sayBtn(w, kind, small, label){
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'say' + (small ? ' sm' : '');
-  b.innerHTML = SPEAKER;
-  b.setAttribute('aria-label', label || 'Послухати');
-  b.addEventListener('click', e => { e.stopPropagation(); sayWord(w, kind); });
-  return b;
-}
-
-/* ---------- Допоміжне ---------- */
-function persist(){ save(KEYS.progress, progress); save(KEYS.log, log); }
-
-/* ---------- Серія днів ---------- */
-function streak(){
-  let n = today();
-  const has = d => { const l = log[dayKey(d)]; return l && l.r > 0; };
-  if(!has(n)) n--;
-  let s = 0;
-  while(has(n)){ s++; n--; }
-  return s;
-}
-function renderStreak(){
-  const s = streak();
-  $('streak').innerHTML = s > 0 ? 'Серія <b>' + days(s) + '</b>' : '';
-}
-
-/* ---------- Рулетка ---------- */
-function renderTape(done, total){
-  const fill = $('tapeFill');
-  const track = fill.parentElement;
-  const pct = total > 0 ? Math.min(100, done / total * 100) : 0;
-  const w = track.clientWidth || 300;
-  fill.style.setProperty('--step', (total > 0 ? Math.max(4, w / total) : 12) + 'px');
-  fill.style.width = pct + '%';
-  const tape = $('tape');
-  tape.setAttribute('aria-valuemax', String(total));
-  tape.setAttribute('aria-valuenow', String(done));
-  $('tapeDone').innerHTML = total > 0 ? 'Сьогодні <b>' + done + ' з ' + total + '</b>' : 'Сьогодні карток немає';
-  const left = Math.max(0, total - done);
-  $('tapeLeft').textContent = total > 0 ? (left ? 'залишилось ' + left : 'усе пройдено') : '';
-}
-
-/* ---------- Навчання ---------- */
-let queue = [];
-let pos = 0;
-let revealed = false;
-let current = null;
-let showUkFirst = false;
-
-function remainingUnique(){ return new Set(queue.slice(pos)).size; }
-
-function renderLearn(){
-  const inSession = queue.length && pos < queue.length;
-  $('session').hidden = !inSession;
-  $('learnHome').hidden = !!inSession;
-  if(inSession){ renderCard(); return; }
-
-  const l = todayLog();
-  const planned = buildQueue();
-  const reviews = dueReviews().length;
-  renderTape(l.c, l.c + planned.length);
-  const home = $('learnHome');
-  home.innerHTML = '';
-
-  if(planned.length){
-    home.appendChild(el('h2', null, l.c ? 'Продовжимо?' : cards(planned.length) + ' на сьогодні'));
-    const ul = el('ul', 'plan-list');
-    if(reviews){ const li1 = el('li'); li1.append(el('span', null, 'Повторити'), el('b', null, words(reviews))); ul.appendChild(li1); }
-    const nNew = Math.min(newCandidates().length, newAllowance());
-    if(nNew){ const li2 = el('li'); li2.append(el('span', null, 'Нові'), el('b', null, words(nNew))); ul.appendChild(li2); }
-    home.appendChild(ul);
-    const st = el('div', 'stack');
-    const go = el('button', 'btn btn-primary', l.c ? 'Продовжити' : 'Почати');
-    go.addEventListener('click', startSession);
-    st.appendChild(go);
-    home.appendChild(st);
-  }else{
-    const left = newCandidates().length;
-    home.appendChild(el('h2', null, l.r ? 'На сьогодні все' : 'Карток на сьогодні немає'));
-    home.appendChild(el('p', null, l.r
-      ? 'Нових слів: ' + l.n + '. Відповідей: ' + l.r + '. Звіт уже готовий.'
-      : (left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Налаштуваннях.')));
-    const st = el('div', 'stack');
-    if(l.r){
-      const rep = el('button', 'btn btn-primary', 'Скопіювати звіт');
-      rep.addEventListener('click', copyReport);
-      st.appendChild(rep);
-    }
-    if(left){
-      const more = el('button', 'btn', 'Ще 5 нових слів');
-      more.addEventListener('click', () => { todayLog().x = (todayLog().x || 0) + 5; persist(); startSession(); });
-      st.appendChild(more);
-    }
-    home.appendChild(st);
-  }
-}
-
-function startSession(){
-  queue = buildQueue();
-  pos = 0;
-  if(!queue.length){ renderLearn(); return; }
-  renderLearn();
-}
-
-function fitWord(node){
-  const card = $('card');
-  const avail = card.clientWidth - 44;
-  const text = node.textContent;
-  const longest = text.split(/\s+/).reduce((m, s) => Math.max(m, s.length), 1);
-  const isPhrase = text.length > 16;
-  const factor = node.classList.contains('uk') ? 0.62 : 0.78;
-  let size = Math.floor(avail / (longest * factor));
-  size = Math.max(22, Math.min(isPhrase ? 29 : 46, size));
-  node.style.fontSize = size + 'px';
-}
-
-function renderCard(){
-  const id = queue[pos];
-  current = byId(id);
-  if(!current){ pos++; if(pos < queue.length) renderCard(); else renderLearn(); return; }
-  revealed = false;
-  showUkFirst = settings.dir === 'uk' || (settings.dir === 'mix' && Math.random() < 0.5);
-
-  const l = todayLog();
-  renderTape(l.c, l.c + remainingUnique());
-
-  const p = progress[id];
-  $('cardCat').textContent = (CATS[current.cat] || '') + (p ? '' : ', нове слово');
-  const front = $('front');
-  front.innerHTML = '';
-  const word = el('h2', 'word' + (showUkFirst ? ' uk' : ''), showUkFirst ? current.uk : current.en);
-  word.lang = showUkFirst ? 'uk' : 'en';
-  front.appendChild(word);
-  if(!showUkFirst) front.appendChild(sayBtn(current, 'w', false, 'Послухати слово'));
-  requestAnimationFrame(() => fitWord(word));
-
-  $('back').hidden = true;
-  $('back').innerHTML = '';
-  $('hint').hidden = false;
-  $('revealBtn').hidden = false;
-  $('actions').hidden = true;
-
-  $('ivHard').textContent = inDays(nextInterval(p, 1));
-  $('ivGood').textContent = inDays(nextInterval(p, 2));
-
-  preloadWord(current);
-  preloadWord(byId(queue[pos + 1]));
-  if(!showUkFirst && settings.autoplay) sayWord(current, 'w');
-}
-
-function reveal(){
-  if(revealed || !current) return;
-  revealed = true;
-  const back = $('back');
-  back.innerHTML = '';
-  if(showUkFirst){
-    const t = el('p', 'trans en');
-    const s = el('span', null, current.en); s.lang = 'en';
-    t.append(s, sayBtn(current, 'w', true, 'Послухати слово'));
-    back.appendChild(t);
-    if(settings.autoplay) sayWord(current, 'w');
-  }else{
-    back.appendChild(el('p', 'trans', current.uk));
-  }
-  if(current.ex){
-    const ex = el('p', 'ex');
-    const s = el('span', null, current.ex); s.lang = 'en';
-    ex.append(s, sayBtn(current, 'x', true, 'Послухати приклад'));
-    back.appendChild(ex);
-  }
-  if(current.exUk) back.appendChild(el('p', 'ex-uk', current.exUk));
-  back.hidden = false;
-  $('hint').hidden = true;
-  $('revealBtn').hidden = true;
-  $('actions').hidden = false;
-}
-
-function grade(g){
-  if(!revealed || !current) return;
-  const id = current.id;
-  const t = today();
-  const l = todayLog();
-  let p = progress[id];
-  if(!p){ p = { iv:0, ef:2.5, reps:0, lapses:0, due:t, first:t }; l.n++; }
-  l.r++;
-  if(g === 0){
-    l.a++;
-    if(p.reps > 0) p.lapses++;
-    p.reps = 0; p.iv = 0; p.ef = Math.max(1.3, p.ef - 0.2); p.due = t;
-    queue.splice(Math.min(queue.length, pos + 4), 0, id);
-  }else{
-    p.iv = nextInterval(p, g);
-    if(g === 1) p.ef = Math.max(1.3, p.ef - 0.15);
-    p.reps++; p.due = t + p.iv;
-    if(!queue.slice(pos + 1).includes(id)) l.c++;
-  }
-  p.last = t;
-  progress[id] = p;
-  persist();
-  pos++;
-  renderStreak();
-  if(pos >= queue.length){ queue = []; pos = 0; renderLearn(); }
-  else renderCard();
-}
-
-$('card').addEventListener('click', e => { if(!e.target.closest('button')) reveal(); });
-$('card').addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); reveal(); } });
-$('revealBtn').addEventListener('click', reveal);
-$('actions').addEventListener('click', e => { const b = e.target.closest('[data-grade]'); if(b) grade(Number(b.dataset.grade)); });
-document.addEventListener('keydown', e => {
-  if(currentTab !== 'learn' || $('session').hidden) return;
-  if(e.target.closest && e.target.closest('button,input,select,textarea')) return;
-  if(e.key === ' ' && e.target !== $('card')){ e.preventDefault(); reveal(); }
-  if(revealed && ['1','2','3'].includes(e.key)) grade(Number(e.key) - 1);
-});
-
-/* ---------- Словник ---------- */
-let dictCat = 'all';
-let openItem = null;
-function renderChips(){
-  const box = $('chips'); box.innerHTML = '';
-  const cats = [['all','Усі']].concat(Object.entries(CATS));
-  cats.forEach(([k, name]) => {
-    if(k === 'mine' && !custom.length) return;
-    const b = el('button', 'chip', name);
-    b.setAttribute('aria-pressed', String(dictCat === k));
-    b.addEventListener('click', () => { dictCat = k; renderChips(); renderList(); });
-    box.appendChild(b);
-  });
-}
-const STATUS_TEXT = { new:'нове', learning:'вчу', known:'знаю' };
-function renderList(){
-  const q = $('search').value.trim().toLowerCase();
-  const list = $('list'); list.innerHTML = '';
-  const items = allWords().filter(w => (dictCat === 'all' || w.cat === dictCat) &&
-    (!q || w.en.toLowerCase().includes(q) || w.uk.toLowerCase().includes(q)));
-  const known = items.filter(w => statusOf(w.id) === 'known').length;
-  $('dictCount').textContent = words(items.length) + (known ? ', знаю ' + known : '');
-  if(!items.length){
-    const li = el('li', 'empty', q ? 'Нічого не знайдено. Можна додати це слово.' : 'Тут поки порожньо.');
-    list.appendChild(li); return;
-  }
-  items.forEach(w => {
-    const li = el('li', 'item');
-    const head = el('button', 'item-head');
-    head.setAttribute('aria-expanded', String(openItem === w.id));
-    const txt = el('span', 'item-text');
-    const en = el('span', 'item-en', w.en); en.lang = 'en';
-    txt.append(en, el('span', 'item-uk', w.uk));
-    const st = statusOf(w.id);
-    head.append(txt, el('span', 'status ' + st, STATUS_TEXT[st]));
-    head.addEventListener('click', () => { openItem = openItem === w.id ? null : w.id; renderList(); });
-    li.appendChild(head);
-    if(openItem === w.id){
-      const body = el('div', 'item-body');
-      if(w.ex){
-        const ex = el('p', 'ex');
-        const s = el('span', null, w.ex); s.lang = 'en';
-        ex.append(s, sayBtn(w, 'x', true, 'Послухати приклад'));
-        body.appendChild(ex);
-        if(w.exUk) body.appendChild(el('p', 'ex-uk', w.exUk));
-      }
-      const acts = el('div', 'item-actions');
-      const listen = el('button', 'link-btn', 'Послухати слово');
-      listen.addEventListener('click', () => sayWord(w, 'w'));
-      preloadWord(w);
-      acts.appendChild(listen);
-      const p = progress[w.id];
-      if(p){
-        acts.appendChild(el('span', 'opt', p.due <= today() ? 'повторити сьогодні' : 'наступне повторення ' + fmtDate(p.due)));
-      }
-      if(w.cat === 'mine'){
-        const del = el('button', 'link-btn', 'Видалити');
-        del.style.textDecorationColor = 'var(--orange)';
-        del.addEventListener('click', () => {
-          if(!confirm('Видалити «' + w.en + '» зі словника?')) return;
-          custom = custom.filter(c => c.id !== w.id);
-          delete progress[w.id];
-          save(KEYS.custom, custom); persist();
-          openItem = null; renderChips(); renderList();
-          toast('Слово видалено');
-        });
-        acts.appendChild(del);
-      }
-      body.appendChild(acts);
-      li.appendChild(body);
-    }
-    list.appendChild(li);
-  });
-}
-$('search').addEventListener('input', () => { openItem = null; renderList(); });
-$('addOpen').addEventListener('click', () => {
-  $('addPanel').hidden = false;
-  const q = $('search').value.trim();
-  if(q && /[a-z]/i.test(q)) $('fEn').value = q;
-  $('fEn').focus();
-  window.scrollTo({ top:0, behavior:'smooth' });
-});
-$('addCancel').addEventListener('click', () => { $('addForm').reset(); $('addPanel').hidden = true; });
-$('addForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const en = $('fEn').value.trim(), uk = $('fUk').value.trim();
-  if(!en || !uk) return;
-  if(allWords().some(w => w.en.toLowerCase() === en.toLowerCase())){ toast('«' + en + '» уже є у словнику'); return; }
-  custom.unshift({ id:'u' + Date.now().toString(36), cat:'mine', en, uk, ex:$('fEx').value.trim(), exUk:$('fExUk').value.trim() });
-  save(KEYS.custom, custom);
-  $('addForm').reset(); $('addPanel').hidden = true;
-  $('search').value = '';
-  dictCat = 'mine'; renderChips(); renderList();
-  toast('Слово додано');
-});
-
-/* ---------- Звіт ---------- */
-function reportText(){
-  const l = todayLog();
-  const all = allWords();
-  const learning = all.filter(w => statusOf(w.id) === 'learning').length;
-  const known = all.filter(w => statusOf(w.id) === 'known').length;
-  const acc = l.r ? Math.round((l.r - l.a) / l.r * 100) : 0;
-  const s = streak();
-  const lines = [
-    'Англійська, ' + fmtDate(today()),
-    'Нових слів: ' + l.n,
-    'Відповідей: ' + l.r + (l.r ? ' (з першого разу ' + acc + '%)' : ''),
-    'Серія: ' + (s ? days(s) + ' поспіль' : 'ще не почата'),
-    'Вчу: ' + words(learning) + ', знаю: ' + known
-  ];
-  return lines.join('\n');
-}
-function renderReport(){
-  $('reportTitle').textContent = 'Звіт за ' + fmtDate(today());
-  $('reportText').textContent = reportText();
-  const chart = $('chart'); chart.innerHTML = '';
-  const t = today();
-  const vals = [];
-  for(let d = t - 13; d <= t; d++){ const l = log[dayKey(d)]; vals.push({ d, r: l ? l.r : 0 }); }
-  const max = Math.max(10, ...vals.map(v => v.r));
-  vals.forEach(v => {
-    const b = el('div', 'bar' + (v.r ? '' : ' zero') + (v.d === t ? ' today' : ''));
-    b.style.height = Math.max(3, v.r / max * 100) + '%';
-    b.title = fmtDate(v.d) + ': ' + v.r;
-    chart.appendChild(b);
-  });
-  chart.setAttribute('aria-label', 'Відповіді за 14 днів: ' + vals.map(v => fmtDate(v.d).slice(0,5) + ' ' + v.r).join(', '));
-  $('chartFrom').textContent = fmtDate(t - 13).slice(0,5);
-  const all = allWords();
-  const rows = [
-    ['Слів у словнику', all.length],
-    ['Нові', all.filter(w => statusOf(w.id) === 'new').length],
-    ['Вчу', all.filter(w => statusOf(w.id) === 'learning').length],
-    ['Знаю (повтор через 3+ тижні)', all.filter(w => statusOf(w.id) === 'known').length],
-    ['Свої слова', custom.length]
-  ];
-  const dl = $('totals'); dl.innerHTML = '';
-  rows.forEach(([k, v]) => { const d = el('div'); d.append(el('dt', null, k), el('dd', null, String(v))); dl.appendChild(d); });
-}
-async function copyReport(){
-  const text = reportText();
-  try{
-    await navigator.clipboard.writeText(text);
-  }catch(e){
-    const ta = document.createElement('textarea');
-    ta.value = text; ta.setAttribute('readonly',''); ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try{ document.execCommand('copy'); }catch(_){}
-    ta.remove();
-  }
-  toast('Звіт скопійовано');
-}
-$('copyReport').addEventListener('click', copyReport);
-
-/* ---------- Налаштування ---------- */
-function seg(boxId, options, value, onPick){
-  const box = $(boxId); box.innerHTML = '';
-  options.forEach(([val, label]) => {
-    const b = el('button', null, label);
-    b.type = 'button';
-    b.setAttribute('aria-pressed', String(value === val));
-    b.addEventListener('click', () => { onPick(val); });
-    box.appendChild(b);
-  });
-}
-function saveSettings(){ save(KEYS.settings, settings); }
-function renderVoices(){
-  const sel = $('voice');
-  if(!sel) return;
-  sel.innerHTML = '';
-  if(!synth){ sel.disabled = true; $('voiceNote').textContent = 'Цей браузер не вміє озвучувати текст.'; return; }
-  if(!voices.length){ sel.appendChild(new Option('Стандартний британський', '')); $('voiceNote').textContent = ''; return; }
-  const cur = pickVoice();
-  voices.forEach(v => {
-    const accent = /IE/i.test(v.lang) ? 'ірландський' : /GB/i.test(v.lang) ? 'британський' : v.lang;
-    sel.appendChild(new Option(v.name + ' (' + accent + ')', v.voiceURI, false, cur && v.voiceURI === cur.voiceURI));
-  });
-  $('voiceNote').textContent = voices.some(v => /IE/i.test(v.lang))
-    ? 'Тут є й ірландський голос: корисно, щоб звикати до місцевої вимови.'
-    : '';
-}
-const SAMPLE_ID = 'site-hand';
-function renderVoiceSrc(){
-  const opts = AUD.voices.map(v => [v, VOICE_NAMES[v] || v]).concat([['device','iPhone']]);
-  seg('segVoice', opts, settings.voiceSrc, v => {
-    settings.voiceSrc = v; saveSettings(); renderVoiceSrc();
-    sayWord(byId(SAMPLE_ID), 'x');
-  });
-  $('voiceLbl').textContent = settings.voiceSrc === 'device' ? 'Голос iPhone' : 'Голос iPhone для слів, доданих на сайті';
-  $('offlineAudio').hidden = settings.voiceSrc === 'device' || !AUD.voices.length;
-}
-let offlineBusy = false;
-$('offlineAudio').addEventListener('click', async () => {
-  if(offlineBusy) return;
-  const urls = [];
-  allWords().forEach(w => { const a = clipUrl(w, 'w'), b = clipUrl(w, 'x'); if(a) urls.push(a); if(b) urls.push(b); });
-  if(!urls.length) return;
-  offlineBusy = true;
-  const btn = $('offlineAudio');
-  let done = 0, failed = 0;
-  const worker = async () => {
-    while(urls.length){
-      const u = urls.pop();
-      try{ const r = await fetch(u); if(!r.ok) failed++; else await r.arrayBuffer(); }catch(e){ failed++; }
-      done++;
-      if(done % 10 === 0) btn.textContent = 'Завантажую… ' + done;
-    }
-  };
-  await Promise.all([worker(), worker(), worker(), worker()]);
-  offlineBusy = false;
-  btn.textContent = 'Завантажити всі записи для офлайну';
-  toast(failed ? 'Не вдалося завантажити ' + failed + '. Спробуй ще раз з інтернетом.' : 'Готово: записи працюватимуть і без інтернету');
-});
-function renderSettings(){
-  seg('segNew', [[5,'5'],[10,'10'],[15,'15'],[20,'20']], settings.newPerDay, v => { settings.newPerDay = v; saveSettings(); renderSettings(); });
-  seg('segDir', [['en','Англ → укр'],['uk','Укр → англ'],['mix','Змішано']], settings.dir, v => { settings.dir = v; saveSettings(); renderSettings(); });
-  seg('segRate', [[0.75,'Повільно'],[0.9,'Середньо'],[1,'Звичайно']], settings.rate, v => { settings.rate = v; saveSettings(); renderSettings(); sayWord(byId(SAMPLE_ID), 'x'); });
-  $('autoplay').checked = settings.autoplay;
-  renderVoiceSrc();
-  renderVoices();
-  const box = $('catToggles'); box.innerHTML = '';
-  Object.entries(CATS).forEach(([k, name]) => {
-    if(k === 'mine') return;
-    const row = el('div', 'toggle');
-    const total = BASE.filter(w => w.cat === k).length;
-    const fresh = BASE.filter(w => w.cat === k && !progress[w.id]).length;
-    const label = el('span', null, name);
-    const sub = el('span', 'opt', fresh + ' з ' + total + ' ще не вчив');
-    sub.style.display = 'block';
-    sub.style.fontSize = '14px';
-    label.appendChild(sub);
-    const sw = el('input', 'switch'); sw.type = 'checkbox'; sw.checked = settings.cats[k] !== false;
-    sw.setAttribute('aria-label', name);
-    sw.addEventListener('change', () => { settings.cats[k] = sw.checked; saveSettings(); });
-    row.append(label, sw);
-    box.appendChild(row);
-  });
-}
-$('autoplay').addEventListener('change', e => { settings.autoplay = e.target.checked; saveSettings(); });
-$('voice').addEventListener('change', e => { settings.voice = e.target.value; saveSettings(); speakDevice('Can you give me a hand?'); });
-$('voiceTest').innerHTML = SPEAKER;
-$('voiceTest').addEventListener('click', () => speakDevice('Can you give me a hand with these slabs?'));
-
-function backupData(){ return { app:'english-words', version:1, saved:new Date().toISOString(), progress, custom, log, settings }; }
-$('backupSave').addEventListener('click', async () => {
-  const json = JSON.stringify(backupData());
-  const name = 'english-words-' + dayKey(today()) + '.json';
-  try{
-    const file = new File([json], name, { type:'application/json' });
-    if(navigator.canShare && navigator.canShare({ files:[file] })){
-      await navigator.share({ files:[file], title:'English Words, копія' });
-      return;
-    }
-  }catch(e){ if(e && e.name === 'AbortError') return; }
-  const url = URL.createObjectURL(new Blob([json], { type:'application/json' }));
-  const a = document.createElement('a'); a.href = url; a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 4000);
-  toast('Копію збережено');
-});
-$('backupLoad').addEventListener('click', () => $('backupFile').click());
-$('backupFile').addEventListener('change', async e => {
-  const f = e.target.files && e.target.files[0];
-  e.target.value = '';
-  if(!f) return;
-  try{
-    const data = JSON.parse(await f.text());
-    if(data.app !== 'english-words') throw new Error('bad');
-    const when = data.saved ? new Date(data.saved) : null;
-    const label = when ? fmtDate(dayNum(when)) : 'невідомої дати';
-    if(!confirm('Замінити поточний прогрес копією від ' + label + '?')) return;
-    progress = data.progress || {}; custom = data.custom || []; log = data.log || {};
-    settings = Object.assign({}, DEFAULT_SETTINGS, data.settings || {});
-    settings.cats = Object.assign({}, DEFAULT_SETTINGS.cats, settings.cats || {});
-    save(KEYS.custom, custom); saveSettings(); persist();
-    queue = []; pos = 0;
-    renderAll();
-    toast('Прогрес відновлено');
-  }catch(err){
-    toast('Це не схоже на копію English Words. Вибери файл english-words-….json');
-  }
-});
-$('resetAll').addEventListener('click', () => {
-  if(!confirm('Скинути весь прогрес і статистику? Свої слова залишаться. Скасувати це не вийде.')) return;
-  progress = {}; log = {}; persist();
-  queue = []; pos = 0;
-  renderAll();
-  toast('Прогрес скинуто');
-});
-
-/* ---------- Вкладки ---------- */
-let currentTab = 'learn';
-function showTab(name){
-  currentTab = name;
-  document.querySelectorAll('[data-screen]').forEach(s => { s.hidden = s.dataset.screen !== name; });
-  document.querySelectorAll('[data-tab]').forEach(t => {
-    if(t.dataset.tab === name) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
-  });
-  if(name === 'learn') renderLearn();
-  if(name === 'dict'){ renderChips(); renderList(); }
-  if(name === 'report') renderReport();
-  if(name === 'settings') renderSettings();
-  if(name !== 'learn') stopAudio();
-  window.scrollTo(0, 0);
-}
-document.querySelectorAll('[data-tab]').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
-
-function renderAll(){ renderStreak(); showTab(currentTab); }
-
-// Новий день, поки сайт відкритий
-let lastDay = today();
-document.addEventListener('visibilitychange', () => {
-  if(document.visibilityState === 'visible' && today() !== lastDay){ lastDay = today(); queue = []; pos = 0; renderAll(); }
-});
-window.addEventListener('resize', () => {
-  if(currentTab !== 'learn') return;
-  const l = todayLog();
-  if(queue.length && pos < queue.length) renderTape(l.c, l.c + remainingUnique());
-});
-
-renderAll();
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
-}
-})();
-</script>
+<script src="/js/fsrs.js"></script>
+<script src="/js/core.js"></script>
+<script src="/js/app.js"></script>
 </body>
 </html>
