@@ -45,6 +45,12 @@ def answer(page, wrong=False, scheme='light'):
         page.wait_for_timeout(150)
         shot(page, f'{scheme}-{ex}-a')
     if ex == 'intro':
+        if visible(page, '.opt-btn'):
+            page.locator('.opt-btn').nth(0 if rnd.random() < 0.5 else 1).click()
+            page.wait_for_timeout(120)
+        if key + '-done' not in seen_types:
+            seen_types[key + '-done'] = 1
+            shot(page, f'{scheme}-{ex}-b')
         click_text(page, 'Вчити')
         return True
     if ex in ('mcq_en_uk', 'mcq_uk_en', 'listen_mcq'):
@@ -80,6 +86,12 @@ def answer(page, wrong=False, scheme='light'):
     elif ex == 'speak':
         click_text(page, 'Показати відповідь')
         click_text(page, 'Не згадав' if wrong else 'Правильно')
+    elif ex == 'own_sentence':
+        if wrong:
+            click_text(page, 'Пропустити')
+        else:
+            page.fill('textarea.answer', 'I think ' + w['en'].replace('to ', '') + ' is a useful word for work.')
+            click_text(page, 'Готово')
     else:
         raise RuntimeError('unknown exercise ' + ex)
     if ex not in ('flip', 'flip_rev', 'speak') and key + '-done' not in seen_types:
@@ -147,12 +159,31 @@ try:
                     states[c['st']] = states.get(c['st'], 0) + 1
                 print(scheme, 'day', d + 1, 'answers', n, 'cards', len(cards), states)
             # Вправи для міцних слів, до яких бот за 3 тижні не доходить
-            for ex_type, check in (('dictation', 'canDictate'), ('build_sentence', 'canBuildSentence'), ('flip', 'canType')):
+            for ex_type, check in (('dictation', 'canDictate'), ('build_sentence', 'canBuildSentence'), ('flip', 'canType'), ('own_sentence', 'canDictate')):
                 wid = page.evaluate('''([check]) => Object.entries(window.EW.cards).filter(([id, c]) => c.st === 'review')
                     .map(([id]) => window.WORDS.find(x => x.id === id)).find(w => w && EWCore[check](w)).id''', [check])
                 page.evaluate('([id, t]) => window.EW.force(id, t)', [wid, ex_type])
                 answer(page, scheme=scheme)
             page.evaluate('window.EW.showTab("learn")')
+            # Спринт
+            page.evaluate('''() => { const t = EWCore.dayNum(); for (const id in window.EW.cards) { const c = window.EW.cards[id]; if (c.st === 'review') { c.reps = Math.max(c.reps || 0, 2); c.s = Math.max(c.s || 0, 5); } } }''')
+            page.evaluate('window.EW.startSprint()')
+            page.wait_for_timeout(300)
+            assert page.evaluate('!!window.EW.sprint'), 'sprint did not start'
+            shot(page, f'{scheme}-sprint')
+            for k in range(6):
+                btns = page.locator('.opt-btn')
+                if btns.count() == 0:
+                    break
+                btns.nth(k % 4).click()
+                page.wait_for_timeout(800)
+            page.clock.run_for(61000)
+            page.wait_for_timeout(400)
+            assert not page.evaluate('!!window.EW.sprint'), 'sprint did not end'
+            shot(page, f'{scheme}-sprint-end')
+            print(scheme, 'sprint result:', page.inner_text('#card .prompt').replace('\n', ' | '))
+            click_text(page, 'Готово')
+            page.wait_for_timeout(200)
             for tab in ('dict', 'report', 'settings'):
                 page.evaluate('document.activeElement && document.activeElement.blur()')
                 page.wait_for_timeout(120)

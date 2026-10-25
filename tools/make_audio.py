@@ -105,13 +105,17 @@ def main():
     for w in words:
         word_text = w.get('say') or w['en']
         ex_text = w.get('sayEx') or w.get('ex') or ''
+        ex2_text = w.get('sayEx2') or w.get('ex2') or ''
         hw = text_hash(word_text)
         hx = text_hash(ex_text) if ex_text else None
-        manifest[w['id']] = [hw, hx] if hx else [hw]
+        hx2 = text_hash(ex2_text) if ex2_text else None
+        manifest[w['id']] = [hw, hx, hx2] if hx2 else ([hw, hx] if hx else [hw])
         for name in VOICES:
             jobs.append((name, f"{w['id']}-{hw}.mp3", word_text, w['id']))
             if hx:
                 jobs.append((name, f"{w['id']}-{hx}.mp3", ex_text, w['id']))
+            if hx2:
+                jobs.append((name, f"{w['id']}-{hx2}.mp3", ex2_text, w['id']))
 
     keep = {name: set() for name in VOICES}
     done = 0

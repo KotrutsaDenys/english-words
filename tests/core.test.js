@@ -250,4 +250,37 @@ test('Позначення помилок у написанні', () => {
   assert.strictEqual(fix, 'a');
 });
 
+test('Слова-плутанки не потрапляють в один день, а потім стають дистракторами', () => {
+  const order = C.orderNew(WORDS, {}, null, 10, 1000);
+  for (let day = 0; day < 10; day++) {
+    const chunk = order.slice(day * 10, day * 10 + 10).map(w => w.id);
+    for (const id of chunk) for (const p of C.confusables(id)) assert.ok(!chunk.includes(p), id + ' + ' + p + ' same day');
+  }
+  const cards = { 'talk-borrow': { st: 'learn', step: 1, first: 1000, due: 1000 } };
+  const next = C.orderNew(WORDS, cards, null, 10, 1001).slice(0, 10).map(w => w.id);
+  assert.ok(!next.includes('talk-lend'), 'lend deferred after borrow yesterday');
+  const rng = seeded(3);
+  const lend = byId('talk-lend');
+  const close = C.distractors(lend, WORDS, 'uk', 3, rng, true).map(w => w.id);
+  assert.ok(close.includes('talk-borrow'), 'close distractors include borrow');
+  const far = C.distractors(lend, WORDS, 'uk', 3, rng, false).map(w => w.id);
+  assert.ok(!far.includes('talk-borrow'), 'far distractors exclude borrow');
+  assert.ok(far.every(id => byId(id).cat !== 'talk'), 'far distractors from other categories');
+});
+
+test('Два контексти чергуються', () => {
+  const w = byId('site-trowel');
+  assert.ok(w.ex2 && w.ex2 !== w.ex);
+  assert.strictEqual(C.exampleFor(w, { reps: 0 }).n, 1);
+  assert.strictEqual(C.exampleFor(w, { reps: 1 }).n, 2);
+  assert.strictEqual(C.exampleFor(w, { reps: 1 }, 'other').n, 1);
+  assert.strictEqual(C.withExample(w, { reps: 3 }).ex, w.ex2);
+  assert.ok(WORDS.every(x => x.ex2 && x.ex2Uk), 'all words have ex2');
+});
+
+test('Спринт бере лише вивчені слова', () => {
+  const cards = { 'site-trowel': { st: 'review', reps: 3, s: 10 }, 'site-hawk': { st: 'review', reps: 1, s: 10 }, 'site-float': { st: 'learn' } };
+  assert.strictEqual(C.sprintPool(WORDS, cards).map(w => w.id).join(','), 'site-trowel');
+});
+
 console.log('OK, тестів пройдено: ' + passed);

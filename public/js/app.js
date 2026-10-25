@@ -16,7 +16,7 @@ function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
-const KEYS = { cards: 'ew.cards', progress: 'ew.progress', custom: 'ew.custom', log: 'ew.log', settings: 'ew.settings', notes: 'ew.notes', meta: 'ew.meta' };
+const KEYS = { cards: 'ew.cards', progress: 'ew.progress', custom: 'ew.custom', log: 'ew.log', settings: 'ew.settings', notes: 'ew.notes', meta: 'ew.meta', own: 'ew.own' };
 function load(key, fallback) {
   try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; }
 }
@@ -34,7 +34,7 @@ function inDays(n) { if (n == null) return ''; if (n <= 0) return 'знову'; 
 let currentTab = 'learn';
 const DEFAULT_SETTINGS = {
   newPerDay: 10, mode: 'mix', typing: true, speaking: true, sessionLen: 0, retention: 0.9,
-  autoplay: true, voiceSrc: 'emma', voice: '', rate: 1, cats: {}
+  autoplay: true, voiceSrc: 'emma', voice: '', rate: 1, cats: {}, pretest: true
 };
 let settings = Object.assign({}, DEFAULT_SETTINGS, load(KEYS.settings, {}));
 settings.cats = Object.assign({}, settings.cats || {});
@@ -44,6 +44,7 @@ delete settings.dir;
 
 let custom = load(KEYS.custom, []);
 let notes = load(KEYS.notes, {});
+let own = load(KEYS.own, {});
 let log = load(KEYS.log, {});
 let meta = load(KEYS.meta, {});
 let cards = load(KEYS.cards, null);
@@ -103,12 +104,13 @@ player.preload = 'auto';
 try { player.preservesPitch = true; player.webkitPreservesPitch = true; } catch (e) {}
 const blobs = new Map();
 let playing = '';
-function textFor(w, kind) { return kind === 'x' ? (w.sayEx || w.ex) : (w.say || w.en); }
+function textFor(w, kind) { return kind === 'x2' ? (w.sayEx2 || w.ex2) : kind === 'x' ? (w.sayEx || w.ex) : (w.say || w.en); }
 function clipUrl(w, kind) {
   const voice = settings.voiceSrc;
   if (!w || !AUD.voices.includes(voice)) return null;
   const f = AUD.files[w.id];
-  const h = f && (kind === 'x' ? f[1] : f[0]);
+  if (kind === 'x' && w.exN === 2) kind = 'x2';
+  const h = f && (kind === 'x2' ? f[2] : kind === 'x' ? f[1] : f[0]);
   return h ? '/audio/' + voice + '/' + w.id + '-' + h + '.mp3' : null;
 }
 function canListen() { return (AUD.voices.includes(settings.voiceSrc) && AUD.voices.length > 0) || !!synth; }
@@ -127,7 +129,7 @@ function preloadUrl(url) {
     }
   }).catch(() => { blobs.delete(url); });
 }
-function preloadWord(w) { if (!w) return; preloadUrl(clipUrl(w, 'w')); if (w.ex) preloadUrl(clipUrl(w, 'x')); }
+function preloadWord(w) { if (!w) return; preloadUrl(clipUrl(w, 'w')); if (w.ex) preloadUrl(clipUrl(w, 'x')); if (w.ex2) preloadUrl(clipUrl(w, 'x2')); }
 function playUrl(url, fallbackText, rate) {
   stopAudio();
   playing = url;
@@ -165,11 +167,12 @@ const ICON = {
   cloze: SVG('<path d="M4 8h5M15 8h5M4 16h16"/><path d="M10 9.5h4" stroke-dasharray="1.5 2"/>'),
   build: SVG('<rect x="3.5" y="13" width="7.5" height="6" rx="1.5"/><rect x="13" y="13" width="7.5" height="6" rx="1.5"/><rect x="8.2" y="5" width="7.5" height="6" rx="1.5"/>'),
   dictation: SVG('<path d="M6 9.5a6 6 0 1 1 9.4 4.9c-1.4 1-2.4 2.1-2.4 3.6a2.5 2.5 0 0 1-4.6 1.4"/><path d="M9.5 10a2.5 2.5 0 0 1 5 0"/>'),
-  speak: SVG('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>')
+  speak: SVG('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>'),
+  pen: SVG('<path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M13.5 8.5l3 3"/>')
 };
 const EX_ICON = {
   intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
-  type_en: 'type', cloze: 'cloze', dictation: 'dictation', build_phrase: 'build', build_sentence: 'build', speak: 'speak'
+  type_en: 'type', cloze: 'cloze', dictation: 'dictation', build_phrase: 'build', build_sentence: 'build', speak: 'speak', own_sentence: 'pen'
 };
 function sayBtn(w, kind, small, label) {
   const b = el('button', 'say' + (small ? ' sm' : ''));
@@ -241,6 +244,7 @@ function envFor(practiceIds, reviewOnly) {
   return { words: allWords(), cards, settings, today: today(), log: todayLog(), rng: Math.random, canListen: canListen(), practiceIds, reviewOnly };
 }
 function updateTape() {
+  if (sprint) { sprintTape(); return; }
   if (session && session.practice) { renderTape(practiceDone, practiceDone + session.remaining(), 'Тренування'); return; }
   const l = todayLog();
   const done = (l.r || 0) + (l.n || 0) + (l.k || 0);
@@ -323,7 +327,7 @@ function vocabSection() {
   return sec;
 }
 function renderLearn() {
-  const active = session && current;
+  const active = (session && current) || sprint;
   $('stage').hidden = !active;
   $('learnHome').hidden = !!active;
   updateTape();
@@ -369,6 +373,14 @@ function renderLearn() {
       home.appendChild(el('h2', 'hero', 'Сьогодні вільно'));
       home.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Налаштуваннях.'));
     }
+    const fresh = Object.keys(cards).filter(id => byId(id) && cards[id].first === today() && !cards[id].known);
+    if (l.r && fresh.length) {
+      const ev = el('button', 'btn', 'Закріпити сьогоднішні нові (' + fresh.length + ')');
+      ev.addEventListener('click', () => startSession(fresh));
+      st.appendChild(ev);
+      const h = new Date().getHours();
+      home.appendChild(el('p', 'tip', h >= 19 || h < 4 ? 'Найкраще перед сном: сон закріплює те, що повторив останнім.' : 'Один швидкий прохід увечері перед сном закріпить сьогоднішні слова.'));
+    }
     if (misses.length) {
       const pr = el('button', 'btn', 'Потренувати помилки (' + misses.length + ')');
       pr.addEventListener('click', () => startSession(misses));
@@ -380,6 +392,19 @@ function renderLearn() {
       st.appendChild(more);
     }
     home.appendChild(st);
+  }
+  const sp = C.sprintPool(allWords(), cards).length;
+  if (sp >= 8) {
+    const sec = el('section', 'section');
+    const title = el('h3', 'section-title', 'Спринт на швидкість');
+    title.appendChild(el('span', null, meta.sprintBest ? 'рекорд ' + meta.sprintBest : words(sp) + ' готові'));
+    sec.appendChild(title);
+    sec.appendChild(el('p', 'tip', 'Хвилина: впізнай якомога більше вивчених слів. Тренує швидкість, без якої в розмові слова не встигаєш дістати.'));
+    const b = el('button', 'btn', 'Почати спринт');
+    b.style.marginTop = '10px';
+    b.addEventListener('click', startSprint);
+    sec.appendChild(b);
+    home.appendChild(sec);
   }
   home.appendChild(weekSection());
   home.appendChild(vocabSection());
@@ -619,6 +644,7 @@ function nextButton() {
 function show(item) {
   ui = { t0: performance.now(), answered: false, hints: 0, tries: 0 };
   document.body.classList.remove('typing');
+  if (item.exercise !== 'intro') item.word = C.withExample(byId(item.id), item.card);
   const w = item.word;
   preloadWord(w);
   if (session) {
@@ -638,24 +664,60 @@ RENDER.intro = item => {
   const body = frame(item);
   body.appendChild(bigWord(w.en, 'en'));
   const r = el('div', 'row'); r.appendChild(sayBtn(w, 'w')); body.appendChild(r);
-  const d = el('div', 'details');
-  d.appendChild(el('p', 'trans', w.uk));
-  if (w.ex) {
-    const ex = el('p', 'ex'); ex.append(enSpan(w.ex), sayBtn(w, 'x', true)); d.appendChild(ex);
-    if (w.exUk) d.appendChild(el('p', 'ex-uk', w.exUk));
-  }
-  if (w.note) { const n = el('p', 'note'); n.textContent = w.note; d.appendChild(n); }
-  d.appendChild(el('p', 'tip', 'Послухай і скажи вголос двічі: сказане вголос запам\'ятовується краще.'));
-  d.appendChild(mnemonicBlock(w, false));
-  $('card').appendChild(d);
   const learn = () => { addTime(); session.introduce(item.id, false); persist(); nextItem(); };
   const known = () => {
     addTime(); session.introduce(item.id, true); persist(); renderStreak();
     toast('Повторю «' + w.en + '» приблизно через ' + days(cards[item.id].due - today()));
     nextItem();
   };
-  setFoot([button('Вже знаю', 'btn-quiet', known), button('Вчити', 'btn-primary', learn)], 2);
-  keys = { enter: learn };
+  const reveal = guessed => {
+    const d = el('div', 'details');
+    if (guessed === true) d.appendChild(verdict('right', 'Вгадав', ' тепер запам\'ятай'));
+    else if (guessed === false) d.appendChild(verdict('info', 'Не вгадав, і це нормально', ' помилка перед відповіддю теж допомагає запам\'ятати'));
+    d.appendChild(el('p', 'trans', w.uk));
+    [[w.ex, w.exUk, 'x'], [w.ex2, w.ex2Uk, 'x2']].forEach(([ex, exUk, kind]) => {
+      if (!ex) return;
+      const p = el('p', 'ex'); p.append(enSpan(ex), sayBtn(w, kind, true)); d.appendChild(p);
+      if (exUk) d.appendChild(el('p', 'ex-uk', exUk));
+    });
+    if (w.note) { const n = el('p', 'note'); n.textContent = w.note; d.appendChild(n); }
+    d.appendChild(el('p', 'tip', 'Скажи слово і приклад уголос: сказане тримається довше, ніж прочитане.'));
+    d.appendChild(mnemonicBlock(w, false));
+    $('card').appendChild(d);
+    setFoot([button('Вже знаю', 'btn-quiet', known), button('Вчити', 'btn-primary', learn)], 2);
+    keys = { enter: learn };
+  };
+  if (settings.pretest !== false && !(session && session.practice)) {
+    body.appendChild(el('p', 'prompt-sub', 'Як гадаєш, що це означає?'));
+    const opts = C.shuffle([w].concat(C.distractors(w, allWords(), 'uk', 3, Math.random, false)));
+    const box = el('div', 'options');
+    const btns = [];
+    opts.forEach((o, i) => {
+      const b = el('button', 'opt-btn');
+      b.type = 'button';
+      b.append(el('span', 'k', String(i + 1)), el('span', null, o.uk));
+      b.addEventListener('click', () => {
+        if (ui.guessed != null) return;
+        const ok = o.id === w.id;
+        ui.guessed = ok;
+        const l = todayLog(); l.g = (l.g || 0) + 1; if (ok) l.gok = (l.gok || 0) + 1;
+        btns.forEach((x, k) => {
+          x.disabled = true;
+          if (opts[k].id === w.id) { x.classList.add('right'); x.firstChild.innerHTML = ICON.check; }
+          else if (x === b) { x.classList.add('wrong'); x.firstChild.innerHTML = ICON.cross; }
+          else x.classList.add('dim');
+        });
+        reveal(ok);
+      });
+      btns.push(b);
+      box.appendChild(b);
+    });
+    $('card').appendChild(box);
+    setFoot([button('Показати одразу', 'btn-quiet', () => { if (ui.guessed == null) { ui.guessed = 'skip'; box.remove(); reveal(null); } })]);
+    keys = { num: n => btns[n - 1] && btns[n - 1].click() };
+  } else {
+    reveal(null);
+  }
   if (settings.autoplay) sayWord(w, 'w');
 };
 
@@ -672,7 +734,8 @@ function mcq(item, prompt, field) {
   } else {
     listenPrompt(body, w);
   }
-  const opts = C.shuffle([w].concat(C.distractors(w, allWords(), field, 3)));
+  const close = !!(item.card && item.card.st !== 'learn');
+  const opts = C.shuffle([w].concat(C.distractors(w, allWords(), field, 3, Math.random, close)));
   const box = el('div', 'options');
   const btns = [];
   opts.forEach((o, i) => {
@@ -1062,6 +1125,169 @@ RENDER.speak = item => {
   }
 };
 
+/* Своє речення: продуктивне вживання слова */
+RENDER.own_sentence = item => {
+  const w = item.word;
+  const body = frame(item);
+  const h = el('h2', 'word', w.en); h.lang = 'en'; h.style.fontSize = '30px';
+  body.appendChild(h);
+  body.appendChild(el('p', 'trans', w.uk));
+  body.appendChild(el('p', 'prompt-sub', 'Склади своє речення з цим словом, про своє життя або роботу'));
+  const ta = el('textarea', 'answer');
+  ta.rows = 2;
+  ta.lang = 'en';
+  ta.placeholder = 'Напиши англійською…';
+  ta.setAttribute('autocapitalize', 'sentences');
+  ta.setAttribute('autocorrect', 'off');
+  ta.setAttribute('aria-label', 'Своє речення');
+  ta.style.resize = 'none';
+  $('card').appendChild(ta);
+  ta.addEventListener('focus', () => document.body.classList.add('typing'));
+  ta.addEventListener('blur', () => setTimeout(() => document.body.classList.remove('typing'), 50));
+  const stem = w.en.replace(/^to /i, '').replace(/^(the|a|an) /i, '').replace(/[.!?]+$/, '').toLowerCase();
+  const forms = C.tokens(stem).map(t => C.wordForms(t.toLowerCase()));
+  const containsWord = text => {
+    const toks = C.tokens(text).map(t => t.toLowerCase());
+    return forms.every(fs => toks.some(t => fs.includes(t)));
+  };
+  const check = () => {
+    if (ui.answered) return;
+    const text = ta.value.trim();
+    if (!text) { toast('Напиши речення або натисни «Пропустити»'); return; }
+    if (C.tokens(text).length < 3) { toast('Хоча б три слова'); return; }
+    if (!containsWord(text)) { toast('У реченні має бути слово «' + stem + '»'); return; }
+    ta.disabled = true; ta.blur();
+    const list = own[w.id] || [];
+    if (!list.includes(text)) { list.unshift(text); own[w.id] = list.slice(0, 3); save(KEYS.own, own); }
+    finish(3);
+    ta.classList.add('right');
+    sayWord(w, 'x');
+    $('card').appendChild(details(w, { verdict: verdict('right', 'Записала твоє речення', ' перевір себе за прикладами нижче'), uk: false }));
+    const next = button('Далі', 'btn-primary', nextItem);
+    const unsure = button('Я не впевнений', 'btn-quiet', () => { regrade(2); toast('Добре, повторимо раніше'); setFoot([next]); });
+    setFoot([unsure, next], 2);
+    keys = { enter: () => next.click() };
+  };
+  setFoot([button('Пропустити', 'btn-quiet', () => { if (!ui.answered) { finish(2); sayWord(w, 'x'); $('card').appendChild(details(w, { verdict: verdict('info', 'Ось як його вживають'), uk: false })); nextButton(); } }), button('Готово', 'btn-primary', check)], 2);
+  keys = {};
+  try { ta.focus({ preventScroll: true }); } catch (e) {}
+};
+
+/* ---------- Спринт: хвилина на швидкість ---------- */
+const SPRINT_SECONDS = 60;
+let sprint = null;
+function startSprint() {
+  const pool = C.shuffle(C.sprintPool(allWords(), cards).slice());
+  if (pool.length < 8) return;
+  stopAudio();
+  session = null; current = null; ui = null;
+  sprint = { pool, i: 0, ok: 0, wrong: [], left: SPRINT_SECONDS, timer: null, t0: performance.now() };
+  showTab('learn');
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+  sprint.timer = setInterval(() => {
+    if (!sprint) return;
+    sprint.left = Math.max(0, SPRINT_SECONDS - Math.floor((performance.now() - sprint.t0) / 1000));
+    sprintTape();
+    if (sprint.left <= 0) endSprint();
+  }, 250);
+  sprintTape();
+  sprintNext();
+}
+function sprintTape() {
+  if (!sprint) return;
+  renderTape(SPRINT_SECONDS - sprint.left, SPRINT_SECONDS, 'Секунди');
+  $('tapeLeft').textContent = 'правильно ' + sprint.ok;
+}
+function sprintNext() {
+  if (!sprint) return;
+  if (sprint.i >= sprint.pool.length) { endSprint(); return; }
+  const w = sprint.pool[sprint.i];
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic'); ic.innerHTML = ICON.choose;
+  label.append(ic, document.createTextNode('Спринт'));
+  const timer = el('span', 'sprint-time', String(sprint.left));
+  timer.id = 'sprintTime';
+  head.append(label, timer);
+  card.appendChild(head);
+  const body = el('div', 'prompt');
+  body.appendChild(bigWord(w.en, 'en'));
+  card.appendChild(body);
+  const opts = C.shuffle([w].concat(C.distractors(w, allWords(), 'uk', 3, Math.random, true)));
+  const box = el('div', 'options');
+  const btns = [];
+  opts.forEach((o, i) => {
+    const b = el('button', 'opt-btn');
+    b.type = 'button';
+    b.append(el('span', 'k', String(i + 1)), el('span', null, o.uk));
+    b.addEventListener('click', () => {
+      if (!sprint || b.disabled) return;
+      btns.forEach(x => { x.disabled = true; });
+      const ok = o.id === w.id;
+      if (ok) { sprint.ok++; b.classList.add('right'); }
+      else {
+        b.classList.add('wrong');
+        btns[opts.findIndex(x => x.id === w.id)].classList.add('right');
+        sprint.wrong.push(w.id);
+        const l = todayLog(); l.miss = l.miss || []; if (!l.miss.includes(w.id)) l.miss.push(w.id);
+      }
+      sprint.i++;
+      setTimeout(sprintNext, ok ? 120 : 650);
+    });
+    btns.push(b);
+    box.appendChild(b);
+  });
+  card.appendChild(box);
+  setFoot([button('Зупинити', 'btn-quiet', endSprint)]);
+  keys = { num: n => btns[n - 1] && btns[n - 1].click() };
+}
+function endSprint() {
+  if (!sprint) return;
+  clearInterval(sprint.timer);
+  const r = sprint;
+  sprint = null;
+  const best = meta.sprintBest || 0;
+  const record = r.ok > best;
+  if (record) meta.sprintBest = r.ok;
+  meta.sprintLast = r.ok;
+  meta.sprintRuns = (meta.sprintRuns || 0) + 1;
+  save(KEYS.meta, meta);
+  const l = todayLog(); l.sp = Math.max(l.sp || 0, r.ok); persist();
+  const card = $('card');
+  card.innerHTML = '';
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic'); ic.innerHTML = ICON.choose;
+  label.append(ic, document.createTextNode('Спринт'));
+  head.appendChild(label);
+  card.appendChild(head);
+  const body = el('div', 'prompt');
+  const big = el('h2', 'word', String(r.ok));
+  body.appendChild(big);
+  body.appendChild(el('p', 'prompt-sub', words(r.ok) + ' за хвилину' + (record && best ? ', новий рекорд' : best ? ', рекорд ' + best : '')));
+  card.appendChild(body);
+  if (r.wrong.length) {
+    const d = el('div', 'details');
+    d.appendChild(el('p', 'tip', 'Сплутав:'));
+    r.wrong.forEach(id => {
+      const w = byId(id);
+      const p = el('p', 'ex');
+      p.append(enSpan(w.en), document.createTextNode(' — ' + w.uk), sayBtn(w, 'w', true));
+      d.appendChild(p);
+    });
+    card.appendChild(d);
+  }
+  const done = button('Готово', 'btn-primary', () => { renderLearn(); });
+  const again = button('Ще раз', '', startSprint);
+  setFoot([again, done], 2);
+  keys = { enter: () => done.click() };
+  renderStreak();
+}
+
 /* Клавіатура (для комп'ютера) */
 document.addEventListener('keydown', e => {
   if (currentTab !== 'learn') return;
@@ -1133,11 +1359,18 @@ function renderList() {
 function itemBody(w, c, t) {
   const body = el('div', 'item-body');
   preloadWord(w);
-  if (w.ex) {
-    const ex = el('p', 'ex'); ex.append(enSpan(w.ex), sayBtn(w, 'x', true)); body.appendChild(ex);
-    if (w.exUk) body.appendChild(el('p', 'ex-uk', w.exUk));
-  }
+  [[w.ex, w.exUk, 'x'], [w.ex2, w.ex2Uk, 'x2']].forEach(([ex, exUk, kind]) => {
+    if (!ex) return;
+    const p = el('p', 'ex'); p.append(enSpan(ex), sayBtn(w, kind, true)); body.appendChild(p);
+    if (exUk) body.appendChild(el('p', 'ex-uk', exUk));
+  });
   if (w.note) { const n = el('p', 'note'); n.textContent = w.note; body.appendChild(n); }
+  if (own[w.id] && own[w.id].length) {
+    const o = el('p', 'muted');
+    o.append(document.createTextNode('Твої речення: '));
+    own[w.id].forEach((t, i) => { const sp = el('span', null, (i ? ' · ' : '') + t); sp.lang = 'en'; sp.style.color = 'var(--ink)'; o.appendChild(sp); });
+    body.appendChild(o);
+  }
   if (c) {
     let info;
     if (c.st === 'review') info = (c.due <= t ? 'Повторення сьогодні' : 'Повторення ' + C.fmtDate(c.due)) + '. Пам\'ять зараз ' + Math.round(C.strength(c, t) * 100) + '%.';
@@ -1223,7 +1456,7 @@ function reportRows() {
     ['Серія', s ? days(s) + ' поспіль' : 'ще не почата'],
     ['Вчу', words(tt.learning + tt.leech)],
     ['Знаю', words(tt.known)]
-  ];
+  ].concat(l.sp ? [['Спринт', l.sp + ' за хвилину']] : []);
 }
 function reportText() {
   return ['Англійська, ' + C.fmtDate(today())].concat(reportRows().map(([a, b]) => a + ': ' + b)).join('\n');
@@ -1369,6 +1602,7 @@ function renderSettings() {
   segment('segRet', [[0.85, '85%'], [0.9, '90%'], [0.95, '95%']], settings.retention, v => { settings.retention = v; re(); });
   $('retNote').textContent = 'Яку частку слів ти маєш згадувати на повторенні. ' + RET_NOTES[settings.retention];
   $('typing').checked = settings.typing !== false;
+  $('pretest').checked = settings.pretest !== false;
   $('speaking').checked = settings.speaking !== false;
   const vopts = AUD.voices.map(v => [v, VOICE_NAMES[v] || v]).concat([['device', 'iPhone']]);
   segment('segVoice', vopts, settings.voiceSrc, v => { settings.voiceSrc = v; re(); sayWord(byId(SAMPLE_ID), 'x'); });
@@ -1395,6 +1629,7 @@ function renderSettings() {
   $('lastBackup').textContent = meta.lastBackup != null ? 'Остання копія: ' + C.fmtDate(meta.lastBackup) + '.' : 'Копію ще не зберігали.';
 }
 $('typing').addEventListener('change', e => { settings.typing = e.target.checked; saveSettings(); });
+$('pretest').addEventListener('change', e => { settings.pretest = e.target.checked; saveSettings(); });
 $('speaking').addEventListener('change', e => { settings.speaking = e.target.checked; saveSettings(); });
 $('autoplay').addEventListener('change', e => { settings.autoplay = e.target.checked; saveSettings(); });
 $('voice').addEventListener('change', e => { settings.voice = e.target.value; saveSettings(); speakDevice('Can you give me a hand?'); });
@@ -1405,7 +1640,7 @@ let offlineBusy = false;
 $('offlineAudio').addEventListener('click', async () => {
   if (offlineBusy) return;
   const urls = [];
-  allWords().forEach(w => { const a = clipUrl(w, 'w'), b = clipUrl(w, 'x'); if (a) urls.push(a); if (b) urls.push(b); });
+  allWords().forEach(w => { ['w', 'x', 'x2'].forEach(k => { const u = clipUrl(w, k); if (u) urls.push(u); }); });
   if (!urls.length) return;
   offlineBusy = true;
   const btn = $('offlineAudio');
@@ -1425,7 +1660,7 @@ $('offlineAudio').addEventListener('click', async () => {
 });
 
 /* Резервна копія */
-function backupData() { return { app: 'english-words', version: 3, saved: new Date().toISOString(), cards, custom, notes, log, settings, meta }; }
+function backupData() { return { app: 'english-words', version: 4, saved: new Date().toISOString(), cards, custom, notes, own, log, settings, meta }; }
 function markBackup() { meta.lastBackup = today(); save(KEYS.meta, meta); }
 async function saveBackup() {
   const json = JSON.stringify(backupData());
@@ -1460,12 +1695,12 @@ $('backupFile').addEventListener('change', async e => {
     const label = when ? C.fmtDate(C.dayNum(when)) : 'невідомої дати';
     if (!confirm('Замінити поточний прогрес копією від ' + label + '?')) return;
     cards = data.cards || (data.progress ? C.migrateV2(data.progress, today()) : {});
-    custom = data.custom || []; log = data.log || {}; notes = data.notes || {};
+    custom = data.custom || []; log = data.log || {}; notes = data.notes || {}; own = data.own || {};
     meta = Object.assign({}, data.meta || {});
     settings = Object.assign({}, DEFAULT_SETTINGS, data.settings || {});
     settings.cats = Object.assign({}, settings.cats || {});
     if (![0.85, 0.9, 0.95].includes(settings.retention)) settings.retention = 0.9;
-    save(KEYS.custom, custom); save(KEYS.notes, notes); save(KEYS.meta, meta); saveSettings(); persist();
+    save(KEYS.custom, custom); save(KEYS.notes, notes); save(KEYS.own, own); save(KEYS.meta, meta); saveSettings(); persist();
     reindex(); session = null; current = null;
     renderAll();
     toast('Прогрес відновлено');
@@ -1488,7 +1723,7 @@ function showTab(name) {
   document.querySelectorAll('[data-tab]').forEach(t => {
     if (t.dataset.tab === name) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
   });
-  if (name !== 'learn') stopAudio();
+  if (name !== 'learn') { stopAudio(); if (sprint) endSprint(); }
   if (name === 'learn') renderLearn();
   if (name === 'dict') { renderStatusSeg(); renderChips(); renderList(); }
   if (name === 'report') renderReport();
@@ -1513,7 +1748,7 @@ if ('serviceWorker' in navigator) {
 if (/[?&]test=1/.test(location.search)) {
   window.EW = {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
-    settings, nextItem, showTab,
+    settings, nextItem, showTab, startSprint, get sprint() { return sprint; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());
       showTab('learn');

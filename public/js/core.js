@@ -112,14 +112,14 @@
     put: ['put'], pay: ['paid'], leave: ['left'], fall: ['fell', 'fallen'], say: ['said'], tell: ['told'],
     buy: ['bought'], see: ['saw', 'seen'], make: ['made'], hold: ['held'], send: ['sent'], feel: ['felt'],
     drive: ['drove', 'driven'], speak: ['spoke', 'spoken'], break: ['broke', 'broken'], think: ['thought'],
-    catch: ['caught'], lend: ['lent'], fit: ['fitted'], spell: ['spelt', 'spelled'], be: ['is', 'am', 'are', 'was', 'were', 'been'],
+    catch: ['caught'], lend: ['lent'], overtake: ['overtook', 'overtaken'], fit: ['fitted'], spell: ['spelt', 'spelled'], be: ['is', 'am', 'are', 'was', 'were', 'been'],
     have: ['has', 'had'], do: ['does', 'did', 'done'], wake: ['woke'], win: ['won'], lose: ['lost'], sell: ['sold']
   };
   function wordForms(w) {
-    const out = new Set([w, w + 's', w + 'es', w + 'ed', w + 'd', w + 'ing']);
+    const out = new Set([w, w + 's', w + 'es', w + 'ed', w + 'd', w + 'ing', w + 'er', w + 'est', w + 'r']);
     if (/e$/.test(w)) out.add(w.slice(0, -1) + 'ing');
     if (/[^aeiou]y$/.test(w)) { out.add(w.slice(0, -1) + 'ies'); out.add(w.slice(0, -1) + 'ied'); }
-    if (/[^aeiou][aeiou][bdgmnprt]$/.test(w)) { out.add(w + w.slice(-1) + 'ed'); out.add(w + w.slice(-1) + 'ing'); }
+    if (/[^aeiou][aeiou][bdgmnprtl]$/.test(w)) { out.add(w + w.slice(-1) + 'ed'); out.add(w + w.slice(-1) + 'ing'); out.add(w + w.slice(-1) + 'er'); }
     (IRREGULAR[w] || []).forEach(f => out.add(f));
     return Array.from(out);
   }
@@ -181,8 +181,20 @@
     dictation: 'Напиши, що чуєш',
     build_phrase: 'Склади фразу',
     build_sentence: 'Склади речення',
-    speak: 'Скажи англійською'
+    speak: 'Скажи англійською',
+    own_sentence: 'Своє речення'
   };
+  /* Який приклад показати: чергуємо два контексти за кількістю повторень */
+  function exampleFor(w, card, kind) {
+    if (!w.ex2) return { ex: w.ex, exUk: w.exUk, sayEx: w.sayEx, n: 1 };
+    const reps = card ? (card.reps || 0) + (card.step || 0) : 0;
+    const second = kind === 'other' ? reps % 2 === 0 : reps % 2 === 1;
+    return second ? { ex: w.ex2, exUk: w.ex2Uk, sayEx: w.sayEx2, n: 2 } : { ex: w.ex, exUk: w.exUk, sayEx: w.sayEx, n: 1 };
+  }
+  function withExample(w, card) {
+    const e = exampleFor(w, card);
+    return Object.assign({}, w, { ex: e.ex, exUk: e.exUk, sayEx: e.sayEx, exN: e.n });
+  }
   function eligible(type, w, ctx) {
     const st = ctx.settings || {};
     const typing = st.typing !== false, speaking = st.speaking !== false;
@@ -194,6 +206,7 @@
       case 'build_phrase': return canBuildPhrase(w);
       case 'build_sentence': return !!w.ex && canBuildSentence(w);
       case 'speak': return speaking;
+      case 'own_sentence': return typing && canType(w) && !/\.\.\.|…/.test(w.en) && tokens(w.en).length <= 2;
       default: return true;
     }
   }
@@ -228,18 +241,42 @@
     let list;
     if (s < 4) list = [['mcq_uk_en', 3], ['listen_mcq', 2], ['flip_rev', 2], ['type_en', 2], ['build_phrase', 2]];
     else if (s < 15) list = [['type_en', 4], ['cloze', 3], ['build_phrase', 3], ['speak', 2], ['flip_rev', 1], ['listen_mcq', 1]];
-    else if (s < 45) list = [['type_en', 3], ['cloze', 3], ['dictation', 2], ['build_sentence', 3], ['speak', 2], ['flip', 1]];
-    else list = [['dictation', 3], ['build_sentence', 3], ['speak', 3], ['cloze', 2], ['flip', 1]];
+    else if (s < 45) list = [['type_en', 3], ['cloze', 3], ['dictation', 2], ['build_sentence', 3], ['speak', 2], ['flip', 1], ['own_sentence', 1]];
+    else list = [['dictation', 3], ['build_sentence', 3], ['speak', 3], ['cloze', 2], ['flip', 1], ['own_sentence', 2]];
     return choose(list, ctx) || 'flip_rev';
   }
 
+  /* ---------- Слова, які легко сплутати: не вчити в один день, а потім розрізняти ---------- */
+  const CONFUSABLE = [
+    ['talk-borrow', 'talk-lend'], ['core-cheap', 'core-expensive'], ['core-full', 'core-empty'], ['core-loud', 'core-quiet'],
+    ['core-safe', 'core-dangerous'], ['core-similar', 'core-different'], ['core-tidy', 'core-messy'], ['talk-already', 'talk-yet'],
+    ['talk-yet', 'talk-still'], ['talk-already', 'talk-still'], ['core-hardly', 'core-properly'], ['travel-single', 'travel-return'],
+    ['travel-arrivals', 'travel-departures'], ['verbs-pickup', 'verbs-dropoff'], ['verbs-puton', 'verbs-takeoff'],
+    ['verbs-turnup', 'verbs-turnoff'], ['core-remember', 'core-forget'], ['core-recommend', 'core-suggest'],
+    ['core-notice', 'core-realise'], ['core-expect', 'core-hope'], ['core-bring', 'core-take'], ['site-trowel', 'site-float'],
+    ['site-hawk', 'site-float'], ['site-bonding', 'site-render'], ['site-slab', 'site-plasterboard'], ['feel-bored', 'feel-fedup'],
+    ['feel-worried', 'feel-nervous'], ['feel-annoyed', 'feel-upset'], ['weather-drizzle', 'weather-showers'],
+    ['weather-freezing', 'weather-baltic'], ['core-busy', 'core-available'], ['work-quote', 'work-estimate'],
+    ['work-hourly', 'work-dayrate'], ['health-painkillers', 'health-tablets'], ['core-mistake', 'core-wrong'],
+    ['talk-wages', 'talk-payslip'], ['car-petrol', 'car-station'], ['car-tyre', 'car-puncture'], ['shop-aisle', 'travel-aisle'],
+    ['health-plaster', 'site-bonding'], ['irish-knackered', 'talk-tired'], ['core-even', 'core-though'], ['core-instead', 'core-atleast']
+  ];
+  const CONF_MAP = {};
+  CONFUSABLE.forEach(([a, b]) => { (CONF_MAP[a] = CONF_MAP[a] || []).push(b); (CONF_MAP[b] = CONF_MAP[b] || []).push(a); });
+  function confusables(id) { return CONF_MAP[id] || []; }
+
   /* ---------- Варіанти відповіді для тестів ---------- */
-  function distractors(word, words, field, n, rng) {
+  /* close: true для вивчених слів (схожі варіанти вчать розрізняти), false для нових (далекі, щоб не плутати) */
+  function distractors(word, words, field, n, rng, close) {
     rng = rng || Math.random;
     const target = norm(word[field]);
     const phrase = isPhrase(word);
     const seen = new Set([target]);
-    const score = w => (w.cat === word.cat ? 0 : 2) + (isPhrase(w) === phrase ? 0 : 1) + rng() * 1.5;
+    const conf = new Set(confusables(word.id));
+    const score = w => {
+      if (conf.has(w.id)) return close ? -2 : 50;
+      return (w.cat === word.cat ? (close ? 0 : 3) : (close ? 2 : 0)) + (isPhrase(w) === phrase ? 0 : 1) + rng() * 1.5;
+    };
     const pool = words.filter(w => w.id !== word.id && w[field]).map(w => [score(w), w]).sort((a, b) => a[0] - b[0]);
     const out = [];
     for (const [, w] of pool) {
@@ -360,7 +397,7 @@
 
   /* ---------- Порядок нових слів: свої першими, далі теми з вагами ---------- */
   const CAT_WEIGHT = { core: 4, talk: 3, site: 3, irish: 2, verbs: 2, work: 2, feel: 1, health: 1, phone: 1, shop: 1, car: 1, weather: 1, false: 1, travel: 1 };
-  function orderNew(words, cards, cats) {
+  function orderNew(words, cards, cats, perDay, today) {
     const pool = words.filter(w => !cards[w.id] && (cats ? cats[w.cat] !== false : true));
     const mine = pool.filter(w => w.cat === 'mine');
     const groups = {};
@@ -381,7 +418,25 @@
       out.push(groups[best].shift());
       left--;
     }
-    return mine.concat(out);
+    // Слова-плутанки не повинні потрапити в один день: партнера відсуваємо далі
+    const n = perDay || 10;
+    const recentDays = new Set();
+    if (today != null) for (const id in cards) { const c = cards[id]; if (c && c.first != null && c.first >= today - 1) recentDays.add(id); }
+    const result = [];
+    const deferred = [];
+    const placed = new Set();
+    for (const w of out) {
+      const partners = confusables(w.id);
+      const clash = partners.some(pid => placed.has(pid) && result.length < n) || partners.some(pid => recentDays.has(pid));
+      if (clash) deferred.push(w); else { result.push(w); placed.add(w.id); }
+      if (result.length === n) { placed.clear(); }
+    }
+    return mine.concat(result, deferred);
+  }
+
+  /* ---------- Спринт: швидке впізнавання вивчених слів ---------- */
+  function sprintPool(words, cards) {
+    return words.filter(w => { const c = cards[w.id]; return c && c.st === 'review' && (c.reps || 0) >= 2 && (c.s || 0) >= 4; });
   }
 
   /* ---------- Сесія ---------- */
@@ -408,7 +463,7 @@
       else this.pipe.push({ id, readyAt: 0 });
     }
     this.reviews.sort((a, b) => strength(env.cards[a], today) - strength(env.cards[b], today));
-    this.newIds = env.reviewOnly ? [] : orderNew(env.words, env.cards, env.settings.cats).slice(0, this.allowance()).map(w => w.id);
+    this.newIds = env.reviewOnly ? [] : orderNew(env.words, env.cards, env.settings.cats, env.settings.newPerDay || 10, today).slice(0, this.allowance()).map(w => w.id);
   }
   Session.prototype.allowance = function () {
     const l = this.env.log || {};
@@ -519,7 +574,7 @@
   const api = {
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
     wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
-    EXERCISES, pickExercise, eligible, distractors, shuffle,
+    EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
     migrateV2, orderNew, Session
   };
