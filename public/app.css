@@ -178,6 +178,24 @@ textarea.answer{font-size:18px;line-height:1.4;min-height:64px}
 .yours s{color:var(--orange)}
 .yours .bad{color:var(--orange);text-decoration:underline wavy;text-underline-offset:3px}
 .yours .fix{background:color-mix(in srgb,var(--hivis) 60%,transparent);color:var(--ink);font-weight:800;border-radius:3px;padding:0 1px}
+/* Фрази зі словом */
+.phrases{margin-top:14px;border:1.5px solid var(--line-soft);border-radius:14px;overflow:hidden}
+.phrases-head{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 14px;background:var(--sunk);border:0;font-weight:800;font-size:15px;text-align:left}
+.phrases-head::after{content:"+";font-weight:800;color:var(--muted);margin-left:auto}
+.phrases-head[aria-expanded="true"]::after{content:"−"}
+.phrases-n{font-size:12px;font-weight:800;background:var(--hivis);color:var(--on-hivis);border-radius:999px;padding:2px 8px;margin-left:auto}
+.phrases-head[aria-expanded="true"] .phrases-n{margin-left:auto}
+.phrases-body{padding:4px 14px 10px}
+.phrase{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--line-soft)}
+.phrase:first-child{border-top:0}
+.phrase > .say.sm{flex:none;margin:1px 0 0}
+.phrase-text{min-width:0;flex:1}
+.phrase-en{display:block;font-weight:700;font-size:16px;line-height:1.3}
+.phrase-uk{display:block;color:var(--muted);font-size:14px;margin-top:1px}
+.phrase-acts{display:flex;align-items:center;gap:6px;margin-top:6px}
+.mini{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;padding:5px 9px;border-radius:999px;border:1.5px solid var(--line);color:var(--ink);text-decoration:none;white-space:nowrap}
+.mini svg{width:12px;height:12px}
+.mini:active{background:var(--sunk)}
 .mnemo{margin-top:12px}
 .mnemo textarea{width:100%;min-height:62px;resize:vertical;font-size:16px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
 .mnemo textarea:focus{outline:none;border-color:var(--ink)}

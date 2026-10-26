@@ -38,17 +38,34 @@ BATH_WORDS = ['after', 'plaster', 'plasterboard', 'pass', 'ask', 'asked', 'last'
               'master', 'disaster', 'afternoon', 'basket', 'task', 'mask', 'vast', 'past']
 
 
-def load_words():
+def load_js(file, name):
     js = ("const fs=require('fs');const vm=require('vm');const c={window:{}};"
           "vm.createContext(c);vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),c);"
-          "process.stdout.write(JSON.stringify(c.window.WORDS));")
-    out = subprocess.run(['node', '-e', js, os.path.join(PUBLIC, 'words.js')],
+          "process.stdout.write(JSON.stringify(c.window[process.argv[2]]));")
+    out = subprocess.run(['node', '-e', js, os.path.join(PUBLIC, file), name],
                          check=True, capture_output=True, text=True).stdout
     return json.loads(out)
 
 
+def load_words():
+    return load_js('words.js', 'WORDS')
+
+
+def load_phrases():
+    return load_js('phrases.js', 'PHRASES') if os.path.exists(os.path.join(PUBLIC, 'phrases.js')) else {}
+
+
+# v2: 96 kbps і інтонація завершеного речення для коротких фраз
 def text_hash(text):
-    return hashlib.sha1(('v1|' + text).encode('utf-8')).hexdigest()[:8]
+    return hashlib.sha1(('v2|' + text).encode('utf-8')).hexdigest()[:8]
+
+
+def speak_text(text):
+    """Окремі слова й короткі фрази без розділового знака читаються з інтонацією речення."""
+    t = text.strip()
+    if t and t[-1] not in '.!?…':
+        t += '.'
+    return t
 
 
 class Speaker:
@@ -71,7 +88,7 @@ class Speaker:
         return ph
 
     def render(self, text, voice, out_path):
-        ph = self.phonemes(text)
+        ph = self.phonemes(speak_text(text))
         samples, sr = self.k.create(ph, voice=voice, speed=SPEED, lang='en-gb', is_phonemes=True)
         samples = np.asarray(samples, dtype=np.float32)
         peak = float(np.max(np.abs(samples))) or 1.0
@@ -84,7 +101,7 @@ class Speaker:
         try:
             sf.write(wav, samples, sr)
             subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-ac', '1', '-ar', str(SR),
-                            '-c:a', 'libmp3lame', '-b:a', '48k', out_path], check=True)
+                            '-c:a', 'libmp3lame', '-b:a', '96k', out_path], check=True)
         finally:
             os.unlink(wav)
 
@@ -97,12 +114,20 @@ def main():
     args = ap.parse_args()
 
     words = load_words()
+    phrases = load_phrases()
     speaker = Speaker(args.model, args.voices)
     only = set(args.only.split(',')) if args.only else None
 
     manifest = {}
+    pmanifest = {}
     jobs = []
     for w in words:
+        plist = phrases.get(w['id']) or []
+        if plist:
+            pmanifest[w['id']] = [text_hash(p[0]) for p in plist]
+            for p, h in zip(plist, pmanifest[w['id']]):
+                for name in VOICES:
+                    jobs.append((name, f"{w['id']}-{h}.mp3", p[0], w['id']))
         word_text = w.get('say') or w['en']
         ex_text = w.get('sayEx') or w.get('ex') or ''
         ex2_text = w.get('sayEx2') or w.get('ex2') or ''
@@ -141,9 +166,9 @@ def main():
 
     with open(os.path.join(PUBLIC, 'audio.js'), 'w', encoding='utf-8') as fh:
         fh.write('// Згенеровано tools/make_audio.py. Не редагувати вручну.\n')
-        fh.write('window.AUDIO = ' + json.dumps({'voices': list(VOICES), 'files': manifest},
+        fh.write('window.AUDIO = ' + json.dumps({'voices': list(VOICES), 'files': manifest, 'phrases': pmanifest},
                                                  ensure_ascii=False, separators=(',', ':')) + ';\n')
-    print(f'Нових записів: {done}, видалено старих: {removed}, слів у маніфесті: {len(manifest)}')
+    print(f'Нових записів: {done}, видалено старих: {removed}, слів у маніфесті: {len(manifest)}, фраз: {sum(len(v) for v in pmanifest.values())}')
 
 
 if __name__ == '__main__':

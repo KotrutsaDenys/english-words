@@ -5,6 +5,7 @@
 - Весь текст інтерфейсу українською, без русизмів, дати DD.MM.YYYY. Звертання до користувача в чоловічому роді.
 - `id` слів у `public/words.js` не змінювати й не перевикористовувати: прогрес (`ew.cards` у localStorage) прив'язаний до них.
 - У кожного слова два приклади (`ex`/`exUk` і `ex2`/`ex2Uk`), вони чергуються за кількістю повторень (`exampleFor` у core.js). Нове слово має отримати обидва. Пари-плутанки (lend/borrow тощо) у `CONFUSABLE` в core.js: не даються в один день, а для вивчених слів стають дистракторами.
+- `public/phrases.js`: по 5 фраз на слово (`[en, uk]`), озвучуються тим самим скриптом (`AUDIO.phrases`), кнопки YouGlish (`/english/uk`) і YouTube (пошук у лапках, формат m.youtube.com). Нове слово має отримати 5 фраз.
 - Нові слова → згенерувати озвучку `tools/make_audio.py` (Kokoro, голос `bf_emma`; модель з релізу thewh1teagle/kokoro-onnx `model-files-v1.0`, `pip install kokoro-onnx soundfile`, потрібні ffmpeg і node). Для слів, які пишуться не так, як читаються, додати `say` / `sayEx` / `sayEx2`; перевіряти вимову через `Speaker.phonemes()` у скрипті.
 - Додав новий файл, потрібний офлайн → додай його в `CORE` і підніми `CACHE` у `public/sw.js`.
 - Логіка й розклад: `public/js/core.js` і `public/js/fsrs.js` (без DOM, тестуються в node). Інтерфейс: `public/js/app.js`.

@@ -192,6 +192,13 @@ try:
                 if tab == 'dict':
                     page.locator('.item-head').first.click()
                     page.wait_for_timeout(150)
+                    assert page.locator('.phrase').count() == 5, 'phrases in dictionary'
+                    links = page.locator('.phrase .mini')
+                    assert links.count() == 10
+                    yg = links.nth(0).get_attribute('href'); yt = links.nth(1).get_attribute('href')
+                    assert yg.startswith('https://youglish.com/pronounce/') and yg.endswith('/english/uk'), yg
+                    assert yt.startswith('https://m.youtube.com/results?search_query=%22'), yt
+                    print(scheme, 'phrase links:', yg, '|', yt)
                 shot(page, f'{scheme}-{tab}')
                 if SHOTS:
                     page.screenshot(path=os.path.join(SHOTS, f'{scheme}-{tab}-full.png'), full_page=True)

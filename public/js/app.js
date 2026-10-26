@@ -7,6 +7,7 @@ const F = window.FSRS;
 const CATS = window.CATEGORIES;
 const BASE = window.WORDS;
 const AUD = window.AUDIO || { voices: [], files: {} };
+const PHRASES = window.PHRASES || {};
 
 /* ---------- Дрібниці ---------- */
 const $ = id => document.getElementById(id);
@@ -141,6 +142,67 @@ function playUrl(url, fallbackText, rate) {
   if (p && p.catch) p.catch(err => { if (err && err.name !== 'AbortError' && playing === url) speakDevice(fallbackText, rate); });
 }
 player.addEventListener('error', () => { if (playing) { const t = player.dataset.fallback; playing = ''; if (t) speakDevice(t); } });
+function phraseUrl(w, i) {
+  const voice = settings.voiceSrc;
+  if (!w || !AUD.voices.includes(voice) || !AUD.phrases) return null;
+  const hs = AUD.phrases[w.id];
+  return hs && hs[i] ? '/audio/' + voice + '/' + w.id + '-' + hs[i] + '.mp3' : null;
+}
+function sayPhrase(w, i) {
+  const p = (PHRASES[w.id] || [])[i];
+  if (!p) return;
+  const url = phraseUrl(w, i);
+  if (url) playUrl(url, p[0]); else speakDevice(p[0]);
+}
+function cleanPhrase(t) { return String(t).replace(/[?!.,]+$/g, '').replace(/[“”"]/g, '').trim(); }
+function youglishUrl(t) { return 'https://youglish.com/pronounce/' + encodeURIComponent(cleanPhrase(t)) + '/english/uk'; }
+function youtubeUrl(t) { return 'https://m.youtube.com/results?search_query=' + encodeURIComponent('"' + cleanPhrase(t) + '"'); }
+/* Блок фраз: 5 коротких сполучень зі словом, кожна з озвучкою і відео, де її кажуть */
+function phraseBlock(w, open) {
+  const list = PHRASES[w.id];
+  if (!list || !list.length) return null;
+  const box = el('div', 'phrases');
+  const head = el('button', 'phrases-head');
+  head.type = 'button';
+  head.setAttribute('aria-expanded', String(!!open));
+  head.append(el('span', null, 'Фрази зі словом'), el('span', 'phrases-n', String(list.length)));
+  const body = el('div', 'phrases-body');
+  body.hidden = !open;
+  list.forEach((p, i) => {
+    const row = el('div', 'phrase');
+    const play = el('button', 'say sm');
+    play.type = 'button';
+    play.innerHTML = ICON.speaker;
+    play.setAttribute('aria-label', 'Послухати фразу');
+    play.addEventListener('click', e => { e.stopPropagation(); sayPhrase(w, i); });
+    const text = el('div', 'phrase-text');
+    const en = el('span', 'phrase-en', p[0]); en.lang = 'en';
+    text.append(en, el('span', 'phrase-uk', p[1]));
+    const acts = el('div', 'phrase-acts');
+    const link = (label, href, title) => {
+      const a = el('a', 'mini');
+      a.innerHTML = ICON.play + label;
+      a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.title = title;
+      a.addEventListener('click', e => e.stopPropagation());
+      return a;
+    };
+    acts.append(link('YouGlish', youglishUrl(p[0]), 'Відео, де носії кажуть цю фразу'), link('YouTube', youtubeUrl(p[0]), 'Пошук фрази в YouTube'));
+    text.appendChild(acts);
+    row.append(play, text);
+    body.appendChild(row);
+  });
+  head.addEventListener('click', e => {
+    e.stopPropagation();
+    const o = body.hidden;
+    body.hidden = !o;
+    head.setAttribute('aria-expanded', String(o));
+    if (o) preloadPhrases(w);
+  });
+  if (open) preloadPhrases(w);
+  box.append(head, body);
+  return box;
+}
+function preloadPhrases(w) { (PHRASES[w.id] || []).forEach((p, i) => preloadUrl(phraseUrl(w, i))); }
 function sayWord(w, kind, rate) {
   if (!w) return;
   const text = textFor(w, kind);
@@ -168,7 +230,8 @@ const ICON = {
   build: SVG('<rect x="3.5" y="13" width="7.5" height="6" rx="1.5"/><rect x="13" y="13" width="7.5" height="6" rx="1.5"/><rect x="8.2" y="5" width="7.5" height="6" rx="1.5"/>'),
   dictation: SVG('<path d="M6 9.5a6 6 0 1 1 9.4 4.9c-1.4 1-2.4 2.1-2.4 3.6a2.5 2.5 0 0 1-4.6 1.4"/><path d="M9.5 10a2.5 2.5 0 0 1 5 0"/>'),
   speak: SVG('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>'),
-  pen: SVG('<path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M13.5 8.5l3 3"/>')
+  pen: SVG('<path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M13.5 8.5l3 3"/>'),
+  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5.5v13l11-6.5z"/></svg>'
 };
 const EX_ICON = {
   intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
@@ -582,6 +645,8 @@ function details(w, opts) {
   }
   if (w.note) { const n = el('p', 'note'); n.textContent = w.note; d.appendChild(n); }
   if (opts.tip) d.appendChild(el('p', 'tip', opts.tip));
+  const pb = phraseBlock(w, false);
+  if (pb) d.appendChild(pb);
   const fresh = current && cards[current.id];
   d.appendChild(mnemonicBlock(w, !!(fresh && C.isLeech(fresh) && opts.wrong)));
   return d;
@@ -682,6 +747,8 @@ RENDER.intro = item => {
     });
     if (w.note) { const n = el('p', 'note'); n.textContent = w.note; d.appendChild(n); }
     d.appendChild(el('p', 'tip', 'Скажи слово і приклад уголос: сказане тримається довше, ніж прочитане.'));
+    const pb = phraseBlock(w, false);
+    if (pb) d.appendChild(pb);
     d.appendChild(mnemonicBlock(w, false));
     $('card').appendChild(d);
     setFoot([button('Вже знаю', 'btn-quiet', known), button('Вчити', 'btn-primary', learn)], 2);
@@ -1378,6 +1445,8 @@ function itemBody(w, c, t) {
     if (c.lapses) info += ' Забував: ' + c.lapses + ' р.';
     body.appendChild(el('p', 'muted', info));
   }
+  const pb = phraseBlock(w, true);
+  if (pb) body.appendChild(pb);
   body.appendChild(mnemonicBlock(w, false));
   const acts = el('div', 'item-actions');
   const act = (text, fn, danger) => {
@@ -1640,7 +1709,10 @@ let offlineBusy = false;
 $('offlineAudio').addEventListener('click', async () => {
   if (offlineBusy) return;
   const urls = [];
-  allWords().forEach(w => { ['w', 'x', 'x2'].forEach(k => { const u = clipUrl(w, k); if (u) urls.push(u); }); });
+  allWords().forEach(w => {
+    ['w', 'x', 'x2'].forEach(k => { const u = clipUrl(w, k); if (u) urls.push(u); });
+    (PHRASES[w.id] || []).forEach((p, i) => { const u = phraseUrl(w, i); if (u) urls.push(u); });
+  });
   if (!urls.length) return;
   offlineBusy = true;
   const btn = $('offlineAudio');

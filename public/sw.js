@@ -1,8 +1,8 @@
 // Сторінка й дані: мережа першою, щоб після коміту одразу була свіжа версія.
 // Записи вимови: кеш першим, бо назва файлу містить хеш і вміст не змінюється.
-const CACHE = 'ew-v5';
+const CACHE = 'ew-v6';
 const AUDIO_CACHE = 'ew-audio-v1';
-const CORE = ['/', '/app.css', '/words.js', '/audio.js', '/js/fsrs.js', '/js/core.js', '/js/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
+const CORE = ['/', '/app.css', '/words.js', '/phrases.js', '/audio.js', '/js/fsrs.js', '/js/core.js', '/js/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', event => {
