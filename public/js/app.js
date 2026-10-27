@@ -605,6 +605,8 @@ function renderLearn() {
     tiles.forEach(x => grid.appendChild(x));
     home.appendChild(grid);
   }
+  const news = newsCard();
+  if (news) home.appendChild(news);
   const setup = setupSection();
   if (setup) home.appendChild(setup);
   home.appendChild(weekSection());
@@ -630,10 +632,25 @@ function setupItems() {
     }
   });
   if (!meta.reminder) items.push({ id: 'remind', icon: 'calendar', title: 'Обери час для слів', sub: 'щоденне нагадування в Календарі', body: () => reminderPanel(() => renderLearn()) });
-  if (!meta.triaged && Object.keys(cards).length < 80 && C.orderNew(allWords(), cards, settings.cats).length > 20) {
+  if (!meta.triaged && meta.seenBase && Object.keys(cards).length < 80 && C.orderNew(allWords(), cards, settings.cats).length > 20) {
     items.push({ id: 'triage', icon: 'sieve', title: 'Відсій знайомі слова', sub: 'щоб не витрачати час на те, що вже знаєш', action: startTriage });
   }
   return items;
+}
+/* Разове повідомлення про новий базовий словник: одразу запропонувати відсіяти знайоме */
+function newsCard() {
+  if (meta.seenBase || !allWords().some(w => w.cat === 'spoken')) return null;
+  const box = el('section', 'news');
+  box.appendChild(el('h3', 'section-title', 'Новий базовий словник'));
+  const n = allWords().filter(w => /^(spoken|base1|base2|base3)$/.test(w.cat)).length;
+  const k = allWords().filter(w => w.cat === 'idioms').length;
+  box.appendChild(el('p', null, 'Додала ' + words(n) + ' з найуживанішої англійської' + (k ? ' і ' + k + ' стійких виразів' : '') + '. Багато простих слів ти вже знаєш: відсій їх, щоб не витрачати на них час.'));
+  const row = el('div', 'btn-row');
+  const go = button('Відсіяти знайомі', 'btn-primary', () => { meta.seenBase = today(); save(KEYS.meta, meta); startTriage(); });
+  const ok = button('Зрозуміло', 'btn-quiet', () => { meta.seenBase = today(); save(KEYS.meta, meta); renderLearn(); });
+  row.append(ok, go);
+  box.appendChild(row);
+  return box;
 }
 function setupSection() {
   if (meta.setupHidden) return null;

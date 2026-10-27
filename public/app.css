@@ -147,6 +147,10 @@ body.kb-open .tape-meta{display:none}
 body.typing .dock{display:none}
 .btn-big{min-height:60px;font-size:18px}
 .btn-big small{font-size:13px}
+.news{margin-top:22px;background:var(--surface);border:1.5px solid var(--line-soft);border-left:5px solid var(--hivis-deep);border-radius:16px;padding:14px}
+.news .section-title{margin-bottom:6px}
+.news p{margin:0 0 12px;font-size:15px}
+.news .btn{min-height:48px}
 .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
 .qa{display:flex;align-items:flex-start;gap:10px;text-align:left;padding:12px;border-radius:16px;border:1.5px solid var(--line-soft);background:var(--surface);min-height:72px;color:var(--ink)}
 .qa:active{background:var(--sunk)}

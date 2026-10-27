@@ -307,7 +307,7 @@ try:
         page.wait_for_timeout(200)
         assert visible(page, '.tabs') and page.evaluate('window.EW.mode') is None
         # Відсіяти знайомі
-        page.click('.setup-head:has-text("Відсій")')
+        page.click('.news button:has-text("Відсіяти знайомі")')
         page.wait_for_timeout(200)
         assert page.locator('.tri').count() == 20
         ids = page.evaluate('window.EW.mode') == 'triage'
