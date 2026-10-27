@@ -200,6 +200,7 @@ def main():
     ap.add_argument('--voices', required=True)
     ap.add_argument('--only', help='через кому: id слів, які перегенерувати')
     ap.add_argument('--every', type=int, default=50, help='як часто (у словах) оновлювати audio.js')
+    ap.add_argument('--no-new-phrases', action='store_true', help='спершу лише слова й приклади: нові файли фраз не створювати')
     args = ap.parse_args()
 
     words = load_js(['words.js', 'words-base.js'], 'WORDS')
@@ -241,6 +242,8 @@ def main():
             old = prev_phr.get(wid)
             if os.path.exists(path) and not force and isinstance(old, list) and old and old[0] == ph:
                 pmanifest[wid] = old
+            elif args.no_new_phrases:
+                pass
             else:
                 times = build_pack(speaker, voice, folder, wid, plist, path)
                 pmanifest[wid] = [ph] + times
