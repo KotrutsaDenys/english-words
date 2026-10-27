@@ -195,9 +195,12 @@
     const e = exampleFor(w, card);
     return Object.assign({}, w, { ex: e.ex, exUk: e.exUk, sayEx: e.sayEx, exN: e.n });
   }
+  /* Вправи, яким потрібен звук або голос: у тихому режимі їх немає */
+  const SOUND_EXERCISES = ['listen_mcq', 'dictation', 'speak'];
   function eligible(type, w, ctx) {
     const st = ctx.settings || {};
     const typing = st.typing !== false, speaking = st.speaking !== false;
+    if (st.quiet && SOUND_EXERCISES.includes(type)) return false;
     switch (type) {
       case 'type_en': return typing && canType(w);
       case 'cloze': return typing && !!clozeTarget(w);
@@ -397,15 +400,20 @@
 
   /* ---------- Порядок нових слів: свої першими, далі теми з вагами ---------- */
   const CAT_WEIGHT = { core: 4, talk: 3, site: 3, irish: 2, verbs: 2, work: 2, feel: 1, health: 1, phone: 1, shop: 1, car: 1, weather: 1, false: 1, travel: 1 };
-  function orderNew(words, cards, cats, perDay, today) {
-    const pool = words.filter(w => !cards[w.id] && (cats ? cats[w.cat] !== false : true));
+  function orderNew(words, cards, cats, perDay, today, priority) {
+    const first = new Set(priority || []);
+    const pool = words.filter(w => !cards[w.id] && (first.has(w.id) || (cats ? cats[w.cat] !== false : true)));
+    // Свої слова, потім позначені «вчити першим» (у порядку позначення), потім теми
     const mine = pool.filter(w => w.cat === 'mine');
+    const byId = new Map(pool.map(w => [w.id, w]));
+    const pri = (priority || []).map(id => byId.get(id)).filter(w => w && w.cat !== 'mine');
+    const priIds = new Set(pri.map(w => w.id));
     const groups = {};
-    pool.filter(w => w.cat !== 'mine').forEach(w => { (groups[w.cat] = groups[w.cat] || []).push(w); });
+    pool.filter(w => w.cat !== 'mine' && !priIds.has(w.id)).forEach(w => { (groups[w.cat] = groups[w.cat] || []).push(w); });
     const keys = Object.keys(groups);
     const credit = {}; keys.forEach(k => { credit[k] = 0; });
     const out = [];
-    let left = pool.length - mine.length;
+    let left = pool.length - mine.length - pri.length;
     while (left > 0) {
       let best = null, total = 0;
       for (const k of keys) {
@@ -431,7 +439,7 @@
       if (clash) deferred.push(w); else { result.push(w); placed.add(w.id); }
       if (result.length === n) { placed.clear(); }
     }
-    return mine.concat(result, deferred);
+    return mine.concat(pri, result, deferred);
   }
 
   /* ---------- Спринт: швидке впізнавання вивчених слів ---------- */
@@ -446,7 +454,8 @@
     this.pos = 0;
     this.recent = [];
     this.practice = !!env.practiceIds;
-    this.limit = this.practice ? 0 : (env.settings.sessionLen || 0);
+    this.limit = this.practice ? 0 : (env.limit != null ? env.limit : (env.settings.sessionLen || 0));
+    this.history = [];
     this.byId = new Map(env.words.map(w => [w.id, w]));
     this.pipe = [];
     this.reviews = [];
@@ -463,7 +472,7 @@
       else this.pipe.push({ id, readyAt: 0 });
     }
     this.reviews.sort((a, b) => strength(env.cards[a], today) - strength(env.cards[b], today));
-    this.newIds = env.reviewOnly ? [] : orderNew(env.words, env.cards, env.settings.cats, env.settings.newPerDay || 10, today).slice(0, this.allowance()).map(w => w.id);
+    this.newIds = env.reviewOnly ? [] : orderNew(env.words, env.cards, env.settings.cats, env.settings.newPerDay || 10, today, env.priority).slice(0, this.allowance()).map(w => w.id);
   }
   Session.prototype.allowance = function () {
     const l = this.env.log || {};
@@ -475,12 +484,15 @@
   /* Скільки ще вправ орієнтовно: нове слово = знайомство + 3 кроки */
   Session.prototype.remainingUnits = function () {
     if (this.practice) return this.pipe.length;
-    let u = this.reviews.length + this.newIds.length * (LEARN_STEPS + 1);
+    let pipeU = 0;
     for (const id of new Set(this.pipe.map(p => p.id))) {
       const c = this.env.cards[id];
-      u += c && c.st === 'learn' ? Math.max(1, LEARN_STEPS + 1 - (c.step || 1)) : 1;
+      pipeU += c && c.st === 'learn' ? Math.max(1, LEARN_STEPS + 1 - (c.step || 1)) : 1;
     }
-    return u;
+    const fresh = this.reviews.length + this.newIds.length * (LEARN_STEPS + 1);
+    // Коротке заняття: після ліміту лише довчити почате
+    if (this.limit) return pipeU + Math.min(fresh, Math.max(0, this.limit - this.pos));
+    return pipeU + fresh;
   };
   Session.prototype.counts = function () {
     return { reviews: this.reviews.length, fresh: this.newIds.length, learning: new Set(this.pipe.map(p => p.id)).size };
@@ -514,8 +526,20 @@
     return { id, word, card, exercise, source };
   };
   /* Слово показали як нове: learn = вчити, known = вже знаю */
+  /* Знімок стану перед дією, щоб її можна було скасувати */
+  const clone = o => (o == null ? o : JSON.parse(JSON.stringify(o)));
+  Session.prototype.snapshot = function (id) {
+    const env = this.env;
+    this.history.push({
+      id, had: Object.prototype.hasOwnProperty.call(env.cards, id), card: clone(env.cards[id]), log: clone(env.log || {}),
+      pipe: this.pipe.map(p => Object.assign({}, p)), reviews: this.reviews.slice(), newIds: this.newIds.slice(), pos: this.pos, recent: this.recent.slice()
+    });
+    if (this.history.length > 20) this.history.shift();
+  };
+  Session.prototype.canUndo = function () { return this.history.length > 0; };
   Session.prototype.introduce = function (id, known) {
     const env = this.env;
+    this.snapshot(id);
     this.newIds = this.newIds.filter(x => x !== id);
     if (known) {
       env.cards[id] = knownCard(env.today, env.settings.retention, env.rng);
@@ -530,10 +554,7 @@
   /* Відповідь на вправу. g: 1 не знаю, 2 важко/з підказкою, 3 знаю, 4 легко */
   Session.prototype.answer = function (id, g, exercise) {
     const env = this.env, log = env.log || {};
-    this._undo = {
-      id, card: env.cards[id] ? JSON.parse(JSON.stringify(env.cards[id])) : null, log: JSON.parse(JSON.stringify(log)),
-      pipe: this.pipe.slice(), reviews: this.reviews.slice(), pos: this.pos, recent: this.recent.slice()
-    };
+    this.snapshot(id);
     this.recent.unshift(exercise); this.recent.length = Math.min(this.recent.length, 2);
     log.r = (log.r || 0) + 1;
     if (g === 1) {
@@ -544,7 +565,8 @@
     this.pipe = this.pipe.filter(p => p.id !== id);
     this.reviews = this.reviews.filter(x => x !== id);
     let res;
-    if (this.practice) {
+    // Тренування або слово без картки (видалене під час заняття): розклад не чіпаємо
+    if (this.practice || !env.cards[id]) {
       res = g >= 2 ? { done: true } : { again: true, gap: 3 };
     } else {
       const card = env.cards[id];
@@ -559,24 +581,41 @@
     return res;
   };
 
-  /* Скасувати останню відповідь (щоб зарахувати її інакше) */
+  /* Скасувати останню дію (відповідь або знайомство з новим словом). Повертає id слова або false */
   Session.prototype.undo = function () {
-    const u = this._undo;
+    const u = this.history.pop();
     if (!u) return false;
     const env = this.env;
-    if (u.card && !this.practice) env.cards[u.id] = u.card;
+    if (!this.practice) { if (u.had) env.cards[u.id] = u.card; else delete env.cards[u.id]; }
     if (env.log) { Object.keys(env.log).forEach(k => { delete env.log[k]; }); Object.assign(env.log, u.log); }
-    this.pipe = u.pipe; this.reviews = u.reviews; this.pos = u.pos; this.recent = u.recent;
-    this._undo = null;
-    return true;
+    this.pipe = u.pipe; this.reviews = u.reviews; this.newIds = u.newIds; this.pos = u.pos; this.recent = u.recent;
+    return u.id;
   };
+
+  /* ---------- Серія днів з одним вихідним на тиждень ----------
+     Один пропущений день між двома днями занять серію не обриває, якщо за попередні
+     7 днів вихідного ще не було. Вихідний не додається до числа днів. */
+  function streakInfo(has, today) {
+    const todayDone = !!has(today);
+    let d = todayDone ? today : today - 1;
+    let days = 0, lastRest = null;
+    const rests = [];
+    for (let guard = 0; guard < 4000; guard++) {
+      if (has(d)) { days++; d--; continue; }
+      if (has(d - 1) && (lastRest == null || lastRest - d >= 7)) { rests.push(d); lastRest = d; d--; continue; }
+      break;
+    }
+    // Чи можна сьогодні пропустити без втрати серії: вчора було заняття, і вихідний давно
+    const restReady = days > 0 && !todayDone && has(today - 1) && !rests.some(r => r > today - 7);
+    return { days, rests, todayDone, restReady };
+  }
 
   const api = {
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
     wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
     EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
-    migrateV2, orderNew, Session
+    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo
   };
   root.EWCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

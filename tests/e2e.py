@@ -45,7 +45,7 @@ def answer(page, wrong=False, scheme='light'):
         page.wait_for_timeout(150)
         shot(page, f'{scheme}-{ex}-a')
     if ex == 'intro':
-        if visible(page, '.opt-btn'):
+        if visible(page, '.opt-btn:not([disabled])'):
             page.locator('.opt-btn').nth(0 if rnd.random() < 0.5 else 1).click()
             page.wait_for_timeout(120)
         if key + '-done' not in seen_types:
@@ -122,7 +122,7 @@ def run_day(page, wrong_rate=0.0, scheme='light', limit=400):
 try:
     with sync_playwright() as p:
         b = p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
-        for scheme in ['light', 'dark']:
+        for scheme in ([] if os.environ.get('E2E_UX_ONLY') else ['light', 'dark']):
             ctx = b.new_context(viewport={'width': 375, 'height': 760}, device_scale_factor=2, color_scheme=scheme,
                                 is_mobile=True, has_touch=True)
             page = ctx.new_page()
@@ -132,6 +132,9 @@ try:
             start = datetime(2026, 10, 24, 18, 0, 0)
             page.clock.set_fixed_time(start)
             page.goto(URL)
+            page.wait_for_timeout(600)
+            # Бот відповідає швидко; самостійний перехід далі перевіряється окремо нижче
+            page.evaluate('localStorage.setItem("ew.settings", JSON.stringify({autoNext: false})); location.reload()')
             page.wait_for_timeout(600)
             shot(page, f'{scheme}-home')
             n1 = run_day(page, wrong_rate=0.15, scheme=scheme)
@@ -223,6 +226,120 @@ try:
         print('migration home:', home.replace('\n', ' | '))
         assert 'повторення' in home and 'довчити' in home
         print('migration streak:', page.inner_text('#streak'))
+        ctx.close()
+
+        # Зручність: повноекранне заняття, назад, тихий режим, підсумок, відсів, коротке заняття, нагадування
+        ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True)
+        page = ctx.new_page()
+        page.on('pageerror', lambda e: errors.append('ux pageerror: ' + str(e)))
+        page.clock.set_fixed_time(datetime(2026, 10, 27, 19, 0, 0))
+        page.goto(URL)
+        page.wait_for_timeout(500)
+        assert visible(page, '#learnHome .dock button:has-text("Почати")'), 'головна кнопка внизу'
+        assert visible(page, '.tabs') and not visible(page, '#exitBtn')
+        # Нагадування в Календар
+        page.click('.setup-head:has-text("Обери час")')
+        href = page.locator('.remind a.btn').get_attribute('href')
+        assert href.startswith('/reminder.ics?t=19:30&d=') and '&a=' in href, href
+        page.click('.remind .chip:has-text("перед сном")')
+        href = page.locator('.remind a.btn').get_attribute('href')
+        assert '?t=22:00&d=20261027' in href, href
+        # Заняття: вкладки й шапка сховані, назад повертає знайомство
+        page.click('#learnHome .dock button')
+        page.wait_for_timeout(300)
+        assert not visible(page, '.tabs') and not visible(page, '.top') and visible(page, '#exitBtn')
+        assert page.evaluate('window.EW.current.exercise') == 'intro'
+        first = page.evaluate('window.EW.current.id')
+        assert page.locator('#undoBtn').is_disabled()
+        page.locator('.opt-btn').nth(0).click()
+        page.wait_for_timeout(150)
+        assert visible(page, '#foot.sheet .verdict'), 'висновок у нижній панелі'
+        click_text(page, 'Вчити')
+        page.wait_for_timeout(200)
+        assert first in page.evaluate('Object.keys(window.EW.cards)')
+        page.click('#undoBtn')
+        page.wait_for_timeout(200)
+        assert first not in page.evaluate('Object.keys(window.EW.cards)'), 'назад прибрав картку'
+        assert page.evaluate('[window.EW.current.id, window.EW.current.exercise]') == [first, 'intro']
+        click_text(page, 'Показати одразу')
+        click_text(page, 'Вчити')
+        page.wait_for_timeout(200)
+        # Тихий режим міняє вправу на слух на іншу
+        lid = page.evaluate("Object.keys(window.EW.cards)[0]")
+        page.evaluate('([id]) => window.EW.force(id, "listen_mcq")', [lid])
+        page.click('#quietBtn')
+        page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.settings.quiet') is True
+        assert page.evaluate('window.EW.current.exercise') not in ('listen_mcq', 'dictation', 'speak')
+        page.click('#quietBtn')
+        # Самостійний перехід після правильної відповіді
+        page.evaluate('window.EW.settings.autoNext = true')
+        pair = page.evaluate('''() => { const t = EWCore.dayNum(); const ws = window.WORDS.slice(250, 252);
+            for (const w of ws) window.EW.cards[w.id] = { st: 'review', s: 6, d: 5, last: t - 6, due: t, reps: 2, lapses: 0, first: t - 9 };
+            return ws.map(w => [w.id, w.uk]); }''')
+        (a_id, a_uk), (b_id, b_uk) = pair
+        page.evaluate('([id]) => window.EW.force(id, "mcq_en_uk")', [a_id])
+        page.wait_for_timeout(150)
+        page.locator('.opt-btn').filter(has=page.locator('span', has_text=a_uk)).first.click()
+        assert visible(page, '#foot.sheet.right'), 'правильна відповідь'
+        assert visible(page, '#foot button.auto'), 'смужка відліку'
+        for _ in range(30):
+            page.wait_for_timeout(200)
+            if page.evaluate('window.EW.current.id') != a_id:
+                break
+        assert page.evaluate('window.EW.current.id') != a_id, 'не перейшов далі сам'
+        # Торкнувся картки: стоїть
+        page.evaluate('([id]) => window.EW.force(id, "mcq_en_uk")', [b_id])
+        page.wait_for_timeout(150)
+        page.locator('.opt-btn').filter(has=page.locator('span', has_text=b_uk)).first.click()
+        page.locator('#card .ex-head').dispatch_event('pointerdown')
+        assert not visible(page, '#foot button.auto')
+        page.wait_for_timeout(4500)
+        assert page.evaluate('window.EW.current.id') == b_id, 'перейшов, хоча торкнувся картки'
+        # Хрестик: підсумок заняття
+        page.click('#exitBtn')
+        page.wait_for_timeout(250)
+        assert page.evaluate('window.EW.mode') == 'summary'
+        summary = page.inner_text('#card')
+        print('summary:', summary.replace('\n', ' | '))
+        assert 'Заняття завершено' in summary and 'точність' in summary
+        click_text(page, 'На головну')
+        page.wait_for_timeout(200)
+        assert visible(page, '.tabs') and page.evaluate('window.EW.mode') is None
+        # Відсіяти знайомі
+        page.click('.setup-head:has-text("Відсій")')
+        page.wait_for_timeout(200)
+        assert page.locator('.tri').count() == 20
+        ids = page.evaluate('window.EW.mode') == 'triage'
+        page.locator('.tri').nth(0).click(); page.locator('.tri').nth(2).click()
+        click_text(page, 'Знаю 2 слова')
+        page.wait_for_timeout(200)
+        known = [c for c in page.evaluate('Object.values(window.EW.cards)') if c.get('known')]
+        assert len(known) == 2 and page.evaluate('window.EW.meta.triaged') is not None, known
+        # Хоч 2 хвилини
+        page.evaluate('''() => { const t = EWCore.dayNum(); for (const w of window.WORDS.slice(40, 70)) window.EW.cards[w.id] = { st: 'review', s: 4, d: 5, last: t - 4, due: t, reps: 2, lapses: 0, first: t - 9 }; }''')
+        page.evaluate('window.EW.showTab("learn")')
+        page.wait_for_timeout(200)
+        page.click('.qa:has-text("Хоч 2 хвилини")')
+        page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.session.limit') == 12 and page.evaluate('window.EW.session.newIds.length') == 0
+        page.click('#exitBtn')
+        page.wait_for_timeout(200)
+        # Вчити першим зі словника
+        page.evaluate('window.EW.showTab("dict")')
+        far = page.evaluate('window.WORDS[300]')
+        page.fill('#search', far['en'])
+        page.wait_for_timeout(200)
+        page.locator('.item-head').first.click()
+        page.click('.item-actions button:has-text("Вчити першим")')
+        assert page.evaluate('window.EW.meta.priority') == [far['id']]
+        assert visible(page, '.status.pri')
+        page.evaluate('window.EW.showTab("learn")')
+        page.wait_for_timeout(200)
+        page.click('#learnHome .dock button')
+        page.wait_for_timeout(200)
+        print('first new after priority:', page.evaluate('window.EW.session.newIds.slice(0, 2)'))
+        assert page.evaluate('window.EW.session.newIds[0]') == far['id']
         ctx.close()
         b.close()
 finally:

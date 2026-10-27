@@ -30,12 +30,22 @@ const days = n => n + ' ' + C.plural(n, 'день', 'дні', 'днів');
 const words = n => n + ' ' + C.plural(n, 'слово', 'слова', 'слів');
 const mins = n => n + ' хв';
 function inDays(n) { if (n == null) return ''; if (n <= 0) return 'знову'; if (n === 1) return 'завтра'; return 'через ' + days(n); }
+/* Коротко для вузьких кнопок оцінки: «9 дн.», «2 міс.» */
+function shortDays(n) {
+  if (n == null) return '';
+  if (n <= 0) return 'знову';
+  if (n === 1) return 'завтра';
+  if (n < 60) return n + ' дн.';
+  if (n < 365) return Math.round(n / 30) + ' міс.';
+  return (Math.round(n / 36.5) / 10).toString().replace('.', ',') + ' р.';
+}
 
 /* ---------- Стан ---------- */
 let currentTab = 'learn';
 const DEFAULT_SETTINGS = {
   newPerDay: 10, mode: 'mix', typing: true, speaking: true, sessionLen: 0, retention: 0.9,
-  autoplay: true, voiceSrc: 'emma', voice: '', rate: 1, cats: {}, pretest: true
+  autoplay: true, voiceSrc: 'emma', voice: '', rate: 1, cats: {}, pretest: true,
+  autoNext: true, quiet: false, haptics: true
 };
 let settings = Object.assign({}, DEFAULT_SETTINGS, load(KEYS.settings, {}));
 settings.cats = Object.assign({}, settings.cats || {});
@@ -211,6 +221,33 @@ function sayWord(w, kind, rate) {
   if (url) playUrl(url, text, rate); else speakDevice(text, rate);
 }
 if (navigator.audioSession) { try { navigator.audioSession.type = 'playback'; } catch (e) {} }
+/* Озвучка без натискання: у тихому режимі мовчить. Кнопки з динаміком працюють завжди */
+function autoSay(w, kind) { if (!settings.quiet) sayWord(w, kind); }
+function audioBusy() { return (!player.paused && !player.ended && !!playing) || !!(synth && synth.speaking); }
+
+/* ---------- Вібрація на відповідь ----------
+   Android: navigator.vibrate. iPhone (Safari 17.4+): перемикач <input switch> дає легкий відгук,
+   якщо клацнути його в обробнику натискання. */
+function haptic(kind) {
+  if (!settings.haptics) return;
+  try {
+    if (navigator.vibrate && !/iPhone|iPad/.test(navigator.userAgent)) { navigator.vibrate(kind === 'wrong' ? [25, 70, 25] : 12); return; }
+    const tap = () => {
+      const label = document.createElement('label');
+      label.setAttribute('aria-hidden', 'true');
+      label.style.display = 'none';
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.setAttribute('switch', '');
+      label.appendChild(input);
+      document.head.appendChild(label);
+      label.click();
+      label.remove();
+    };
+    tap();
+    if (kind === 'wrong') setTimeout(tap, 120);
+  } catch (e) {}
+}
 
 const SVG = (body, w) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
 const ICON = {
@@ -231,7 +268,22 @@ const ICON = {
   dictation: SVG('<path d="M6 9.5a6 6 0 1 1 9.4 4.9c-1.4 1-2.4 2.1-2.4 3.6a2.5 2.5 0 0 1-4.6 1.4"/><path d="M9.5 10a2.5 2.5 0 0 1 5 0"/>'),
   speak: SVG('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>'),
   pen: SVG('<path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M13.5 8.5l3 3"/>'),
-  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5.5v13l11-6.5z"/></svg>'
+  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5.5v13l11-6.5z"/></svg>',
+  // керування заняттям і головна
+  close: SVG('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>', 2.4),
+  undo: SVG('<path d="M9 7.5 4.5 12 9 16.5"/><path d="M5 12h9.5a5 5 0 0 1 0 10H12"/>', 2.2),
+  mute: SVG('<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/>'),
+  moon: SVG('<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/>'),
+  bolt: SVG('<path d="M13 3 5.5 13.5H12L11 21l7.5-10.5H12z"/>'),
+  repeat: SVG('<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 15.5"/><path d="M4 20v-4.5h4.5"/>'),
+  target: SVG('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 12h.01"/>'),
+  moonplus: SVG('<path d="M12 4v4M10 6h4"/><path d="M19.5 13.5A7.5 7.5 0 1 1 10 4.5"/>'),
+  sieve: SVG('<path d="M4 5h16l-6 7.5V19l-4 1.5v-8z"/>'),
+  plus: SVG('<path d="M12 5v14M5 12h14"/>', 2.4),
+  calendar: SVG('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 13.5v3.5M10.2 15.3h3.6"/>'),
+  share: SVG('<path d="M12 3.5v11M8 7.5l4-4 4 4"/><path d="M6.5 11H5.5A1.5 1.5 0 0 0 4 12.5v6A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5v-6a1.5 1.5 0 0 0-1.5-1.5h-1"/>'),
+  chevron: SVG('<path d="m9 6 6 6-6 6"/>', 2.4),
+  timer: SVG('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M10 2.5h4M18.5 6l1.5-1.5"/>')
 };
 const EX_ICON = {
   intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
@@ -253,14 +305,8 @@ let recBroken = false;
 function canRecognize() { return !!SR && !standalone && !recBroken; }
 
 /* ---------- Серія днів і рулетка ---------- */
-function streak() {
-  let n = today();
-  const has = d => { const l = log[C.dayKey(d)]; return l && (l.r > 0 || l.c > 0); };
-  if (!has(n)) n--;
-  let s = 0;
-  while (has(n)) { s++; n--; }
-  return s;
-}
+function streakInfo() { return C.streakInfo(studied, today()); }
+function streak() { return streakInfo().days; }
 function renderStreak() {
   const s = streak();
   $('streak').innerHTML = s > 0 ? ICON.flame + '<span><b>' + days(s) + '</b> поспіль</span>' : '';
@@ -290,10 +336,10 @@ function renderTape(done, total, label, remUnits) {
   $('tapeHook').style.left = pct + '%';
   $('tape').setAttribute('aria-valuemax', String(total));
   $('tape').setAttribute('aria-valuenow', String(done));
-  $('tapeDone').innerHTML = total > 0 ? (label || 'Вправи') + ' <b>' + done + ' з ' + total + '</b>' : 'На сьогодні нічого';
+  $('tapeDone').innerHTML = total > 0 ? (label || 'Зроблено') + ' <b>' + done + '</b> з ' + total : 'На сьогодні нічого';
   const left = remUnits != null ? remUnits : Math.max(0, total - done);
-  const leftText = remUnits != null ? 'залишилось ≈ ' + mins(Math.max(1, Math.ceil(left * 10 / 60))) : 'залишилось ' + left;
-  $('tapeLeft').textContent = total > 0 ? (left ? leftText : 'усе пройдено') : '';
+  const leftText = remUnits != null ? 'ще ≈ ' + mins(Math.max(1, Math.ceil(left * 10 / 60))) : 'ще ' + left;
+  $('tapeLeft').textContent = total > 0 ? (left ? leftText : 'усе на сьогодні') : '';
 }
 
 /* ---------- Навчання ---------- */
@@ -302,17 +348,37 @@ let current = null;
 let ui = null;          // стан поточної вправи
 let practiceDone = 0;
 let keys = {};          // клавіатурні дії поточного екрана
+let mode = null;        // що на екрані вправ: session, sprint, triage, summary; null = головна
+let itemHistory = [];   // вправи, до яких можна повернутися кнопкою «назад»
+let sess = null;        // знімок дня на початку заняття, для підсумку
 
-function envFor(practiceIds, reviewOnly) {
-  return { words: allWords(), cards, settings, today: today(), log: todayLog(), rng: Math.random, canListen: canListen(), practiceIds, reviewOnly };
+function envFor(practiceIds, reviewOnly, limit) {
+  return {
+    words: allWords(), cards, settings, today: today(), log: todayLog(), rng: Math.random, canListen: canListen(),
+    practiceIds, reviewOnly, limit, priority: meta.priority || []
+  };
 }
 function updateTape() {
+  updateSessionBar();
   if (sprint) { sprintTape(); return; }
   if (session && session.practice) { renderTape(practiceDone, practiceDone + session.remaining(), 'Тренування'); return; }
   const l = todayLog();
   const done = (l.r || 0) + (l.n || 0) + (l.k || 0);
   const rem = (session || new C.Session(envFor())).remainingUnits();
   renderTape(done, done + rem, null, rem);
+}
+/* Верхній рядок під час заняття: вийти, повернути відповідь, тихий режим */
+function updateSessionBar() {
+  const inSession = !!mode;
+  document.body.classList.toggle('in-session', inSession);
+  $('exitBtn').hidden = !inSession;
+  const undoable = mode === 'session' && !!session && session.canUndo();
+  $('undoBtn').hidden = mode !== 'session';
+  $('undoBtn').disabled = !undoable;
+  $('quietBtn').hidden = mode !== 'session';
+  $('quietBtn').setAttribute('aria-pressed', String(!!settings.quiet));
+  $('quietBtn').innerHTML = settings.quiet ? ICON.mute : ICON.speaker;
+  $('quietBtn').setAttribute('aria-label', settings.quiet ? 'Тихий режим увімкнено' : 'Тихий режим');
 }
 function estimateMinutes(units) { return Math.max(1, Math.ceil(units * 10 / 60)); }
 
@@ -337,28 +403,36 @@ function planSentence(cnt) {
   const s = joinUk(parts);
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
+const lowerFirst = s => s.charAt(0).toLowerCase() + s.slice(1);
 function studied(d) { const l = log[C.dayKey(d)]; return !!(l && (l.r > 0 || l.c > 0)); }
 function weekSection() {
   const t = today();
   const wd = new Date(t * 86400000).getUTCDay();
   const monday = t - ((wd + 6) % 7);
+  const info = streakInfo();
+  const rests = new Set(info.rests);
   const sec = el('section', 'section');
-  const s = streak();
   const title = el('h3', 'section-title', 'Цей тиждень');
-  title.appendChild(el('span', null, s ? 'серія ' + days(s) : 'серія ще не почата'));
+  title.appendChild(el('span', null, info.days ? 'серія ' + days(info.days) : 'серія ще не почата'));
   sec.appendChild(title);
   const row = el('div', 'week');
+  let restShown = false;
   for (let d = monday; d < monday + 7; d++) {
     const done = studied(d);
-    const cell = el('div', 'day' + (done ? ' done' : '') + (d === t ? ' today' : ''));
+    const rest = !done && rests.has(d);
+    if (rest) restShown = true;
+    const cell = el('div', 'day' + (done ? ' done' : '') + (rest ? ' rest' : '') + (d === t ? ' today' : ''));
     const dot = el('i');
     if (done) dot.innerHTML = ICON.check;
+    else if (rest) dot.innerHTML = ICON.moon;
     dot.setAttribute('aria-hidden', 'true');
     cell.append(dot, document.createTextNode(WD_SHORT[(d - monday + 1) % 7]));
-    cell.setAttribute('aria-label', C.fmtDate(d) + (done ? ': було заняття' : d > t ? '' : ': без заняття'));
+    cell.setAttribute('aria-label', C.fmtDate(d) + (done ? ': було заняття' : rest ? ': вихідний, серія не обірвалась' : d > t ? '' : ': без заняття'));
     row.appendChild(cell);
   }
   sec.appendChild(row);
+  if (restShown) sec.appendChild(el('p', 'tip', 'Місяць — вихідний: один пропущений день на тиждень серію не обриває.'));
+  else if (!info.todayDone && info.days === 0 && studied(t - 2) && !studied(t - 1)) sec.appendChild(el('p', 'tip', 'Вчора був пропуск. Заняття сьогодні збереже серію.'));
   return sec;
 }
 function vocabBar(box, legend, tt) {
@@ -389,39 +463,64 @@ function vocabSection() {
   vocabBar(bar, legend, tt);
   return sec;
 }
+
+/* Плитка швидкої дії на головній */
+function quick(icon, title, sub, onClick, cls) {
+  const b = el('button', 'qa' + (cls ? ' ' + cls : ''));
+  b.type = 'button';
+  const ic = el('span', 'qa-ic'); ic.innerHTML = ICON[icon] || '';
+  const txt = el('span', 'qa-text');
+  txt.append(el('b', null, title), el('small', null, sub));
+  b.append(ic, txt);
+  b.addEventListener('click', onClick);
+  return b;
+}
+/* Головна кнопка дня: завжди в одному місці, під великим пальцем */
+function dock(text, sub, onClick) {
+  const d = el('div', 'dock');
+  const b = button(text, 'btn-primary btn-big', onClick, sub);
+  d.appendChild(b);
+  return { box: d, btn: b };
+}
+function dueTomorrow() { const t = today(); return Object.values(cards).filter(c => c.st === 'review' && c.due === t + 1).length; }
+
 function renderLearn() {
-  const active = (session && current) || sprint;
-  $('stage').hidden = !active;
-  $('learnHome').hidden = !!active;
+  if (mode) { $('stage').hidden = false; $('learnHome').hidden = true; updateTape(); return; }
+  $('stage').hidden = true;
+  $('learnHome').hidden = false;
+  setFoot([]);
   updateTape();
-  if (active) return;
   const home = $('learnHome');
   home.innerHTML = '';
+  home.classList.remove('has-dock');
   keys = {};
+  const t = today();
   const l = todayLog();
   const plan = new C.Session(envFor());
   const cnt = plan.counts();
   const total = cnt.reviews + cnt.learning + cnt.fresh;
+  const units = plan.remainingUnits();
+  const misses = (l.miss || []).filter(id => byId(id));
+  const fresh = Object.keys(cards).filter(id => byId(id) && cards[id].first === t && !cards[id].known);
+  const left = C.orderNew(allWords(), cards, settings.cats, null, null, meta.priority).length;
+  const sp = C.sprintPool(allWords(), cards).length;
+  const hour = new Date().getHours();
+  const evening = hour >= 19 || hour < 4;
+  const tiles = [];
+  let main = null;
   home.appendChild(el('p', 'greet', greeting()));
-  const st = el('div', 'stack');
   if (total) {
-    home.appendChild(el('h2', 'hero', (l.r ? 'Ще ' : '') + (l.r ? planSentence(cnt).charAt(0).toLowerCase() + planSentence(cnt).slice(1) : planSentence(cnt))));
-    home.appendChild(el('p', 'hero-sub', 'Приблизно ' + mins(estimateMinutes(plan.remainingUnits())) + '.'));
+    const sentence = planSentence(cnt);
+    home.appendChild(el('h2', 'hero', l.r ? 'Ще ' + lowerFirst(sentence) : sentence));
+    const sub = el('p', 'hero-sub', 'Приблизно ' + mins(estimateMinutes(units)) + '.');
+    home.appendChild(sub);
+    if (meta.reminder && meta.reminder.a) home.appendChild(el('p', 'plan-line', 'Твій план: ' + meta.reminder.a + ', о ' + meta.reminder.t));
     if (cnt.reviews >= 40 && cnt.fresh) home.appendChild(el('p', 'tip', 'Повторень сьогодні багато. Нічого страшного, якщо зробиш лише їх, а нові слова почекають до завтра.'));
-    const go = el('button', 'btn btn-primary', l.r ? 'Продовжити' : 'Почати');
-    go.addEventListener('click', () => startSession());
-    st.appendChild(go);
-    if (cnt.reviews && cnt.fresh) {
-      const quick = el('button', 'btn', 'Тільки повторення, без нових');
-      quick.addEventListener('click', () => startSession(null, true));
-      st.appendChild(quick);
-    }
-    home.appendChild(st);
-    keys.enter = () => go.click();
+    main = dock(l.r ? 'Продовжити' : 'Почати', '≈ ' + mins(estimateMinutes(units)), () => startSession());
+    if (units > 14) tiles.push(quick('bolt', 'Хоч 2 хвилини', cnt.reviews ? 'найслабші повторення' : 'коротке заняття', startShort));
+    if (cnt.reviews && cnt.fresh) tiles.push(quick('repeat', 'Тільки повторення', 'без нових слів', () => startSession(null, true)));
     plan.reviews.slice(0, 3).concat(plan.newIds.slice(0, 2)).forEach(id => preloadWord(byId(id)));
   } else {
-    const left = C.orderNew(allWords(), cards, settings.cats).length;
-    const misses = (l.miss || []).filter(id => byId(id));
     if (l.r) {
       home.appendChild(el('h2', 'hero', 'Готово на сьогодні'));
       const acc = Math.round((l.r - (l.a || 0)) / l.r * 100);
@@ -429,72 +528,346 @@ function renderLearn() {
       [['Час', mins(Math.max(1, Math.round((l.ms || 0) / 60000)))], ['Нових слів', String(l.n || 0)], ['Повторено', String(l.rv || 0)], ['Точність', acc + '%']]
         .forEach(([a, b]) => { const li = el('li'); li.append(el('span', null, a), el('b', null, b)); ul.appendChild(li); });
       home.appendChild(ul);
-      const rep = el('button', 'btn btn-primary', 'Скопіювати звіт');
+      const tm = dueTomorrow();
+      home.appendChild(el('p', 'tip', tm ? 'Завтра чекає ' + tm + ' ' + C.plural(tm, 'повторення', 'повторення', 'повторень') + '.' : 'Завтра повторень майже немає, можна взяти нові слова.'));
+      const rep = el('button', 'link-btn', 'Скопіювати звіт');
+      rep.type = 'button';
       rep.addEventListener('click', copyReport);
-      st.appendChild(rep);
+      home.appendChild(rep);
     } else {
       home.appendChild(el('h2', 'hero', 'Сьогодні вільно'));
       home.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Налаштуваннях.'));
     }
-    const fresh = Object.keys(cards).filter(id => byId(id) && cards[id].first === today() && !cards[id].known);
-    if (l.r && fresh.length) {
-      const ev = el('button', 'btn', 'Закріпити сьогоднішні нові (' + fresh.length + ')');
-      ev.addEventListener('click', () => startSession(fresh));
-      st.appendChild(ev);
-      const h = new Date().getHours();
-      home.appendChild(el('p', 'tip', h >= 19 || h < 4 ? 'Найкраще перед сном: сон закріплює те, що повторив останнім.' : 'Один швидкий прохід увечері перед сном закріпить сьогоднішні слова.'));
-    }
-    if (misses.length) {
-      const pr = el('button', 'btn', 'Потренувати помилки (' + misses.length + ')');
-      pr.addEventListener('click', () => startSession(misses));
-      st.appendChild(pr);
-    }
-    if (left) {
-      const more = el('button', 'btn', 'Ще 5 нових слів');
-      more.addEventListener('click', () => { todayLog().x = (todayLog().x || 0) + 5; persist(); startSession(); });
-      st.appendChild(more);
-    }
-    home.appendChild(st);
+    const consolidate = () => startSession(fresh);
+    const practice = () => startSession(misses);
+    if (l.r && fresh.length && evening) main = dock('Закріпити сьогоднішні нові', words(fresh.length) + ', перед сном найкраще', consolidate);
+    else if (misses.length) main = dock('Потренувати помилки', words(misses.length), practice);
+    if (l.r && fresh.length && !evening) tiles.push(quick('moonplus', 'Закріпити нові', words(fresh.length) + ', краще ввечері', consolidate));
+    if (misses.length && !(main && main.btn.textContent.startsWith('Потренувати'))) tiles.push(quick('target', 'Потренувати помилки', words(misses.length), practice));
+    if (left) tiles.push(quick('plus', 'Ще 5 нових слів', 'понад денний ліміт', () => { todayLog().x = (todayLog().x || 0) + 5; persist(); startSession(); }));
   }
-  const sp = C.sprintPool(allWords(), cards).length;
-  if (sp >= 8) {
-    const sec = el('section', 'section');
-    const title = el('h3', 'section-title', 'Спринт на швидкість');
-    title.appendChild(el('span', null, meta.sprintBest ? 'рекорд ' + meta.sprintBest : words(sp) + ' готові'));
-    sec.appendChild(title);
-    sec.appendChild(el('p', 'tip', 'Хвилина: впізнай якомога більше вивчених слів. Тренує швидкість, без якої в розмові слова не встигаєш дістати.'));
-    const b = el('button', 'btn', 'Почати спринт');
-    b.style.marginTop = '10px';
-    b.addEventListener('click', startSprint);
-    sec.appendChild(b);
-    home.appendChild(sec);
+  if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
+  if (tiles.length) {
+    const grid = el('div', 'qa-grid');
+    tiles.forEach(x => grid.appendChild(x));
+    home.appendChild(grid);
   }
+  const setup = setupSection();
+  if (setup) home.appendChild(setup);
   home.appendChild(weekSection());
   home.appendChild(vocabSection());
+  if (main) {
+    home.appendChild(main.box);
+    home.classList.add('has-dock');
+    keys.enter = () => main.btn.click();
+  }
 }
 
-function startSession(practiceIds, reviewOnly) {
-  session = new C.Session(envFor(practiceIds, reviewOnly));
+/* ---------- Налаштувати один раз ---------- */
+const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function setupItems() {
+  const items = [];
+  if (IOS && !standalone) items.push({
+    id: 'home', icon: 'share', title: 'Додай на екран «Додому»', sub: 'відкриватиметься як програма, на весь екран',
+    body: () => {
+      const b = el('div', 'setup-body');
+      b.appendChild(el('p', null, 'У Safari натисни «Поділитися» (квадрат зі стрілкою; в iOS 26 він у меню «•••»), прокрути й вибери «На початковий екран» (Add to Home Screen), потім «Додати».'));
+      b.appendChild(el('p', 'muted', 'Значок Words з\'явиться поруч з іншими програмами. Прогрес у Safari і в програмі окремий, тож краще одразу вчити з програми, а копію перенести через Налаштування → Резервна копія.'));
+      return b;
+    }
+  });
+  if (!meta.reminder) items.push({ id: 'remind', icon: 'calendar', title: 'Обери час для слів', sub: 'щоденне нагадування в Календарі', body: () => reminderPanel(() => renderLearn()) });
+  if (!meta.triaged && Object.keys(cards).length < 80 && C.orderNew(allWords(), cards, settings.cats).length > 20) {
+    items.push({ id: 'triage', icon: 'sieve', title: 'Відсій знайомі слова', sub: 'щоб не витрачати час на те, що вже знаєш', action: startTriage });
+  }
+  return items;
+}
+function setupSection() {
+  if (meta.setupHidden) return null;
+  const items = setupItems();
+  if (!items.length) return null;
+  const sec = el('section', 'section');
+  const title = el('h3', 'section-title', 'Налаштуй один раз');
+  const hide = el('button', 'link-btn small', 'сховати');
+  hide.type = 'button';
+  hide.addEventListener('click', () => { meta.setupHidden = true; save(KEYS.meta, meta); renderLearn(); toast('Це все є в Налаштуваннях'); });
+  title.appendChild(hide);
+  sec.appendChild(title);
+  const list = el('div', 'setup');
+  items.forEach(it => {
+    const row = el('div', 'setup-item');
+    const head = el('button', 'setup-head');
+    head.type = 'button';
+    const ic = el('span', 'qa-ic'); ic.innerHTML = ICON[it.icon];
+    const txt = el('span', 'qa-text'); txt.append(el('b', null, it.title), el('small', null, it.sub));
+    const chev = el('span', 'chev'); chev.innerHTML = ICON.chevron;
+    head.append(ic, txt, chev);
+    row.appendChild(head);
+    let body = null;
+    head.setAttribute('aria-expanded', 'false');
+    head.addEventListener('click', () => {
+      if (it.action) { it.action(); return; }
+      if (body) { body.remove(); body = null; head.setAttribute('aria-expanded', 'false'); return; }
+      body = it.body();
+      row.appendChild(body);
+      head.setAttribute('aria-expanded', 'true');
+    });
+    list.appendChild(row);
+  });
+  sec.appendChild(list);
+  return sec;
+}
+
+/* ---------- Нагадування: подія в Календарі (план «коли і де», а не «колись») ---------- */
+const ANCHORS = [
+  ['зранку з кавою', '07:30'], ['на перерві', '12:30'], ['дорогою з роботи', '17:30'], ['після вечері', '19:30'], ['перед сном', '22:00']
+];
+function reminderPanel(onDone) {
+  const box = el('div', 'setup-body remind');
+  box.appendChild(el('p', null, 'Коли саме вчитимеш? Прив\'язка до звичної справи спрацьовує краще, ніж «колись увечері».'));
+  const cur = meta.reminder || {};
+  let anchor = cur.a || ANCHORS[3][0];
+  const chips = el('div', 'chips wrap');
+  const time = el('input', 'field time');
+  time.type = 'time';
+  time.value = cur.t || (ANCHORS.find(a => a[0] === anchor) || ANCHORS[3])[1];
+  time.setAttribute('aria-label', 'Час нагадування');
+  const drawChips = () => {
+    chips.innerHTML = '';
+    ANCHORS.forEach(([a, tm]) => {
+      const c = el('button', 'chip', a);
+      c.type = 'button';
+      c.setAttribute('aria-pressed', String(a === anchor));
+      c.addEventListener('click', () => { anchor = a; time.value = tm; drawChips(); });
+      chips.appendChild(c);
+    });
+  };
+  drawChips();
+  const row = el('div', 'remind-row');
+  const lbl = el('label', 'lbl', 'О котрій');
+  row.append(lbl, time);
+  const add = el('a', 'btn btn-primary', 'Додати в Календар');
+  add.target = '_blank';
+  add.rel = 'noopener';
+  const sync = () => {
+    const tm = /^\d{2}:\d{2}$/.test(time.value) ? time.value : '19:30';
+    const now = new Date();
+    const [hh, mm] = tm.split(':').map(Number);
+    const start = (now.getHours() * 60 + now.getMinutes() < hh * 60 + mm) ? today() : today() + 1;
+    add.href = '/reminder.ics?t=' + tm + '&d=' + C.dayKey(start).replace(/-/g, '') + '&a=' + encodeURIComponent(anchor);
+  };
+  time.addEventListener('input', sync);
+  time.addEventListener('change', sync);
+  chips.addEventListener('click', sync);
+  sync();
+  add.addEventListener('click', () => {
+    sync();
+    meta.reminder = { t: time.value, a: anchor };
+    save(KEYS.meta, meta);
+    toast('Відкриваю Календар: натисни «Додати»');
+    if (onDone) setTimeout(onDone, 800);
+  });
+  box.append(chips, row, add);
+  box.appendChild(el('p', 'muted', 'Календар покаже подію щодня в цей час. Змінити чи видалити її можна в самому Календарі.'));
+  return box;
+}
+
+function startSession(practiceIds, reviewOnly, limit) {
+  stopAudio();
+  cancelAuto();
+  session = new C.Session(envFor(practiceIds, reviewOnly, limit));
   practiceDone = 0;
+  itemHistory = [];
+  const l = todayLog();
+  sess = { r: l.r || 0, a: l.a || 0, n: l.n || 0, k: l.k || 0, ms: l.ms || 0, miss: (l.miss || []).slice(), practice: !!practiceIds };
+  mode = 'session';
   nextItem();
 }
-function endSession() {
-  const wasPractice = session && session.practice;
+/* «Хоч 2 хвилини»: дюжина вправ, спершу найслабші повторення */
+function startShort() {
+  const plan = new C.Session(envFor());
+  startSession(null, plan.counts().reviews > 0, 12);
+}
+function endSession(manual) {
+  cancelAuto();
+  stopAudio();
+  const wasPractice = !!(session && session.practice);
   session = null; current = null; ui = null;
   document.body.classList.remove('typing');
+  const l = todayLog();
+  const did = sess ? (l.r || 0) - sess.r + (l.n || 0) - sess.n + (l.k || 0) - sess.k : 0;
+  if (did > 0) { showSummary(manual, wasPractice); return; }
+  mode = null; sess = null;
   renderLearn();
-  if (wasPractice) toast('Тренування завершено');
 }
 function nextItem() {
+  cancelAuto();
   stopAudio();
   if (!session) return;
   current = session.next();
-  if (!current) { endSession(); return; }
+  if (!current) { endSession(false); return; }
   show(current);
+}
+/* Повернути попередню вправу (якщо помилково натиснув не те) */
+function doUndo() {
+  if (mode !== 'session' || !session || !session.canUndo()) return;
+  cancelAuto();
+  stopAudio();
+  const id = session.undo();
+  const h = itemHistory.pop() || { exercise: 'flip', source: 'review' };
+  if (h.done) practiceDone = Math.max(0, practiceDone - 1);
+  persist();
+  renderStreak();
+  current = { id, word: byId(id), card: cards[id], exercise: h.exercise, source: h.source };
+  show(current);
+  toast('Повернула попередню вправу');
+}
+function pushHistory(h) { itemHistory.push(h); if (itemHistory.length > 20) itemHistory.shift(); }
+function toggleQuiet() {
+  settings.quiet = !settings.quiet;
+  saveSettings();
+  if (settings.quiet) stopAudio();
+  updateSessionBar();
+  toast(settings.quiet ? 'Тихий режим: без автоозвучки й вправ на слух' : 'Звук увімкнено');
+  if (mode === 'session' && session && current && ui && !ui.answered && !ui.revealed && ui.guessed == null && C.SOUND_EXERCISES.includes(current.exercise)) {
+    current = session.make(current.id, current.source);
+    show(current);
+  }
+}
+
+/* Підсумок заняття */
+function showSummary(manual, practice) {
+  mode = 'summary';
+  const s0 = sess || { r: 0, a: 0, n: 0, ms: 0, miss: [] };
+  sess = null;
+  const l = todayLog();
+  const r = (l.r || 0) - s0.r, a = (l.a || 0) - s0.a, n = (l.n || 0) - s0.n;
+  const ms = (l.ms || 0) - s0.ms;
+  const missIds = (l.miss || []).filter(id => !s0.miss.includes(id) && byId(id));
+  const plan = new C.Session(envFor());
+  const cnt = plan.counts();
+  const leftTotal = cnt.reviews + cnt.learning + cnt.fresh;
+  const info = streakInfo();
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic done'); ic.innerHTML = ICON.check;
+  label.append(ic, document.createTextNode(practice ? 'Тренування завершено' : 'Заняття завершено'));
+  head.appendChild(label);
+  if (info.days) { const sk = el('span', 'ex-right streak-chip'); sk.innerHTML = ICON.flame; sk.appendChild(el('span', null, days(info.days))); head.appendChild(sk); }
+  card.appendChild(head);
+  const body = el('div', 'prompt summary');
+  const titleText = practice ? 'Помилки розібрано' : !leftTotal ? 'Усе на сьогодні!' : manual ? 'Добра перерва' : 'Готово';
+  body.appendChild(el('h2', 'word', titleText));
+  const stats = el('div', 'stats');
+  const stat = (v, k) => { const d = el('div', 'stat'); d.append(el('b', null, v), el('span', null, k)); stats.appendChild(d); };
+  stat(String(r + n), C.plural(r + n, 'вправа', 'вправи', 'вправ'));
+  stat(r ? Math.round((r - a) / r * 100) + '%' : '—', 'точність');
+  stat(mins(Math.max(1, Math.round(ms / 60000))), 'час');
+  body.appendChild(stats);
+  if (n) body.appendChild(el('p', 'prompt-sub', 'Нових слів: ' + n + '.'));
+  if (!practice && leftTotal) body.appendChild(el('p', 'prompt-sub', 'Ще залишилось: ' + lowerFirst(planSentence(cnt)) + ', ≈ ' + mins(estimateMinutes(plan.remainingUnits())) + '. Прогрес збережено.'));
+  else if (!practice) { const tm = dueTomorrow(); body.appendChild(el('p', 'prompt-sub', tm ? 'Завтра: ' + tm + ' ' + C.plural(tm, 'повторення', 'повторення', 'повторень') + '.' : 'Завтра повторень майже немає.')); }
+  card.appendChild(body);
+  if (missIds.length) {
+    const d = el('div', 'details');
+    d.appendChild(el('p', 'tip', 'Помилки цього заняття:'));
+    missIds.forEach(id => {
+      const w = byId(id);
+      const p = el('p', 'ex');
+      p.append(enSpan(w.en), document.createTextNode(' — ' + w.uk), sayBtn(w, 'w', true));
+      d.appendChild(p);
+    });
+    card.appendChild(d);
+  }
+  const home = () => { mode = null; renderLearn(); window.scrollTo(0, 0); };
+  const btns = [];
+  if (!practice && leftTotal) {
+    btns.push(button('На головну', 'btn-quiet', home));
+    btns.push(button('Продовжити', 'btn-primary', () => startSession()));
+  } else {
+    if (missIds.length && !practice) btns.push(button('Потренувати помилки', '', () => startSession(missIds)));
+    btns.push(button('Готово', 'btn-primary', home));
+  }
+  setFoot(btns, btns.length === 2 ? 2 : 0);
+  keys = { enter: () => btns[btns.length - 1].click() };
+  updateTape();
+  renderStreak();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- Відсіяти знайомі слова наперед ---------- */
+let triage = null;
+function startTriage() {
+  const list = C.orderNew(allWords(), cards, settings.cats, settings.newPerDay, today(), meta.priority).filter(w => w.cat !== 'mine').slice(0, 20);
+  if (!list.length) { toast('Нових слів не залишилось'); return; }
+  stopAudio();
+  session = null; current = null; ui = null;
+  triage = { list, known: new Set() };
+  mode = 'triage';
+  if (currentTab !== 'learn') showTab('learn');
+  renderTriage();
+}
+function renderTriage() {
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic'); ic.innerHTML = ICON.sieve;
+  label.append(ic, document.createTextNode('Відсіяти знайомі'));
+  head.append(label, el('span', 'ex-right', words(triage.list.length) + ' наступні'));
+  card.appendChild(head);
+  card.appendChild(el('p', 'prompt-sub', 'Торкнись слів, які вже знаєш напевно. Вони не займатимуть місце серед нових, лише перевірка через кілька тижнів.'));
+  const ul = el('div', 'triage');
+  const save1 = button('Готово', 'btn-primary', finishTriage);
+  const redrawCount = () => { save1.firstChild.textContent = triage.known.size ? 'Знаю ' + words(triage.known.size) : 'Нічого не знаю'; };
+  triage.list.forEach(w => {
+    const b = el('button', 'tri');
+    b.type = 'button';
+    b.setAttribute('aria-pressed', 'false');
+    const box = el('span', 'tri-box'); box.innerHTML = ICON.check;
+    const txt = el('span', 'tri-text');
+    const en = el('b', null, w.en); en.lang = 'en';
+    txt.append(en, el('span', null, w.uk));
+    b.append(box, txt);
+    b.addEventListener('click', () => {
+      const on = !triage.known.has(w.id);
+      if (on) triage.known.add(w.id); else triage.known.delete(w.id);
+      b.setAttribute('aria-pressed', String(on));
+      haptic('ok');
+      redrawCount();
+    });
+    ul.appendChild(b);
+  });
+  card.appendChild(ul);
+  redrawCount();
+  setFoot([button('Скасувати', 'btn-quiet', () => { triage = null; mode = null; renderLearn(); }), save1], 2);
+  updateTape();
+  window.scrollTo(0, 0);
+}
+function finishTriage() {
+  if (!triage) return;
+  const n = triage.known.size;
+  triage.known.forEach(id => { if (!cards[id]) cards[id] = C.knownCard(today(), settings.retention, Math.random); });
+  meta.triaged = today();
+  save(KEYS.meta, meta);
+  persist();
+  triage = null;
+  mode = null;
+  renderLearn();
+  toast(n ? 'Позначено ' + words(n) + ' як відомі' : 'Добре, усі ці слова вивчиш');
 }
 
 /* Каркас вправи */
 function frame(item) {
+  if (!mode) mode = 'session';
   $('stage').hidden = false;
   $('learnHome').hidden = true;
   const card = $('card');
@@ -523,11 +896,19 @@ function frame(item) {
   keys = {};
   return body;
 }
-function setFoot(buttons, cols) {
+/* Нижня панель: кнопки і, після відповіді, висновок (завжди видно, хоч би яка довга картка) */
+function setFoot(buttons, cols, fb) {
   const foot = $('foot');
   foot.innerHTML = '';
-  foot.className = 'foot' + (cols ? ' cols' + cols : '');
-  buttons.forEach(b => foot.appendChild(b));
+  foot.className = 'foot' + (fb ? ' sheet ' + (fb.dataset.kind || 'info') : '');
+  const inner = el('div', 'foot-in');
+  if (fb) inner.appendChild(fb);
+  const row = el('div', 'foot-btns' + (cols ? ' cols' + cols : ''));
+  buttons.forEach(b => row.appendChild(b));
+  if (buttons.length) inner.appendChild(row);
+  foot.appendChild(inner);
+  foot.hidden = !buttons.length && !fb;
+  measureFoot();
 }
 function button(text, cls, onClick, sub) {
   const b = el('button', 'btn' + (cls ? ' ' + cls : ''));
@@ -621,16 +1002,10 @@ function mnemonicBlock(w, openByDefault) {
   return box;
 }
 
-/* Блок з відповіддю: слово, переклад, приклад, підказка */
+/* Блок з відповіддю в картці: слово, переклад, приклад, фрази, асоціація */
 function details(w, opts) {
   opts = opts || {};
   const d = el('div', 'details');
-  if (opts.verdict) {
-    const info = nextInfo();
-    if (info) opts.verdict.querySelector('.vbody').appendChild(el('span', 'next-info', info));
-    d.appendChild(opts.verdict);
-  }
-  if (opts.yours) d.appendChild(opts.yours);
   if (opts.en !== false) {
     const t = el('p', 'trans en');
     t.append(enSpan(w.en), sayBtn(w, 'w', true));
@@ -659,8 +1034,10 @@ function nextInfo() {
   if (r.again) return 'Ще раз за кілька вправ.';
   return '';
 }
-function verdict(kind, text, sub) {
+/* Висновок для нижньої панелі. answer: правильна відповідь (рядок або вузол), extra: вузол під нею */
+function verdict(kind, text, sub, answer, extra) {
   const v = el('div', 'verdict ' + kind);
+  v.dataset.kind = kind;
   v.setAttribute('role', 'status');
   const ic = el('span', 'vi');
   ic.innerHTML = kind === 'right' ? ICON.check : kind === 'typo' ? ICON.bang : kind === 'info' ? ICON.speaker : ICON.cross;
@@ -668,8 +1045,22 @@ function verdict(kind, text, sub) {
   const t = el('span', 'vt', text);
   if (sub) t.appendChild(el('small', null, sub));
   body.appendChild(t);
+  if (answer) {
+    const a = el('span', 'va');
+    if (typeof answer === 'string') a.textContent = answer; else a.appendChild(answer);
+    body.appendChild(a);
+  }
+  if (extra) body.appendChild(extra);
+  const info = nextInfo();
+  if (info) body.appendChild(el('span', 'next-info', info));
   v.append(ic, body);
   return v;
+}
+/* «слово — переклад» для висновку */
+function pair(w) {
+  const f = document.createDocumentFragment();
+  f.append(enSpan(w.en), document.createTextNode(' — ' + w.uk));
+  return f;
 }
 
 /* Зарахувати відповідь */
@@ -686,7 +1077,10 @@ function finish(g) {
   addTime();
   const res = session.answer(current.id, g, current.exercise);
   ui.res = res;
-  if (session.practice && res.done) practiceDone++;
+  const counted = !!(session.practice && res.done);
+  if (counted) practiceDone++;
+  pushHistory({ id: current.id, exercise: current.exercise, source: current.source, done: counted });
+  haptic(g === 1 ? 'wrong' : 'ok');
   persist();
   renderStreak();
   updateTape();
@@ -694,19 +1088,51 @@ function finish(g) {
 }
 function regrade(g) {
   if (!ui || !ui.answered || !session.undo()) return;
+  const h = itemHistory.pop();
+  if (h && h.done) practiceDone = Math.max(0, practiceDone - 1);
   ui.answered = false;
   ui.timed = true;
   finish(g);
 }
-function nextButton() {
+/* «Далі». Після правильної відповіді сам переходить далі, якщо не торкатися екрана */
+function nextButton(fb, autoOk) {
   const b = button('Далі', 'btn-primary', nextItem);
-  setFoot([b]);
+  setFoot([b], 0, fb);
   keys = { enter: () => b.click() };
-  setTimeout(() => { try { b.focus({ preventScroll: true }); } catch (e) {} }, 30);
+  if (autoOk) startAuto(b);
   return b;
 }
+let auto = null;
+function cancelAuto() {
+  if (!auto) return;
+  clearTimeout(auto.timer);
+  auto.btn.classList.remove('auto');
+  auto = null;
+}
+function startAuto(btn) {
+  cancelAuto();
+  if (!settings.autoNext) return;
+  const ms = 1700;
+  btn.style.setProperty('--auto', ms + 'ms');
+  btn.classList.add('auto');
+  const t0 = performance.now();
+  const tick = () => {
+    if (!auto || auto.btn !== btn) return;
+    // Дати Еммі договорити, але не чекати вічно
+    if (audioBusy() && performance.now() - t0 < 4000) { auto.timer = setTimeout(tick, 150); return; }
+    auto = null;
+    btn.classList.remove('auto');
+    nextItem();
+  };
+  auto = { btn, timer: setTimeout(tick, ms) };
+}
+['pointerdown', 'touchmove', 'wheel'].forEach(ev => document.addEventListener(ev, e => {
+  if (auto && !(e.target && e.target.closest && e.target.closest('#foot'))) cancelAuto();
+}, { passive: true }));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') cancelAuto(); });
 
 function show(item) {
+  cancelAuto();
   ui = { t0: performance.now(), answered: false, hints: 0, tries: 0 };
   document.body.classList.remove('typing');
   if (item.exercise !== 'intro') item.word = C.withExample(byId(item.id), item.card);
@@ -729,16 +1155,26 @@ RENDER.intro = item => {
   const body = frame(item);
   body.appendChild(bigWord(w.en, 'en'));
   const r = el('div', 'row'); r.appendChild(sayBtn(w, 'w')); body.appendChild(r);
-  const learn = () => { addTime(); session.introduce(item.id, false); persist(); nextItem(); };
-  const known = () => {
-    addTime(); session.introduce(item.id, true); persist(); renderStreak();
-    toast('Повторю «' + w.en + '» приблизно через ' + days(cards[item.id].due - today()));
+  // Здогадку рахуємо після introduce, щоб «назад» повертав і її
+  const countGuess = () => {
+    if (ui.guessed !== true && ui.guessed !== false) return;
+    const l = todayLog(); l.g = (l.g || 0) + 1; if (ui.guessed) l.gok = (l.gok || 0) + 1;
+  };
+  const decide = isKnown => {
+    if (ui.answered) return;
+    ui.answered = true;
+    addTime();
+    session.introduce(item.id, isKnown);
+    countGuess();
+    pushHistory({ id: item.id, exercise: 'intro', source: item.source || 'new' });
+    persist();
+    if (isKnown) { renderStreak(); toast('Повторю «' + w.en + '» приблизно через ' + days(cards[item.id].due - today())); }
     nextItem();
   };
+  const learn = () => decide(false);
+  const known = () => decide(true);
   const reveal = guessed => {
     const d = el('div', 'details');
-    if (guessed === true) d.appendChild(verdict('right', 'Вгадав', ' тепер запам\'ятай'));
-    else if (guessed === false) d.appendChild(verdict('info', 'Не вгадав, і це нормально', ' помилка перед відповіддю теж допомагає запам\'ятати'));
     d.appendChild(el('p', 'trans', w.uk));
     [[w.ex, w.exUk, 'x'], [w.ex2, w.ex2Uk, 'x2']].forEach(([ex, exUk, kind]) => {
       if (!ex) return;
@@ -751,7 +1187,10 @@ RENDER.intro = item => {
     if (pb) d.appendChild(pb);
     d.appendChild(mnemonicBlock(w, false));
     $('card').appendChild(d);
-    setFoot([button('Вже знаю', 'btn-quiet', known), button('Вчити', 'btn-primary', learn)], 2);
+    let v = null;
+    if (guessed === true) v = verdict('right', 'Вгадав', ' тепер запам\'ятай');
+    else if (guessed === false) v = verdict('info', 'Не вгадав, і це нормально', ' здогадка все одно допомагає запам\'ятати');
+    setFoot([button('Вже знаю', 'btn-quiet', known), button('Вчити', 'btn-primary', learn)], 2, v);
     keys = { enter: learn };
   };
   if (settings.pretest !== false && !(session && session.practice)) {
@@ -767,12 +1206,12 @@ RENDER.intro = item => {
         if (ui.guessed != null) return;
         const ok = o.id === w.id;
         ui.guessed = ok;
-        const l = todayLog(); l.g = (l.g || 0) + 1; if (ok) l.gok = (l.gok || 0) + 1;
+        haptic('ok');
         btns.forEach((x, k) => {
           x.disabled = true;
           if (opts[k].id === w.id) { x.classList.add('right'); x.firstChild.innerHTML = ICON.check; }
           else if (x === b) { x.classList.add('wrong'); x.firstChild.innerHTML = ICON.cross; }
-          else x.classList.add('dim');
+          else x.remove();
         });
         reveal(ok);
       });
@@ -785,7 +1224,7 @@ RENDER.intro = item => {
   } else {
     reveal(null);
   }
-  if (settings.autoplay) sayWord(w, 'w');
+  if (settings.autoplay) autoSay(w, 'w');
 };
 
 /* Вибір з варіантів */
@@ -795,7 +1234,7 @@ function mcq(item, prompt, field) {
   if (prompt === 'en') {
     body.appendChild(bigWord(w.en, 'en'));
     const r = el('div', 'row'); r.appendChild(sayBtn(w, 'w')); body.appendChild(r);
-    if (settings.autoplay) sayWord(w, 'w');
+    if (settings.autoplay) autoSay(w, 'w');
   } else if (prompt === 'uk') {
     body.appendChild(bigWord(w.uk, 'uk'));
   } else {
@@ -826,10 +1265,9 @@ function mcq(item, prompt, field) {
       else if (x === b) { x.classList.add('wrong'); x.firstChild.innerHTML = ICON.cross; }
       else x.classList.add('dim');
     });
-    sayWord(w, 'w');
-    const v = ok ? verdict('right', 'Правильно') : verdict('wrong', 'Ні, правильно:');
-    $('card').appendChild(details(w, { verdict: v, en: prompt !== 'en', uk: prompt !== 'uk', wrong: !ok }));
-    nextButton();
+    autoSay(w, 'w');
+    $('card').appendChild(details(w, { en: prompt !== 'en', uk: prompt !== 'uk', wrong: !ok }));
+    nextButton(ok ? verdict('right', 'Правильно') : verdict('wrong', 'Ні, правильно:', null, pair(w)), ok);
   }
 }
 function listenPrompt(body, w) {
@@ -856,7 +1294,7 @@ function flip(item, rev) {
   else {
     body.appendChild(bigWord(w.en, 'en'));
     const r = el('div', 'row'); r.appendChild(sayBtn(w, 'w')); body.appendChild(r);
-    if (settings.autoplay) sayWord(w, 'w');
+    if (settings.autoplay) autoSay(w, 'w');
   }
   body.appendChild(el('p', 'prompt-sub', rev ? 'Згадай англійською, потім відкрий відповідь' : 'Згадай переклад, потім відкрий відповідь'));
   const reveal = () => {
@@ -864,10 +1302,10 @@ function flip(item, rev) {
     ui.revealed = true;
     $('card').onclick = null;
     $('card').appendChild(details(w, { en: rev, uk: !rev }));
-    if (rev) sayWord(w, 'w');
+    if (rev) autoSay(w, 'w');
     const pv = C.previewIntervals(item.card, today(), settings.retention);
     const learning = !item.card || item.card.st !== 'review';
-    const sub = g => learning ? (g === 1 ? 'ще раз' : g === 4 ? 'вже знаю' : 'далі') : inDays(pv[g]);
+    const sub = g => learning ? (g === 1 ? 'ще раз' : g === 4 ? 'вже знаю' : 'далі') : shortDays(pv[g]);
     const grade = g => { finish(g); nextItem(); };
     const bs = [
       button('Не знаю', 'btn-again', () => grade(1), sub(1)),
@@ -953,60 +1391,57 @@ function typing(item, kind) {
     const res = check.result;
     input.disabled = true;
     input.blur();
-    let g, v;
-    if (res === 'exact') {
-      g = ui.hints ? 2 : 3;
-      input.classList.add('right');
-      v = verdict('right', 'Правильно', ui.hints ? ' з підказкою' : '');
-    } else if (res === 'typo') {
-      g = 2;
-      input.classList.add('typo');
-      v = verdict('typo', 'Майже, перевір написання');
-    } else {
-      g = 1;
-      input.classList.add('wrong');
-      v = verdict('wrong', value ? 'Ні, правильно:' : 'Правильна відповідь:');
-    }
+    let g;
+    if (res === 'exact') { g = ui.hints ? 2 : 3; input.classList.add('right'); }
+    else if (res === 'typo') { g = 2; input.classList.add('typo'); }
+    else { g = 1; input.classList.add('wrong'); }
     finish(g);
     if (ui.blank) { ui.blank.classList.add('filled'); }
-    sayWord(w, kind === 'cloze' ? 'x' : 'w');
-    let yours = null;
-    if (g <= 2 && value && res !== 'exact') {
-      yours = el('div');
+    autoSay(w, kind === 'cloze' ? 'x' : 'w');
+    // Що написав учень проти правильного: літери з помилкою підсвічені
+    const right = String(check.target || display);
+    let yours = null, close = false;
+    if (value && res !== 'exact') {
+      yours = el('span', 'yours-box');
       const line = (label, text, against, cls) => {
-        const p = el('p', 'yours');
+        const p = el('span', 'yours');
         p.appendChild(document.createTextNode(label));
         const span = el('span'); span.lang = 'en';
         C.diffMarks(text, against).forEach(m => span.appendChild(m.ok ? document.createTextNode(m.ch) : el('span', cls, m.ch)));
         p.appendChild(span);
         yours.appendChild(p);
       };
-      const right = String(check.target || display);
-      const close = res === 'typo' || (check.dist != null && check.dist <= Math.ceil(right.length * 0.4));
+      close = res === 'typo' || (check.dist != null && check.dist <= Math.ceil(right.length * 0.4));
       if (close) {
         line('Ти написав: ', value, right, 'bad');
         line('Правильно: ', right, value, 'fix');
       } else {
-        const p = el('p', 'yours');
+        const p = el('span', 'yours');
         const sv = el('s', null, value); sv.lang = 'en';
         p.append(document.createTextNode('Ти написав: '), sv);
         yours.appendChild(p);
       }
     }
-    $('card').appendChild(details(w, { verdict: v, yours, en: true, uk: kind === 'dictation', wrong: g === 1 }));
+    let v;
+    if (res === 'exact') v = verdict('right', 'Правильно', ui.hints ? ' з підказкою' : '');
+    else if (res === 'typo') v = verdict('typo', 'Майже, перевір написання', null, null, yours);
+    else if (close) v = verdict('wrong', 'Неправильно', null, null, yours);
+    else v = verdict('wrong', value ? 'Ні, правильно:' : 'Правильна відповідь:', null, enSpan(display), yours);
+    $('card').appendChild(details(w, { en: true, uk: kind === 'dictation', wrong: g === 1 }));
     const next = button('Далі', 'btn-primary', nextItem);
     const btns = [next];
     if (g === 1 && value) {
       const accept = button('Я мав рацію', 'btn-quiet', () => {
         regrade(ui.hints ? 2 : 3);
-        toast('Зараховано');
-        accept.remove();
-        setFoot([next]);
+        input.classList.remove('wrong'); input.classList.add('right');
+        setFoot([next], 0, verdict('right', 'Зараховано'));
+        keys = { enter: () => next.click() };
       });
       btns.unshift(accept);
     }
-    setFoot(btns, btns.length === 2 ? 2 : 0);
+    setFoot(btns, btns.length === 2 ? 2 : 0, v);
     keys = { enter: () => next.click() };
+    if (res === 'exact' && !ui.hints) startAuto(next);
   };
   const check = () => {
     if (ui.answered) return;
@@ -1092,11 +1527,11 @@ function build(item, sentence) {
     redraw();
   };
   $('card').append(answerBox, bank);
-  const done = (g, v) => {
+  const done = (g, kind, title, sub) => {
     finish(g);
-    sayWord(w, sentence ? 'x' : 'w');
-    $('card').appendChild(details(w, { verdict: v, en: true, uk: sentence, wrong: g === 1 }));
-    nextButton();
+    autoSay(w, sentence ? 'x' : 'w');
+    $('card').appendChild(details(w, { en: true, uk: sentence, wrong: g === 1 }));
+    nextButton(verdict(kind, title, sub, g === 1 ? enSpan(sentence ? w.ex : w.en) : null), g === 3);
   };
   const check = () => {
     if (ui.answered || !placed.length) return;
@@ -1104,19 +1539,19 @@ function build(item, sentence) {
     if (ok) {
       placed.forEach(p => { p.state = 'good'; });
       redraw();
-      done(ui.tries ? 2 : 3, verdict('right', 'Правильно', ui.tries ? ' з другої спроби' : ''));
+      done(ui.tries ? 2 : 3, 'right', 'Правильно', ui.tries ? ' з другої спроби' : '');
       return;
     }
     ui.tries++;
     placed.forEach((p, i) => { p.state = p.t.toLowerCase() === lowerTarget[i] ? 'good' : 'bad'; });
     redraw();
     if (ui.tries >= 2) {
-      done(1, verdict('wrong', 'Правильний порядок:'));
-    } else toast('Майже. Прибери червоні слова й спробуй ще раз');
+      done(1, 'wrong', 'Правильний порядок:');
+    } else { haptic('wrong'); toast('Майже. Прибери червоні слова й спробуй ще раз'); }
   };
   const checkBtn = button('Перевірити', 'btn-primary', check);
   checkBtn.disabled = true;
-  setFoot([button('Не знаю', 'btn-quiet', () => { if (!ui.answered) done(1, verdict('wrong', 'Правильно так:')); }), checkBtn], 2);
+  setFoot([button('Не знаю', 'btn-quiet', () => { if (!ui.answered) done(1, 'wrong', 'Правильно так:'); }), checkBtn], 2);
   keys = { enter: check };
 }
 RENDER.build_phrase = item => build(item, false);
@@ -1132,15 +1567,15 @@ RENDER.speak = item => {
     if (ui.revealed) return;
     ui.revealed = true;
     sayWord(w, 'w');
-    const v = heard ? verdict('info', 'Почула: «' + heard + '»', ' порівняй з правильним') : verdict('info', 'Порівняй зі своєю відповіддю');
-    $('card').appendChild(details(w, { verdict: v, uk: false }));
+    const v = heard ? verdict('info', 'Почула: «' + heard + '»', ' порівняй з правильним', pair(w)) : verdict('info', 'Порівняй зі своєю відповіддю', null, pair(w));
+    $('card').appendChild(details(w, { uk: false }));
     const grade = g => { finish(g); nextItem(); };
     const bs = [
       button('Не згадав', 'btn-again', () => grade(1)),
       button('З помилкою', '', () => grade(2)),
       button('Правильно', 'btn-primary', () => grade(3))
     ];
-    setFoot(bs, 3);
+    setFoot(bs, 3, v);
     keys = { num: n => bs[n - 1] && bs[n - 1].click() };
   };
   if (canRecognize()) {
@@ -1172,8 +1607,8 @@ RENDER.speak = item => {
         if (hit) {
           finish(3);
           sayWord(w, 'w');
-          $('card').appendChild(details(w, { verdict: verdict('right', 'Правильно, вимова зрозуміла'), uk: false }));
-          nextButton();
+          $('card').appendChild(details(w, { uk: false }));
+          nextButton(verdict('right', 'Правильно, вимова зрозуміла'), true);
         } else selfGrade(alts[0] || '');
       };
       rec.onerror = ev => {
@@ -1183,7 +1618,7 @@ RENDER.speak = item => {
       rec.onend = () => { mic.classList.remove('on'); label.textContent = 'Натисни й говори'; rec = null; };
       try { rec.start(); } catch (e) { recBroken = true; selfGrade(''); }
     });
-    setFoot([button('Не знаю', 'btn-quiet', () => { if (!ui.answered && !ui.revealed) { finish(1); sayWord(w, 'w'); $('card').appendChild(details(w, { verdict: verdict('wrong', 'Правильно:'), uk: false, wrong: true })); nextButton(); } }), button('Показати відповідь', '', () => selfGrade(''))], 2);
+    setFoot([button('Не знаю', 'btn-quiet', () => { if (!ui.answered && !ui.revealed) { finish(1); sayWord(w, 'w'); $('card').appendChild(details(w, { uk: false, wrong: true })); nextButton(verdict('wrong', 'Правильно:', null, pair(w))); } }), button('Показати відповідь', '', () => selfGrade(''))], 2);
   } else {
     body.appendChild(el('p', 'tip', 'Скажи повністю вголос, потім відкрий відповідь і чесно оціни себе.'));
     const rb = button('Показати відповідь', 'btn-primary', () => selfGrade(''));
@@ -1228,14 +1663,14 @@ RENDER.own_sentence = item => {
     if (!list.includes(text)) { list.unshift(text); own[w.id] = list.slice(0, 3); save(KEYS.own, own); }
     finish(3);
     ta.classList.add('right');
-    sayWord(w, 'x');
-    $('card').appendChild(details(w, { verdict: verdict('right', 'Записала твоє речення', ' перевір себе за прикладами нижче'), uk: false }));
+    autoSay(w, 'x');
+    $('card').appendChild(details(w, { uk: false }));
     const next = button('Далі', 'btn-primary', nextItem);
-    const unsure = button('Я не впевнений', 'btn-quiet', () => { regrade(2); toast('Добре, повторимо раніше'); setFoot([next]); });
-    setFoot([unsure, next], 2);
+    const unsure = button('Я не впевнений', 'btn-quiet', () => { regrade(2); setFoot([next], 0, verdict('info', 'Добре, повторимо раніше')); keys = { enter: () => next.click() }; });
+    setFoot([unsure, next], 2, verdict('right', 'Записала твоє речення', ' перевір себе за прикладами в картці'));
     keys = { enter: () => next.click() };
   };
-  setFoot([button('Пропустити', 'btn-quiet', () => { if (!ui.answered) { finish(2); sayWord(w, 'x'); $('card').appendChild(details(w, { verdict: verdict('info', 'Ось як його вживають'), uk: false })); nextButton(); } }), button('Готово', 'btn-primary', check)], 2);
+  setFoot([button('Пропустити', 'btn-quiet', () => { if (!ui.answered) { finish(2); autoSay(w, 'x'); $('card').appendChild(details(w, { uk: false })); nextButton(verdict('info', 'Ось як його вживають')); } }), button('Готово', 'btn-primary', check)], 2);
   keys = {};
   try { ta.focus({ preventScroll: true }); } catch (e) {}
 };
@@ -1249,7 +1684,8 @@ function startSprint() {
   stopAudio();
   session = null; current = null; ui = null;
   sprint = { pool, i: 0, ok: 0, wrong: [], left: SPRINT_SECONDS, timer: null, t0: performance.now() };
-  showTab('learn');
+  mode = 'sprint';
+  if (currentTab !== 'learn') showTab('learn');
   $('stage').hidden = false;
   $('learnHome').hidden = true;
   sprint.timer = setInterval(() => {
@@ -1295,6 +1731,7 @@ function sprintNext() {
       if (!sprint || b.disabled) return;
       btns.forEach(x => { x.disabled = true; });
       const ok = o.id === w.id;
+      haptic(ok ? 'ok' : 'wrong');
       if (ok) { sprint.ok++; b.classList.add('right'); }
       else {
         b.classList.add('wrong');
@@ -1317,6 +1754,7 @@ function endSprint() {
   clearInterval(sprint.timer);
   const r = sprint;
   sprint = null;
+  mode = 'summary';
   const best = meta.sprintBest || 0;
   const record = r.ok > best;
   if (record) meta.sprintBest = r.ok;
@@ -1348,17 +1786,21 @@ function endSprint() {
     });
     card.appendChild(d);
   }
-  const done = button('Готово', 'btn-primary', () => { renderLearn(); });
+  const done = button('Готово', 'btn-primary', () => { mode = null; renderLearn(); });
   const again = button('Ще раз', '', startSprint);
   setFoot([again, done], 2);
   keys = { enter: () => done.click() };
   renderStreak();
+  updateTape();
 }
 
 /* Клавіатура (для комп'ютера) */
 document.addEventListener('keydown', e => {
   if (currentTab !== 'learn') return;
+  if (auto && e.key !== 'Enter') cancelAuto();
   if (e.target.closest && e.target.closest('input,textarea,select')) return;
+  if (e.key === 'Escape' && mode) { e.preventDefault(); $('exitBtn').click(); return; }
+  if ((e.key === 'z' || e.key === 'я') && !e.metaKey && !e.ctrlKey && mode === 'session') { e.preventDefault(); doUndo(); return; }
   if (/^[1-4]$/.test(e.key) && keys.num) { e.preventDefault(); keys.num(Number(e.key)); return; }
   if (e.key === 'Enter' && keys.enter) { if (e.target.closest && e.target.closest('button')) return; e.preventDefault(); keys.enter(); return; }
   if (e.key === ' ' && keys.space) { e.preventDefault(); keys.space(); }
@@ -1415,7 +1857,10 @@ function renderList() {
       txt.appendChild(m);
     }
     const st = C.statusOf(c);
-    head.append(txt, el('span', 'status ' + st, STATUS_TEXT[st]));
+    head.appendChild(txt);
+    // Мітка лише там, де вона щось каже: нові слова без мітки, «вчу» тихо
+    if (st !== 'new') head.appendChild(el('span', 'status ' + st, STATUS_TEXT[st]));
+    else if ((meta.priority || []).includes(w.id)) head.appendChild(el('span', 'status pri', 'першим'));
     head.addEventListener('click', () => { openItem = openItem === w.id ? null : w.id; renderList(); });
     li.appendChild(head);
     if (openItem === w.id) li.appendChild(itemBody(w, c, t));
@@ -1457,6 +1902,18 @@ function itemBody(w, c, t) {
     acts.appendChild(b);
   };
   act('Послухати', () => sayWord(w, 'w'));
+  if (!c) {
+    const isPri = (meta.priority || []).includes(w.id);
+    act(isPri ? 'Не першим' : 'Вчити першим', () => {
+      const list = (meta.priority || []).filter(x => x !== w.id && !cards[x]);
+      if (!isPri) list.push(w.id);
+      meta.priority = list;
+      save(KEYS.meta, meta);
+      resetSession();
+      renderList();
+      toast(isPri ? 'Повернула в загальну чергу' : '«' + w.en + '» буде серед найближчих нових');
+    });
+  }
   if (!c) act('Вже знаю', () => {
     cards[w.id] = C.knownCard(t, settings.retention, Math.random);
     persist(); resetSession(); renderList(); toast('Позначено як відоме');
@@ -1475,7 +1932,7 @@ function itemBody(w, c, t) {
   body.appendChild(acts);
   return body;
 }
-function resetSession() { session = null; current = null; ui = null; }
+function resetSession() { session = null; current = null; ui = null; if (mode === 'session') mode = null; }
 $('search').addEventListener('input', () => { openItem = null; renderList(); });
 $('addOpen').addEventListener('click', () => {
   $('addPanel').hidden = false;
@@ -1673,6 +2130,16 @@ function renderSettings() {
   $('typing').checked = settings.typing !== false;
   $('pretest').checked = settings.pretest !== false;
   $('speaking').checked = settings.speaking !== false;
+  $('autoNext').checked = settings.autoNext !== false;
+  $('quiet').checked = !!settings.quiet;
+  $('haptics').checked = settings.haptics !== false;
+  const rb = $('reminderBox');
+  rb.innerHTML = '';
+  if (meta.reminder) {
+    const p = el('p', 'note2', 'Зараз: ' + meta.reminder.a + ', о ' + meta.reminder.t + '. Щоб змінити, додай нову подію, а стару видали в Календарі.');
+    rb.appendChild(p);
+  }
+  rb.appendChild(reminderPanel(() => renderSettings()));
   const vopts = AUD.voices.map(v => [v, VOICE_NAMES[v] || v]).concat([['device', 'iPhone']]);
   segment('segVoice', vopts, settings.voiceSrc, v => { settings.voiceSrc = v; re(); sayWord(byId(SAMPLE_ID), 'x'); });
   segment('segRate', [[0.75, 'Повільно'], [0.9, 'Середньо'], [1, 'Звичайно']], settings.rate, v => { settings.rate = v; re(); sayWord(byId(SAMPLE_ID), 'x'); });
@@ -1701,6 +2168,10 @@ $('typing').addEventListener('change', e => { settings.typing = e.target.checked
 $('pretest').addEventListener('change', e => { settings.pretest = e.target.checked; saveSettings(); });
 $('speaking').addEventListener('change', e => { settings.speaking = e.target.checked; saveSettings(); });
 $('autoplay').addEventListener('change', e => { settings.autoplay = e.target.checked; saveSettings(); });
+$('autoNext').addEventListener('change', e => { settings.autoNext = e.target.checked; saveSettings(); });
+$('quiet').addEventListener('change', e => { settings.quiet = e.target.checked; saveSettings(); if (settings.quiet) stopAudio(); });
+$('haptics').addEventListener('change', e => { settings.haptics = e.target.checked; saveSettings(); if (settings.haptics) haptic('ok'); });
+$('triageBtn').addEventListener('click', startTriage);
 $('voice').addEventListener('change', e => { settings.voice = e.target.value; saveSettings(); speakDevice('Can you give me a hand?'); });
 $('voiceTest').innerHTML = ICON.speaker;
 $('voiceTest').addEventListener('click', () => speakDevice('Can you give me a hand with these slabs?'));
@@ -1773,7 +2244,7 @@ $('backupFile').addEventListener('change', async e => {
     settings.cats = Object.assign({}, settings.cats || {});
     if (![0.85, 0.9, 0.95].includes(settings.retention)) settings.retention = 0.9;
     save(KEYS.custom, custom); save(KEYS.notes, notes); save(KEYS.own, own); save(KEYS.meta, meta); saveSettings(); persist();
-    reindex(); session = null; current = null;
+    reindex(); session = null; current = null; mode = null;
     renderAll();
     toast('Прогрес відновлено');
   } catch (err) {
@@ -1783,7 +2254,7 @@ $('backupFile').addEventListener('change', async e => {
 $('resetAll').addEventListener('click', () => {
   if (!confirm('Скинути весь прогрес і статистику? Свої слова й асоціації залишаться. Скасувати це не вийде.')) return;
   cards = {}; log = {}; persist();
-  session = null; current = null;
+  session = null; current = null; mode = null;
   renderAll();
   toast('Прогрес скинуто');
 });
@@ -1808,9 +2279,81 @@ function renderAll() { renderStreak(); showTab(currentTab); }
 let lastDay = today();
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState !== 'visible') return;
-  if (today() !== lastDay) { lastDay = today(); session = null; current = null; ui = null; renderAll(); }
+  if (today() !== lastDay) {
+    lastDay = today();
+    if (sprint) endSprint();
+    session = null; current = null; ui = null; mode = null; triage = null;
+    renderAll();
+  }
 });
 window.addEventListener('resize', () => { if (currentTab === 'learn') updateTape(); });
+
+/* ---------- Кнопки заняття ---------- */
+$('exitBtn').innerHTML = ICON.close;
+$('undoBtn').innerHTML = ICON.undo;
+$('exitBtn').addEventListener('click', () => {
+  if (mode === 'session') { endSession(true); return; }
+  if (mode === 'sprint') { endSprint(); return; }
+  triage = null; mode = null; renderLearn();
+});
+$('undoBtn').addEventListener('click', doUndo);
+$('quietBtn').addEventListener('click', toggleQuiet);
+
+/* ---------- Клавіатура iPhone і висота нижньої панелі ----------
+   Safari не підсовує закріплені знизу елементи над клавіатурою, тож рахуємо її висоту самі. */
+const vv = window.visualViewport;
+let maxInnerH = window.innerHeight;
+function measureFoot() {
+  const f = $('foot');
+  const h = f.hidden || $('stage').hidden ? 0 : f.offsetHeight;
+  document.documentElement.style.setProperty('--foot-h', h + 'px');
+}
+if ('ResizeObserver' in window) new ResizeObserver(measureFoot).observe($('foot'));
+let vvTimer = null;
+function textFocused() { const a = document.activeElement; return !!a && (a.tagName === 'TEXTAREA' || (a.tagName === 'INPUT' && !/^(checkbox|radio|button|file|range)$/.test(a.type))); }
+function onViewport() {
+  if (!vv) return;
+  maxInnerH = Math.max(maxInnerH, window.innerHeight);
+  // Клавіатура відкрита: видима частина помітно нижча за екран, і фокус у полі вводу
+  const open = textFocused() && maxInnerH - vv.height > 120 && vv.scale < 1.05;
+  // Наскільки підняти нижню панель, щоб вона стояла над клавіатурою (у координатах сторінки)
+  const kb = open ? Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) : 0;
+  document.documentElement.style.setProperty('--kb', kb + 'px');
+  document.body.classList.toggle('kb-open', open);
+  clearTimeout(vvTimer);
+  if (open) vvTimer = setTimeout(keepFocusVisible, 80);
+}
+/* Поле вводу має бути видно між верхом екрана і панеллю з кнопками над клавіатурою */
+function keepFocusVisible() {
+  const a = document.activeElement;
+  if (!vv || !a || !a.closest || !a.closest('#card')) return;
+  const foot = $('foot');
+  const r = a.getBoundingClientRect();
+  const top = vv.offsetTop + 8;
+  const bottom = vv.offsetTop + vv.height - (foot.hidden ? 0 : foot.offsetHeight) - 10;
+  if (r.bottom > bottom) window.scrollBy(0, r.bottom - bottom);
+  else if (r.top < top) window.scrollBy(0, r.top - top);
+}
+if (vv) { vv.addEventListener('resize', onViewport); vv.addEventListener('scroll', onViewport); }
+window.addEventListener('orientationchange', () => { maxInnerH = 0; setTimeout(onViewport, 400); });
+document.addEventListener('focusin', () => setTimeout(onViewport, 50));
+document.addEventListener('focusout', () => setTimeout(onViewport, 50));
+/* Програма з екрана «Додому»: після клавіатури iOS інколи лишає екран укороченим. Лікуємо перемалюванням */
+document.addEventListener('focusout', () => {
+  if (!standalone) return;
+  setTimeout(() => {
+    const a = document.activeElement;
+    if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return;
+    if (window.innerHeight >= maxInnerH - 60) return;
+    const app = document.querySelector('.app');
+    const y = window.scrollY;
+    app.style.display = 'none';
+    void app.offsetHeight;
+    app.style.display = '';
+    window.scrollTo(0, y);
+    onViewport();
+  }, 350);
+});
 
 renderAll();
 
@@ -1820,9 +2363,12 @@ if ('serviceWorker' in navigator) {
 if (/[?&]test=1/.test(location.search)) {
   window.EW = {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
-    settings, nextItem, showTab, startSprint, get sprint() { return sprint; },
+    settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
+    get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession,
+    debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());
+      mode = 'session';
       showTab('learn');
       current = { id, word: byId(id), card: cards[id], exercise, source: 'review' };
       show(current);

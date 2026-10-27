@@ -29,12 +29,17 @@
   <main>
   <!-- Вчити -->
   <section id="screen-learn" data-screen="learn">
-    <div class="tape" id="tape" role="progressbar" aria-label="Прогрес за сьогодні" aria-valuemin="0">
-      <span class="tape-case" aria-hidden="true"></span>
-      <div class="tape-track" id="tapeTrack">
-        <div class="tape-fill" id="tapeFill"><div class="tape-scale" id="tapeScale"></div></div>
-        <span class="tape-hook" id="tapeHook" aria-hidden="true"></span>
+    <div class="sbar">
+      <button type="button" class="icon-btn" id="exitBtn" aria-label="Завершити заняття" hidden></button>
+      <div class="tape" id="tape" role="progressbar" aria-label="Прогрес за сьогодні" aria-valuemin="0">
+        <span class="tape-case" aria-hidden="true"></span>
+        <div class="tape-track" id="tapeTrack">
+          <div class="tape-fill" id="tapeFill"><div class="tape-scale" id="tapeScale"></div></div>
+          <span class="tape-hook" id="tapeHook" aria-hidden="true"></span>
+        </div>
       </div>
+      <button type="button" class="icon-btn" id="undoBtn" aria-label="Повернути попередню вправу" hidden></button>
+      <button type="button" class="icon-btn" id="quietBtn" aria-label="Тихий режим" aria-pressed="false" hidden></button>
     </div>
     <div class="tape-meta"><span id="tapeDone"></span><span id="tapeLeft"></span></div>
     <div id="learnHome" class="plan"></div>
@@ -63,9 +68,11 @@
         </div>
       </form>
     </div>
-    <input class="field search" id="search" type="search" placeholder="Пошук англійською або українською" aria-label="Пошук у словнику" autocapitalize="none" autocorrect="off">
-    <div class="seg small" id="segStatus" style="margin-top:12px" role="group" aria-label="Стан слова"></div>
-    <div class="chips" id="chips" role="group" aria-label="Теми"></div>
+    <div class="dict-tools">
+      <input class="field search" id="search" type="search" placeholder="Пошук слова" aria-label="Пошук у словнику англійською або українською" autocapitalize="none" autocorrect="off" enterkeyhint="search">
+      <div class="seg small" id="segStatus" role="group" aria-label="Стан слова"></div>
+      <div class="chips" id="chips" role="group" aria-label="Теми"></div>
+    </div>
     <div class="dict-meta"><span id="dictCount"></span><button class="link-btn" id="addOpen">Додати слово</button></div>
     <ul class="list" id="list"></ul>
   </section>
@@ -100,35 +107,34 @@
   <!-- Налаштування -->
   <section id="screen-settings" data-screen="settings" hidden>
     <div class="group">
-      <h2>Нових слів на день</h2>
+      <h2>Щодня</h2>
+      <h3 class="sub">Нових слів на день</h3>
       <p class="note2">Повторення показуються завжди, це лише ліміт нових.</p>
       <div class="seg" id="segNew"></div>
+      <h3 class="sub">Тривалість заняття</h3>
+      <p class="note2">Коротке заняття закінчиться раніше, а початі нові слова все одно довчиш.</p>
+      <div class="seg" id="segLen"></div>
+      <h3 class="sub">Нагадування</h3>
+      <div id="reminderBox"></div>
     </div>
     <div class="group">
-      <h2>Як вчити</h2>
+      <h2>Вправи</h2>
       <p class="note2">Вправи змушують згадувати самому, тому слова тримаються довше. Картки швидші, але слабші.</p>
       <div class="seg" id="segMode"></div>
       <div class="toggle" style="margin-top:12px"><span>Вгадувати значення перед показом<span class="opt">здогадка перед відповіддю, навіть хибна, покращує пам'ять</span></span><input type="checkbox" class="switch" id="pretest" aria-label="Вгадувати значення перед показом"></div>
       <div class="toggle"><span>Вправи з письмом<span class="opt">написати слово, вставити в речення, диктант, своє речення</span></span><input type="checkbox" class="switch" id="typing" aria-label="Вправи з письмом"></div>
       <div class="toggle"><span>Вправи на говоріння<span class="opt">сказати слово вголос</span></span><input type="checkbox" class="switch" id="speaking" aria-label="Вправи на говоріння"></div>
+      <div class="toggle"><span>Після правильної відповіді одразу далі<span class="opt">за секунду-дві, якщо не торкатися екрана</span></span><input type="checkbox" class="switch" id="autoNext" aria-label="Після правильної відповіді одразу далі"></div>
     </div>
     <div class="group">
-      <h2>Тривалість заняття</h2>
-      <p class="note2">Коротке заняття закінчиться раніше, а початі нові слова все одно довчиш.</p>
-      <div class="seg" id="segLen"></div>
-    </div>
-    <div class="group">
-      <h2>Наскільки міцно пам'ятати</h2>
-      <p class="note2" id="retNote"></p>
-      <div class="seg" id="segRet"></div>
-    </div>
-    <div class="group">
-      <h2>Вимова</h2>
+      <h2>Звук і відчуття</h2>
       <p class="note2">Емма озвучує всі слова й приклади зі словника британською вимовою.</p>
       <div class="seg" id="segVoice"></div>
-      <label class="lbl">Швидкість</label>
+      <h3 class="sub">Швидкість</h3>
       <div class="seg" id="segRate"></div>
       <div class="toggle" style="margin-top:14px"><span>Озвучувати слово автоматично</span><input type="checkbox" class="switch" id="autoplay" aria-label="Озвучувати слово автоматично"></div>
+      <div class="toggle"><span>Тихий режим<span class="opt">без автоозвучки і без вправ на слух та говоріння; вмикається й кнопкою під час заняття</span></span><input type="checkbox" class="switch" id="quiet" aria-label="Тихий режим"></div>
+      <div class="toggle"><span>Вібрація на відповідь<span class="opt">легкий відгук телефона на правильну й хибну відповідь</span></span><input type="checkbox" class="switch" id="haptics" aria-label="Вібрація на відповідь"></div>
       <label class="lbl" for="voice" id="voiceLbl">Голос iPhone для слів, доданих на сайті</label>
       <div class="voice-row">
         <select class="field" id="voice"></select>
@@ -138,8 +144,14 @@
       <button class="btn" id="offlineAudio" style="width:100%;margin-top:10px">Завантажити всі записи для офлайну</button>
     </div>
     <div class="group">
+      <h2>Наскільки міцно пам'ятати</h2>
+      <p class="note2" id="retNote"></p>
+      <div class="seg" id="segRet"></div>
+    </div>
+    <div class="group">
       <h2>Теми для нових слів</h2>
       <div id="catToggles"></div>
+      <button class="btn" id="triageBtn" style="width:100%;margin-top:14px">Відсіяти знайомі серед наступних нових</button>
     </div>
     <div class="group">
       <h2>Резервна копія</h2>
@@ -166,16 +178,19 @@
         <p><b>Своє речення.</b> Для міцних слів зрідка просить скласти власне речення. Створене самим запам'ятовується найкраще.</p>
         <p><b>Своя асоціація.</b> Для слів, які постійно вилітають, придумай власну зачіпку. Своя тримається найкраще.</p>
         <p><b>Щодня потроху.</b> 10–15 хвилин щодня дають більше, ніж година раз на тиждень, а сон між повтореннями закріплює вивчене.</p>
+        <p><b>План «коли й де».</b> Конкретний намір («після вечері відкриваю слова») виконується помітно частіше, ніж просто «вчитиму щодня». Тому нагадування прив'язане до звичної справи.</p>
+        <p><b>Хоч 2 хвилини.</b> У важкий день зроби коротке заняття з найслабших повторень: серія жива, а звичка не рветься. Один пропущений день на тиждень серію теж не обриває.</p>
       </details>
       <details class="more">
-        <summary>Нагадування</summary>
-        <p>Найпростіше: у Нагадуваннях на iPhone створи щоденне нагадування на зручний час, наприклад на дорогу з роботи, і встав у нього адресу сайту.</p>
+        <summary>Під час заняття</summary>
+        <p><b>Хрестик угорі</b> завершує заняття, прогрес уже збережено. <b>Стрілка назад</b> повертає попередню вправу, якщо натиснув не те. <b>Динамік</b> вмикає тихий режим: без звуку й вправ на слух, коли поруч люди.</p>
+        <p>Після правильної відповіді наступна вправа з'являється сама. Торкнись картки, щоб зупинитися й роздивитися приклад.</p>
       </details>
     </div>
     <div class="group bare">
       <button class="btn btn-danger" id="resetAll" style="width:100%">Скинути весь прогрес</button>
     </div>
-    <p class="version">Версія 6 від 26.10.2026</p>
+    <p class="version">Версія 7 від 27.10.2026</p>
   </section>
   </main>
 </div>

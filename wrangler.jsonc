@@ -2,7 +2,10 @@
   // Назва воркера має збігатися з Project name у Cloudflare
   "name": "english-words",
   "compatibility_date": "2026-09-01",
+  // Статичні файли з public/ віддаються напряму; воркер отримує лише інші адреси (/reminder.ics)
+  "main": "src/worker.js",
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    "binding": "ASSETS"
   }
 }

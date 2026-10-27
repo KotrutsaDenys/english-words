@@ -283,4 +283,99 @@ test('Спринт бере лише вивчені слова', () => {
   assert.strictEqual(C.sprintPool(WORDS, cards).map(w => w.id).join(','), 'site-trowel');
 });
 
+test('Серія: один вихідний на тиждень не обриває, два пропуски поспіль обривають', () => {
+  const T = 5000;
+  const on = set => d => set.has(d);
+  // Вчилися 5 днів, сьогодні ще ні: серія 5
+  let info = C.streakInfo(on(new Set([T - 1, T - 2, T - 3, T - 4, T - 5])), T);
+  assert.strictEqual(info.days, 5);
+  assert.strictEqual(info.todayDone, false);
+  assert.ok(info.restReady, 'можна відпочити сьогодні');
+  // Пропуск позавчора: вихідний, серія триває, сам день не рахується
+  info = C.streakInfo(on(new Set([T, T - 1, T - 3, T - 4])), T);
+  assert.strictEqual(info.days, 4);
+  assert.strictEqual(info.rests.join(), String(T - 2));
+  // Два вихідні в одному тижні: другий обриває
+  info = C.streakInfo(on(new Set([T, T - 2, T - 4, T - 5])), T);
+  assert.strictEqual(info.days, 2);
+  // Вихідні через тиждень обидва зараховуються
+  const many = new Set();
+  for (let d = T; d > T - 20; d--) if (d !== T - 3 && d !== T - 11) many.add(d);
+  info = C.streakInfo(on(many), T);
+  assert.strictEqual(info.days, 18);
+  assert.strictEqual(info.rests.length, 2);
+  // Два дні поспіль без занять: серії немає
+  info = C.streakInfo(on(new Set([T - 3, T - 4])), T);
+  assert.strictEqual(info.days, 0);
+  // Учора пропуск, позавчора заняття: серія ще жива, сьогоднішнє заняття її продовжить
+  info = C.streakInfo(on(new Set([T - 2, T - 3])), T);
+  assert.strictEqual(info.days, 2);
+  assert.ok(!info.restReady);
+});
+
+test('«Вчити першим» ставить слова на початок черги нових', () => {
+  const order = C.orderNew(WORDS, {}, null, 10, 1000, ['site-hawk', 'talk-lend']).map(w => w.id);
+  assert.strictEqual(order.slice(0, 2).join(), 'site-hawk,talk-lend');
+  assert.strictEqual(order.length, WORDS.length);
+  assert.strictEqual(new Set(order).size, order.length);
+  // Пріоритет діє навіть для вимкненої теми
+  const off = C.orderNew(WORDS, {}, { site: false }, 10, 1000, ['site-hawk']).map(w => w.id);
+  assert.strictEqual(off[0], 'site-hawk');
+  assert.ok(!off.slice(1).some(id => id.startsWith('site-')));
+  const env = { words: WORDS, cards: {}, settings: { newPerDay: 3, retention: 0.9 }, today: 1000, log: {}, rng: seeded(5), canListen: true, priority: ['site-hawk'] };
+  assert.strictEqual(new C.Session(env).newIds[0], 'site-hawk');
+});
+
+test('Тихий режим прибирає вправи на слух і говоріння', () => {
+  const w = byId('site-trowel');
+  const ctx = { settings: { quiet: true, typing: true, speaking: true }, canListen: true };
+  for (const t of C.SOUND_EXERCISES) assert.ok(!C.eligible(t, w, ctx), t);
+  assert.ok(C.eligible('mcq_en_uk', w, ctx));
+  const rng = seeded(11);
+  for (let i = 0; i < 200; i++) {
+    const ex = C.pickExercise(w, { st: 'review', s: 40, reps: 6 }, { settings: ctx.settings, rng, recent: [], canListen: true });
+    assert.ok(!C.SOUND_EXERCISES.includes(ex), ex);
+  }
+});
+
+test('Назад: скасування знайомства і кількох відповідей поспіль', () => {
+  const env = { words: WORDS, cards: {}, settings: { newPerDay: 3, retention: 0.9 }, today: 9600, log: {}, rng: seeded(9), canListen: true };
+  const s = new C.Session(env);
+  const first = s.next();
+  assert.strictEqual(first.exercise, 'intro');
+  const before = s.newIds.slice();
+  s.introduce(first.id, false);
+  assert.ok(env.cards[first.id] && env.log.n === 1);
+  assert.strictEqual(s.undo(), first.id);
+  assert.ok(!(first.id in env.cards), 'картку прибрано');
+  assert.strictEqual(s.newIds.join(), before.join());
+  assert.strictEqual(env.log.n, undefined);
+  assert.ok(!s.canUndo());
+  // Знайомство і відповідь, потім два кроки назад (одне нове слово, тож далі буде його крок)
+  s.newIds = [first.id];
+  s.introduce(first.id, false);
+  const it = s.next();
+  assert.strictEqual(it.id, first.id);
+  const snapCards = JSON.stringify(env.cards);
+  s.answer(it.id, 1, it.exercise);
+  assert.strictEqual(s.undo(), it.id);
+  assert.strictEqual(JSON.stringify(env.cards), snapCards);
+  assert.strictEqual(s.undo(), first.id);
+  assert.strictEqual(Object.keys(env.cards).length, 0);
+});
+
+test('Коротке заняття: ліміт задається окремо від налаштувань', () => {
+  const cards = {};
+  for (let i = 0; i < 30; i++) cards[WORDS[i].id] = { st: 'review', s: 3 + i, d: 5, last: 9690, due: 9700, reps: 2, lapses: 0 };
+  const env = { words: WORDS, cards, settings: { newPerDay: 10, retention: 0.9, sessionLen: 0 }, today: 9700, log: {}, rng: seeded(6), canListen: true, reviewOnly: true, limit: 12 };
+  const s = new C.Session(env);
+  assert.strictEqual(s.remainingUnits(), 12);
+  let n = 0, it;
+  while ((it = s.next()) && n < 100) { s.answer(it.id, 3, it.exercise); n++; }
+  assert.strictEqual(n, 12);
+  // Найслабші першими
+  const answered = Object.entries(cards).filter(([, c]) => c.last === 9700).map(([id]) => id);
+  assert.ok(answered.includes(WORDS[0].id));
+});
+
 console.log('OK, тестів пройдено: ' + passed);
