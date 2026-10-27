@@ -323,8 +323,14 @@ try:
         page.click('.qa:has-text("Хоч 2 хвилини")')
         page.wait_for_timeout(200)
         assert page.evaluate('window.EW.session.limit') == 12 and page.evaluate('window.EW.session.newIds.length') == 0
-        page.click('#exitBtn')
-        page.wait_for_timeout(200)
+        # Жест «назад» закриває заняття, а не сайт
+        page.go_back()
+        page.wait_for_timeout(300)
+        assert page.url.startswith(URL.split('?')[0]) and page.evaluate('window.EW.mode') in ('summary', None), page.url
+        if page.evaluate('window.EW.mode'):
+            page.click('#exitBtn')
+            page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') is None
         # Вчити першим зі словника
         page.evaluate('window.EW.showTab("dict")')
         far = page.evaluate('window.WORDS[300]')

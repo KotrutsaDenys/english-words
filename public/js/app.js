@@ -369,7 +369,7 @@ function updateTape() {
 }
 /* Верхній рядок під час заняття: вийти, повернути відповідь, тихий режим */
 function updateSessionBar() {
-  const inSession = !!mode;
+  const inSession = !!mode && currentTab === 'learn';
   document.body.classList.toggle('in-session', inSession);
   $('exitBtn').hidden = !inSession;
   const undoable = mode === 'session' && !!session && session.canUndo();
@@ -379,7 +379,24 @@ function updateSessionBar() {
   $('quietBtn').setAttribute('aria-pressed', String(!!settings.quiet));
   $('quietBtn').innerHTML = settings.quiet ? ICON.mute : ICON.speaker;
   $('quietBtn').setAttribute('aria-label', settings.quiet ? 'Тихий режим увімкнено' : 'Тихий режим');
+  syncHistory();
 }
+/* Жест «назад» (свайп від краю в Safari, кнопка на Android) закриває заняття, а не сайт */
+let histPushed = false, ignorePop = false;
+function syncHistory() {
+  try {
+    if (mode && !histPushed) { history.pushState({ ew: 'stage' }, ''); histPushed = true; }
+    else if (!mode && histPushed) { histPushed = false; ignorePop = true; history.back(); }
+  } catch (e) {}
+}
+window.addEventListener('popstate', () => {
+  if (ignorePop) { ignorePop = false; return; }
+  if (!histPushed) return;
+  histPushed = false;
+  if (mode === 'session') endSession(true);
+  else if (mode === 'sprint') endSprint();
+  else if (mode) { triage = null; mode = null; renderLearn(); }
+});
 function estimateMinutes(units) { return Math.max(1, Math.ceil(units * 10 / 60)); }
 
 const WEEKDAYS = ['неділя', 'понеділок', 'вівторок', 'середа', 'четвер', "п'ятниця", 'субота'];
@@ -515,6 +532,14 @@ function renderLearn() {
     const sub = el('p', 'hero-sub', 'Приблизно ' + mins(estimateMinutes(units)) + '.');
     home.appendChild(sub);
     if (meta.reminder && meta.reminder.a) home.appendChild(el('p', 'plan-line', 'Твій план: ' + meta.reminder.a + ', о ' + meta.reminder.t));
+    if (settings.quiet) {
+      const q = el('button', 'plan-line quiet-chip');
+      q.type = 'button';
+      q.innerHTML = ICON.mute;
+      q.append(document.createTextNode('Тихий режим увімкнено · '), el('u', null, 'вимкнути'));
+      q.addEventListener('click', () => { settings.quiet = false; saveSettings(); renderLearn(); toast('Звук увімкнено'); });
+      home.appendChild(q);
+    }
     if (cnt.reviews >= 40 && cnt.fresh) home.appendChild(el('p', 'tip', 'Повторень сьогодні багато. Нічого страшного, якщо зробиш лише їх, а нові слова почекають до завтра.'));
     main = dock(l.r ? 'Продовжити' : 'Почати', '≈ ' + mins(estimateMinutes(units)), () => startSession());
     if (units > 14) tiles.push(quick('bolt', 'Хоч 2 хвилини', cnt.reviews ? 'найслабші повторення' : 'коротке заняття', startShort));
@@ -2266,7 +2291,7 @@ function showTab(name) {
   document.querySelectorAll('[data-tab]').forEach(t => {
     if (t.dataset.tab === name) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
   });
-  if (name !== 'learn') { stopAudio(); if (sprint) endSprint(); }
+  if (name !== 'learn') { stopAudio(); cancelAuto(); if (sprint) endSprint(); updateSessionBar(); }
   if (name === 'learn') renderLearn();
   if (name === 'dict') { renderStatusSeg(); renderChips(); renderList(); }
   if (name === 'report') renderReport();

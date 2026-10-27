@@ -137,6 +137,10 @@ body.kb-open .tape-meta{display:none}
 .tip{color:var(--muted);font-size:14px;margin:12px 0 0}
 .plan-line{margin:10px 0 0;display:inline-block;font-size:14px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--surface);border:1.5px solid var(--line-soft)}
 #learnHome.has-dock{padding-bottom:84px}
+.quiet-chip{display:inline-flex;align-items:center;gap:6px;color:var(--orange);font-family:inherit}
+.plan-line + .quiet-chip{margin-left:6px}
+.quiet-chip svg{width:16px;height:16px}
+.quiet-chip u{text-underline-offset:3px}
 /* Головна кнопка дня: закріплена над вкладками, під великим пальцем */
 .dock{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 66px);z-index:4;padding:14px 16px 8px;background:linear-gradient(to bottom,transparent,var(--plaster) 16px)}
 .dock .btn{max-width:488px;margin:0 auto;width:100%}
