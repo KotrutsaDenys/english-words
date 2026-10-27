@@ -125,7 +125,33 @@ function clipUrl(w, kind) {
   return h ? '/audio/' + voice + '/' + w.id + '-' + h + '.mp3' : null;
 }
 function canListen() { return (AUD.voices.includes(settings.voiceSrc) && AUD.voices.length > 0) || !!synth; }
-function stopAudio() { try { player.pause(); } catch (e) {} if (synth) synth.cancel(); }
+function stopAudio() { clearSegment(); try { player.pause(); } catch (e) {} if (synth) synth.cancel(); }
+/* Фрази слова лежать в одному файлі: граємо шматок [початок, кінець] і зупиняємось у паузі після нього */
+let segEnd = 0, segTimer = null, segToken = 0;
+function clearSegment() { segEnd = 0; if (segTimer) { clearInterval(segTimer); segTimer = null; } }
+function playSegment(url, start, end, fallbackText, rate) {
+  stopAudio();
+  playing = url;
+  player.dataset.fallback = fallbackText || '';
+  const src = blobs.get(url) || url;
+  const from = Math.max(0, start - 0.04);
+  const token = ++segToken;
+  const seek = () => { if (token !== segToken) return; try { if (Math.abs(player.currentTime - from) > 0.08) player.currentTime = from; } catch (e) {} };
+  if (player.getAttribute('src') !== src) {
+    player.src = src;
+    player.addEventListener('loadedmetadata', seek, { once: true });
+  }
+  if (player.readyState >= 1) seek();
+  player.defaultPlaybackRate = rate || settings.rate;
+  player.playbackRate = rate || settings.rate;
+  segEnd = end + 0.12;
+  segTimer = setInterval(() => {
+    if (!segEnd) return;
+    if (player.currentTime >= segEnd) { const keep = playing; try { player.pause(); } catch (e) {} clearSegment(); playing = keep; }
+  }, 30);
+  const p = player.play();
+  if (p && p.catch) p.catch(err => { if (err && err.name !== 'AbortError' && playing === url) { clearSegment(); speakDevice(fallbackText, rate); } });
+}
 function preloadUrl(url) {
   if (!url || blobs.has(url)) return;
   blobs.set(url, null);
@@ -152,17 +178,19 @@ function playUrl(url, fallbackText, rate) {
   if (p && p.catch) p.catch(err => { if (err && err.name !== 'AbortError' && playing === url) speakDevice(fallbackText, rate); });
 }
 player.addEventListener('error', () => { if (playing) { const t = player.dataset.fallback; playing = ''; if (t) speakDevice(t); } });
-function phraseUrl(w, i) {
+/* Файл з усіма фразами слова: AUDIO.phrases[id] = [хеш, [початок, кінець], ...] */
+function phrasePackUrl(w) {
   const voice = settings.voiceSrc;
   if (!w || !AUD.voices.includes(voice) || !AUD.phrases) return null;
-  const hs = AUD.phrases[w.id];
-  return hs && hs[i] ? '/audio/' + voice + '/' + w.id + '-' + hs[i] + '.mp3' : null;
+  const pk = AUD.phrases[w.id];
+  return pk && typeof pk[0] === 'string' ? '/audio/' + voice + '/' + w.id + '-p' + pk[0] + '.mp3' : null;
 }
 function sayPhrase(w, i) {
   const p = (PHRASES[w.id] || [])[i];
   if (!p) return;
-  const url = phraseUrl(w, i);
-  if (url) playUrl(url, p[0]); else speakDevice(p[0]);
+  const url = phrasePackUrl(w);
+  const t = url && AUD.phrases[w.id][i + 1];
+  if (t) playSegment(url, t[0], t[1], p[0]); else speakDevice(p[0]);
 }
 function cleanPhrase(t) { return String(t).replace(/[?!.,]+$/g, '').replace(/[“”"]/g, '').trim(); }
 function youglishUrl(t) { return 'https://youglish.com/pronounce/' + encodeURIComponent(cleanPhrase(t)) + '/english/uk'; }
@@ -212,7 +240,7 @@ function phraseBlock(w, open) {
   box.append(head, body);
   return box;
 }
-function preloadPhrases(w) { (PHRASES[w.id] || []).forEach((p, i) => preloadUrl(phraseUrl(w, i))); }
+function preloadPhrases(w) { preloadUrl(phrasePackUrl(w)); }
 function sayWord(w, kind, rate) {
   if (!w) return;
   const text = textFor(w, kind);
@@ -827,12 +855,13 @@ function showSummary(manual, practice) {
 
 /* ---------- Відсіяти знайомі слова наперед ---------- */
 let triage = null;
+function triageList() { return C.orderNew(allWords(), cards, settings.cats, settings.newPerDay, today(), meta.priority).filter(w => w.cat !== 'mine').slice(0, 20); }
 function startTriage() {
-  const list = C.orderNew(allWords(), cards, settings.cats, settings.newPerDay, today(), meta.priority).filter(w => w.cat !== 'mine').slice(0, 20);
+  const list = triageList();
   if (!list.length) { toast('Нових слів не залишилось'); return; }
   stopAudio();
   session = null; current = null; ui = null;
-  triage = { list, known: new Set() };
+  triage = { list, known: new Set(), total: 0 };
   mode = 'triage';
   if (currentTab !== 'learn') showTab('learn');
   renderTriage();
@@ -847,12 +876,17 @@ function renderTriage() {
   const label = el('span', 'ex-label');
   const ic = el('span', 'ex-ic'); ic.innerHTML = ICON.sieve;
   label.append(ic, document.createTextNode('Відсіяти знайомі'));
-  head.append(label, el('span', 'ex-right', words(triage.list.length) + ' наступні'));
+  const count = el('span', 'ex-right');
+  head.append(label, count);
   card.appendChild(head);
-  card.appendChild(el('p', 'prompt-sub', 'Торкнись слів, які вже знаєш напевно. Вони не займатимуть місце серед нових, лише перевірка через кілька тижнів.'));
+  card.appendChild(el('p', 'prompt-sub', 'Торкнись слів, які вже знаєш напевно. Вони не займатимуть місце серед нових, лише одна перевірка через кілька тижнів.'));
   const ul = el('div', 'triage');
-  const save1 = button('Готово', 'btn-primary', finishTriage);
-  const redrawCount = () => { save1.firstChild.textContent = triage.known.size ? 'Знаю ' + words(triage.known.size) : 'Нічого не знаю'; };
+  const done = button('Готово', 'btn-quiet', () => finishTriage(false));
+  const more = button('Ще 20', 'btn-primary', () => finishTriage(true));
+  const redrawCount = () => {
+    const n = triage.total + triage.known.size;
+    count.textContent = n ? 'знаю ' + words(n) : words(triage.list.length) + ' наступні';
+  };
   triage.list.forEach(w => {
     const b = el('button', 'tri');
     b.type = 'button';
@@ -873,17 +907,31 @@ function renderTriage() {
   });
   card.appendChild(ul);
   redrawCount();
-  setFoot([button('Скасувати', 'btn-quiet', () => { triage = null; mode = null; renderLearn(); }), save1], 2);
+  setFoot([done, more], 2);
+  keys = { enter: () => more.click() };
   updateTape();
   window.scrollTo(0, 0);
 }
-function finishTriage() {
+function finishTriage(next) {
   if (!triage) return;
-  const n = triage.known.size;
   triage.known.forEach(id => { if (!cards[id]) cards[id] = C.knownCard(today(), settings.retention, Math.random); });
+  triage.total += triage.known.size;
+  const n = triage.total;
   meta.triaged = today();
   save(KEYS.meta, meta);
   persist();
+  if (next) {
+    // Наступні 20: невідмічені з цієї порції підуть у навчання, їх не показуємо вдруге
+    const shown = new Set(triage.shown || []);
+    triage.list.forEach(w => shown.add(w.id));
+    const list = C.orderNew(allWords(), cards, settings.cats, settings.newPerDay, today(), meta.priority)
+      .filter(w => w.cat !== 'mine' && !shown.has(w.id)).slice(0, 20);
+    if (list.length) {
+      triage = { list, known: new Set(), total: n, shown: Array.from(shown) };
+      renderTriage();
+      return;
+    }
+  }
   triage = null;
   mode = null;
   renderLearn();
@@ -1892,6 +1940,7 @@ function renderList() {
     frag.appendChild(li);
   });
   list.appendChild(frag);
+  if (items.length > 400) list.appendChild(el('li', 'empty', 'Показано 400 з ' + items.length + '. Вибери тему або почни вводити слово.'));
 }
 function itemBody(w, c, t) {
   const body = el('div', 'item-body');
@@ -2207,7 +2256,7 @@ $('offlineAudio').addEventListener('click', async () => {
   const urls = [];
   allWords().forEach(w => {
     ['w', 'x', 'x2'].forEach(k => { const u = clipUrl(w, k); if (u) urls.push(u); });
-    (PHRASES[w.id] || []).forEach((p, i) => { const u = phraseUrl(w, i); if (u) urls.push(u); });
+    const pk = phrasePackUrl(w); if (pk) urls.push(pk);
   });
   if (!urls.length) return;
   offlineBusy = true;
@@ -2390,7 +2439,7 @@ if (/[?&]test=1/.test(location.search)) {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
     get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession,
-    debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, speaking: !!(synth && synth.speaking) }; },
+    debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());
       mode = 'session';

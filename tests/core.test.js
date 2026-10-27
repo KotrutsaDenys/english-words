@@ -9,6 +9,7 @@ const C = require('../public/js/core.js');
 const ctx = { window: {} };
 vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words.js'), 'utf8'), ctx);
+if (fs.existsSync(path.join(__dirname, '../public/words-base.js'))) vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words-base.js'), 'utf8'), ctx);
 const WORDS = ctx.window.WORDS;
 const byId = id => WORDS.find(w => w.id === id);
 let passed = 0;

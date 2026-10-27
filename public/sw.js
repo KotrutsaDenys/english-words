@@ -1,8 +1,8 @@
 // Сторінка й дані: мережа першою, щоб після коміту одразу була свіжа версія.
 // Записи вимови: кеш першим, бо назва файлу містить хеш і вміст не змінюється.
-const CACHE = 'ew-v7';
+const CACHE = 'ew-v8';
 const AUDIO_CACHE = 'ew-audio-v2';
-const CORE = ['/', '/app.css', '/words.js', '/phrases.js', '/audio.js', '/js/fsrs.js', '/js/core.js', '/js/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
+const CORE = ['/', '/app.css', '/words.js', '/words-base.js', '/phrases.js', '/phrases-base.js', '/audio.js', '/js/fsrs.js', '/js/core.js', '/js/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', event => {
@@ -48,15 +48,22 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  event.respondWith(
-    fetch(req).then(res => {
-      if (res.ok && res.status === 200 && !res.redirected) {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
-      }
-      return res;
-    }).catch(() =>
-      caches.match(req).then(hit => hit || (req.mode === 'navigate' ? caches.match('/') : Response.error()))
-    )
-  );
+  // Мережа першою, але на повільному інтернеті (на об'єкті, в дорозі) не чекаємо довше 3 с:
+  // віддаємо збережену копію, а свіжа ляже в кеш на наступний раз.
+  const network = fetch(req).then(res => {
+    if (res.ok && res.status === 200 && !res.redirected) {
+      const copy = res.clone();
+      caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+    }
+    return res;
+  });
+  const fallback = () => caches.match(req).then(hit => hit || (req.mode === 'navigate' ? caches.match('/') : null));
+  event.respondWith(new Promise(resolve => {
+    let done = false;
+    const finish = r => { if (!done && r) { done = true; resolve(r); } };
+    const timer = setTimeout(() => fallback().then(finish), 3000);
+    network.then(res => { clearTimeout(timer); finish(res); })
+      .catch(() => { clearTimeout(timer); fallback().then(hit => { if (!done) { done = true; resolve(hit || Response.error()); } }); });
+  }));
+  event.waitUntil(network.catch(() => {}));
 });

@@ -3,3 +3,5 @@ node_modules/
 .DS_Store
 __pycache__/
 *.pyc
+*.part.mp3
+public/audio.js.tmp

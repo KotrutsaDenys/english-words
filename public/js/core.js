@@ -113,12 +113,40 @@
     buy: ['bought'], see: ['saw', 'seen'], make: ['made'], hold: ['held'], send: ['sent'], feel: ['felt'],
     drive: ['drove', 'driven'], speak: ['spoke', 'spoken'], break: ['broke', 'broken'], think: ['thought'],
     catch: ['caught'], lend: ['lent'], overtake: ['overtook', 'overtaken'], fit: ['fitted'], spell: ['spelt', 'spelled'], be: ['is', 'am', 'are', 'was', 'were', 'been'],
-    have: ['has', 'had'], do: ['does', 'did', 'done'], wake: ['woke'], win: ['won'], lose: ['lost'], sell: ['sold']
+    have: ['has', 'had'], do: ['does', 'did', 'done'], wake: ['woke', 'woken'], win: ['won'], lose: ['lost'], sell: ['sold'],
+    // інші неправильні дієслова з базового словника
+    arise: ['arose', 'arisen'], bear: ['bore', 'born', 'borne'], beat: ['beaten'], become: ['became'], begin: ['began', 'begun'],
+    bend: ['bent'], bet: ['bet'], bind: ['bound'], bite: ['bit', 'bitten'], bleed: ['bled'], blow: ['blew', 'blown'],
+    build: ['built'], burn: ['burnt'], burst: ['burst'], cast: ['cast'], choose: ['chose', 'chosen'], cling: ['clung'],
+    cost: ['cost'], creep: ['crept'], deal: ['dealt'], dig: ['dug'], draw: ['drew', 'drawn'], dream: ['dreamt'],
+    drink: ['drank', 'drunk'], eat: ['ate', 'eaten'], feed: ['fed'], fight: ['fought'], flee: ['fled'], fly: ['flew', 'flown', 'flies'],
+    forbid: ['forbade', 'forbidden'], forgive: ['forgave', 'forgiven'], freeze: ['froze', 'frozen'], grow: ['grew', 'grown'],
+    hang: ['hung'], hear: ['heard'], hide: ['hid', 'hidden'], hit: ['hit'], kneel: ['knelt'], know: ['knew', 'known'],
+    lay: ['laid'], lead: ['led'], lean: ['leant'], leap: ['leapt'], learn: ['learnt'], let: ['let'], lie: ['lay', 'lain', 'lying'],
+    light: ['lit'], meet: ['met'], mistake: ['mistook', 'mistaken'], quit: ['quit'], read: ['read'], ride: ['rode', 'ridden'],
+    ring: ['rang', 'rung'], rise: ['rose', 'risen'], seek: ['sought'], shake: ['shook', 'shaken'], shine: ['shone'],
+    shoot: ['shot'], show: ['shown'], shrink: ['shrank', 'shrunk'], shut: ['shut'], sing: ['sang', 'sung'], sink: ['sank', 'sunk'],
+    sit: ['sat'], sleep: ['slept'], slide: ['slid'], smell: ['smelt'], spin: ['spun'], split: ['split'], spread: ['spread'],
+    spring: ['sprang', 'sprung'], stand: ['stood'], steal: ['stole', 'stolen'], stick: ['stuck'], sting: ['stung'],
+    strike: ['struck'], swear: ['swore', 'sworn'], sweep: ['swept'], swim: ['swam', 'swum'], swing: ['swung'],
+    teach: ['taught'], tear: ['tore', 'torn'], throw: ['threw', 'thrown'], wear: ['wore', 'worn'], weep: ['wept'],
+    wind: ['wound'], withdraw: ['withdrew', 'withdrawn'], write: ['wrote', 'written'], undertake: ['undertook', 'undertaken'],
+    upset: ['upset'], forecast: ['forecast'], broadcast: ['broadcast'], prove: ['proven'],
+    // неправильні множини й ступені порівняння
+    child: ['children'], man: ['men'], woman: ['women'], person: ['people'], foot: ['feet'], tooth: ['teeth'], mouse: ['mice'],
+    life: ['lives'], wife: ['wives'], knife: ['knives'], half: ['halves'], leaf: ['leaves'], shelf: ['shelves'], wolf: ['wolves'],
+    thief: ['thieves'], good: ['better', 'best'], bad: ['worse', 'worst'], far: ['further', 'furthest', 'farther'],
+    many: ['more', 'most'], little: ['less', 'least'], big: ['bigger', 'biggest'], hot: ['hotter', 'hottest'], sad: ['sadder', 'saddest']
   };
   function wordForms(w) {
     const out = new Set([w, w + 's', w + 'es', w + 'ed', w + 'd', w + 'ing', w + 'er', w + 'est', w + 'r']);
     if (/e$/.test(w)) out.add(w.slice(0, -1) + 'ing');
-    if (/[^aeiou]y$/.test(w)) { out.add(w.slice(0, -1) + 'ies'); out.add(w.slice(0, -1) + 'ied'); }
+    if (/[^aeiou]y$/.test(w)) { ['ies', 'ied', 'ier', 'iest', 'ily'].forEach(e => out.add(w.slice(0, -1) + e)); }
+    if (/e$/.test(w)) out.add(w + 'st');
+    if (/ie$/.test(w)) out.add(w.slice(0, -2) + 'ying');
+    if (/le$/.test(w)) out.add(w.slice(0, -1) + 'y');
+    if (/[^aeiou]$/.test(w) && !/y$/.test(w)) out.add(w + 'ly');
+    if (/[aeiou]$/.test(w) || /e$/.test(w)) out.add(w + 'ly');
     if (/[^aeiou][aeiou][bdgmnprtl]$/.test(w)) { out.add(w + w.slice(-1) + 'ed'); out.add(w + w.slice(-1) + 'ing'); out.add(w + w.slice(-1) + 'er'); }
     (IRREGULAR[w] || []).forEach(f => out.add(f));
     return Array.from(out);
@@ -262,7 +290,16 @@
     ['weather-freezing', 'weather-baltic'], ['core-busy', 'core-available'], ['work-quote', 'work-estimate'],
     ['work-hourly', 'work-dayrate'], ['health-painkillers', 'health-tablets'], ['core-mistake', 'core-wrong'],
     ['talk-wages', 'talk-payslip'], ['car-petrol', 'car-station'], ['car-tyre', 'car-puncture'], ['shop-aisle', 'travel-aisle'],
-    ['health-plaster', 'site-bonding'], ['irish-knackered', 'talk-tired'], ['core-even', 'core-though'], ['core-instead', 'core-atleast']
+    ['health-plaster', 'site-bonding'], ['irish-knackered', 'talk-tired'], ['core-even', 'core-though'], ['core-instead', 'core-atleast'],
+    // базовий словник: пари, які українці найчастіше плутають
+    ['sp-say', 'sp-tell'], ['sp-speak', 'sp-talk'], ['sp-look', 'sp-see'], ['sp-see', 'sp-watch'], ['sp-hear', 'sp-listen'],
+    ['sp-lose', 'b3-loose'], ['b1-rise', 'sp-raise'], ['sp-lie', 'b2-lay'], ['sp-quite', 'core-quiet'], ['sp-fun', 'sp-funny'],
+    ['b1-affect', 'b1-effect'], ['b2-advise', 'core-advice'], ['sp-job', 'sp-work'], ['sp-wait', 'core-expect'], ['sp-win', 'core-earn'],
+    ['sp-hard', 'core-hardly'], ['sp-accept', 'sp-except'], ['sp-wonder', 'b3-wander'], ['sp-dead', 'sp-die'], ['sp-alone', 'feel-lonely'],
+    ['b2-tall', 'sp-high'], ['sp-learn', 'sp-teach'], ['b3-beside', 'sp-besides'], ['sp-sit', 'sp-seat'], ['sp-price', 'b3-prize'],
+    ['sp-during', 'sp-while'], ['b3-shade', 'b3-shadow'], ['b1-travel', 'sp-trip'], ['b2-journey', 'sp-trip'], ['sp-person', 'sp-personal'],
+    ['sp-chicken', 'sp-kitchen'], ['b2-actual', 'b1-current'], ['b1-possibility', 'b1-opportunity'], ['b2-salary', 'b2-wage'],
+    ['b1-customer', 'work-client'], ['b2-guest', 'b2-host'], ['talk-borrow', 'b2-loan']
   ];
   const CONF_MAP = {};
   CONFUSABLE.forEach(([a, b]) => { (CONF_MAP[a] = CONF_MAP[a] || []).push(b); (CONF_MAP[b] = CONF_MAP[b] || []).push(a); });
@@ -399,7 +436,9 @@
   }
 
   /* ---------- Порядок нових слів: свої першими, далі теми з вагами ---------- */
-  const CAT_WEIGHT = { core: 4, talk: 3, site: 3, irish: 2, verbs: 2, work: 2, feel: 1, health: 1, phone: 1, shop: 1, car: 1, weather: 1, false: 1, travel: 1 };
+  // Розмовні слова з базового словника йдуть найчастіше: вони покривають більшість живої мови
+  const CAT_WEIGHT = { spoken: 12, core: 4, base1: 4, talk: 3, site: 3, idioms: 3, irish: 2, verbs: 2, work: 2, base2: 2,
+    feel: 1, health: 1, phone: 1, shop: 1, car: 1, weather: 1, false: 1, travel: 1, base3: 1 };
   function orderNew(words, cards, cats, perDay, today, priority) {
     const first = new Set(priority || []);
     const pool = words.filter(w => !cards[w.id] && (first.has(w.id) || (cats ? cats[w.cat] !== false : true)));

@@ -32,8 +32,9 @@
 - `public/js/fsrs.js`: алгоритм FSRS-5 з типовими параметрами.
 - `public/js/core.js`: логіка без інтерфейсу (перевірка відповідей, речення з пропуском, вибір вправи, сесія, міграція).
 - `public/js/app.js`: інтерфейс.
-- `public/words.js`: словник (378 слів у 14 темах, по два приклади); `public/phrases.js`: 1890 фраз. `id` не змінювати: на ньому тримається прогрес.
-- `public/audio/emma/*.mp3` і `public/audio.js`: записи британського голосу, генерує `tools/make_audio.py`.
+- `public/words.js`: стартовий словник (378 слів у 14 темах, по два приклади); `public/phrases.js`: його фрази. `id` не змінювати: на ньому тримається прогрес.
+- `public/words-base.js` і `public/phrases-base.js`: базовий словник (~2570 найуживаніших слів за New General Service List 1.01, CC BY-SA 4.0; розмовні відібрані за частотою в субтитрах OpenSubtitles через FrequencyWords, MIT) і ~250 стійких виразів з дослівним перекладом.
+- `public/audio/emma/*.mp3` і `public/audio.js`: записи британського голосу, генерує `tools/make_audio.py` (фрази слова в одному файлі з часовими мітками).
 - `public/sw.js`: офлайн-кеш (сторінка мережею першою, записи кешем першими).
 - `src/worker.js`: воркер для адрес, яких немає серед файлів (`/reminder.ics`); решту віддає Cloudflare з `public/`.
 - Деплой: Cloudflare Workers Builds, кожен push у `main` (`wrangler.jsonc`, воркер `english-words`).

@@ -312,7 +312,13 @@ try:
         assert page.locator('.tri').count() == 20
         ids = page.evaluate('window.EW.mode') == 'triage'
         page.locator('.tri').nth(0).click(); page.locator('.tri').nth(2).click()
-        click_text(page, 'Знаю 2 слова')
+        first_batch = page.evaluate("Array.from(document.querySelectorAll('.tri b')).map(b => b.textContent)")
+        click_text(page, 'Ще 20')
+        page.wait_for_timeout(200)
+        second_batch = page.evaluate("Array.from(document.querySelectorAll('.tri b')).map(b => b.textContent)")
+        assert not set(first_batch) & set(second_batch), 'друга порція повторює першу'
+        assert 'знаю 2 слова' in page.inner_text('#card .ex-head')
+        click_text(page, 'Готово')
         page.wait_for_timeout(200)
         known = [c for c in page.evaluate('Object.values(window.EW.cards)') if c.get('known')]
         assert len(known) == 2 and page.evaluate('window.EW.meta.triaged') is not None, known
@@ -333,6 +339,21 @@ try:
         assert page.evaluate('window.EW.mode') is None
         # Вчити першим зі словника
         page.evaluate('window.EW.showTab("dict")')
+        # Фраза з файлу фраз: грає свій шматок і зупиняється
+        page.fill('#search', 'trowel')
+        page.wait_for_timeout(200)
+        page.locator('.item-head').first.click()
+        page.wait_for_timeout(300)
+        seg = page.evaluate('window.AUDIO.phrases["site-trowel"][3]')
+        page.evaluate('document.querySelectorAll(".phrase .say")[2].click()')
+        ts = []
+        for _ in range(45):
+            page.wait_for_timeout(60)
+            ts.append(page.evaluate('window.EW.debug()'))
+        played = [d['t'] for d in ts if not d['paused']]
+        assert played and min(played) >= seg[0] - 0.2 and max(d['t'] for d in ts) <= seg[1] + 0.4, (seg, played[:3], ts[-1])
+        assert ts[-1]['paused'], 'фраза не зупинилась'
+        page.locator('.item-head').first.click()
         far = page.evaluate('window.WORDS[300]')
         page.fill('#search', far['en'])
         page.wait_for_timeout(200)
