@@ -59,8 +59,20 @@ BATH_WORDS = ['after', 'plaster', 'plasterboard', 'pass', 'ask', 'asked', 'last'
 TEXT_FIXES = [
     (re.compile(r"\b([Ee])xcuse (me|him|her|us|them|you|myself|my|our|his)\b"), r"\1xcuze \2"),
     (re.compile(r"\bto excuse\b"), 'to excuze'),
-    (re.compile(r"\b([Cc])lose (the|it|your|my|his|her|our|their|that|this|up|down|them|everything|all|a|an)\b"), r"\1loze \2"),
-    (re.compile(r"(^|[.!?]\s+)Use (it|the|your|a|an|my|this|that|them|some|less|more)\b"), r"\1Uze \2"),
+    (re.compile(r"\b([Cc])lose (the|it|your|my|his|her|our|their|that|this|up|down|them|everything|all|a|an|at|early|late|soon|tonight|today|tomorrow)\b"), r"\1loze \2"),
+    (re.compile(r"\b([Cc])lose\?"), r"\1loze?"),
+    # дієслово на початку речення чи фрази: use your head, live with my parents
+    (re.compile(r"(^|[.!?]\s+)([Uu])se (?!of\b)"), r"\1\2ze "),
+    (re.compile(r"(^|[.!?]\s+)([Ll])ive (with|on|and|next|together|alone|apart|abroad|nearby|like|in|up|close|here|there|near)\b"), r"\1\2iv \3"),
+    # lives після підмета: My family lives in Ukraine (espeak читає як множину від life)
+    (re.compile(r"\blives (in|alone|with|next|near|on|abroad|nearby|miles|close|by|here|there|downstairs|upstairs|together|far|just|round|around|across|opposite|beside)\b"), r"livz \1"),
+    # row = сварка, tear = рвати, wind someone up = дражнити
+    (re.compile(r"\b(have|had|having) a (big |huge |massive |bit of a )?row\b"), r"\1 a \2rau"),
+    (re.compile(r"\b([Tt])he row about\b"), r"\1he rau about"),
+    (re.compile(r"\ba row with\b"), 'a rau with'),
+    (re.compile(r"\btear (up|down|off|apart|open|it|the|a|your|my|his|her)\b"), r"tare \1"),
+    (re.compile(r"\bwind (someone|me|him|her|them|us|you|the lads|the boss|everyone|people) up\b"), r"wined \1 up"),
+    (re.compile(r"\bwound (someone|me|him|her|them|us|you|the lads|the boss|everyone) up\b"), r"wownd \1 up"),
 ]
 
 
