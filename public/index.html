@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>English Words</title>
 <meta name="description" content="Особистий тренажер англійських слів: інтервальне повторення FSRS, вправи на пригадування і британська вимова.">
-<meta name="theme-color" content="#E4E8E5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#10171C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4F5F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1220" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -16,8 +16,8 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap">
-<link rel="stylesheet" href="/app.css?v=90c7bd6930">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/app.css?v=5a115d0f83">
 </head>
 <body>
 <div class="app">
@@ -32,13 +32,7 @@
     <div class="sbar">
       <button type="button" class="icon-btn" id="exitBtn" aria-label="Завершити заняття" hidden></button>
       <div class="tape" id="tape" role="progressbar" aria-label="Прогрес за сьогодні" aria-valuemin="0">
-        <span class="tape-case" aria-hidden="true"></span>
-        <div class="tape-track" id="tapeTrack">
-          <div class="tape-ghost" id="tapeGhost"></div>
-          <span class="tape-end" aria-hidden="true"></span>
-          <div class="tape-fill" id="tapeFill"><div class="tape-scale" id="tapeScale"></div></div>
-          <span class="tape-hook" id="tapeHook" aria-hidden="true"></span>
-        </div>
+        <div class="tape-track" id="tapeTrack"><div class="tape-fill" id="tapeFill"></div></div>
       </div>
       <button type="button" class="icon-btn" id="undoBtn" aria-label="Повернути попередню вправу" hidden></button>
       <button type="button" class="icon-btn" id="quietBtn" aria-label="Тихий режим" aria-pressed="false" hidden></button>
@@ -211,7 +205,7 @@
     <div class="group bare">
       <button class="btn btn-danger" id="resetAll" style="width:100%">Скинути весь прогрес</button>
     </div>
-    <p class="version">Версія 9 від 28.10.2026</p>
+    <p class="version">Версія 10 від 28.10.2026</p>
   </section>
   </main>
 </div>
@@ -237,6 +231,6 @@
 <script src="/audio.js?v=9cdb672632"></script>
 <script src="/js/fsrs.js?v=3951b09840"></script>
 <script src="/js/core.js?v=0e181eb524"></script>
-<script src="/js/app.js?v=b7966db2a4"></script>
+<script src="/js/app.js?v=a371de14e7"></script>
 </body>
 </html>

@@ -340,7 +340,7 @@ const standalone = navigator.standalone === true || (window.matchMedia && matchM
 let recBroken = false;
 function canRecognize() { return !!SR && !standalone && !recBroken; }
 
-/* ---------- Серія днів і рулетка ---------- */
+/* ---------- Серія днів і смуга прогресу ---------- */
 function streakInfo() { return C.streakInfo(studied, today()); }
 function streak() { return streakInfo().days; }
 function renderStreak() {
@@ -348,42 +348,16 @@ function renderStreak() {
   $('streak').innerHTML = s > 0 ? ICON.flame + '<span><b>' + days(s) + '</b> поспіль</span>' : '';
 }
 function renderTape(done, total, label, remUnits, hideLeft) {
-  const track = $('tapeTrack');
-  const fill = $('tapeFill');
-  const scale = $('tapeScale');
-  const ghost = $('tapeGhost');
   const pct = total > 0 ? Math.min(100, done / total * 100) : 0;
-  const w = track.clientWidth || 300;
-  const step = total > 0 ? w / total : 12;
-  scale.style.width = w + 'px';
-  scale.style.setProperty('--step', Math.max(3, step) + 'px');
-  scale.style.setProperty('--step5', Math.max(15, step * 5) + 'px');
-  const every = [5, 10, 20, 25, 50, 100].find(n => n * step >= 26) || 100;
-  const key = total + ':' + w;
-  if (scale.dataset.key !== key) {
-    scale.dataset.key = key;
-    scale.innerHTML = '';
-    // Числа не підходять впритул до упору в кінці, щоб не обрізались
-    if (total > 0) for (let k = every; k < total && k * step <= w - 18; k += every) {
-      const n = el('span', 'tape-num', String(k));
-      n.style.left = (k * step) + 'px';
-      scale.appendChild(n);
-    }
-    // Та сама шкала блідою під стрічкою: навіть порожня рулетка читається як мірка до мети дня
-    ghost.innerHTML = scale.innerHTML;
-    ghost.style.setProperty('--step', scale.style.getPropertyValue('--step'));
-    ghost.style.setProperty('--step5', scale.style.getPropertyValue('--step5'));
-  }
-  fill.style.width = pct + '%';
-  $('tapeHook').style.left = pct + '%';
-  // Мету дня досягнуто: стрічка один раз «клацає» об упор
+  $('tapeFill').style.width = pct + '%';
+  // Мету дня досягнуто: смуга один раз спалахує й стає зеленою
   const tape = $('tape');
   const full = total > 0 && done >= total;
   if (full && !tape.classList.contains('full') && tape.dataset.seen === '1') { tape.classList.remove('snap'); void tape.offsetWidth; tape.classList.add('snap'); }
   tape.classList.toggle('full', full);
   tape.dataset.seen = '1';
-  $('tape').setAttribute('aria-valuemax', String(total));
-  $('tape').setAttribute('aria-valuenow', String(done));
+  tape.setAttribute('aria-valuemax', String(total));
+  tape.setAttribute('aria-valuenow', String(done));
   $('tapeDone').innerHTML = total > 0 ? (label || 'Зроблено') + ' <b>' + done + '</b> з ' + total : 'На сьогодні нічого';
   const left = remUnits != null ? remUnits : Math.max(0, total - done);
   const leftText = remUnits != null ? 'ще ≈ ' + mins(Math.max(1, Math.ceil(left * 10 / 60))) : 'ще ' + left;
@@ -1075,7 +1049,7 @@ function fitWord(node) {
   const avail = (card.clientWidth || 340) - 40 - (inRow ? 58 : 0);
   const text = node.textContent;
   const longest = text.split(/\s+/).reduce((m, s) => Math.max(m, s.length), 1);
-  const factor = node.classList.contains('uk') ? 0.62 : 0.78;
+  const factor = node.classList.contains('uk') ? 0.62 : 0.64;
   let size = Math.floor(avail / (longest * factor));
   size = Math.max(22, Math.min(text.length > 16 ? 29 : 44, size));
   node.style.fontSize = size + 'px';
@@ -1193,7 +1167,7 @@ function mnemonicBlock(w, openByDefault) {
   const editor = () => {
     box.innerHTML = '';
     const ta = el('textarea');
-    ta.placeholder = 'Наприклад: trowel схоже на «трава», гладилкою «косиш» штукатурку';
+    ta.placeholder = 'Наприклад: cheap звучить як «чіпси», а чіпси дешеві';
     ta.value = notes[w.id] || '';
     ta.setAttribute('aria-label', 'Своя асоціація');
     const row = el('div', 'row');
@@ -3489,7 +3463,7 @@ $('haptics').addEventListener('change', e => { settings.haptics = e.target.check
 $('triageBtn').addEventListener('click', startTriage);
 $('voice').addEventListener('change', e => { settings.voice = e.target.value; saveSettings(); speakDevice('Can you give me a hand?'); });
 $('voiceTest').innerHTML = ICON.speaker;
-$('voiceTest').addEventListener('click', () => speakDevice('Can you give me a hand with these slabs?'));
+$('voiceTest').addEventListener('click', () => speakDevice('Can you give me a hand with this?'));
 
 /* Записи для офлайну. Усі записи важать ~660 МБ, тож за замовчуванням лише потрібні найближчим часом */
 let offlineBusy = false;
