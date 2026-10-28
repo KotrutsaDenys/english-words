@@ -80,16 +80,26 @@ svg{display:block}
 .tape-case{flex:none;position:relative;width:36px;height:36px;border-radius:11px;background:var(--case);z-index:2;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
 .tape-case::before{content:"";position:absolute;left:9px;top:9px;width:18px;height:18px;border-radius:50%;background:var(--hivis);box-shadow:inset 0 0 0 4px var(--case),inset 0 0 0 6px var(--hivis)}
 .tape-case::after{content:"";position:absolute;left:13px;top:-4px;width:10px;height:6px;border-radius:3px 3px 0 0;background:var(--orange)}
-.tape-track{flex:1;position:relative;height:22px;margin-left:-2px;border-radius:0 4px 4px 0;
-  background:repeating-linear-gradient(to right,var(--line) 0 6px,transparent 6px 11px) top/100% 1px no-repeat,
-             repeating-linear-gradient(to right,var(--line) 0 6px,transparent 6px 11px) bottom/100% 1px no-repeat}
-.tape-fill{position:absolute;left:0;top:0;bottom:0;width:0;overflow:hidden;background:var(--hivis);box-shadow:inset 0 -2px 0 var(--hivis-deep);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.tape-track{flex:1;position:relative;height:22px;margin-left:-2px;border-radius:0 4px 4px 0;background:var(--sunk);box-shadow:inset 0 1px 0 var(--line-soft),inset 0 -1px 0 var(--line-soft)}
+/* Бліда шкала під стрічкою і упор у кінці: мірка до мети дня видна, навіть поки стрічка не витягнута */
+.tape-ghost{position:absolute;left:0;top:0;bottom:0;right:0;overflow:hidden;
+  background:
+    repeating-linear-gradient(to right,var(--line) 0 1.5px,transparent 1.5px var(--step5,60px)) 0 0/100% 55% repeat-x,
+    repeating-linear-gradient(to right,var(--line) 0 1px,transparent 1px var(--step,12px)) 0 0/100% 28% repeat-x}
+.tape-ghost .tape-num{color:var(--muted);opacity:.75}
+.tape-end{position:absolute;right:-2px;top:-5px;bottom:-5px;width:4px;border-radius:2px;background:var(--line)}
+.tape.full .tape-end{background:var(--ink)}
+.tape.snap .tape-hook{animation:snap .55s cubic-bezier(.3,1.6,.5,1)}
+.tape.snap .tape-fill{animation:flash .7s ease-out}
+@keyframes snap{0%{transform:translateX(-10px)}60%{transform:translateX(3px)}100%{transform:none}}
+@keyframes flash{0%{filter:brightness(1.25)}100%{filter:none}}
+.tape-fill{position:absolute;left:0;top:0;bottom:0;width:0;overflow:hidden;background:var(--hivis);box-shadow:inset 0 -2px 0 var(--hivis-deep);transition:width .5s cubic-bezier(.2,.8,.2,1);z-index:1}
 .tape-scale{position:absolute;left:0;top:0;bottom:0;
   background:
     repeating-linear-gradient(to right,var(--on-hivis) 0 1.5px,transparent 1.5px var(--step5,60px)) 0 0/100% 55% repeat-x,
     repeating-linear-gradient(to right,var(--on-hivis) 0 1px,transparent 1px var(--step,12px)) 0 0/100% 28% repeat-x}
 .tape-num{position:absolute;bottom:1px;transform:translateX(3px);font-family:var(--display);font-weight:700;font-size:9px;line-height:1;color:var(--on-hivis)}
-.tape-hook{position:absolute;top:-5px;bottom:-5px;width:6px;margin-left:-3px;left:0;border-radius:2px;background:var(--ink);transition:left .5s cubic-bezier(.2,.8,.2,1);z-index:1}
+.tape-hook{position:absolute;top:-5px;bottom:-5px;width:6px;margin-left:-3px;left:0;border-radius:2px;background:var(--ink);transition:left .5s cubic-bezier(.2,.8,.2,1);z-index:2}
 .tape-meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted);margin-top:10px;font-weight:600}
 /* Заняття на весь екран: без шапки й вкладок, нічого зайвого під пальцем */
 body.in-session .top,body.in-session .tabs{display:none}
@@ -152,8 +162,11 @@ body.typing .dock{display:none}
 .news p{margin:0 0 12px;font-size:15px}
 .news .btn{min-height:48px}
 .news .btn-quiet{flex:0 0 34%}
-.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
-.qa{display:flex;align-items:flex-start;gap:10px;text-align:left;padding:12px;border-radius:16px;border:1.5px solid var(--line-soft);background:var(--surface);min-height:72px;color:var(--ink)}
+/* Швидкі дії одним списком: довгі українські підписи не ламаються в плитках */
+.qa-list{margin-top:22px;background:var(--surface);border:1.5px solid var(--line-soft);border-radius:16px;overflow:hidden}
+.qa{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:11px 14px;border:0;background:none;min-height:60px;color:var(--ink)}
+.qa + .qa{border-top:1px solid var(--line-soft)}
+.qa::after{content:"";flex:none;margin-left:auto;width:8px;height:8px;border-top:2px solid var(--muted);border-right:2px solid var(--muted);transform:rotate(45deg)}
 .qa:active{background:var(--sunk)}
 .qa-ic{flex:none;width:32px;height:32px;border-radius:10px;background:var(--sunk);display:grid;place-items:center}
 .qa-ic svg{width:18px;height:18px}
@@ -208,6 +221,9 @@ body.kb-open .card .prompt{padding-top:2px}
 .say.sm svg{width:16px;height:16px}
 .say:active,.listen-big:active{transform:scale(.96)}
 .prompt > .row{margin-top:14px}
+.word-row{display:flex;align-items:center;gap:12px}
+.word-row .word{flex:1;min-width:0}
+.word-row .say{flex:none;align-self:center}
 .listen-big{width:104px;height:104px;border-radius:50%;border:0;background:var(--hivis);color:var(--on-hivis);display:grid;place-items:center;margin:4px auto 0;box-shadow:inset 0 -4px 0 var(--hivis-deep)}
 .listen-big svg{width:44px;height:44px}
 .slow-btn{display:block;margin:12px auto 0;background:none;border:0;font-weight:800;color:var(--muted);text-decoration:underline;text-underline-offset:4px;padding:6px}
@@ -289,6 +305,11 @@ body.kb-open #stage .foot{padding-bottom:10px;padding-top:8px}
 .opt-btn{width:100%;text-align:left;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);padding:12px 14px;font-size:17px;font-weight:700;min-height:54px;display:flex;align-items:center;gap:12px;transition:border-color .15s,background .15s}
 .opt-btn .k{flex:none;width:26px;height:26px;border-radius:8px;background:var(--sunk);display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--muted)}
 .opt-btn .k svg{width:14px;height:14px}
+/* На телефоні цифри-клавіші не потрібні: порожнє коло, яке стає ✓ або ✗ */
+@media (hover: none){
+  .opt-btn .k{font-size:0;background:transparent;border:2px solid var(--line);border-radius:50%;width:24px;height:24px}
+  .opt-btn.right .k,.opt-btn.wrong .k{border:0}
+}
 .opt-btn.en{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:-.015em}
 .opt-btn:active{background:var(--sunk)}
 .opt-btn.right{border-color:var(--ok);background:var(--ok-soft)}
@@ -350,8 +371,9 @@ body.kb-open #stage .foot{padding-bottom:10px;padding-top:8px}
 
 /* Підсумок заняття */
 .summary .word{font-size:34px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-.stat{background:var(--sunk);border-radius:14px;padding:10px 8px;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;border-top:1.5px dashed var(--line);border-bottom:1.5px dashed var(--line)}
+.stat{padding:12px 4px;text-align:center}
+.stat + .stat{border-left:1.5px dashed var(--line)}
 .stat b{display:block;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em}
 .stat span{display:block;color:var(--muted);font-size:13px;font-weight:700}
 /* Відсіяти знайомі */

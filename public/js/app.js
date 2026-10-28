@@ -339,10 +339,11 @@ function renderStreak() {
   const s = streak();
   $('streak').innerHTML = s > 0 ? ICON.flame + '<span><b>' + days(s) + '</b> поспіль</span>' : '';
 }
-function renderTape(done, total, label, remUnits) {
+function renderTape(done, total, label, remUnits, hideLeft) {
   const track = $('tapeTrack');
   const fill = $('tapeFill');
   const scale = $('tapeScale');
+  const ghost = $('tapeGhost');
   const pct = total > 0 ? Math.min(100, done / total * 100) : 0;
   const w = track.clientWidth || 300;
   const step = total > 0 ? w / total : 12;
@@ -354,20 +355,31 @@ function renderTape(done, total, label, remUnits) {
   if (scale.dataset.key !== key) {
     scale.dataset.key = key;
     scale.innerHTML = '';
-    if (total > 0) for (let k = every; k < total; k += every) {
+    // Числа не підходять впритул до упору в кінці, щоб не обрізались
+    if (total > 0) for (let k = every; k < total && k * step <= w - 18; k += every) {
       const n = el('span', 'tape-num', String(k));
       n.style.left = (k * step) + 'px';
       scale.appendChild(n);
     }
+    // Та сама шкала блідою під стрічкою: навіть порожня рулетка читається як мірка до мети дня
+    ghost.innerHTML = scale.innerHTML;
+    ghost.style.setProperty('--step', scale.style.getPropertyValue('--step'));
+    ghost.style.setProperty('--step5', scale.style.getPropertyValue('--step5'));
   }
   fill.style.width = pct + '%';
   $('tapeHook').style.left = pct + '%';
+  // Мету дня досягнуто: стрічка один раз «клацає» об упор
+  const tape = $('tape');
+  const full = total > 0 && done >= total;
+  if (full && !tape.classList.contains('full') && tape.dataset.seen === '1') { tape.classList.remove('snap'); void tape.offsetWidth; tape.classList.add('snap'); }
+  tape.classList.toggle('full', full);
+  tape.dataset.seen = '1';
   $('tape').setAttribute('aria-valuemax', String(total));
   $('tape').setAttribute('aria-valuenow', String(done));
   $('tapeDone').innerHTML = total > 0 ? (label || 'Зроблено') + ' <b>' + done + '</b> з ' + total : 'На сьогодні нічого';
   const left = remUnits != null ? remUnits : Math.max(0, total - done);
   const leftText = remUnits != null ? 'ще ≈ ' + mins(Math.max(1, Math.ceil(left * 10 / 60))) : 'ще ' + left;
-  $('tapeLeft').textContent = total > 0 ? (left ? leftText : 'усе на сьогодні') : '';
+  $('tapeLeft').textContent = total > 0 && !hideLeft ? (left ? leftText : 'усе на сьогодні') : '';
 }
 
 /* ---------- Навчання ---------- */
@@ -393,7 +405,8 @@ function updateTape() {
   const l = todayLog();
   const done = (l.r || 0) + (l.n || 0) + (l.k || 0);
   const rem = (session || new C.Session(envFor())).remainingUnits();
-  renderTape(done, done + rem, null, rem);
+  // На головній час уже є на кнопці «Почати», тут лише скільки зроблено за день
+  renderTape(done, done + rem, mode ? null : 'Сьогодні', rem, !mode);
 }
 /* Верхній рядок під час заняття: вийти, повернути відповідь, тихий режим */
 function updateSessionBar() {
@@ -557,8 +570,6 @@ function renderLearn() {
   if (total) {
     const sentence = planSentence(cnt);
     home.appendChild(el('h2', 'hero', l.r ? 'Ще ' + lowerFirst(sentence) : sentence));
-    const sub = el('p', 'hero-sub', 'Приблизно ' + mins(estimateMinutes(units)) + '.');
-    home.appendChild(sub);
     if (meta.reminder && meta.reminder.a) home.appendChild(el('p', 'plan-line', 'Твій план: ' + meta.reminder.a + ', о ' + meta.reminder.t));
     if (settings.quiet) {
       const q = el('button', 'plan-line quiet-chip');
@@ -601,7 +612,7 @@ function renderLearn() {
   }
   if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
   if (tiles.length) {
-    const grid = el('div', 'qa-grid');
+    const grid = el('div', 'qa-list');
     tiles.forEach(x => grid.appendChild(x));
     home.appendChild(grid);
   }
@@ -1028,9 +1039,16 @@ function bigWord(text, lang) {
   requestAnimationFrame(() => fitWord(h));
   return h;
 }
+/* Слово і динамік поруч: видно, що слухати саме його, і менше місця по висоті */
+function wordWithSay(w) {
+  const row = el('div', 'word-row');
+  row.append(bigWord(w.en, 'en'), sayBtn(w, 'w'));
+  return row;
+}
 function fitWord(node) {
   const card = $('card');
-  const avail = (card.clientWidth || 340) - 40;
+  const inRow = node.parentElement && node.parentElement.classList.contains('word-row');
+  const avail = (card.clientWidth || 340) - 40 - (inRow ? 58 : 0);
   const text = node.textContent;
   const longest = text.split(/\s+/).reduce((m, s) => Math.max(m, s.length), 1);
   const factor = node.classList.contains('uk') ? 0.62 : 0.78;
@@ -1257,8 +1275,7 @@ const RENDER = {};
 RENDER.intro = item => {
   const w = item.word;
   const body = frame(item);
-  body.appendChild(bigWord(w.en, 'en'));
-  const r = el('div', 'row'); r.appendChild(sayBtn(w, 'w')); body.appendChild(r);
+  body.appendChild(wordWithSay(w));
   // Здогадку рахуємо після introduce, щоб «назад» повертав і її
   const countGuess = () => {
     if (ui.guessed !== true && ui.guessed !== false) return;
@@ -1336,8 +1353,7 @@ function mcq(item, prompt, field) {
   const w = item.word;
   const body = frame(item);
   if (prompt === 'en') {
-    body.appendChild(bigWord(w.en, 'en'));
-    const r = el('div', 'row'); r.appendChild(sayBtn(w, 'w')); body.appendChild(r);
+    body.appendChild(wordWithSay(w));
     if (settings.autoplay) autoSay(w, 'w');
   } else if (prompt === 'uk') {
     body.appendChild(bigWord(w.uk, 'uk'));
@@ -1396,8 +1412,7 @@ function flip(item, rev) {
   const body = frame(item);
   if (rev) body.appendChild(bigWord(w.uk, 'uk'));
   else {
-    body.appendChild(bigWord(w.en, 'en'));
-    const r = el('div', 'row'); r.appendChild(sayBtn(w, 'w')); body.appendChild(r);
+    body.appendChild(wordWithSay(w));
     if (settings.autoplay) autoSay(w, 'w');
   }
   body.appendChild(el('p', 'prompt-sub', rev ? 'Згадай англійською, потім відкрий відповідь' : 'Згадай переклад, потім відкрий відповідь'));
