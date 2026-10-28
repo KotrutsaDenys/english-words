@@ -392,6 +392,101 @@ try:
         page.click('.tri-all')
         assert page.locator('.tri[aria-pressed="true"]').count() == 0
         page.click('#exitBtn')
+        # Тест з варіантами: чесне «Не знаю» і що означає вибраний хибний варіант
+        page.evaluate('window.EW.showTab("learn")')
+        page.evaluate('([id]) => window.EW.force(id, "mcq_en_uk")', [a_id])
+        page.wait_for_timeout(150)
+        click_text(page, 'Не знаю')
+        page.wait_for_timeout(150)
+        assert visible(page, '#foot.sheet.wrong') and visible(page, '.opt-btn.right'), 'Не знаю показує відповідь'
+        b_en = page.evaluate('([id]) => window.WORDS.find(w => w.id === id).en', [b_id])
+        page.evaluate('([id]) => window.EW.force(id, "mcq_uk_en")', [b_id])
+        page.wait_for_timeout(150)
+        btns = page.locator('.opt-btn')
+        for i in range(btns.count()):
+            if btns.nth(i).locator('span').nth(1).inner_text() != b_en:
+                btns.nth(i).click()
+                break
+        assert ' — це ' in page.inner_text('#foot .verdict .yours'), 'значення хибного варіанта'
+        # Слово з прикладу: бульбашка з перекладом; дотик поза нею лише закриває її
+        page.evaluate('([id]) => window.EW.force(id, "flip")', ['site-trowel'])
+        page.wait_for_timeout(150)
+        click_text(page, 'Показати відповідь')
+        page.wait_for_timeout(150)
+        page.locator('.details .ex .tw', has_text='the').first.click()
+        assert visible(page, '.peek') and 'артикль' in page.inner_text('.peek'), 'переклад службового слова'
+        click_text(page, 'Знаю')
+        page.wait_for_timeout(150)
+        assert not visible(page, '.peek') and page.evaluate('window.EW.current.id') == 'site-trowel'
+        assert page.locator('#foot .foot-btns.cols4 button').count() == 4, 'дотик поза бульбашкою не оцінив слово'
+        page.locator('.details .ex .tw', has_text='trowel').first.click()
+        assert 'гладилка' in page.inner_text('.peek')
+        page.keyboard.press('Escape')
+        assert not visible(page, '.peek') and page.evaluate('window.EW.mode') == 'session', 'Escape закриває лише бульбашку'
+        page.click('#exitBtn')
+        page.wait_for_timeout(200)
+        if page.evaluate('window.EW.mode') == 'summary':
+            click_text(page, 'Готово' if visible(page, '#foot button:has-text("Готово")') else 'На головну')
+            page.wait_for_timeout(200)
+        # Слухати: слово, пауза, переклад і приклад; кнопки, екран блокування, підсумок
+        page.evaluate('window.EW.showTab("learn")')
+        page.wait_for_timeout(200)
+        page.click('.qa:has-text("Слухати")')
+        page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') == 'listen' and visible(page, '#lUk.veil'), 'переклад спершу прихований'
+        for _ in range(40):
+            page.wait_for_timeout(200)
+            if not visible(page, '#lUk.veil'):
+                break
+        assert not visible(page, '#lUk.veil'), 'переклад так і не з\'явився'
+        title = page.evaluate('navigator.mediaSession && navigator.mediaSession.metadata && navigator.mediaSession.metadata.title')
+        assert title == page.inner_text('#card .word'), title
+        click_text(page, 'Пауза')
+        assert visible(page, '#foot button:has-text("Слухати")') and page.evaluate('window.EW.debug().paused')
+        click_text(page, 'Далі')
+        page.wait_for_timeout(200)
+        assert page.inner_text('#card .ex-right').strip().endswith('з ' + str(page.evaluate('window.EW.listenIds().length'))) and '2 з' in page.inner_text('#card .ex-right')
+        page.click('#exitBtn')
+        page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') == 'summary' and 'Прослухано' in page.inner_text('#card')
+        assert page.evaluate('window.EW.log[EWCore.dayKey(EWCore.dayNum())].ls') >= 1
+        click_text(page, 'Готово')
+        page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') is None and page.evaluate('window.EW.debug().paused')
+        # Після пропущених днів: нові слова на паузі, але їх можна взяти
+        page.evaluate('''() => { const t = EWCore.dayNum(); for (const w of window.WORDS.slice(500, 540)) window.EW.cards[w.id] = { st: 'review', s: 4, d: 5, last: t - 9, due: t - 3, reps: 2, lapses: 0, first: t - 20 }; }''')
+        page.evaluate('window.EW.showTab("learn")')
+        page.wait_for_timeout(200)
+        assert 'нов' not in page.inner_text('.hero') and visible(page, '.qa:has-text("Взяти й нові слова")'), page.inner_text('.hero')
+        page.click('.qa:has-text("Взяти й нові слова")')
+        page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.session.newIds.length') > 0
+        page.click('#exitBtn')
+        page.wait_for_timeout(200)
+        if page.evaluate('window.EW.mode'):
+            page.click('#exitBtn')
+        # Словник: дії з відібраними словами
+        page.evaluate('window.EW.showTab("dict")')
+        page.fill('#search', '')
+        page.wait_for_timeout(250)
+        assert not visible(page, '#dictActs'), 'без фільтра дій немає'
+        page.click('#segStatus button:has-text("Вчу")')
+        page.wait_for_timeout(200)
+        assert visible(page, '.act:has-text("Слухати")') and visible(page, '.act:has-text("Потренувати")')
+        page.click('.act:has-text("Потренувати")')
+        page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') == 'session' and page.evaluate('window.EW.session.practice')
+        page.click('#exitBtn')
+        page.wait_for_timeout(200)
+        assert visible(page, '#screen-dict') and page.evaluate('window.EW.mode') is None, 'тренування зі словника повертає в словник'
+        page.click('#segStatus button:has-text("Усі")')
+        page.click('#catBtn')
+        page.locator('.cat-cell', has_text='Погода').click()
+        page.wait_for_timeout(200)
+        page.click('.act:has-text("Вчити першими")')
+        pri = page.evaluate('window.EW.meta.priority')
+        assert len(pri) >= 5 and all(page.evaluate('([id]) => window.WORDS.find(w => w.id === id).cat', [x]) == 'weather' for x in pri[-5:]), pri[-5:]
+        assert visible(page, '.act:has-text("Не першими")')
         # Записи для офлайну: за замовчуванням не всі 660 МБ
         page.evaluate('window.EW.showTab("settings")')
         page.wait_for_timeout(200)

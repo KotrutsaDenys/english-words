@@ -379,6 +379,51 @@ test('Коротке заняття: ліміт задається окремо 
   assert.ok(answered.includes(WORDS[0].id));
 });
 
+test('Борг після пропущених днів: нові слова чекають, поки його не розібрано', () => {
+  const mk = overdueN => {
+    const cards = {};
+    for (let i = 0; i < 50; i++) cards[WORDS[i].id] = { st: 'review', s: 5, d: 5, last: 9690, due: i < overdueN ? 9697 : (i < 45 ? 9700 : 9710), reps: 2, lapses: 0 };
+    return cards;
+  };
+  const env = (cards, extra) => Object.assign({ words: WORDS, cards, settings: { newPerDay: 10, retention: 0.9, sessionLen: 0 }, today: 9700, log: {}, rng: seeded(3), canListen: true }, extra || {});
+  const heavy = new C.Session(env(mk(35)));
+  assert.strictEqual(heavy.overdue, 35);
+  assert.ok(heavy.newPaused);
+  assert.strictEqual(heavy.counts().fresh, 0);
+  assert.strictEqual(heavy.counts().reviews, 45);
+  // Можна взяти нові попри борг
+  const forced = new C.Session(env(mk(35), { withNew: true }));
+  assert.ok(!forced.newPaused && forced.counts().fresh === 10);
+  // Звичайний день: прострочених мало, нові є
+  const light = new C.Session(env(mk(10)));
+  assert.ok(!light.newPaused && light.counts().fresh === 10);
+  // Більший денний ліміт нових піднімає поріг
+  assert.strictEqual(C.backlogLimit(20), 60);
+  assert.ok(!new C.Session(env(mk(35), { settings: { newPerDay: 20, retention: 0.9, sessionLen: 0 } })).newPaused);
+});
+
+test('Слово з прикладу знаходиться в словнику за початковою формою', () => {
+  const find = C.lookupIndex(WORDS);
+  const base = t => { const r = find(t); return r ? C.norm(r.words[0].en).replace(/^to /, '') : null; };
+  assert.strictEqual(base('used'), 'use');
+  assert.strictEqual(base('uses'), 'use');
+  assert.strictEqual(base('children'), 'child');
+  assert.strictEqual(base('stopped'), 'stop');
+  assert.strictEqual(base('making'), 'make');
+  assert.strictEqual(base('went'), 'go');
+  assert.strictEqual(base('families'), 'family');
+  assert.strictEqual(base('Walls'), 'wall');
+  assert.ok(find('trowel').exact);
+  assert.ok(!find('wrecked'));
+  // Вираз з речення важливіший за окреме слово, а службові слова беруться з глосарію
+  assert.strictEqual(find('off', 'Tomorrow is my day off.').phrases[0].en, 'day off');
+  assert.ok(find('picked', 'He picked it up on the way.').phrases.some(w => /pick up/.test(w.en)));
+  const withGloss = C.lookupIndex(WORDS, { the: 'артикль', "it's": 'це є' });
+  assert.ok(withGloss('The').words[0].gloss);
+  assert.strictEqual(withGloss("It's").words[0].uk, 'це є');
+  assert.deepStrictEqual(C.lemmaCandidates("plasterer's").slice(0, 2), ["plasterer's", 'plasterer']);
+});
+
 test('Стилі й скрипти в index.html мають актуальні ?v= (python3 tools/stamp.py)', () => {
   const crypto = require('crypto');
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');

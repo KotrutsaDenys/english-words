@@ -376,6 +376,49 @@ body.kb-open #stage .foot{padding-bottom:10px;padding-top:8px}
 .stat + .stat{border-left:1.5px dashed var(--line)}
 .stat b{display:block;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em}
 .stat span{display:block;color:var(--muted);font-size:13px;font-weight:700}
+.stats.two{grid-template-columns:repeat(2,1fr)}
+.verdict .yours{display:block;margin:5px 0 0;font-size:15px;font-weight:700;color:var(--ink)}
+.verdict .yours [lang="en"]{font-family:var(--display);font-weight:600;font-size:15px}
+
+/* Слухати: переклад і приклад проступають, коли до них доходить голос */
+.prompt.listen{padding-top:12px}
+.l-uk{font-size:24px;font-weight:800;line-height:1.25;margin:10px 0 0}
+.veil{filter:blur(7px);opacity:.35;pointer-events:none;user-select:none;-webkit-user-select:none}
+.l-uk,.l-ex,.l-ph{transition:filter .35s ease-out,opacity .35s ease-out}
+.l-ex{border-top:1.5px dashed var(--line);margin-top:16px;padding-top:12px}
+.l-ex .ex{margin-top:0}
+.l-ph{margin-top:6px}
+.l-phr{margin:10px 0 0;padding-left:10px;border-left:3px solid transparent;transition:border-color .2s;scroll-margin:90px 0 calc(var(--foot-h,90px) + 16px)}
+.l-phr.on{border-left-color:var(--hivis-deep)}
+.l-opts{margin-top:18px;padding-top:12px;border-top:1px solid var(--line-soft)}
+.l-opts .chip{padding:7px 12px;font-size:13px}
+.l-opts .tip{margin-top:10px;font-size:13px}
+.foot-btns.cols3m{grid-template-columns:1fr 1.35fr 1fr}
+.l-btn{gap:3px;padding:6px 4px;font-size:14px}
+.l-btn .l-ic svg{width:22px;height:22px}
+.l-btn[disabled]{opacity:.35}
+.badge.fresh{background:var(--hivis);color:var(--on-hivis)}
+
+/* Переклад слова з прикладу */
+.tw{cursor:pointer;border-radius:4px;-webkit-tap-highlight-color:transparent}
+.tw.on{background:color-mix(in srgb,var(--hivis) 60%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--hivis) 60%,transparent)}
+html.peek-open body{cursor:pointer}
+.peek{position:fixed;z-index:12;width:min(300px,calc(100vw - 24px));background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:16px;
+  padding:10px 12px 10px 14px;box-shadow:0 22px 40px -18px rgba(0,0,0,.55);animation:reveal .14s ease-out;cursor:auto}
+.peek-form{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--muted)}
+.peek-row{display:flex;align-items:center;gap:10px}
+.peek-row + .peek-st,.peek-row + .link-btn{margin-top:2px}
+.peek-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.peek-text b{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.01em}
+.peek-uk{font-size:15px;font-weight:600}
+.peek .say.sm{margin:0}
+.peek-st{margin:4px 0 0;font-size:13px;font-weight:700;color:var(--ok)}
+.peek .link-btn.small{color:var(--ink)}
+.peek .link-btn[disabled]{text-decoration:none;color:var(--muted)}
+.peek * + .peek-row,.peek * + .peek-form{margin-top:8px;padding-top:8px;border-top:1px solid var(--line-soft)}
+.peek .peek-form + .peek-row{margin-top:2px;padding-top:0;border-top:0}
+.peek-none{margin:2px 0;font-size:15px;font-weight:600}
+
 /* Відсіяти знайомі */
 .triage{display:grid;gap:6px;margin-top:10px}
 .tri-all{margin-top:8px;color:var(--ink)}
@@ -417,6 +460,10 @@ body.kb-open #stage .foot{padding-bottom:10px;padding-top:8px}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--plaster);border-color:var(--ink)}
 .seg.small button{font-size:13px;padding:8px 2px;min-height:38px}
 .dict-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:14px;font-weight:600;margin:6px 0 12px}
+.dict-acts{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 0 12px}
+.act{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 14px 8px 11px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-weight:800;font-size:14px}
+.act svg{width:17px;height:17px}
+.act:active{background:var(--sunk)}
 .list{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:18px;border:1.5px solid var(--line-soft);overflow:hidden}
 .item + .item{border-top:1px solid var(--line-soft)}
 .item-head{display:flex;gap:12px;align-items:center;width:100%;padding:13px 16px;background:none;border:0;text-align:left}

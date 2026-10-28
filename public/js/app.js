@@ -45,10 +45,12 @@ let currentTab = 'learn';
 const DEFAULT_SETTINGS = {
   newPerDay: 10, mode: 'mix', typing: true, speaking: true, sessionLen: 0, retention: 0.9,
   autoplay: true, voiceSrc: 'emma', voice: '', rate: 1, cats: {}, pretest: true,
-  autoNext: true, quiet: false, haptics: true
+  autoNext: true, quiet: false, haptics: true,
+  listen: { shadow: false, phrases: false, uk: true }
 };
 let settings = Object.assign({}, DEFAULT_SETTINGS, load(KEYS.settings, {}));
 settings.cats = Object.assign({}, settings.cats || {});
+settings.listen = Object.assign({}, DEFAULT_SETTINGS.listen, settings.listen || {});
 if (![0.75, 0.9, 1].includes(settings.rate)) settings.rate = settings.rate < 0.8 ? 0.75 : settings.rate < 0.95 ? 0.9 : 1;
 if (![0.85, 0.9, 0.95].includes(settings.retention)) settings.retention = 0.9;
 delete settings.dir;
@@ -66,12 +68,13 @@ if (!cards) {
 }
 
 let index = null;
+let peekIdx = null;     // пошук слова з прикладу (будується при першому дотику)
 function allWords() { return custom.concat(BASE); }
 function byId(id) {
   if (!index) index = new Map(allWords().map(w => [w.id, w]));
   return index.get(id);
 }
-function reindex() { index = null; }
+function reindex() { index = null; peekIdx = null; }
 function todayLog() {
   const k = C.dayKey(today());
   if (!log[k]) log[k] = { n: 0, r: 0, a: 0, c: 0, x: 0, ms: 0 };
@@ -83,9 +86,11 @@ function saveSettings() { save(KEYS.settings, settings); }
 /* ---------- Вимова: записи Емми і голос iPhone як запасний ---------- */
 const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
 let voices = [];
+let ukVoices = [];
 function loadVoices() {
   if (!synth) return;
   const all = synth.getVoices();
+  ukVoices = all.filter(v => /^uk/i.test(v.lang));
   let list = all.filter(v => /^en[-_](GB|IE)/i.test(v.lang));
   if (!list.length) list = all.filter(v => /^en/i.test(v.lang));
   voices = list.sort((a, b) => (a.lang > b.lang ? 1 : a.lang < b.lang ? -1 : a.name.localeCompare(b.name)));
@@ -214,7 +219,7 @@ function phraseBlock(w, open) {
     play.setAttribute('aria-label', 'Послухати фразу');
     play.addEventListener('click', e => { e.stopPropagation(); sayPhrase(w, i); });
     const text = el('div', 'phrase-text');
-    const en = el('span', 'phrase-en', p[0]); en.lang = 'en';
+    const en = el('span', 'phrase-en'); en.appendChild(enText(p[0]));
     text.append(en, el('span', 'phrase-uk', p[1]));
     const acts = el('div', 'phrase-acts');
     const link = (label, href, title) => {
@@ -311,6 +316,9 @@ const ICON = {
   calendar: SVG('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 13.5v3.5M10.2 15.3h3.6"/>'),
   share: SVG('<path d="M12 3.5v11M8 7.5l4-4 4 4"/><path d="M6.5 11H5.5A1.5 1.5 0 0 0 4 12.5v6A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5v-6a1.5 1.5 0 0 0-1.5-1.5h-1"/>'),
   chevron: SVG('<path d="m9 6 6 6-6 6"/>', 2.4),
+  prev: SVG('<path d="M6 5.5v13"/><path d="M18.5 6.5 9.5 12l9 5.5z"/>'),
+  next: SVG('<path d="M18 5.5v13"/><path d="M5.5 6.5l9 5.5-9 5.5z"/>'),
+  pause: SVG('<path d="M8.5 5.5v13M15.5 5.5v13"/>', 3),
   timer: SVG('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M10 2.5h4M18.5 6l1.5-1.5"/>')
 };
 const EX_ICON = {
@@ -395,12 +403,13 @@ let sess = null;        // знімок дня на початку занятт�
 function envFor(practiceIds, reviewOnly, limit) {
   return {
     words: allWords(), cards, settings, today: today(), log: todayLog(), rng: Math.random, canListen: canListen(),
-    practiceIds, reviewOnly, limit, priority: meta.priority || []
+    practiceIds, reviewOnly, limit, priority: meta.priority || [], withNew: !!todayLog().nw
   };
 }
 function updateTape() {
   updateSessionBar();
   if (sprint) { sprintTape(); return; }
+  if (mode === 'listen' && listen) { listenTape(); return; }
   if (session && session.practice) { renderTape(practiceDone, practiceDone + session.remaining(), 'Тренування'); return; }
   const l = todayLog();
   const done = (l.r || 0) + (l.n || 0) + (l.k || 0);
@@ -436,6 +445,7 @@ window.addEventListener('popstate', () => {
   histPushed = false;
   if (mode === 'session') endSession(true);
   else if (mode === 'sprint') endSprint();
+  else if (mode === 'listen') finishListen();
   else if (mode) { triage = null; mode = null; renderLearn(); }
 });
 function estimateMinutes(units) { return Math.max(1, Math.ceil(units * 10 / 60)); }
@@ -579,10 +589,12 @@ function renderLearn() {
       q.addEventListener('click', () => { settings.quiet = false; saveSettings(); renderLearn(); toast('Звук увімкнено'); });
       home.appendChild(q);
     }
-    if (cnt.reviews >= 40 && cnt.fresh) home.appendChild(el('p', 'tip', 'Повторень сьогодні багато. Нічого страшного, якщо зробиш лише їх, а нові слова почекають до завтра.'));
+    if (plan.newPaused) home.appendChild(el('p', 'tip', 'Після пропущених днів накопичилось ' + plan.overdue + ' ' + C.plural(plan.overdue, 'повторення', 'повторення', 'повторень') + '. Нові слова почекають, поки не розбереш їх: найслабші йдуть першими.'));
+    else if (cnt.reviews >= 40 && cnt.fresh) home.appendChild(el('p', 'tip', 'Повторень сьогодні багато. Нічого страшного, якщо зробиш лише їх, а нові слова почекають до завтра.'));
     main = dock(l.r ? 'Продовжити' : 'Почати', '≈ ' + mins(estimateMinutes(units)), () => startSession());
     if (units > 14) tiles.push(quick('bolt', 'Хоч 2 хвилини', cnt.reviews ? 'найслабші повторення' : 'коротке заняття', startShort));
     if (cnt.reviews && cnt.fresh) tiles.push(quick('repeat', 'Тільки повторення', 'без нових слів', () => startSession(null, true)));
+    if (plan.newPaused && left) tiles.push(quick('plus', 'Взяти й нові слова', 'сьогодні, попри борг', () => { todayLog().nw = 1; persist(); startSession(); }));
     plan.reviews.slice(0, 3).concat(plan.newIds.slice(0, 2)).forEach(id => preloadWord(byId(id)));
   } else {
     if (l.r) {
@@ -602,14 +614,16 @@ function renderLearn() {
       home.appendChild(el('h2', 'hero', 'Сьогодні вільно'));
       home.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Налаштуваннях.'));
     }
-    const consolidate = () => startSession(fresh);
-    const practice = () => startSession(misses);
+    const consolidate = () => startSession(fresh, false, null, 'fresh');
+    const practice = () => startSession(misses, false, null, 'misses');
     if (l.r && fresh.length && evening) main = dock('Закріпити сьогоднішні нові', words(fresh.length) + ', перед сном найкраще', consolidate);
     else if (misses.length) main = dock('Потренувати помилки', words(misses.length), practice);
     if (l.r && fresh.length && !evening) tiles.push(quick('moonplus', 'Закріпити нові', words(fresh.length) + ', краще ввечері', consolidate));
     if (misses.length && !(main && main.btn.textContent.startsWith('Потренувати'))) tiles.push(quick('target', 'Потренувати помилки', words(misses.length), practice));
     if (left) tiles.push(quick('plus', 'Ще 5 нових слів', 'понад денний ліміт', () => { todayLog().x = (todayLog().x || 0) + 5; persist(); startSession(); }));
   }
+  const ls = canListen() ? listenIds().length : 0;
+  if (ls >= 3) tiles.push(quick('listen', 'Слухати', 'у дорогу: ' + words(ls) + ' голосом, без рук', () => startListen()));
   if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
   if (tiles.length) {
     const grid = el('div', 'qa-list');
@@ -753,14 +767,15 @@ function reminderPanel(onDone) {
   return box;
 }
 
-function startSession(practiceIds, reviewOnly, limit) {
+/* kind для тренування: misses (помилки), fresh (сьогоднішні нові), dict (слова зі словника) */
+function startSession(practiceIds, reviewOnly, limit, kind) {
   stopAudio();
   cancelAuto();
   session = new C.Session(envFor(practiceIds, reviewOnly, limit));
   practiceDone = 0;
   itemHistory = [];
   const l = todayLog();
-  sess = { r: l.r || 0, a: l.a || 0, n: l.n || 0, k: l.k || 0, ms: l.ms || 0, miss: (l.miss || []).slice(), practice: !!practiceIds };
+  sess = { r: l.r || 0, a: l.a || 0, n: l.n || 0, k: l.k || 0, ms: l.ms || 0, miss: (l.miss || []).slice(), practice: !!practiceIds, kind: kind || (practiceIds ? 'misses' : null) };
   mode = 'session';
   nextItem();
 }
@@ -773,13 +788,14 @@ function endSession(manual) {
   cancelAuto();
   stopAudio();
   const wasPractice = !!(session && session.practice);
+  const fromDict = !!(sess && sess.kind === 'dict');
   session = null; current = null; ui = null;
   document.body.classList.remove('typing');
   const l = todayLog();
   const did = sess ? (l.r || 0) - sess.r + (l.n || 0) - sess.n + (l.k || 0) - sess.k : 0;
   if (did > 0) { showSummary(manual, wasPractice); return; }
   mode = null; sess = null;
-  renderLearn();
+  if (fromDict) showTab('dict'); else renderLearn();
 }
 function nextItem() {
   cancelAuto();
@@ -820,6 +836,7 @@ function toggleQuiet() {
 function showSummary(manual, practice) {
   mode = 'summary';
   const s0 = sess || { r: 0, a: 0, n: 0, ms: 0, miss: [] };
+  const kind = s0.kind;
   sess = null;
   const l = todayLog();
   const r = (l.r || 0) - s0.r, a = (l.a || 0) - s0.a, n = (l.n || 0) - s0.n;
@@ -842,7 +859,8 @@ function showSummary(manual, practice) {
   if (info.days) { const sk = el('span', 'ex-right streak-chip'); sk.innerHTML = ICON.flame; sk.appendChild(el('span', null, days(info.days))); head.appendChild(sk); }
   card.appendChild(head);
   const body = el('div', 'prompt summary');
-  const titleText = practice ? 'Помилки розібрано' : !leftTotal ? 'Усе на сьогодні!' : manual ? 'Добра перерва' : 'Готово';
+  const titleText = practice ? (kind === 'misses' ? 'Помилки розібрано' : kind === 'fresh' ? 'Нові слова закріплено' : 'Готово')
+    : !leftTotal ? 'Усе на сьогодні!' : manual ? 'Добра перерва' : 'Готово';
   body.appendChild(el('h2', 'word', titleText));
   const stats = el('div', 'stats');
   const stat = (v, k) => { const d = el('div', 'stat'); d.append(el('b', null, v), el('span', null, k)); stats.appendChild(d); };
@@ -865,13 +883,13 @@ function showSummary(manual, practice) {
     });
     card.appendChild(d);
   }
-  const home = () => { mode = null; renderLearn(); window.scrollTo(0, 0); };
+  const home = () => { mode = null; if (kind === 'dict') showTab('dict'); else renderLearn(); window.scrollTo(0, 0); };
   const btns = [];
   if (!practice && leftTotal) {
     btns.push(button('На головну', 'btn-quiet', home));
     btns.push(button('Продовжити', 'btn-primary', () => startSession()));
   } else {
-    if (missIds.length && !practice) btns.push(button('Потренувати помилки', '', () => startSession(missIds)));
+    if (missIds.length && !practice) btns.push(button('Потренувати помилки', '', () => startSession(missIds, false, null, 'misses')));
     btns.push(button('Готово', 'btn-primary', home));
   }
   setFoot(btns, btns.length === 2 ? 2 : 0);
@@ -983,6 +1001,7 @@ function finishTriage(next) {
 /* Каркас вправи */
 function frame(item) {
   if (!mode) mode = 'session';
+  closePeek();
   $('stage').hidden = false;
   $('learnHome').hidden = true;
   const card = $('card');
@@ -1057,6 +1076,109 @@ function fitWord(node) {
   node.style.fontSize = size + 'px';
 }
 function enSpan(text) { const s = el('span', null, text); s.lang = 'en'; return s; }
+/* Англійський текст, де кожне слово можна торкнути й побачити переклад */
+function enText(text) {
+  const s = el('span'); s.lang = 'en';
+  String(text || '').split(/([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'’]*)/).forEach((part, i) => {
+    if (!part) return;
+    s.appendChild(i % 2 ? el('span', 'tw', part) : document.createTextNode(part));
+  });
+  return s;
+}
+
+/* ---------- Переклад слова з прикладу: бульбашка біля слова ---------- */
+let peekEl = null;
+function peekFind(t, sentence) { if (!peekIdx) peekIdx = C.lookupIndex(allWords(), window.GLOSSARY); return peekIdx(t, sentence); }
+function closePeek() {
+  if (!peekEl) return;
+  peekEl.remove(); peekEl = null;
+  document.querySelectorAll('.tw.on').forEach(x => x.classList.remove('on'));
+  document.documentElement.classList.remove('peek-open');
+}
+function openPeek(span) {
+  closePeek();
+  if (listen && !listen.paused) lPause();
+  const token = span.textContent;
+  const sentence = span.parentNode ? span.parentNode.textContent : '';
+  const r = peekFind(token, sentence);
+  const box = el('div', 'peek');
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-label', 'Переклад слова ' + token);
+  const entry = w => {
+    const row = el('div', 'peek-row');
+    const txt = el('div', 'peek-text');
+    const en = el('b', null, w.en); en.lang = 'en';
+    txt.append(en, el('span', 'peek-uk', w.uk));
+    const say = el('button', 'say sm');
+    say.type = 'button';
+    say.innerHTML = ICON.speaker;
+    say.setAttribute('aria-label', 'Послухати ' + w.en);
+    say.addEventListener('click', () => (w.gloss ? speakDevice(w.en) : sayWord(w, 'w')));
+    row.append(txt, say);
+    box.appendChild(row);
+    if (w.gloss) return;
+    const c = cards[w.id];
+    if (c) { box.appendChild(el('p', 'peek-st', C.statusOf(c) === 'known' ? 'Знаєш це слово' : 'Вчиш це слово')); return; }
+    if (current && current.id === w.id) return;
+    const isPri = (meta.priority || []).includes(w.id);
+    const b = el('button', 'link-btn small', isPri ? 'Буде серед найближчих нових' : 'Вчити першим');
+    b.type = 'button';
+    b.disabled = isPri;
+    b.addEventListener('click', () => {
+      meta.priority = (meta.priority || []).filter(x => x !== w.id && !cards[x]).concat([w.id]);
+      save(KEYS.meta, meta);
+      b.textContent = 'Буде серед найближчих нових'; b.disabled = true;
+      if (!mode) resetSession();
+    });
+    box.appendChild(b);
+  };
+  if (r) {
+    // Вираз з цього речення (day off, pick up) важливіший за окреме слово
+    r.phrases.forEach(entry);
+    const singles = r.words.slice(0, r.phrases.length ? 1 : 3);
+    if (singles.length && !r.exact && !singles[0].gloss) {
+      const f = el('p', 'peek-form'); f.append(enSpan(token), document.createTextNode(' — форма слова ' + r.base)); box.appendChild(f);
+    }
+    singles.forEach(entry);
+  } else {
+    box.appendChild(el('p', 'peek-none', 'Слова «' + token + '» немає в словнику.'));
+    if (!mode && /^[a-z'’-]{2,}$/i.test(token)) {
+      const add = el('button', 'link-btn small', 'Додати своє слово');
+      add.type = 'button';
+      add.addEventListener('click', () => {
+        closePeek();
+        showTab('dict');
+        $('addPanel').hidden = false;
+        $('fEn').value = token.toLowerCase();
+        $('fUk').focus();
+      });
+      box.appendChild(add);
+    }
+  }
+  document.body.appendChild(box);
+  span.classList.add('on');
+  peekEl = box;
+  document.documentElement.classList.add('peek-open');
+  // Під словом, а якщо не вміщається над нижньою панеллю, то над ним
+  const rect = span.getBoundingClientRect();
+  const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  const bw = box.offsetWidth, bh = box.offsetHeight;
+  const footH = document.body.classList.contains('in-session') ? ($('foot').offsetHeight || 0) : 70;
+  const left = Math.max(12, Math.min(vw - bw - 12, rect.left + rect.width / 2 - bw / 2));
+  let top = rect.bottom + 8;
+  if (top + bh > vh - footH - 8) top = Math.max(8, rect.top - bh - 8);
+  box.style.left = left + 'px';
+  box.style.top = top + 'px';
+  if (!meta.peekUsed) { meta.peekUsed = today(); save(KEYS.meta, meta); }
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest && e.target.closest('.tw');
+  if (t) { e.preventDefault(); e.stopPropagation(); if (t.classList.contains('on')) closePeek(); else openPeek(t); return; }
+  // Дотик поза бульбашкою лише закриває її, щоб випадково не натиснути «Далі» під нею
+  if (peekEl && !(e.target.closest && e.target.closest('.peek'))) { e.preventDefault(); e.stopPropagation(); closePeek(); }
+}, true);
+window.addEventListener('scroll', () => { if (peekEl) closePeek(); }, { passive: true });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && peekEl) { closePeek(); e.stopPropagation(); } }, true);
 
 /* Нотатки: власна асоціація */
 function mnemonicBlock(w, openByDefault) {
@@ -1136,7 +1258,7 @@ function details(w, opts) {
   if (opts.uk !== false) d.appendChild(el('p', 'trans', w.uk));
   if (w.ex && opts.ex !== false) {
     const ex = el('p', 'ex');
-    ex.append(enSpan(w.ex), sayBtn(w, 'x', true));
+    ex.append(enText(w.ex), sayBtn(w, 'x', true));
     d.appendChild(ex);
     if (w.exUk) d.appendChild(el('p', 'ex-uk', w.exUk));
   }
@@ -1299,11 +1421,12 @@ RENDER.intro = item => {
     d.appendChild(el('p', 'trans', w.uk));
     [[w.ex, w.exUk, 'x'], [w.ex2, w.ex2Uk, 'x2']].forEach(([ex, exUk, kind]) => {
       if (!ex) return;
-      const p = el('p', 'ex'); p.append(enSpan(ex), sayBtn(w, kind, true)); d.appendChild(p);
+      const p = el('p', 'ex'); p.append(enText(ex), sayBtn(w, kind, true)); d.appendChild(p);
       if (exUk) d.appendChild(el('p', 'ex-uk', exUk));
     });
     if (w.note) { const n = el('p', 'note'); n.textContent = w.note; d.appendChild(n); }
     d.appendChild(el('p', 'tip', 'Скажи слово і приклад уголос: сказане тримається довше, ніж прочитане.'));
+    if (!meta.peekUsed) d.appendChild(el('p', 'tip', 'Незнайоме слово в прикладі? Торкнись його, і з\'явиться переклад.'));
     const pb = phraseBlock(w, false);
     if (pb) d.appendChild(pb);
     d.appendChild(mnemonicBlock(w, false));
@@ -1374,10 +1497,12 @@ function mcq(item, prompt, field) {
     box.appendChild(b);
   });
   $('card').appendChild(box);
+  // Чесне «не знаю» краще за вгадування навмання: вгадане слово розклад вважав би вивченим
+  setFoot([button('Не знаю', 'btn-quiet', () => choose(null, null))]);
   keys = { num: n => btns[n - 1] && btns[n - 1].click() };
   function choose(o, b) {
     if (ui.answered) return;
-    const ok = o.id === w.id;
+    const ok = !!o && o.id === w.id;
     finish(ok ? 3 : 1);
     btns.forEach((x, i) => {
       x.disabled = true;
@@ -1387,7 +1512,16 @@ function mcq(item, prompt, field) {
     });
     autoSay(w, 'w');
     $('card').appendChild(details(w, { en: prompt !== 'en', uk: prompt !== 'uk', wrong: !ok }));
-    nextButton(ok ? verdict('right', 'Правильно') : verdict('wrong', 'Ні, правильно:', null, pair(w)), ok);
+    // Що означає вибраний хибний варіант: помилка теж чогось вчить
+    let mine = null;
+    if (o && !ok) {
+      const other = field === 'uk' ? 'en' : 'uk';
+      mine = el('span', 'yours');
+      const a = el('span', null, o[field]); if (field === 'en') a.lang = 'en';
+      const z = el('span', null, o[other]); if (other === 'en') z.lang = 'en';
+      mine.append(a, document.createTextNode(' — це '), z);
+    }
+    nextButton(ok ? verdict('right', 'Правильно') : verdict('wrong', o ? 'Ні, правильно:' : 'Правильно:', null, pair(w), mine), ok);
   }
 }
 function listenPrompt(body, w) {
@@ -1913,6 +2047,416 @@ function endSprint() {
   updateTape();
 }
 
+/* ---------- Слухати: слова голосом без рук (дорога, робота з одним навушником) ----------
+   Слово, пауза згадати, переклад, приклад. Усе грає один <audio>, і паузи теж записи (тиша):
+   коли екран заблоковано, таймери майже стоять, а звук грає далі, тож ланцюжок не рветься.
+   Розклад повторень не змінюється: це підготовка до заняття, а не заміна. */
+const GAP_URL = '/audio/gap.mp3', GAP_SEC = 0.55;
+let gapSrc = null;
+let listen = null;
+let lSeekTok = 0;
+function loadGap() {
+  if (gapSrc) return;
+  fetch(GAP_URL).then(r => (r.ok ? r.blob() : null)).then(b => { if (b && !gapSrc) gapSrc = URL.createObjectURL(b); }).catch(() => {});
+}
+function ukVoice() { return ukVoices.find(v => /lesya/i.test(v.name)) || ukVoices[0] || null; }
+function ukSpeakable(t) { return String(t).replace(/\s*\([^)]*\)/g, '').replace(/\s+([,;])/g, '$1').replace(/^[,;\s]+|[,;\s]+$/g, '').replace(/\s+/g, ' '); }
+/* Що слухати з головної: помилки дня, слова в процесі, повторення на сьогодні (найслабші першими),
+   свіжі слова за два тижні, кілька наступних нових для знайомства, далі решта вивчених */
+function listenIds() {
+  const t = today(), l = todayLog();
+  const out = [], seen = new Set();
+  const add = id => { if (!seen.has(id) && byId(id)) { seen.add(id); out.push(id); } };
+  const weak = (a, b) => C.strength(cards[a], t) - C.strength(cards[b], t);
+  const mine = Object.keys(cards).filter(id => byId(id) && !cards[id].known);
+  (l.miss || []).forEach(add);
+  mine.filter(id => cards[id].st !== 'review').forEach(add);
+  mine.filter(id => cards[id].st === 'review' && cards[id].due <= t).sort(weak).forEach(add);
+  mine.filter(id => cards[id].st === 'review' && cards[id].first >= t - 14).sort(weak).forEach(add);
+  if (out.length < 30) C.orderNew(allWords(), cards, settings.cats, settings.newPerDay, t, meta.priority).slice(0, 8).forEach(w => add(w.id));
+  mine.filter(id => cards[id].st === 'review').sort(weak).forEach(add);
+  return out.slice(0, 40);
+}
+function startListen(ids, source) {
+  ids = (ids || listenIds()).filter(id => byId(id));
+  if (!ids.length) { toast('Поки немає слів, які можна послухати'); return; }
+  stopAudio(); cancelAuto(); closePeek();
+  if (sprint) endSprint();
+  session = null; current = null; ui = null; triage = null;
+  // iPhone дозволяє голосу говорити без дотику лише після першої фрази, сказаної з дотику
+  if (synth) { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; synth.speak(u); } catch (e) {} }
+  loadGap();
+  listen = { ids, i: 0, k: 0, q: [], tok: 0, paused: false, onEnd: null, segEnd: 0, segFrom: 0, isGap: false, lastDur: 0,
+    heard: new Set(), ms: 0, t0: performance.now(), shown: {}, source: source || 'home', timer: null, pack: null, speakFin: null };
+  mode = 'listen';
+  if (currentTab !== 'learn') showTab('learn');
+  lMediaHandlers(true);
+  lLoad();
+}
+function lWord() { const id = listen.ids[listen.i]; return C.withExample(byId(id), cards[id]); }
+/* Черга дій для одного слова. sh: пауза, щоб повторити вголос (якщо ввімкнено) */
+function lQueue(w) {
+  const q = [{ t: 'say', kind: 'w' }, { t: 'gap', d: 1.6, sh: true }, { t: 'show', what: 'uk' }, { t: 'uk' }];
+  if (w.ex) q.push({ t: 'gap', d: 0.4 }, { t: 'show', what: 'ex' }, { t: 'say', kind: 'x' }, { t: 'gap', d: 1.1, sh: true });
+  if (settings.listen.phrases && PHRASES[w.id] && phrasePackUrl(w)) {
+    q.push({ t: 'show', what: 'ph' });
+    if (settings.listen.shadow) PHRASES[w.id].forEach((p, i) => q.push({ t: 'phrase', i }, { t: 'gap', d: 0.8, sh: true }));
+    else q.push({ t: 'pack' }, { t: 'gap', d: 0.6 });
+  }
+  q.push({ t: 'gap', d: 0.9 });
+  return q;
+}
+function lLoad() {
+  if (!listen) return;
+  const w = lWord();
+  listen.q = lQueue(w); listen.k = 0; listen.shown = {}; listen.lastDur = 0;
+  lRenderCard(w);
+  lMedia(w);
+  const nx = listen.ids[listen.i + 1] && byId(listen.ids[listen.i + 1]);
+  preloadWord(w);
+  if (nx) { preloadWord(C.withExample(nx, cards[nx.id])); if (settings.listen.phrases) preloadPhrases(nx); }
+  if (settings.listen.phrases) preloadPhrases(w);
+  updateTape();
+  if (!listen.paused) lRun();
+}
+function lRun() {
+  if (!listen || listen.paused) return;
+  const a = listen.q[listen.k];
+  if (!a) { lJump(1); return; }
+  const tok = ++listen.tok;
+  const done = () => { if (!listen || tok !== listen.tok || listen.paused) return; listen.k++; lRun(); };
+  const w = lWord();
+  if (a.t === 'show') { lShow(a.what); done(); return; }
+  if (a.t === 'say') {
+    const url = clipUrl(w, a.kind);
+    if (url) { lPlay(url, 0, 0, done); return; }
+    const text = textFor(w, a.kind);
+    if (text && !document.hidden) lSpeak(speakable(text), 'en', done); else done();
+    return;
+  }
+  if (a.t === 'uk') {
+    if (settings.listen.uk && ukVoice() && !document.hidden) lSpeak(ukSpeakable(w.uk), 'uk', done);
+    else lGap(1.0, done);
+    return;
+  }
+  if (a.t === 'gap') { lGap(a.sh && settings.listen.shadow ? Math.max(a.d, listen.lastDur * 1.15 + 0.8) : a.d, done); return; }
+  const url = phrasePackUrl(w);
+  const times = url && AUD.phrases[w.id];
+  if (a.t === 'pack' && url) { listen.pack = times.slice(1); lPlay(url, 0, 0, () => { if (listen) { listen.pack = null; lMark(-1); } done(); }); return; }
+  if (a.t === 'phrase' && times && times[a.i + 1]) { lMark(a.i); lPlay(url, times[a.i + 1][0], times[a.i + 1][1], done); return; }
+  done();
+}
+function lPlay(src, from, to, done) {
+  clearSegment();
+  if (synth && synth.speaking) synth.cancel();
+  playing = '';
+  listen.onEnd = done;
+  listen.isGap = src === gapSrc;
+  listen.segFrom = from || 0;
+  listen.segEnd = to ? to + 0.06 : 0;
+  const real = blobs.get(src) || src;
+  const tk = ++lSeekTok;
+  const seek = () => { if (tk !== lSeekTok) return; try { if (Math.abs(player.currentTime - (from || 0)) > 0.05) player.currentTime = from || 0; } catch (e) {} };
+  if (player.getAttribute('src') !== real) { player.src = real; player.addEventListener('loadedmetadata', seek, { once: true }); }
+  else seek();
+  player.defaultPlaybackRate = settings.rate;
+  player.playbackRate = settings.rate;
+  const p = player.play();
+  if (p && p.catch) p.catch(err => {
+    if (!listen || listen.onEnd !== done) return;
+    if (err && err.name === 'NotAllowedError') lPause();
+    else if (!err || err.name !== 'AbortError') lFire();
+  });
+}
+/* Запис дограв (або дійшов до кінця шматка): наступна дія */
+function lFire() {
+  if (!listen || !listen.onEnd) return;
+  if (!listen.isGap) listen.lastDur = (listen.segEnd ? listen.segEnd - listen.segFrom : (isFinite(player.duration) ? player.duration : 1.5)) / (settings.rate || 1);
+  const f = listen.onEnd;
+  listen.onEnd = null; listen.segEnd = 0;
+  f();
+}
+player.addEventListener('ended', () => { if (listen) lFire(); });
+player.addEventListener('error', () => { if (listen && listen.onEnd) lFire(); });
+player.addEventListener('timeupdate', () => {
+  if (!listen) return;
+  if (listen.segEnd && player.currentTime >= listen.segEnd) { try { player.pause(); } catch (e) {} lFire(); return; }
+  if (listen.pack) {
+    const t = player.currentTime;
+    lMark(listen.pack.findIndex(([a, b]) => t >= a - 0.1 && t <= b + 0.3));
+  }
+});
+function lGap(sec, done) {
+  if (!gapSrc) {
+    clearTimeout(listen.timer);
+    listen.timerOn = true;
+    listen.timer = setTimeout(() => { if (listen) listen.timerOn = false; done(); }, sec * 1000);
+    return;
+  }
+  let left = Math.max(1, Math.round(sec / GAP_SEC));
+  const loop = () => { if (!listen) return; if (left-- <= 0) { done(); return; } lPlay(gapSrc, 0, 0, loop); };
+  loop();
+}
+function lSpeak(text, lang, done) {
+  if (!synth || !text) { done(); return; }
+  try { player.pause(); } catch (e) {}
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const v = lang === 'uk' ? ukVoice() : pickVoice();
+  if (v) { u.voice = v; u.lang = v.lang; } else u.lang = lang === 'uk' ? 'uk-UA' : 'en-GB';
+  u.rate = lang === 'uk' ? 1 : Math.max(0.5, settings.rate * 0.95);
+  let fired = false;
+  const fin = () => { if (fired) return; fired = true; if (listen) { clearTimeout(listen.timer); listen.speakFin = null; } done(); };
+  u.onend = fin; u.onerror = fin;
+  listen.speakFin = fin;
+  // На iPhone подія кінця фрази інколи губиться: не чекаємо вічно
+  clearTimeout(listen.timer);
+  listen.timer = setTimeout(fin, 1800 + text.length * 110);
+  synth.speak(u);
+}
+/* Зупинити поточний звук і скасувати очікування */
+function lHalt() {
+  if (!listen) return;
+  listen.tok++;
+  listen.onEnd = null; listen.segEnd = 0; listen.pack = null; listen.speakFin = null; listen.timerOn = false;
+  clearTimeout(listen.timer);
+  try { player.pause(); } catch (e) {}
+  if (synth) synth.cancel();
+}
+function lHeard() {
+  const id = listen.ids[listen.i];
+  if (!listen.shown.uk || listen.heard.has(id)) return;
+  listen.heard.add(id);
+  const l = todayLog(); l.ls = (l.ls || 0) + 1;
+  save(KEYS.log, log);
+}
+function lPause() {
+  if (!listen || listen.paused) return;
+  lHalt();
+  listen.paused = true;
+  listen.ms += performance.now() - listen.t0;
+  lMediaState();
+  lRenderFoot();
+}
+/* Після паузи слово звучить спочатку: так легше підхопити */
+function lResume() {
+  if (!listen || !listen.paused) return;
+  listen.paused = false;
+  listen.t0 = performance.now();
+  lLoad();
+}
+function lJump(d) {
+  if (!listen) return;
+  lHeard();
+  lHalt();
+  if (listen.i + d >= listen.ids.length) { finishListen(); return; }
+  listen.i = Math.max(0, listen.i + d);
+  // «Наступне» з паузи (і з навушників) одразу грає; зміна налаштування на паузі лише перемальовує
+  if (listen.paused && d !== 0) { listen.paused = false; listen.t0 = performance.now(); }
+  lLoad();
+}
+function lShow(what) {
+  listen.shown[what] = true;
+  const n = $(what === 'uk' ? 'lUk' : what === 'ex' ? 'lEx' : 'lPh');
+  if (n) n.classList.remove('veil');
+}
+function lMark(i) {
+  const box = $('lPh');
+  if (!box) return;
+  Array.from(box.children).forEach((r, k) => {
+    const on = k === i;
+    if (on && !r.classList.contains('on') && !document.hidden) { try { r.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {} }
+    r.classList.toggle('on', on);
+  });
+}
+function lRenderCard(w) {
+  closePeek();
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic'); ic.innerHTML = ICON.listen;
+  label.append(ic, document.createTextNode('Слухати'));
+  const right = el('span', 'ex-right');
+  if (!cards[w.id]) right.appendChild(el('span', 'badge fresh', 'нове'));
+  right.appendChild(document.createTextNode((listen.i + 1) + ' з ' + listen.ids.length));
+  head.append(label, right);
+  card.appendChild(head);
+  const body = el('div', 'prompt listen');
+  body.appendChild(bigWord(w.en, 'en'));
+  const uk = el('p', 'l-uk veil', w.uk); uk.id = 'lUk';
+  body.appendChild(uk);
+  card.appendChild(body);
+  if (w.ex) {
+    const exb = el('div', 'l-ex veil'); exb.id = 'lEx';
+    const p = el('p', 'ex'); p.appendChild(enText(w.ex));
+    exb.appendChild(p);
+    if (w.exUk) exb.appendChild(el('p', 'ex-uk', w.exUk));
+    card.appendChild(exb);
+  }
+  if (settings.listen.phrases && PHRASES[w.id]) {
+    const ph = el('div', 'l-ph veil'); ph.id = 'lPh';
+    PHRASES[w.id].forEach(p => {
+      const r = el('p', 'l-phr');
+      const en = el('span', 'phrase-en'); en.appendChild(enText(p[0]));
+      r.append(en, el('span', 'phrase-uk', p[1]));
+      ph.appendChild(r);
+    });
+    card.appendChild(ph);
+  }
+  card.appendChild(lOptions());
+  lRenderFoot();
+  window.scrollTo(0, 0);
+}
+function lOptions() {
+  const box = el('div', 'l-opts');
+  const row = el('div', 'chips wrap');
+  const hint = el('p', 'tip');
+  const drawHint = () => {
+    hint.textContent = settings.listen.shadow
+      ? 'Після кожного запису пауза: повтори вголос слідом за Еммою, так розмова пізніше йде легше.'
+      : 'Слухай і згадуй переклад до того, як він з\'явиться. Розклад повторень це не змінює.';
+  };
+  const chip = (key, text, restart) => {
+    const b = el('button', 'chip', text);
+    b.type = 'button';
+    b.setAttribute('aria-pressed', String(!!settings.listen[key]));
+    b.addEventListener('click', () => {
+      settings.listen[key] = !settings.listen[key];
+      saveSettings();
+      b.setAttribute('aria-pressed', String(settings.listen[key]));
+      drawHint();
+      if (restart) lJump(0);
+    });
+    return b;
+  };
+  row.append(chip('shadow', 'Пауза, щоб повторити', true), chip('phrases', 'З фразами', true));
+  if (ukVoice()) row.appendChild(chip('uk', 'Переклад уголос'));
+  drawHint();
+  box.append(row, hint);
+  return box;
+}
+function lRenderFoot() {
+  if (!listen) return;
+  const mk = (icon, text, fn, cls) => {
+    const b = el('button', 'btn l-btn' + (cls ? ' ' + cls : ''));
+    b.type = 'button';
+    const i = el('span', 'l-ic'); i.innerHTML = ICON[icon];
+    b.append(i, el('span', null, text));
+    b.addEventListener('click', fn);
+    return b;
+  };
+  const prev = mk('prev', 'Назад', () => lJump(-1));
+  prev.disabled = listen.i === 0;
+  const pp = listen.paused ? mk('play', 'Слухати', lResume, 'btn-primary') : mk('pause', 'Пауза', lPause, 'btn-primary');
+  const last = listen.i >= listen.ids.length - 1;
+  const next = mk(last ? 'check' : 'next', last ? 'Кінець' : 'Далі', () => lJump(1));
+  setFoot([prev, pp, next], '3m');
+  keys = { space: () => (listen.paused ? lResume() : lPause()), enter: () => (listen.paused ? lResume() : lPause()) };
+  lMediaState();
+}
+function listenTape() {
+  const n = listen.ids.length;
+  renderTape(listen.i, n, 'Слово', null, true);
+  $('tapeDone').innerHTML = 'Слово <b>' + (listen.i + 1) + '</b> з ' + n;
+  const per = (settings.listen.phrases ? 20 : 9) * (settings.listen.shadow ? 1.6 : 1);
+  $('tapeLeft').textContent = 'ще ≈ ' + mins(Math.max(1, Math.round((n - listen.i) * per / 60)));
+}
+/* Екран блокування й навушники: назва слова, пауза, наступне/попереднє */
+function lMedia(w) {
+  if (!('mediaSession' in navigator)) return;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: w.en, artist: w.uk, album: 'English Words',
+      artwork: [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }] });
+  } catch (e) {}
+}
+function lMediaState() {
+  if (!('mediaSession' in navigator)) return;
+  try { navigator.mediaSession.playbackState = !listen ? 'none' : listen.paused ? 'paused' : 'playing'; } catch (e) {}
+}
+function lMediaHandlers(on) {
+  if (!('mediaSession' in navigator)) return;
+  const set = (a, f) => { try { navigator.mediaSession.setActionHandler(a, on ? f : null); } catch (e) {} };
+  set('play', () => lResume());
+  set('pause', () => lPause());
+  set('nexttrack', () => lJump(1));
+  set('previoustrack', () => lJump(-1));
+  set('stop', () => finishListen());
+}
+/* Зупинити слухання. Повертає стан, щоб показати підсумок */
+function endListen() {
+  if (!listen) return null;
+  lHeard();
+  lHalt();
+  const L = listen;
+  if (!L.paused) L.ms += performance.now() - L.t0;
+  const l = todayLog();
+  l.lms = (l.lms || 0) + Math.round(L.ms);
+  save(KEYS.log, log);
+  listen = null;
+  lMediaHandlers(false);
+  if ('mediaSession' in navigator) { try { navigator.mediaSession.metadata = null; } catch (e) {} }
+  lMediaState();
+  return L;
+}
+function finishListen() {
+  const L = endListen();
+  if (!L) return;
+  if (L.heard.size) { showListenDone(L); return; }
+  mode = null;
+  if (L.source === 'dict') showTab('dict'); else renderLearn();
+}
+function showListenDone(L) {
+  mode = 'summary';
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic done'); ic.innerHTML = ICON.check;
+  label.append(ic, document.createTextNode('Слухання завершено'));
+  head.appendChild(label);
+  card.appendChild(head);
+  const body = el('div', 'prompt summary');
+  body.appendChild(el('h2', 'word', 'Прослухано'));
+  const stats = el('div', 'stats two');
+  const stat = (v, k) => { const d = el('div', 'stat'); d.append(el('b', null, v), el('span', null, k)); stats.appendChild(d); };
+  stat(String(L.heard.size), C.plural(L.heard.size, 'слово', 'слова', 'слів'));
+  stat(mins(Math.max(1, Math.round(L.ms / 60000))), 'час');
+  body.appendChild(stats);
+  const plan = new C.Session(envFor());
+  const c = plan.counts();
+  const todo = c.reviews + c.learning + c.fresh;
+  body.appendChild(el('p', 'prompt-sub', todo
+    ? 'Тепер ці слова легше згадати самому. На занятті чекає ' + lowerFirst(planSentence(c)) + '.'
+    : 'Слухання готує до заняття, а розклад повторень не змінює.'));
+  card.appendChild(body);
+  const back = () => { mode = null; if (L.source === 'dict') showTab('dict'); else renderLearn(); window.scrollTo(0, 0); };
+  const btns = [button('Готово', 'btn-quiet', back)];
+  if (todo && L.source !== 'dict') btns.push(button('Почати заняття', 'btn-primary', () => startSession()));
+  else btns.push(button('Слухати ще раз', 'btn-primary', () => startListen(L.ids, L.source)));
+  setFoot(btns, 2);
+  keys = { enter: () => btns[1].click() };
+  updateTape();
+}
+document.addEventListener('visibilitychange', () => {
+  if (!listen || listen.paused) return;
+  // Голос iPhone у фоні замовкає: не чекаємо його, а йдемо далі записами
+  if (document.hidden && listen.speakFin) { const f = listen.speakFin; if (synth) synth.cancel(); f(); return; }
+  // Повернувся до екрана, а ланцюжок десь зупинився: слово звучить заново
+  const stalled = () => listen && !listen.paused && (listen.onEnd ? player.paused : !listen.speakFin && !listen.timerOn);
+  if (!document.hidden && stalled()) setTimeout(() => { if (stalled()) { lHalt(); lLoad(); } }, 400);
+});
+/* Звук зупинила система (дзвінок, інша програма): показати паузу, а не чекати вічно */
+player.addEventListener('pause', () => {
+  if (listen && !listen.paused && listen.onEnd && player.paused && !player.ended) lPause();
+});
+
 /* Клавіатура (для комп'ютера) */
 document.addEventListener('keydown', e => {
   if (currentTab !== 'learn') return;
@@ -1965,6 +2509,8 @@ function renderChips() {
       dictCat = k; openItem = null;
       grid.hidden = true; $('catBtn').setAttribute('aria-expanded', 'false');
       renderChips(); renderList();
+      // Сітка тем була довга: повертаємось до кількості слів і дій з темою
+      window.scrollTo(0, 0);
     });
     return b;
   };
@@ -2012,6 +2558,7 @@ function renderList() {
   renderStatusSeg(counts);
   const items = dictStatus === 'all' ? base : base.filter(w => C.statusOf(cards[w.id]) === dictStatus);
   $('dictCount').textContent = words(items.length) + (dictStatus === 'all' && counts.known ? ', знаю ' + counts.known : '');
+  renderDictActs(items, q);
   if (!items.length) {
     list.appendChild(el('li', 'empty', q ? 'Нічого не знайдено. Можна додати це слово.' : 'Тут поки порожньо.'));
     return;
@@ -2060,12 +2607,50 @@ function renderList() {
   list.appendChild(frag);
   if (items.length > 400) list.appendChild(el('li', 'empty', 'Показано 400 з ' + items.length + '. Вибери тему або почни вводити слово.'));
 }
+/* Дії з відібраними словами (тема, стан або пошук): послухати, потренувати, вчити першими */
+function renderDictActs(items, q) {
+  const box = $('dictActs');
+  box.innerHTML = '';
+  const filtered = dictCat !== 'all' || dictStatus !== 'all' || !!q;
+  if (!filtered || !items.length) { box.hidden = true; return; }
+  const t = today();
+  const act = (icon, text, fn) => {
+    const b = el('button', 'act');
+    b.type = 'button';
+    b.innerHTML = ICON[icon];
+    b.appendChild(document.createTextNode(text));
+    b.addEventListener('click', fn);
+    box.appendChild(b);
+  };
+  if (canListen()) act('listen', 'Слухати', () => startListen(items.slice(0, 50).map(w => w.id), 'dict'));
+  const studied = items.filter(w => cards[w.id]).sort((a, b) => C.strength(cards[a.id], t) - C.strength(cards[b.id], t));
+  // Тренування не змінює розклад: до 20 найслабших слів з відібраних
+  if (studied.length >= 2) act('target', 'Потренувати', () => {
+    startSession(C.shuffle(studied.slice(0, 20).map(w => w.id)), false, null, 'dict');
+    showTab('learn');
+  });
+  const fresh = items.filter(w => !cards[w.id]);
+  if (fresh.length && (dictCat !== 'all' || q)) {
+    const pri = new Set(meta.priority || []);
+    const allPri = fresh.every(w => pri.has(w.id));
+    act('plus', allPri ? 'Не першими' : 'Вчити першими', () => {
+      const ids = new Set(fresh.map(w => w.id));
+      const list = (meta.priority || []).filter(x => !cards[x] && !ids.has(x));
+      meta.priority = allPri ? list : list.concat(fresh.map(w => w.id));
+      save(KEYS.meta, meta);
+      resetSession();
+      renderList();
+      toast(allPri ? 'Повернула в загальну чергу' : words(fresh.length) + ' підуть першими серед нових');
+    });
+  }
+  box.hidden = !box.childNodes.length;
+}
 function itemBody(w, c, t) {
   const body = el('div', 'item-body');
   preloadWord(w);
   [[w.ex, w.exUk, 'x'], [w.ex2, w.ex2Uk, 'x2']].forEach(([ex, exUk, kind]) => {
     if (!ex) return;
-    const p = el('p', 'ex'); p.append(enSpan(ex), sayBtn(w, kind, true)); body.appendChild(p);
+    const p = el('p', 'ex'); p.append(enText(ex), sayBtn(w, kind, true)); body.appendChild(p);
     if (exUk) body.appendChild(el('p', 'ex-uk', exUk));
   });
   if (w.note) { const n = el('p', 'note'); n.textContent = w.note; body.appendChild(n); }
@@ -2175,7 +2760,8 @@ function reportRows() {
     ['Серія', s ? days(s) + ' поспіль' : 'ще не почата'],
     ['Вчу', words(tt.learning + tt.leech)],
     ['Знаю', words(tt.known)]
-  ].concat(l.sp ? [['Спринт', l.sp + ' за хвилину']] : []);
+  ].concat(l.sp ? [['Спринт', l.sp + ' за хвилину']] : [])
+    .concat(l.ls ? [['Слухав', words(l.ls) + ', ' + mins(Math.max(1, Math.round((l.lms || 0) / 60000)))]] : []);
 }
 function reportText() {
   return ['Англійська, ' + C.fmtDate(today())].concat(reportRows().map(([a, b]) => a + ': ' + b)).join('\n');
@@ -2428,7 +3014,7 @@ function renderOffline() {
 }
 async function downloadAudio(list, btn) {
   if (offlineBusy) return;
-  const urls = [];
+  const urls = [GAP_URL];
   list.forEach(w => wordUrls(w).forEach(u => urls.push(u)));
   if (!urls.length) return;
   offlineBusy = true;
@@ -2494,6 +3080,7 @@ $('backupFile').addEventListener('change', async e => {
     meta = Object.assign({}, data.meta || {});
     settings = Object.assign({}, DEFAULT_SETTINGS, data.settings || {});
     settings.cats = Object.assign({}, settings.cats || {});
+    settings.listen = Object.assign({}, DEFAULT_SETTINGS.listen, settings.listen || {});
     if (![0.85, 0.9, 0.95].includes(settings.retention)) settings.retention = 0.9;
     save(KEYS.custom, custom); save(KEYS.notes, notes); save(KEYS.own, own); save(KEYS.meta, meta); saveSettings(); persist();
     reindex(); session = null; current = null; mode = null;
@@ -2518,7 +3105,11 @@ function showTab(name) {
   document.querySelectorAll('[data-tab]').forEach(t => {
     if (t.dataset.tab === name) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
   });
-  if (name !== 'learn') { stopAudio(); cancelAuto(); if (sprint) endSprint(); updateSessionBar(); }
+  closePeek();
+  if (name !== 'learn') {
+    if (listen) { endListen(); mode = null; }
+    stopAudio(); cancelAuto(); if (sprint) endSprint(); updateSessionBar();
+  }
   if (name === 'learn') renderLearn();
   if (name === 'dict') { renderChips(); renderList(); }
   if (name === 'report') renderReport();
@@ -2534,6 +3125,7 @@ document.addEventListener('visibilitychange', () => {
   if (today() !== lastDay) {
     lastDay = today();
     if (sprint) endSprint();
+    if (listen) return;
     session = null; current = null; ui = null; mode = null; triage = null;
     renderAll();
   }
@@ -2546,6 +3138,7 @@ $('undoBtn').innerHTML = ICON.undo;
 $('exitBtn').addEventListener('click', () => {
   if (mode === 'session') { endSession(true); return; }
   if (mode === 'sprint') { endSprint(); return; }
+  if (mode === 'listen') { finishListen(); return; }
   triage = null; mode = null; renderLearn();
 });
 $('undoBtn').addEventListener('click', doUndo);
@@ -2616,7 +3209,7 @@ if (/[?&]test=1/.test(location.search)) {
   window.EW = {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
-    get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession,
+    get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, listenIds, startListen,
     debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());

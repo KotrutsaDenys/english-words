@@ -151,6 +151,47 @@
     (IRREGULAR[w] || []).forEach(f => out.add(f));
     return Array.from(out);
   }
+  /* Можливі початкові форми слова з тексту: worked → work, making → make, children → child.
+     Порядок важливий: used → use раніше, ніж us; uses → use раніше, ніж us. */
+  let IRR_REV = null;
+  function lemmaCandidates(token) {
+    const raw = String(token || '').toLowerCase().replace(/[’‘]/g, "'").replace(/^'+|'+$/g, '');
+    const t = raw.replace(/'s$/, '').replace(/s'$/, 's');
+    const out = [];
+    const push = x => { if (x && x.length >= 2 && !out.includes(x)) out.push(x); };
+    if (raw) out.push(raw);   // it's, I, a: як є
+    push(t);                  // plasterer's → plasterer
+    if (!IRR_REV) {
+      IRR_REV = {};
+      for (const base in IRREGULAR) IRREGULAR[base].forEach(f => { (IRR_REV[f] = IRR_REV[f] || []).push(base); });
+    }
+    (IRR_REV[t] || []).forEach(push);
+    const dbl = /([bdgklmnprt])\1$/;
+    if (/ies$/.test(t)) push(t.slice(0, -3) + 'y');
+    if (/s$/.test(t) && !/ss$/.test(t)) push(t.slice(0, -1));
+    if (/es$/.test(t)) push(t.slice(0, -2));
+    if (/ied$/.test(t)) push(t.slice(0, -3) + 'y');
+    if (/ed$/.test(t)) {
+      push(t.slice(0, -1));
+      const s = t.slice(0, -2);
+      push(s);
+      if (dbl.test(s)) push(s.slice(0, -1));
+    }
+    if (/ing$/.test(t)) {
+      const s = t.slice(0, -3);
+      if (/ying$/.test(t)) push(s.slice(0, -1) + 'ie');
+      push(s + 'e');
+      push(s);
+      if (dbl.test(s)) push(s.slice(0, -1));
+    }
+    if (/iest$/.test(t)) push(t.slice(0, -4) + 'y');
+    if (/ier$/.test(t)) push(t.slice(0, -3) + 'y');
+    if (/est$/.test(t)) { push(t.slice(0, -2)); push(t.slice(0, -3)); }
+    if (/er$/.test(t)) { push(t.slice(0, -1)); push(t.slice(0, -2)); }
+    if (/ily$/.test(t)) push(t.slice(0, -3) + 'y');
+    if (/ly$/.test(t)) push(t.slice(0, -2));
+    return out;
+  }
   function isLetter(ch) { return !!ch && /[a-z']/i.test(ch); }
   function findPhrase(text, phrase) {
     const lt = text.toLowerCase(), lp = phrase.toLowerCase();
@@ -182,6 +223,61 @@
     const others = norm(word.ex.slice(0, best.start) + ' ' + word.ex.slice(best.start + best.len));
     if (!others) return null;
     return { start: best.start, end: best.start + best.len, text };
+  }
+
+  /* Пошук слова з тексту в словнику: точний збіг, потім початкова форма. Повертає до трьох значень.
+     glossary: службові слова {en: uk}, яких немає серед слів для вивчення (the, your, it's).
+     sentence: речення, де торкнулися слова, щоб знайти вирази зі словом (day off, pick up, in a nutshell). */
+  const PLACEHOLDER = new Set(['someone', "someone's", 'somebody', 'something', 'sb', 'sth', "one's", 'one', 'your', 'yours', 'yourself', 'oneself']);
+  function lookupIndex(words, glossary) {
+    glossary = glossary || {};
+    const heads = new Map();
+    const multi = new Map();
+    words.forEach(w => {
+      const h = norm(w.en).replace(/^to /, '').replace(/^(the|a|an) /, '').trim();
+      if (!h) return;
+      if (/\s/.test(h)) {
+        const toks = h.split(' ').map(x => x.replace(/^'+|'+$/g, '')).filter(Boolean);
+        if (toks.length > 6) return;
+        toks.forEach(tk => {
+          if (PLACEHOLDER.has(tk) || tk.length < 2) return;
+          const l = multi.get(tk);
+          if (!l) multi.set(tk, [{ w, toks }]); else if (!l.some(x => x.w === w)) l.push({ w, toks });
+        });
+        return;
+      }
+      const list = heads.get(h);
+      if (!list) heads.set(h, [w]); else if (list.length < 3 && !list.some(x => x.uk === w.uk)) list.push(w);
+    });
+    const gl = k => Object.prototype.hasOwnProperty.call(glossary, k) ? [{ en: k, uk: glossary[k], gloss: true }] : null;
+    const single = c => {
+      // Слово для вивчення в точній формі, потім службове в точній формі (was, it's), потім початкові форми
+      if (heads.has(c[0])) return { words: heads.get(c[0]), exact: true, base: c[0] };
+      if (gl(c[0])) return { words: gl(c[0]), exact: true, base: c[0] };
+      for (let i = 1; i < c.length; i++) {
+        const list = heads.get(c[i]) || gl(c[i]);
+        if (list) return { words: list, exact: false, base: c[i] };
+      }
+      return null;
+    };
+    return (token, sentence) => {
+      const c = lemmaCandidates(token);
+      const r = single(c);
+      let phrases = [];
+      if (sentence) {
+        const have = new Set();
+        (String(sentence).match(/[A-Za-z][A-Za-z'’]*/g) || []).forEach(x => lemmaCandidates(x).forEach(f => have.add(f)));
+        const seen = new Set();
+        c.forEach(f => (multi.get(f) || []).forEach(({ w, toks }) => {
+          if (seen.has(w) || !toks.every(tk => PLACEHOLDER.has(tk) || have.has(tk))) return;
+          seen.add(w); phrases.push(w);
+        }));
+        // Довші вирази точніші: in a nutshell перед nutshell
+        phrases = phrases.sort((a, b) => b.en.length - a.en.length).slice(0, 2);
+      }
+      if (!r && !phrases.length) return null;
+      return Object.assign({ words: [], exact: false, base: c[0] }, r || {}, { phrases });
+    };
   }
 
   /* ---------- Слова для «склади фразу» ---------- */
@@ -504,15 +600,21 @@
       return;
     }
     const today = env.today;
+    let overdue = 0;
     for (const id in env.cards) {
       const c = env.cards[id];
       if (!this.byId.has(id) || c.due > today) continue;
-      if (c.st === 'review') this.reviews.push(id);
+      if (c.st === 'review') { this.reviews.push(id); if (c.due < today) overdue++; }
       else this.pipe.push({ id, readyAt: 0 });
     }
     this.reviews.sort((a, b) => strength(env.cards[a], today) - strength(env.cards[b], today));
-    this.newIds = env.reviewOnly ? [] : orderNew(env.words, env.cards, env.settings.cats, env.settings.newPerDay || 10, today, env.priority).slice(0, this.allowance()).map(w => w.id);
+    // Після пропущених днів нові слова чекають, поки не розібрано борг: інакше він лише росте
+    this.overdue = overdue;
+    this.newPaused = !env.reviewOnly && !env.withNew && overdue >= backlogLimit(env.settings.newPerDay);
+    this.newIds = env.reviewOnly || this.newPaused ? [] : orderNew(env.words, env.cards, env.settings.cats, env.settings.newPerDay || 10, today, env.priority).slice(0, this.allowance()).map(w => w.id);
   }
+  /* Скільки прострочених повторень вважати боргом */
+  function backlogLimit(perDay) { return Math.max(30, (perDay || 10) * 3); }
   Session.prototype.allowance = function () {
     const l = this.env.log || {};
     return Math.max(0, (this.env.settings.newPerDay || 10) + (l.x || 0) - (l.n || 0));
@@ -654,7 +756,7 @@
     wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
     EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
-    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo
+    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit
   };
   root.EWCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
