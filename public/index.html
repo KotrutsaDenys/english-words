@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap">
-<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/app.css?v=bd73060482">
 </head>
 <body>
 <div class="app">
@@ -70,9 +70,10 @@
     </div>
     <div class="dict-tools">
       <input class="field search" id="search" type="search" placeholder="Пошук слова" aria-label="Пошук у словнику англійською або українською" autocapitalize="none" autocorrect="off" enterkeyhint="search">
-      <div class="seg small" id="segStatus" role="group" aria-label="Стан слова"></div>
-      <div class="chips" id="chips" role="group" aria-label="Теми"></div>
     </div>
+    <div class="seg small" id="segStatus" role="group" aria-label="Стан слова"></div>
+    <button type="button" class="cat-btn" id="catBtn" aria-expanded="false" aria-controls="catGrid"><span class="cat-btn-label">Тема</span><b id="catName">Усі теми</b><span class="chev" id="catChev"></span></button>
+    <div class="cat-grid" id="catGrid" role="group" aria-label="Теми" hidden></div>
     <div class="dict-meta"><span id="dictCount"></span><button class="link-btn" id="addOpen">Додати слово</button></div>
     <ul class="list" id="list"></ul>
   </section>
@@ -98,6 +99,10 @@
     <h3 class="h3">Словник</h3>
     <div class="vocab-bar" id="vocabBar" role="img"></div>
     <dl class="rows" id="totals"></dl>
+    <div id="baseBox" hidden>
+      <h3 class="h3">Базовий словник</h3>
+      <div id="baseProgress"></div>
+    </div>
     <div id="hardBox" hidden>
       <h3 class="h3">Найважчі слова</h3>
       <ul class="list" id="hardList"></ul>
@@ -141,7 +146,8 @@
         <button class="say" id="voiceTest" aria-label="Прослухати голос iPhone"></button>
       </div>
       <p class="note2" id="voiceNote" style="margin-top:8px"></p>
-      <button class="btn" id="offlineAudio" style="width:100%;margin-top:10px">Завантажити всі записи для офлайну</button>
+      <button class="btn" id="offlineAudio" style="width:100%;margin-top:10px">Завантажити записи для офлайну</button>
+      <div class="offline-more"><button type="button" class="link-btn small" id="offlineAll"></button><span class="note2" id="offlineNote"></span></div>
     </div>
     <div class="group">
       <h2>Наскільки міцно пам'ятати</h2>
@@ -208,13 +214,13 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/words.js"></script>
-<script src="/words-base.js"></script>
-<script src="/phrases.js"></script>
-<script src="/phrases-base.js"></script>
-<script src="/audio.js"></script>
-<script src="/js/fsrs.js"></script>
-<script src="/js/core.js"></script>
-<script src="/js/app.js"></script>
+<script src="/words.js?v=5316032cec"></script>
+<script src="/words-base.js?v=3c46892823"></script>
+<script src="/phrases.js?v=0708003beb"></script>
+<script src="/phrases-base.js?v=eb2504cf00"></script>
+<script src="/audio.js?v=9cdb672632"></script>
+<script src="/js/fsrs.js?v=3951b09840"></script>
+<script src="/js/core.js?v=f0db2f3501"></script>
+<script src="/js/app.js?v=e588481a40"></script>
 </body>
 </html>

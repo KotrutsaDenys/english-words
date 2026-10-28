@@ -355,7 +355,8 @@ body.kb-open #stage .foot{padding-bottom:10px;padding-top:8px}
 .stat b{display:block;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em}
 .stat span{display:block;color:var(--muted);font-size:13px;font-weight:700}
 /* Відсіяти знайомі */
-.triage{display:grid;gap:6px;margin-top:14px}
+.triage{display:grid;gap:6px;margin-top:10px}
+.tri-all{margin-top:8px;color:var(--ink)}
 .tri{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line-soft);background:var(--surface);color:var(--ink);min-height:52px}
 .tri-box{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;color:transparent}
 .tri-box svg{width:15px;height:15px}
@@ -366,8 +367,25 @@ body.kb-open #stage .foot{padding-bottom:10px;padding-top:8px}
 .tri[aria-pressed="true"] .tri-box{background:var(--ok);border-color:var(--ok);color:var(--surface)}
 
 /* ---------- Словник ---------- */
-.dict-tools{position:sticky;top:0;z-index:3;margin:0 -16px;padding:calc(env(safe-area-inset-top) + 8px) 16px 2px;background:var(--plaster)}
-.dict-tools .seg{margin-top:10px}
+/* Закріплений лише пошук: решта фільтрів прокручується, щоб список мав більше місця */
+.dict-tools{position:sticky;top:0;z-index:3;margin:0 -16px;padding:calc(env(safe-area-inset-top) + 8px) 16px 8px;background:var(--plaster)}
+#segStatus{margin-top:2px}
+.seg.small button{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;min-height:46px}
+.seg.small button small{font-size:11px;font-weight:700;opacity:.75}
+.cat-btn{width:100%;display:flex;align-items:center;gap:10px;margin-top:10px;min-height:48px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;font-size:16px}
+.cat-btn-label{color:var(--muted);font-weight:700;font-size:14px}
+.cat-btn b{font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-btn .chev{flex:none;color:var(--muted);transition:transform .2s}
+.cat-btn .chev svg{width:18px;height:18px;transform:rotate(90deg)}
+.cat-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.cat-group{grid-column:1/-1;margin:8px 2px 0;font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.cat-cell{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px 12px;min-height:58px;border-radius:12px;border:1.5px solid var(--line-soft);background:var(--surface);color:var(--ink)}
+.cat-cell b{font-weight:800;font-size:15px;line-height:1.2}
+.cat-cell small{color:var(--muted);font-weight:600;font-size:12px}
+.cat-cell[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--plaster)}
+.cat-cell[aria-pressed="true"] small{color:var(--plaster);opacity:.75}
+.cat-cell.all{grid-column:1/-1}
 .field{width:100%;font-size:17px;padding:13px 15px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);-webkit-appearance:none;appearance:none}
 .field:focus{border-color:var(--ink);outline:none}
 .search{padding-left:44px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2355646C' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='m16 16 4.5 4.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px 50%;background-size:20px}
@@ -434,6 +452,12 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 .rows div:last-child{border-bottom:1px solid var(--line-soft)}
 .rows dt{color:var(--muted);font-weight:600}
 .rows dd{margin:0;font-weight:800;text-align:right}
+.bp-row{padding:10px 0;border-top:1px solid var(--line-soft)}
+.bp-row:first-child{border-top:0;padding-top:0}
+.bp-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px;font-size:15px}
+.bp-top b{font-weight:800}
+.bp-top span{color:var(--muted);font-weight:600;font-size:14px;text-align:right}
+.vocab-bar.small{height:10px}
 .callout{background:var(--amber-soft);border-radius:16px;padding:14px;margin:0 0 16px;font-size:15px;border-left:5px solid var(--hivis-deep)}
 .callout .btn{margin-top:10px;width:100%}
 
@@ -462,6 +486,8 @@ details.more summary::-webkit-details-marker{display:none}
 details.more summary::after{content:"+";float:right;font-weight:800;color:var(--muted)}
 details.more[open] summary::after{content:"−"}
 details.more p{margin:0 0 12px;font-size:15px}
+.offline-more{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-top:8px}
+.offline-more .note2{color:var(--muted);font-size:14px}
 .version{color:var(--muted);font-size:13px;text-align:center;margin-top:24px}
 
 /* ---------- Нижня навігація ---------- */

@@ -367,6 +367,35 @@ try:
         page.wait_for_timeout(200)
         print('first new after priority:', page.evaluate('window.EW.session.newIds.slice(0, 2)'))
         assert page.evaluate('window.EW.session.newIds[0]') == far['id']
+        page.click('#exitBtn')
+        page.wait_for_timeout(200)
+        # Словник: теми сіткою, кількість за станом, пошук від точного збігу
+        page.evaluate('window.EW.showTab("dict")')
+        page.fill('#search', '')
+        page.wait_for_timeout(250)
+        page.click('#catBtn')
+        assert page.locator('.cat-cell').count() >= 15
+        page.locator('.cat-cell', has_text='Стійкі вирази').click()
+        page.wait_for_timeout(200)
+        assert page.inner_text('#catName') == 'Стійкі вирази' and page.locator('#catGrid').is_hidden()
+        assert page.inner_text('#segStatus button[aria-pressed="true"] small') == str(page.evaluate('window.WORDS.filter(w => w.cat === "idioms").length'))
+        page.click('#catBtn'); page.locator('.cat-cell.all').click()
+        page.fill('#search', 'get')
+        page.wait_for_timeout(300)
+        assert page.locator('.item-en').first.inner_text() == 'to get', page.locator('.item-en').first.inner_text()
+        # Відсів: «Знаю всі на цій сторінці»
+        page.evaluate('window.EW.showTab("learn")')
+        page.evaluate('window.EW.startTriage()')
+        page.wait_for_timeout(200)
+        page.click('.tri-all')
+        assert page.locator('.tri[aria-pressed="true"]').count() == 20
+        page.click('.tri-all')
+        assert page.locator('.tri[aria-pressed="true"]').count() == 0
+        page.click('#exitBtn')
+        # Записи для офлайну: за замовчуванням не всі 660 МБ
+        page.evaluate('window.EW.showTab("settings")')
+        page.wait_for_timeout(200)
+        assert 'наступних' in page.inner_text('#offlineAudio') and 'МБ' in page.inner_text('#offlineAll')
         ctx.close()
         b.close()
 finally:

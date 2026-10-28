@@ -897,13 +897,26 @@ function renderTriage() {
   head.append(label, count);
   card.appendChild(head);
   card.appendChild(el('p', 'prompt-sub', 'Торкнись слів, які вже знаєш напевно. Вони не займатимуть місце серед нових, лише одна перевірка через кілька тижнів.'));
+  // Простих слів буває більшість: зручніше позначити всі й зняти кілька незнайомих
+  const allBtn = el('button', 'link-btn small tri-all');
+  allBtn.type = 'button';
+  card.appendChild(allBtn);
   const ul = el('div', 'triage');
   const done = button('Готово', 'btn-quiet', () => finishTriage(false));
   const more = button('Ще 20', 'btn-primary', () => finishTriage(true));
+  const rows = [];
   const redrawCount = () => {
     const n = triage.total + triage.known.size;
     count.textContent = n ? 'знаю ' + words(n) : words(triage.list.length) + ' наступні';
+    allBtn.textContent = triage.known.size === triage.list.length ? 'Зняти всі позначки' : 'Знаю всі на цій сторінці';
   };
+  allBtn.addEventListener('click', () => {
+    const on = triage.known.size !== triage.list.length;
+    triage.list.forEach(w => { if (on) triage.known.add(w.id); else triage.known.delete(w.id); });
+    rows.forEach(b => b.setAttribute('aria-pressed', String(on)));
+    haptic('ok');
+    redrawCount();
+  });
   triage.list.forEach(w => {
     const b = el('button', 'tri');
     b.type = 'button';
@@ -920,6 +933,7 @@ function renderTriage() {
       haptic('ok');
       redrawCount();
     });
+    rows.push(b);
     ul.appendChild(b);
   });
   card.appendChild(ul);
@@ -1901,31 +1915,88 @@ let dictCat = 'all';
 let dictStatus = 'all';
 let openItem = null;
 const STATUS_TEXT = { new: 'нове', learning: 'вчу', known: 'знаю', leech: 'важке' };
-function renderStatusSeg() {
-  segment('segStatus', [['all', 'Усі'], ['new', 'Нові'], ['learning', 'Вчу'], ['known', 'Знаю'], ['leech', 'Важкі']], dictStatus, v => {
-    dictStatus = v; renderStatusSeg(); renderList();
-  });
-}
-function renderChips() {
-  const box = $('chips'); box.innerHTML = '';
-  [['all', 'Усі теми']].concat(Object.entries(CATS)).forEach(([k, name]) => {
-    if (k === 'mine' && !custom.length) return;
-    const b = el('button', 'chip', name);
+/* Стани з кількістю слів (для вибраної теми й пошуку) */
+function renderStatusSeg(counts) {
+  const box = $('segStatus'); box.innerHTML = '';
+  [['all', 'Усі'], ['new', 'Нові'], ['learning', 'Вчу'], ['known', 'Знаю'], ['leech', 'Важкі']].forEach(([val, label]) => {
+    const b = el('button', null, label);
     b.type = 'button';
-    b.setAttribute('aria-pressed', String(dictCat === k));
-    b.addEventListener('click', () => { dictCat = k; renderChips(); renderList(); });
+    b.setAttribute('aria-pressed', String(dictStatus === val));
+    if (counts) b.appendChild(el('small', null, String(counts[val] || 0)));
+    b.addEventListener('click', () => { dictStatus = val; openItem = null; renderList(); });
     box.appendChild(b);
   });
+}
+/* Теми: кнопка з вибраною темою і сітка всіх тем з кількістю слів (20 тем у рядок не вміщаються) */
+const BASE_CATS = ['spoken', 'idioms', 'base1', 'base2', 'base3'];
+function renderChips() {
+  $('catName').textContent = dictCat === 'all' ? 'Усі теми' : (CATS[dictCat] || 'Усі теми');
+  $('catChev').innerHTML = ICON.chevron;
+  const grid = $('catGrid');
+  if (grid.hidden) return;
+  grid.innerHTML = '';
+  const n = {}, kn = {};
+  let knownAll = 0;
+  allWords().forEach(w => {
+    n[w.cat] = (n[w.cat] || 0) + 1;
+    if (C.statusOf(cards[w.id]) === 'known') { kn[w.cat] = (kn[w.cat] || 0) + 1; knownAll++; }
+  });
+  const cell = (k, name, count, known, cls) => {
+    const b = el('button', 'cat-cell' + (cls ? ' ' + cls : ''));
+    b.type = 'button';
+    b.setAttribute('aria-pressed', String(dictCat === k));
+    b.append(el('b', null, name), el('small', null, words(count) + (known ? ', знаю ' + known : '')));
+    b.addEventListener('click', () => {
+      dictCat = k; openItem = null;
+      grid.hidden = true; $('catBtn').setAttribute('aria-expanded', 'false');
+      renderChips(); renderList();
+    });
+    return b;
+  };
+  grid.appendChild(cell('all', 'Усі теми', allWords().length, knownAll, 'all'));
+  const mine = Object.keys(CATS).filter(k => !BASE_CATS.includes(k) && k !== 'mine');
+  [['Базовий словник', BASE_CATS], ['Мої теми', mine.concat(custom.length ? ['mine'] : [])]].forEach(([title, keys]) => {
+    const ks = keys.filter(k => n[k]);
+    if (!ks.length) return;
+    grid.appendChild(el('p', 'cat-group', title));
+    ks.forEach(k => grid.appendChild(cell(k, CATS[k], n[k], kn[k] || 0)));
+  });
+}
+$('catBtn').addEventListener('click', () => {
+  const g = $('catGrid');
+  g.hidden = !g.hidden;
+  $('catBtn').setAttribute('aria-expanded', String(!g.hidden));
+  renderChips();
+});
+/* Пошук: спершу точний збіг, потім слова, що починаються з запиту, потім решта */
+const stripHead = s => s.toLowerCase().replace(/^to /, '').replace(/^(a|an|the) /, '');
+function searchScore(w, q) {
+  const e = w.en.toLowerCase(), h = stripHead(w.en), u = w.uk.toLowerCase();
+  if (h === q || e === q) return 0;
+  if (h.startsWith(q)) return 1;
+  if (e.split(/[^a-z']+/).some(x => x.startsWith(q))) return 2;
+  if (e.includes(q)) return 3;
+  const uw = u.split(/[^а-яіїєґ'ʼ]+/);
+  if (u.startsWith(q)) return 4;
+  if (uw.some(x => x === q)) return 5;
+  if (uw.some(x => x.startsWith(q))) return 6;
+  if (u.includes(q)) return 7;
+  return -1;
 }
 function renderList() {
   const q = $('search').value.trim().toLowerCase();
   const list = $('list'); list.innerHTML = '';
   const t = today();
-  const items = allWords().filter(w => (dictCat === 'all' || w.cat === dictCat) &&
-    (dictStatus === 'all' || C.statusOf(cards[w.id]) === dictStatus) &&
-    (!q || w.en.toLowerCase().includes(q) || w.uk.toLowerCase().includes(q)));
-  const known = items.filter(w => C.statusOf(cards[w.id]) === 'known').length;
-  $('dictCount').textContent = words(items.length) + (known ? ', знаю ' + known : '');
+  let base = allWords().filter(w => dictCat === 'all' || w.cat === dictCat);
+  if (q) {
+    base = base.map((w, i) => ({ w, i, s: searchScore(w, q) })).filter(x => x.s >= 0)
+      .sort((a, b) => a.s - b.s || a.i - b.i).map(x => x.w);
+  }
+  const counts = { all: base.length };
+  base.forEach(w => { const st = C.statusOf(cards[w.id]); counts[st] = (counts[st] || 0) + 1; });
+  renderStatusSeg(counts);
+  const items = dictStatus === 'all' ? base : base.filter(w => C.statusOf(cards[w.id]) === dictStatus);
+  $('dictCount').textContent = words(items.length) + (dictStatus === 'all' && counts.known ? ', знаю ' + counts.known : '');
   if (!items.length) {
     list.appendChild(el('li', 'empty', q ? 'Нічого не знайдено. Можна додати це слово.' : 'Тут поки порожньо.'));
     return;
@@ -1933,7 +2004,7 @@ function renderList() {
   const frag = document.createDocumentFragment();
   items.slice(0, 400).forEach(w => {
     const c = cards[w.id];
-    const li = el('li', 'item');
+    const li = el('li', 'item' + (openItem === w.id ? ' open' : ''));
     const head = el('button', 'item-head');
     head.type = 'button';
     head.setAttribute('aria-expanded', String(openItem === w.id));
@@ -1951,7 +2022,22 @@ function renderList() {
     // Мітка лише там, де вона щось каже: нові слова без мітки, «вчу» тихо
     if (st !== 'new') head.appendChild(el('span', 'status ' + st, STATUS_TEXT[st]));
     else if ((meta.priority || []).includes(w.id)) head.appendChild(el('span', 'status pri', 'першим'));
-    head.addEventListener('click', () => { openItem = openItem === w.id ? null : w.id; renderList(); });
+    // Відкриваємо на місці, без перемальовування всього списку: не стрибає прокрутка
+    head.addEventListener('click', () => {
+      const was = openItem === w.id;
+      const prev = list.querySelector('.item.open');
+      if (prev) {
+        prev.classList.remove('open');
+        const pb = prev.querySelector('.item-body'); if (pb) pb.remove();
+        prev.querySelector('.item-head').setAttribute('aria-expanded', 'false');
+      }
+      openItem = was ? null : w.id;
+      if (!was) {
+        li.classList.add('open');
+        li.appendChild(itemBody(w, cards[w.id], today()));
+        head.setAttribute('aria-expanded', 'true');
+      }
+    });
     li.appendChild(head);
     if (openItem === w.id) li.appendChild(itemBody(w, c, t));
     frag.appendChild(li);
@@ -2024,7 +2110,8 @@ function itemBody(w, c, t) {
   return body;
 }
 function resetSession() { session = null; current = null; ui = null; if (mode === 'session') mode = null; }
-$('search').addEventListener('input', () => { openItem = null; renderList(); });
+let searchTimer = null;
+$('search').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { openItem = null; renderList(); }, 120); });
 $('addOpen').addEventListener('click', () => {
   $('addPanel').hidden = false;
   const q = $('search').value.trim();
@@ -2045,7 +2132,7 @@ $('addForm').addEventListener('submit', e => {
   $('addForm').reset(); $('addPanel').hidden = true;
   $('search').value = '';
   dictCat = 'mine'; dictStatus = 'all';
-  renderStatusSeg(); renderChips(); renderList();
+  renderChips(); renderList();
   toast('Слово додано, воно буде першим серед нових');
 });
 ['fEn', 'fUk', 'fEx', 'fExUk', 'search'].forEach(id => {
@@ -2150,6 +2237,30 @@ function renderReport() {
   const dl = $('totals'); dl.innerHTML = '';
   rows.forEach(([k, v]) => { const d = el('div'); d.append(el('dt', null, k), el('dd', null, String(v))); dl.appendChild(d); });
 
+  // Поступ у базовому словнику: скільки з найуживаніших слів уже твої
+  const bp = $('baseProgress'); bp.innerHTML = '';
+  const agg = {};
+  allWords().forEach(w => {
+    if (!BASE_CATS.includes(w.cat)) return;
+    const a = agg[w.cat] = agg[w.cat] || { n: 0, k: 0, l: 0 };
+    a.n++;
+    const st = C.statusOf(cards[w.id]);
+    if (st === 'known') a.k++; else if (st !== 'new') a.l++;
+  });
+  BASE_CATS.filter(k => agg[k]).forEach(k => {
+    const a = agg[k];
+    const row = el('div', 'bp-row');
+    const top = el('div', 'bp-top');
+    top.append(el('b', null, CATS[k]), el('span', null, 'знаю ' + a.k + (a.l ? ', вчу ' + a.l : '') + ' з ' + a.n));
+    const bar = el('div', 'vocab-bar small');
+    bar.setAttribute('role', 'img');
+    bar.setAttribute('aria-label', CATS[k] + ': знаю ' + a.k + ', вчу ' + a.l + ' з ' + a.n);
+    [['k', a.k], ['l', a.l]].forEach(([c, v]) => { if (!v) return; const i = el('i', c); i.style.width = (v / a.n * 100) + '%'; bar.appendChild(i); });
+    row.append(top, bar);
+    bp.appendChild(row);
+  });
+  $('baseBox').hidden = !bp.childNodes.length;
+
   const hard = Object.entries(cards).filter(([id, c]) => byId(id) && c.st !== 'learn' && ((c.lapses || 0) >= 2 || (c.d || 0) >= 8))
     .sort((a, b) => (b[1].lapses || 0) - (a[1].lapses || 0) || (b[1].d || 0) - (a[1].d || 0)).slice(0, 6);
   $('hardBox').hidden = !hard.length;
@@ -2236,23 +2347,30 @@ function renderSettings() {
   segment('segRate', [[0.75, 'Повільно'], [0.9, 'Середньо'], [1, 'Звичайно']], settings.rate, v => { settings.rate = v; re(); sayWord(byId(SAMPLE_ID), 'x'); });
   $('voiceLbl').textContent = settings.voiceSrc === 'device' ? 'Голос iPhone' : 'Голос iPhone для слів, доданих на сайті';
   $('offlineAudio').hidden = settings.voiceSrc === 'device' || !AUD.voices.length;
+  document.querySelector('.offline-more').hidden = $('offlineAudio').hidden;
   $('autoplay').checked = settings.autoplay;
   renderVoices();
   const box = $('catToggles'); box.innerHTML = '';
-  Object.entries(CATS).forEach(([k, name]) => {
-    if (k === 'mine') return;
-    const total = BASE.filter(w => w.cat === k).length;
-    if (!total) return;
-    const fresh = BASE.filter(w => w.cat === k && !cards[w.id]).length;
-    const row = el('div', 'toggle');
-    const label = el('span', null, name);
-    label.appendChild(el('span', 'opt', fresh + ' з ' + total + ' ще не вчив'));
-    const sw = el('input', 'switch'); sw.type = 'checkbox'; sw.checked = settings.cats[k] !== false;
-    sw.setAttribute('aria-label', name);
-    sw.addEventListener('change', () => { settings.cats[k] = sw.checked; saveSettings(); });
-    row.append(label, sw);
-    box.appendChild(row);
+  const tot = {}, fresh = {};
+  BASE.forEach(w => { tot[w.cat] = (tot[w.cat] || 0) + 1; if (!cards[w.id]) fresh[w.cat] = (fresh[w.cat] || 0) + 1; });
+  const mineKeys = Object.keys(CATS).filter(k => !BASE_CATS.includes(k) && k !== 'mine');
+  [['Базовий словник', BASE_CATS], ['Мої теми', mineKeys]].forEach(([title, keys]) => {
+    const ks = keys.filter(k => tot[k]);
+    if (!ks.length) return;
+    box.appendChild(el('h3', 'sub', title));
+    ks.forEach(k => {
+      const name = CATS[k];
+      const row = el('div', 'toggle');
+      const label = el('span', null, name);
+      label.appendChild(el('span', 'opt', 'ще не вчив ' + (fresh[k] || 0) + ' з ' + tot[k]));
+      const sw = el('input', 'switch'); sw.type = 'checkbox'; sw.checked = settings.cats[k] !== false;
+      sw.setAttribute('aria-label', name);
+      sw.addEventListener('change', () => { settings.cats[k] = sw.checked; saveSettings(); });
+      row.append(label, sw);
+      box.appendChild(row);
+    });
   });
+  renderOffline();
   $('lastBackup').textContent = meta.lastBackup != null ? 'Остання копія: ' + C.fmtDate(meta.lastBackup) + '.' : 'Копію ще не зберігали.';
 }
 $('typing').addEventListener('change', e => { settings.typing = e.target.checked; saveSettings(); });
@@ -2267,30 +2385,58 @@ $('voice').addEventListener('change', e => { settings.voice = e.target.value; sa
 $('voiceTest').innerHTML = ICON.speaker;
 $('voiceTest').addEventListener('click', () => speakDevice('Can you give me a hand with these slabs?'));
 
+/* Записи для офлайну. Усі записи важать ~660 МБ, тож за замовчуванням лише потрібні найближчим часом */
 let offlineBusy = false;
-$('offlineAudio').addEventListener('click', async () => {
+const MB_PER_WORD = 0.21;
+function wordUrls(w) {
+  const out = [];
+  ['w', 'x', 'x2'].forEach(k => { const u = clipUrl(w, k); if (u) out.push(u); });
+  const pk = phrasePackUrl(w); if (pk) out.push(pk);
+  return out;
+}
+function offlineSoon() {
+  const studying = allWords().filter(w => cards[w.id]);
+  const next = C.orderNew(allWords(), cards, settings.cats, settings.newPerDay, today(), meta.priority).slice(0, 50);
+  return studying.concat(next);
+}
+function mbText(n) { return n >= 1000 ? (Math.round(n / 100) / 10).toString().replace('.', ',') + ' ГБ' : Math.max(1, Math.round(n)) + ' МБ'; }
+function renderOffline() {
+  const btn = $('offlineAudio');
+  if (offlineBusy || !btn) return;
+  const soon = offlineSoon();
+  btn.innerHTML = '';
+  btn.append(document.createTextNode('Завантажити записи для офлайну'), el('small', null, words(soon.length) + ': ті, що вчиш, і 50 наступних, ≈ ' + mbText(soon.length * MB_PER_WORD)));
+  $('offlineAll').textContent = 'або всі ' + words(allWords().length) + ' (≈ ' + mbText(allWords().length * MB_PER_WORD) + ')';
+  if ('caches' in window) caches.open('ew-audio-v2').then(c => c.keys()).then(k => {
+    $('offlineNote').textContent = k.length ? 'На телефоні вже збережено ' + k.length + ' ' + C.plural(k.length, 'запис', 'записи', 'записів') + '.' : '';
+  }).catch(() => {});
+}
+async function downloadAudio(list, btn) {
   if (offlineBusy) return;
   const urls = [];
-  allWords().forEach(w => {
-    ['w', 'x', 'x2'].forEach(k => { const u = clipUrl(w, k); if (u) urls.push(u); });
-    const pk = phrasePackUrl(w); if (pk) urls.push(pk);
-  });
+  list.forEach(w => wordUrls(w).forEach(u => urls.push(u)));
   if (!urls.length) return;
   offlineBusy = true;
-  const btn = $('offlineAudio');
+  const total = urls.length;
   let done = 0, failed = 0;
   const worker = async () => {
     while (urls.length) {
       const u = urls.pop();
       try { const r = await fetch(u); if (!r.ok) failed++; else await r.arrayBuffer(); } catch (e) { failed++; }
       done++;
-      if (done % 10 === 0) btn.textContent = 'Завантажую… ' + done;
+      if (done % 10 === 0) btn.textContent = 'Завантажую… ' + Math.round(done / total * 100) + '%';
     }
   };
   await Promise.all([worker(), worker(), worker(), worker()]);
   offlineBusy = false;
-  btn.textContent = 'Завантажити всі записи для офлайну';
+  renderOffline();
   toast(failed ? 'Не вдалося завантажити ' + failed + '. Спробуй ще раз з інтернетом.' : 'Готово: записи працюватимуть і без інтернету');
+}
+$('offlineAudio').addEventListener('click', () => downloadAudio(offlineSoon(), $('offlineAudio')));
+$('offlineAll').addEventListener('click', () => {
+  const n = allWords().length;
+  if (!confirm('Завантажити всі записи (≈ ' + mbText(n * MB_PER_WORD) + ')? Краще через Wi-Fi.')) return;
+  downloadAudio(allWords(), $('offlineAudio'));
 });
 
 /* Резервна копія */
@@ -2359,7 +2505,7 @@ function showTab(name) {
   });
   if (name !== 'learn') { stopAudio(); cancelAuto(); if (sprint) endSprint(); updateSessionBar(); }
   if (name === 'learn') renderLearn();
-  if (name === 'dict') { renderStatusSeg(); renderChips(); renderList(); }
+  if (name === 'dict') { renderChips(); renderList(); }
   if (name === 'report') renderReport();
   if (name === 'settings') renderSettings();
   window.scrollTo(0, 0);

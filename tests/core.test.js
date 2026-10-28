@@ -379,4 +379,16 @@ test('Коротке заняття: ліміт задається окремо 
   assert.ok(answered.includes(WORDS[0].id));
 });
 
+test('Стилі й скрипти в index.html мають актуальні ?v= (python3 tools/stamp.py)', () => {
+  const crypto = require('crypto');
+  const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
+  const refs = Array.from(html.matchAll(/(?:src|href)="(\/[^"?]+\.(?:js|css))(\?v=([0-9a-f]+))?"/g));
+  assert.ok(refs.length >= 8, 'знайдено ' + refs.length);
+  for (const m of refs) {
+    const file = path.join(__dirname, '../public', m[1]);
+    const h = crypto.createHash('sha1').update(fs.readFileSync(file)).digest('hex').slice(0, 10);
+    assert.strictEqual(m[3], h, m[1] + ': запусти python3 tools/stamp.py');
+  }
+});
+
 console.log('OK, тестів пройдено: ' + passed);

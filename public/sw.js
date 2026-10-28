@@ -1,12 +1,21 @@
-// Сторінка й дані: мережа першою, щоб після коміту одразу була свіжа версія.
+// Сторінка: мережа першою (з 3-секундним запасом на повільний інтернет), щоб після коміту одразу була свіжа версія.
+// Стилі й скрипти мають у адресі ?v=<хеш> (tools/stamp.py): їх беремо з кешу одразу, бо вміст за такою адресою не змінюється.
 // Записи вимови: кеш першим, бо назва файлу містить хеш і вміст не змінюється.
-const CACHE = 'ew-v8';
+const CACHE = 'ew-v9';
 const AUDIO_CACHE = 'ew-audio-v2';
-const CORE = ['/', '/app.css', '/words.js', '/words-base.js', '/phrases.js', '/phrases-base.js', '/audio.js', '/js/fsrs.js', '/js/core.js', '/js/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
+const CORE = ['/', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
+  event.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(CORE).then(() =>
+      // Скрипти й стилі поточної версії сторінки, щоб наступне відкриття працювало й без мережі
+      fetch('/', { cache: 'no-store' }).then(r => r.text()).then(html => {
+        const urls = Array.from(html.matchAll(/(?:src|href)="(\/[^"]+\?v=[0-9a-f]+)"/g)).map(m => m[1]);
+        return c.addAll(urls);
+      }).catch(() => {})
+    )).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', event => {
@@ -27,6 +36,20 @@ function cacheFirst(req, cacheName) {
   }));
 }
 
+/* Файл з ?v=: з кешу, а нову версію зберігаємо замість старих версій того самого файла */
+function versioned(req) {
+  return caches.open(CACHE).then(c => c.match(req).then(hit => hit || fetch(req).then(res => {
+    if (res.ok && res.status === 200) {
+      const copy = res.clone();
+      const url = new URL(req.url);
+      c.put(req, copy).then(() => c.keys()).then(keys => Promise.all(keys
+        .filter(k => { const u = new URL(k.url); return u.pathname === url.pathname && u.search !== url.search; })
+        .map(k => c.delete(k)))).catch(() => {});
+    }
+    return res;
+  })));
+}
+
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
@@ -45,6 +68,11 @@ self.addEventListener('fetch', event => {
 
   if (url.pathname.startsWith('/audio/')) {
     event.respondWith(cacheFirst(req, AUDIO_CACHE));
+    return;
+  }
+
+  if (url.searchParams.has('v')) {
+    event.respondWith(versioned(req));
     return;
   }
 
