@@ -1,0 +1,103 @@
+{
+  "id": "passive",
+  "level": "B1",
+  "title": "Passive voice",
+  "uk": "Пасивний стан: was made, is done",
+  "summary": "важлива дія, а не виконавець: the wall was plastered",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "**Пасивний стан** (passive) — коли важливо, **що сталося** з предметом, а не **хто** це зробив. Порівняй: Mick plastered the wall (Мік поштукатурив стіну — цікавить Мік) і The wall was plastered (стіну поштукатурили — цікавить стіна)." },
+    { "t": "ex", "items": [
+      ["Mick **plastered** the wall.", "Мік поштукатурив стіну."],
+      ["The wall **was plastered** yesterday.", "Стіну поштукатурили вчора."],
+      ["My van **was stolen** last night.", "Мій фургон учора вночі вкрали."],
+      ["English **is spoken** all over the world.", "Англійською розмовляють у всьому світі."]
+    ] },
+    { "t": "p", "text": "Українською ми часто просто не називаємо виконавця: «фургон украли», «стіну поштукатурили», «будинок збудовано». А в англійському реченні завжди є **підмет** — слово перед дієсловом, про яке йдеться (у звичайному реченні це той, хто виконує дію: **Mick** plastered). Тому там, де ми кажемо «вкрали», англієць робить підметом сам предмет: **My van** was stolen." },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Формула", "lines": ["підмет + **be** + **V3**", "The wall **was plastered**.", "These houses **were built** in 1990."] },
+    { "t": "p", "text": "**V3** — третя форма дієслова. У правильних дієслів це закінчення -ed: painted, delivered, fixed. Неправильні треба знати: build → **built**, make → **made**, steal → **stolen**, do → **done**, pay → **paid**. Час речення показує **be** (is, was, will be…), а V3 не змінюється ніколи." },
+    { "t": "h", "text": "Навіщо пасив" },
+    { "t": "list", "items": [
+      "Виконавець **невідомий**: My phone **was stolen**. (Хто вкрав — невідомо.)",
+      "Виконавець **неважливий** або й так зрозумілий: The cement **was delivered** at eight. (Важливо, що привезли, а не хто був за кермом.)",
+      "Хочемо говорити саме **про предмет**: This church **was built** in 1850.",
+      "Правила, оголошення, новини: Hard hats **must be worn** on site. (На майданчику обов'язково носити каску.)"
+    ] },
+    { "t": "h", "text": "by — хто це зробив" },
+    { "t": "p", "text": "Якщо виконавця все ж треба назвати, додаємо **by** (= «ким»). Але здебільшого його просто не згадують: про стіну ніхто не скаже «was plastered by someone»." },
+    { "t": "ex", "items": [
+      ["The house **was built by** a local company.", "Будинок збудувала місцева фірма."],
+      ["This kitchen **was designed by** my sister.", "Цю кухню спроєктувала моя сестра."],
+      ["Hamlet **was written by** Shakespeare.", "«Гамлета» написав Шекспір."]
+    ] },
+    { "t": "h", "text": "Пасив у різних часах" },
+    { "t": "p", "text": "Змінюється лише **be** — так само, як у звичайному реченні цього часу. Порівняй: активний стан (хтось робить) і пасивний (щось роблять)." },
+    { "t": "table", "head": ["Час", "Активний", "Пасивний"], "rows": [
+      ["Present Simple", "They clean it.", "It **is cleaned**."],
+      ["Present Continuous", "They're cleaning it.", "It **is being cleaned**."],
+      ["Past Simple", "They cleaned it.", "It **was cleaned**."],
+      ["Present Perfect", "They've cleaned it.", "It **has been cleaned**."],
+      ["will", "They'll clean it.", "It **will be cleaned**."],
+      ["can, must, should", "They must clean it.", "It **must be cleaned**."]
+    ] },
+    { "t": "ex", "items": [
+      ["The site **is cleaned** every Friday.", "Майданчик прибирають щоп'ятниці."],
+      ["The office **is being painted** at the moment.", "Офіс зараз фарбують."],
+      ["The windows **were fitted** last week.", "Вікна встановили минулого тижня."],
+      ["The invoice **has been paid**.", "Рахунок уже оплачено."],
+      ["The roof **will be finished** next week.", "Дах закінчать наступного тижня."],
+      ["It **can be done** in two days.", "Це можна зробити за два дні."]
+    ] },
+    { "t": "h", "text": "Заперечення і питання" },
+    { "t": "rule", "title": "Заперечення", "lines": ["**not** після першого допоміжного дієслова", "It **wasn't delivered**.", "We **haven't been paid** yet.", "It **won't be finished** today."] },
+    { "t": "rule", "title": "Питання", "lines": ["перше допоміжне дієслово + підмет + решта?", "**Was** the cement **delivered**?", "**Has** the invoice **been paid**?"] },
+    { "t": "tip", "text": "**Do, does, did** у пасиві з **be** не потрібні: на початок питання виносимо **be** (або has, will, can). Правильно: **Was** it **delivered**? Неправильно: Did it delivered?" },
+    { "t": "ex", "items": [
+      ["**Was** the cement **delivered**? — Yes, it **was**.", "Цемент привезли? — Так."],
+      ["We **haven't been paid** yet.", "Нам ще не заплатили."],
+      ["Where **were** these tiles **made**?", "Де зробили цю плитку?"],
+      ["The door **wasn't locked**.", "Двері не були замкнені."]
+    ] },
+    { "t": "tip", "text": "«Мені сказали», «нам дали», «йому заплатили» — англійською підметом стає людина: **I was told**, **we were given**, **he was paid**. Не «To me was told»." },
+    { "t": "ex", "items": [
+      ["I **was told** to come at eight.", "Мені сказали прийти о восьмій."],
+      ["We **were given** new hard hats.", "Нам видали нові каски."]
+    ] },
+    { "t": "h", "text": "get + V3 у розмові" },
+    { "t": "p", "text": "У розмові замість be часто кажуть **get**, коли щось **стається** з людиною чи річчю, часто неприємне або несподіване. Get змінюється як звичайне дієслово (get, gets, got), тому питання й заперечення будуємо з do, does, did." },
+    { "t": "ex", "items": [
+      ["We **get paid** on Fridays.", "Нам платять щоп'ятниці."],
+      ["Mick **got injured** playing football.", "Мік травмувався, коли грав у футбол."],
+      ["Tom **got fired** last month.", "Тома звільнили минулого місяця."],
+      ["**Did** you **get paid** for the extra hours?", "Тобі заплатили за понаднормові години?"]
+    ] },
+    { "t": "h", "text": "Я народився: I was born" },
+    { "t": "p", "text": "«Народився» англійською — завжди пасив: **I was born** (дослівно «я був народжений»). Тільки was або were, ніякого «I born»." },
+    { "t": "ex", "items": [
+      ["I **was born** in 1999.", "Я народився в 1999 році."],
+      ["Where **was** your father **born**?", "Де народився твій батько?"],
+      ["Kate **was born** in Cork.", "Кейт народилася в Корку."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "The house was build in 1990.", "right": "The house was built in 1990.", "why": "Після be потрібна V3. Build — неправильне дієслово: build – built – built." },
+    { "t": "mistake", "wrong": "The accident was happened at night.", "right": "The accident happened at night.", "why": "Після happen (статися) не буває «кого/що», тому пасиву від нього немає. Так само die, arrive: he died, а не he was died." },
+    { "t": "mistake", "wrong": "I born in 1999.", "right": "I was born in 1999.", "why": "«Народився» — завжди was born (або were born)." },
+    { "t": "mistake", "wrong": "The work is doing now.", "right": "The work is being done now.", "why": "Робота сама нічого не робить — її роблять. Тому пасив: is being + V3." },
+    { "t": "mistake", "wrong": "Was delivered the cement?", "right": "Was the cement delivered?", "why": "Порядок у питанні: was + підмет + V3. Підмет (the cement) стоїть між was і V3." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "The kitchen ___ last week.", "uk": "Кухню пофарбували минулого тижня.", "opts": ["painted", "was painted", "is painted"], "a": 1, "why": "Кухня сама себе не фарбує, її пофарбували — тому пасив. Last week — минулий час: was + V3." },
+    { "type": "choice", "q": "These flats were ___ in 2005.", "uk": "Ці квартири збудували у 2005 році.", "opts": ["build", "built", "building"], "a": 1, "why": "Після were у пасиві стоїть V3. Build неправильне: build – built – built." },
+    { "type": "choice", "q": "The materials ___ tomorrow.", "uk": "Матеріали привезуть завтра.", "opts": ["will deliver", "will be delivered", "will delivered"], "a": 1, "why": "Матеріали не привозять самі себе, тому пасив. Майбутнє: will be + V3." },
+    { "type": "choice", "q": "The road ___ at the moment.", "uk": "Дорогу зараз ремонтують.", "opts": ["is repairing", "is being repaired", "was repaired"], "a": 1, "why": "At the moment — дія триває зараз: is being + V3. The road is repairing означало б, що дорога сама щось ремонтує." },
+    { "type": "choice", "q": "This bridge was designed ___ a famous engineer.", "uk": "Цей міст спроєктував відомий інженер.", "opts": ["by", "from", "of"], "a": 0, "why": "Того, хто виконав дію, у пасиві називаємо через by (= «ким»): designed by an engineer." },
+    { "type": "choice", "q": "___ to wait here.", "uk": "Мені сказали почекати тут.", "opts": ["I was told", "Me was told", "I told"], "a": 0, "why": "«Мені сказали» — I was told: підметом стає людина (I), а не me. I told — це «я сказав»." },
+    { "type": "input", "q": "These bricks ___ (make) in Wexford.", "uk": "Цю цеглу роблять у Вексфорді.", "a": ["are made"], "why": "Факт — Present Simple, пасив: are + V3 (bricks — множина). Make неправильне: make – made – made." },
+    { "type": "input", "q": "This form must ___ (sign) today.", "uk": "Цю форму треба підписати сьогодні.", "a": ["be signed"], "why": "Після must, can, should пасив має форму be + V3: must be signed." },
+    { "type": "input", "q": "Andrii ___ (injure) at work last week.", "uk": "Андрій травмувався на роботі минулого тижня.", "a": ["was injured", "got injured", "injured himself"], "why": "Минулий час пасиву: was + V3. У розмові так само часто кажуть got injured. Injured himself («травмував себе») теж правильно." },
+    { "type": "input", "q": "The bill hasn't ___ (pay) yet.", "uk": "Рахунок ще не оплатили.", "a": ["been paid"], "why": "Present Perfect у пасиві: has/have + been + V3. Pay неправильне: pay – paid – paid." },
+    { "type": "order", "uk": "Де ти народився?", "words": ["born", "you", "where", "were"], "a": ["Where were you born?"], "why": "«Народився» — was/were born. У питанні were стоїть перед підметом you." },
+    { "type": "order", "uk": "Фургон полагодили вчора?", "words": ["fixed", "the", "yesterday", "was", "van"], "a": ["Was the van fixed yesterday?"], "why": "Питання в пасиві: was + підмет (the van) + V3. Do, does, did тут не потрібні." }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "id": "conditionals-3-wish",
+  "level": "B1",
+  "title": "Third conditional and wish",
+  "uk": "Якби тоді…: третій тип і wish",
+  "summary": "жаль про минуле: If I had known… I wish I had…",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "**Third conditional** (третій тип умовних речень) — про **минуле**, якого вже не змінити. Ми уявляємо, як усе могло бути інакше: «якби я **тоді**…, то … **б**». Так часто висловлюють жаль або докір." },
+    { "t": "ex", "items": [
+      ["If I **had left** earlier, I **would have caught** the bus.", "Якби я вийшов раніше, я встиг би на автобус."],
+      ["If you **had told** me, I **would have helped** you.", "Якби ти мені сказав, я б тобі допоміг."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Третій тип", "lines": ["If + **had** + V3, **would have** + V3", "If I **had known**, I **would have come**."] },
+    { "t": "p", "text": "**V3** — третя форма дієслова. У правильних дієслів вона з -ed (worked, finished), у неправильних її треба знати (known, gone, seen). **Had** і **would have** однакові для всіх: I had, she had, they would have." },
+    { "t": "table", "head": ["Дієслово", "V2", "V3"], "rows": [
+      ["know (знати)", "knew", "**known**"],
+      ["go (іти, їхати)", "went", "**gone**"],
+      ["see (бачити)", "saw", "**seen**"],
+      ["take (брати)", "took", "**taken**"],
+      ["catch (встигнути на)", "caught", "**caught**"],
+      ["tell (сказати)", "told", "**told**"],
+      ["be (бути)", "was / were", "**been**"]
+    ] },
+    { "t": "tip", "text": "У розмові скорочують: **I'd known** = I had known, **I'd have come** = I would have come. Як розрізнити: **'d + V3** — це had, **'d + have** — це would." },
+    { "t": "ex", "items": [
+      ["If **I'd known**, **I'd have come**.", "Якби я знав, я б прийшов."]
+    ] },
+    { "t": "h", "text": "Заперечення і питання" },
+    { "t": "rule", "title": "Заперечення", "lines": ["If + **hadn't** + V3, …", "…, **wouldn't have** + V3"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Would** + you / he / they + **have** + V3 … if …?", "What **would** you **have done** if …?"] },
+    { "t": "ex", "items": [
+      ["If it **hadn't rained**, we **would have finished** the roof.", "Якби не пішов дощ, ми б закінчили дах."],
+      ["I **wouldn't have been** late if the bus **had come** on time.", "Я б не запізнився, якби автобус приїхав вчасно."],
+      ["**Would** you **have taken** the job if they**'d offered** more money?", "Ти погодився б на ту роботу, якби тобі запропонували більше грошей?"]
+    ] },
+    { "t": "h", "text": "Could have і might have" },
+    { "t": "p", "text": "Замість would have можна сказати **could have** (міг би) або **might have** (можливо, …б)." },
+    { "t": "ex", "items": [
+      ["If you **had asked** me, I **could have helped**.", "Якби ти мене попросив, я міг би допомогти."],
+      ["If he **had worn** a helmet, he **might not have been** hurt.", "Якби він був у касці, він, можливо, не травмувався б."]
+    ] },
+    { "t": "h", "text": "Другий чи третій тип?" },
+    { "t": "p", "text": "Українською обидва звучать однаково: «якби я знав». Англійською час видно з форми: про **зараз** — другий тип (knew, would call), про **тоді** — третій (had known, would have called)." },
+    { "t": "ex", "items": [
+      ["If I **knew** her number, I**'d call** her.", "Якби я знав її номер (зараз), я б їй подзвонив."],
+      ["If I **had known** her number, I**'d have called** her.", "Якби я знав її номер (тоді), я б їй подзвонив."]
+    ] },
+    { "t": "h", "text": "Wish: «шкода, що…»" },
+    { "t": "p", "text": "**I wish** перекладаємо «шкода, що…» або «хотів би я…». Після wish дієслово **відступає на крок у минуле**, як в умовних реченнях: про зараз — Past Simple, про минуле — had + V3." },
+    { "t": "table", "head": ["Про що", "Форма", "Приклад"], "rows": [
+      ["зараз", "wish + Past Simple", "I wish I **had** a car."],
+      ["минуле", "wish + had + V3", "I wish I **had known**."],
+      ["хочу, щоб щось змінилося", "wish + would", "I wish he **would stop**."]
+    ] },
+    { "t": "h", "text": "Wish про зараз" },
+    { "t": "ex", "items": [
+      ["I **wish** I **had** a car.", "Шкода, що в мене немає машини."],
+      ["I **wish** I **spoke** English better.", "Хотів би я краще говорити англійською."],
+      ["I **wish** I **didn't have** to work on Saturdays.", "Шкода, що мені треба працювати по суботах."],
+      ["I **wish** I **could** come with you.", "Шкода, що я не можу піти з тобою."],
+      ["I **wish** I **were** taller.", "Хотів би я бути вищим."]
+    ] },
+    { "t": "tip", "text": "Українською часто кажемо із запереченням: «шкода, що **немає**». Англійською навпаки — ствердження: I wish I **had** (хотів би мати). А «шкода, що **треба**» — I wish I **didn't have to**. З be можна і **were**, і **was**: I wish I were taller, I wish I was taller." },
+    { "t": "h", "text": "Wish про минуле" },
+    { "t": "ex", "items": [
+      ["I **wish** I **had studied** English at school.", "Шкода, що я не вчив англійську в школі."],
+      ["I **wish** I **hadn't said** that.", "Шкода, що я це сказав."],
+      ["Tom **wishes** he **had taken** that job.", "Том шкодує, що не погодився на ту роботу."]
+    ] },
+    { "t": "h", "text": "Wish + would: хочу, щоб це змінилося" },
+    { "t": "p", "text": "**I wish + хтось або щось + would** — коли хочеш, щоб інша людина змінила поведінку або щоб щось нарешті сталося. Часто з роздратуванням. Про себе так не кажуть (не I wish I would, а I wish I **could**), і для станів — зросту, віку, того, що в тебе є, — would не підходить." },
+    { "t": "ex", "items": [
+      ["I **wish** he **would stop** talking.", "Хоч би він уже замовк."],
+      ["I **wish** you **wouldn't leave** your tools everywhere.", "От би ти не розкидав скрізь свої інструменти."],
+      ["I **wish** it **would stop** raining.", "Хоч би вже дощ перестав."]
+    ] },
+    { "t": "h", "text": "If only — ще емоційніше" },
+    { "t": "p", "text": "**If only** — «якби ж», «от якби». Значення те саме, що у wish, тільки сильніше. Форми ті самі: про зараз — Past Simple, про минуле — had + V3." },
+    { "t": "ex", "items": [
+      ["**If only** I **had** more time!", "Якби ж у мене було більше часу!"],
+      ["**If only** I **hadn't lost** my keys!", "Якби ж я не загубив ключі!"]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "If I would have known, I would have come.", "right": "If I had known, I would have come.", "why": "Would не ставимо в частину з if і в третьому типі: там had + V3." },
+    { "t": "mistake", "wrong": "If I had knew, I would have told you.", "right": "If I had known, I would have told you.", "why": "Після had — третя форма (V3): known, а не друга, knew." },
+    { "t": "mistake", "wrong": "If I had left earlier, I would catch the bus.", "right": "If I had left earlier, I would have caught the bus.", "why": "Результат теж про минуле, тому would have + V3." },
+    { "t": "mistake", "wrong": "I wish I have a car.", "right": "I wish I had a car.", "why": "Після wish про зараз — Past Simple: had. Дієслово відступає на крок у минуле." },
+    { "t": "mistake", "wrong": "I wish I would be taller.", "right": "I wish I were taller.", "why": "Would після wish — про чужу поведінку чи зміни. Про себе й про стан — Past Simple: were або was." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "If I had left earlier, I ___ the bus.", "uk": "Якби я вийшов раніше, я встиг би на автобус.", "opts": ["would have caught", "would catch", "will catch"], "a": 0, "why": "Минуле, якого не змінити: у результаті would have + V3 (caught)." },
+    { "type": "choice", "q": "If you ___ me, I would have helped you.", "uk": "Якби ти мені сказав, я б тобі допоміг.", "opts": ["had told", "told", "would have told"], "a": 0, "why": "Третій тип: після if — had + V3 (had told). Would have — лише в частині з результатом." },
+    { "type": "choice", "q": "I wish I ___ a car.", "uk": "Шкода, що в мене немає машини.", "opts": ["had", "have", "would have"], "a": 0, "why": "Wish про зараз: дієслово відступає в минуле — Past Simple had." },
+    { "type": "choice", "q": "I wish I ___ English at school.", "uk": "Шкода, що я не вчив англійську в школі.", "opts": ["had studied", "studied", "would study"], "a": 0, "why": "Жаль про минуле (у школі — це тоді): wish + had + V3." },
+    { "type": "choice", "q": "I wish he ___ talking. It's driving me mad.", "uk": "Хоч би він уже замовк. Мене це бісить.", "opts": ["would stop", "stops", "will stop"], "a": 0, "why": "Тебе дратує чужа поведінка, і ти хочеш, щоб вона змінилася: wish + would + дієслово." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Якби я знав, я б прийшов.", "opts": ["If I had known, I would have come.", "If I would have known, I would have come.", "If I had knew, I would have come."], "a": 0, "why": "Після if — had + V3 (known, а не knew). Would have стоїть лише в частині з результатом." },
+    { "type": "input", "q": "If we had ___ (take) the motorway, we would have got there faster.", "uk": "Якби ми поїхали автомагістраллю, ми б доїхали швидше.", "a": ["taken"], "why": "Після had — третя форма (V3). Take — неправильне дієслово: take, took, taken." },
+    { "type": "input", "q": "If it ___ (not / rain), we would have finished the roof.", "uk": "Якби не пішов дощ, ми б закінчили дах.", "a": ["hadn't rained", "had not rained"], "why": "Умова про минуле — had + V3, у запереченні hadn't + V3: hadn't rained." },
+    { "type": "input", "q": "If you had asked me, I ___ (help) you.", "uk": "Якби ти мене попросив, я б тобі допоміг.", "a": ["would have helped"], "why": "Результат про минуле — would have + V3: would have helped." },
+    { "type": "input", "q": "I wish I ___ (not / say) that.", "uk": "Шкода, що я це сказав.", "a": ["hadn't said", "had not said"], "why": "Жаль про минуле: wish + had + V3. Українською «шкода, що сказав», англійською «хотів би, щоб не сказав»: hadn't said." },
+    { "type": "order", "uk": "Що б ти зробив, якби тобі не заплатили?", "words": ["what", "would", "you", "have", "done", "if", "they", "hadn't", "paid", "you"], "a": ["What would you have done if they hadn't paid you?", "If they hadn't paid you, what would you have done?"], "why": "Питання: what + would + you + have + V3. Умова — hadn't paid. «Тобі не заплатили» англійською — «вони тобі не заплатили»: they." },
+    { "type": "order", "uk": "Якби ж я тебе послухав!", "words": ["if", "only", "I", "had", "listened", "to", "you"], "a": ["If only I had listened to you!"], "why": "Жаль про минуле: if only + had + V3, як після wish." }
+  ]
+}

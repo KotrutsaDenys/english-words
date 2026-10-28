@@ -1,0 +1,11 @@
+[
+  { "id": "basics", "title": "Основи речення", "topics": ["word-order", "to-be", "pronouns", "plurals", "articles", "this-that", "there-is", "questions", "negatives", "imperatives"] },
+  { "id": "present", "title": "Теперішній час", "topics": ["present-simple", "present-continuous", "simple-vs-continuous", "present-perfect", "perfect-vs-past", "present-perfect-continuous"] },
+  { "id": "past", "title": "Минулий час", "topics": ["past-simple", "irregular-verbs", "past-continuous", "past-perfect", "used-to"] },
+  { "id": "future", "title": "Майбутній час", "topics": ["will", "going-to", "time-clauses", "future-continuous-perfect"] },
+  { "id": "modals", "title": "Модальні дієслова", "topics": ["can-could", "must-have-to", "should", "might-must-cant", "requests-offers"] },
+  { "id": "describe", "title": "Опис і кількість", "topics": ["adjectives-adverbs", "comparatives", "too-enough-so-such", "quantifiers"] },
+  { "id": "prepositions", "title": "Прийменники", "topics": ["prepositions-time", "prepositions-place"] },
+  { "id": "complex", "title": "Складні речення", "topics": ["conditionals-0-1", "conditionals-2", "conditionals-3-wish", "passive", "reported-speech", "relative-clauses", "gerund-infinitive", "linking-words", "indirect-questions", "question-tags"] },
+  { "id": "everyday", "title": "Корисне щодня", "topics": ["phrasal-verbs", "make-do-get-have"] }
+]

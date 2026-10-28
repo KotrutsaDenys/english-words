@@ -1,0 +1,75 @@
+{
+  "id": "perfect-vs-past",
+  "level": "A2",
+  "title": "Present Perfect or Past Simple",
+  "uk": "Present Perfect чи Past Simple",
+  "summary": "I've seen it чи I saw it yesterday: як обрати час",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "Українське «я бачив» годиться і для «вчора», і для «колись у житті». Англійською це два різні часи, і вибір залежить від одного питання: **чи йдеться про конкретний час, який уже минув?** Так (yesterday, in 2023 або зі змісту ясно, коли саме) — **Past Simple**. Ні (коли саме — неважливо, або період ще триває) — **Present Perfect**." },
+    { "t": "ex", "items": [
+      ["I **saw** Tom yesterday.", "Я бачив Тома вчора."],
+      ["I**'ve seen** this film.", "Я бачив цей фільм. (Коли — неважливо.)"],
+      ["She **moved** to Ireland in 2023.", "Вона переїхала до Ірландії 2023 року."],
+      ["She**'s lived** in three countries.", "Вона жила в трьох країнах."]
+    ] },
+    { "t": "table", "head": ["Past Simple", "Present Perfect"], "rows": [
+      ["час відомий і вже минув", "час неважливий або ще триває"],
+      ["yesterday, last week", "ever, never, before"],
+      ["two days ago, in 2023", "just, already, yet"],
+      ["When…? What time…?", "so far, lately"],
+      ["this morning (уже минув)", "today, this week (ще триває)"]
+    ] },
+    { "t": "h", "text": "Час названий — Past Simple" },
+    { "t": "p", "text": "Якщо в реченні є **завершений** момент чи період — yesterday, last night, last week, two days ago (два дні тому), in 2023, on Monday, at five o'clock, when I was a child, — потрібен **Past Simple**. Навіть якщо результат видно досі." },
+    { "t": "ex", "items": [
+      ["We **finished** the job last Friday.", "Ми закінчили роботу минулої п'ятниці."],
+      ["I **lost** my keys two days ago.", "Я загубив ключі два дні тому."],
+      ["**When did** you **arrive**? — At eight.", "Коли ти приїхав? — О восьмій."]
+    ] },
+    { "t": "tip", "text": "Питання про минуле з **When…?** (коли?) і **What time…?** (о котрій?) — у Past Simple, бо відповідь на них — конкретний час. When **did** you **arrive**? — правильно. When have you arrived? — помилка. Про майбутнє, звісно, питаємо інакше: When **will** you **finish**?" },
+    { "t": "h", "text": "Час не названий — Present Perfect" },
+    { "t": "p", "text": "Коли час не названий (досвід, новина, результат) або період **ще не закінчився** — today, this week, this year, so far (поки що), lately (останнім часом), — потрібен **Present Perfect**. Сюди ж ever, never, just, already, yet." },
+    { "t": "ex", "items": [
+      ["I**'ve had** three coffees today.", "Я сьогодні випив три кави."],
+      ["We**'ve plastered** four rooms so far.", "Поки що ми заштукатурили чотири кімнати."],
+      ["**Have** you **seen** Kate this week?", "Ти бачив Кейт цього тижня?"]
+    ] },
+    { "t": "tip", "text": "**Today**, **this morning**, **this week**: дивись, чи період ще триває. О десятій ранку: I**'ve had** two coffees this morning. Увечері, коли ранок уже минув: I **had** two coffees this morning." },
+    { "t": "h", "text": "Спершу новина, потім подробиці" },
+    { "t": "p", "text": "У розмові часто так: перше речення — новина або досвід (**Present Perfect**). Щойно переходимо до подробиць — коли, де, як, — **Past Simple**." },
+    { "t": "ex", "items": [
+      ["I**'ve been** to Spain. I **went** there in 2022.", "Я був в Іспанії. Їздив туди 2022 року."],
+      ["Mick**'s had** an accident! — How **did** it **happen**?", "Мік потрапив в аварію! — Як це сталося?"],
+      ["**Have** you ever **been** to Cork? — Yes, I **went** last summer.", "Ти колись бував у Корку? — Так, їздив минулого літа."]
+    ] },
+    { "t": "h", "text": "for: досі чи вже ні" },
+    { "t": "p", "text": "**for** (протягом, стільки-то часу) буває в обох часах, але сенс різний. Past Simple — це вже закінчилося. Present Perfect — це триває досі." },
+    { "t": "ex", "items": [
+      ["I **lived** in Dublin for two years.", "Я жив у Дубліні два роки. (Уже не живу.)"],
+      ["I**'ve lived** in Wexford for two years.", "Я живу у Вексфорді вже два роки. (І досі.)"],
+      ["I**'ve known** Andrii since 2024.", "Я знаю Андрія з 2024 року."],
+      ["How long **have** you **had** this van?", "Як давно в тебе цей фургон?"]
+    ] },
+    { "t": "tip", "text": "Українською кажемо «**живу** вже два роки», «**знаю** з 2024 року» — теперішнім часом. Англійською так не можна: якщо щось почалося в минулому й триває досі, а ти кажеш «скільки» (**for**) чи «відколи» (**since**, з якогось моменту), потрібен Present Perfect. Для дій (work, wait) тут часто кажуть have been working — див. тему «Present Perfect Continuous»." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I have seen him yesterday.", "right": "I saw him yesterday.", "why": "Yesterday — завершений час, тому тільки Past Simple." },
+    { "t": "mistake", "wrong": "When have you arrived?", "right": "When did you arrive?", "why": "When…? про минуле питає про конкретний момент, тому Past Simple, а не Present Perfect." },
+    { "t": "mistake", "wrong": "I live here since 2024.", "right": "I've lived here since 2024.", "why": "Почалося в минулому й триває досі — Present Perfect. Present Simple із since не вживають, хоч українською й кажемо «живу з 2024 року»." },
+    { "t": "mistake", "wrong": "I've finished work at five.", "right": "I finished work at five.", "why": "At five — названий час, тому Past Simple." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I ___ Tom yesterday.", "uk": "Я бачив Тома вчора.", "opts": ["saw", "have seen", "see"], "a": 0, "why": "Yesterday — завершений час, тому Past Simple. Present Perfect з yesterday не вживаємо." },
+    { "type": "choice", "q": "We ___ four rooms so far.", "uk": "Поки що ми пофарбували чотири кімнати.", "opts": ["painted", "have painted", "paint"], "a": 1, "why": "So far (поки що) — період ще триває, тому Present Perfect: have + V3." },
+    { "type": "input", "q": "She ___ (move) to Wexford two years ago.", "uk": "Вона переїхала до Вексфорда два роки тому.", "a": ["moved"], "why": "Ago (тому) — завершений момент у минулому, тому Past Simple: moved." },
+    { "type": "choice", "q": "When ___ you arrive in Ireland?", "uk": "Коли ти приїхав в Ірландію?", "opts": ["did", "have", "do"], "a": 0, "why": "When…? про минуле питає про конкретний момент, тому Past Simple: When did you arrive? Present Perfect з when не вживаємо, а do — теперішній час." },
+    { "type": "input", "q": "I ___ (not / see) Mick yet.", "uk": "Я ще не бачив Міка.", "a": ["haven't seen", "have not seen"], "why": "Yet (ще не) — дія ще може статися, тому Present Perfect: haven't + V3 (see → saw → seen)." },
+    { "type": "choice", "q": "I've been to Spain. I ___ there in 2022.", "uk": "Я був в Іспанії. Їздив туди 2022 року.", "opts": ["went", "have been", "have gone"], "a": 0, "why": "Спершу досвід (Present Perfect), а подробиця з роком (in 2022) — уже Past Simple." },
+    { "type": "input", "q": "I ___ (work) in Poland for two years. Now I work in Ireland.", "uk": "Я два роки працював у Польщі. Тепер працюю в Ірландії.", "a": ["worked"], "why": "Робота в Польщі вже закінчилася, тому for + Past Simple: worked." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я закінчив роботу о п'ятій.", "opts": ["I've finished work at five.", "I finished work at five.", "I've finish work at five."], "a": 1, "why": "At five — названий час, тому Past Simple. Present Perfect з конкретним часом не вживаємо." },
+    { "type": "input", "q": "I ___ (know) Kate since 2023.", "uk": "Я знаю Кейт з 2023 року.", "a": ["have known"], "why": "Since (з якогось моменту й досі) — Present Perfect: have + V3. Українською «знаю», а англійською have known." },
+    { "type": "choice", "q": "I ___ here since 2024.", "uk": "Я живу тут з 2024 року.", "opts": ["live", "have lived", "lived"], "a": 1, "why": "Почалося 2024 року й триває досі — Present Perfect. Present Simple і Past Simple із since тут не підходять." },
+    { "type": "order", "uk": "Коли ти купив цей фургон?", "words": ["when", "you", "buy", "did", "this", "van"], "a": ["When did you buy this van?"], "why": "When…? про минуле — Past Simple: When + did + you + початкова форма дієслова (buy)." },
+    { "type": "order", "uk": "Ти колись працював на фермі?", "words": ["worked", "farm", "ever", "on", "have", "you", "a"], "a": ["Have you ever worked on a farm?"], "why": "Досвід за життя без названого часу — Present Perfect: Have + you + ever + V3." }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "id": "prepositions-place",
+  "level": "A2",
+  "title": "Prepositions of place and movement",
+  "uk": "Прийменники місця й руху",
+  "summary": "де і куди: in the van, on the wall, at work, into, across, go home",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "Прийменники місця відповідають на питання **«де?»**, а прийменники руху — **«куди?»** і **«звідки?»**. Головні три — **in**, **on**, **at**. Вони не збігаються з українськими «в» і «на»: «на роботі» — **at** work, «в автобусі» — **on** the bus, «на фото» — **in** the photo. Тому дивись не на українське слово, а на те, **як розташовано** людину чи предмет." },
+    { "t": "h", "text": "In — всередині" },
+    { "t": "p", "text": "**In** — всередині чогось, що має межі: кімната, коробка, машина, місто, країна. Також **in the photo** (на фото), **in bed** (у ліжку), **in the corner** (у кутку кімнати)." },
+    { "t": "ex", "items": [
+      ["The tools are **in** the van.", "Інструменти у фургоні."],
+      ["She lives **in** Wexford.", "Вона живе у Вексфорді."],
+      ["Who's that man **in** the photo?", "Хто той чоловік на фото?"],
+      ["He's still **in** bed.", "Він ще в ліжку."]
+    ] },
+    { "t": "h", "text": "On — на поверхні" },
+    { "t": "p", "text": "**On** — на поверхні, коли предмет торкається її: на стіні, на підлозі, на столі, на даху. Ще з on кажемо про **поверхи** (on the first floor), **сторону** (on the left, on the right) і про великий транспорт, де можна ходити: **on the bus**, on the train, on the plane." },
+    { "t": "ex", "items": [
+      ["There's a clock **on** the wall.", "На стіні годинник."],
+      ["The plans are **on** the table.", "Креслення на столі."],
+      ["The toilet is **on** the left.", "Туалет ліворуч."],
+      ["Their flat is **on** the first floor.", "Їхня квартира на другому поверсі."],
+      ["Tom is **on** the train to Dublin.", "Том у поїзді до Дубліна."]
+    ] },
+    { "t": "tip", "text": "В Ірландії й Британії поверх на рівні землі — **ground floor**, а **first floor** — це наш другий поверх. І транспорт: **on** the bus, train, plane (великий, можна ходити), але **in** the car, van, taxi." },
+    { "t": "h", "text": "At — у точці, у закладі" },
+    { "t": "p", "text": "**At** — у певній **точці** або там, куди приходять з якоюсь метою, коли неважливо, всередині ти чи ні: at the bus stop, at the door, at the traffic lights, at the end of the street. Так само **at work**, **at home**, **at school**, **at the doctor's**, at a party, at the gym. Перед work, home і school артикля the немає." },
+    { "t": "ex", "items": [
+      ["I'll wait for you **at** the bus stop.", "Я чекатиму на тебе на зупинці."],
+      ["There's someone **at** the door.", "Хтось стоїть під дверима."],
+      ["Tom is **at** work.", "Том на роботі."],
+      ["Are you **at** home?", "Ти вдома?"],
+      ["Sarah is **at** the doctor's.", "Сара в лікаря."]
+    ] },
+    { "t": "tip", "text": "В ірландській розмові часто почуєш **in work** (I'm in work till six) або **in school**. Це місцева звичка, тебе зрозуміють. Але в стандартній англійській «на роботі» — **at work** (а in work там означає «мати роботу, не бути безробітним»). У завданнях цього посібника пиши **at work**." },
+    { "t": "h", "text": "Де саме: над, під, поруч" },
+    { "t": "table", "head": ["Прийменник", "Значення", "Приклад"], "rows": [
+      ["above / over", "над", "**above** the door"],
+      ["under / below", "під / нижче", "**under** the sink"],
+      ["next to", "поруч, біля", "**next to** the window"],
+      ["near", "недалеко від", "**near** the station"],
+      ["between", "між", "**between** the two houses"],
+      ["opposite", "навпроти", "**opposite** the church"],
+      ["behind", "позаду, за", "**behind** the house"],
+      ["in front of", "перед", "**in front of** the shop"]
+    ] },
+    { "t": "p", "text": "**Above** — просто вище: the light above the door. **Over** — прямо над, часто накриваючи: a dust sheet over the sofa. **Under** — під, **below** — нижче за рівнем: below zero, the flat below. І дрібниця, на якій часто помиляються: **near** без of (near the station), а **next to** — завжди з to." },
+    { "t": "ex", "items": [
+      ["Park **in front of** the shop.", "Паркуйся перед магазином."],
+      ["There's a Lidl **opposite** the station.", "Навпроти вокзалу є Lidl."],
+      ["Put the ladder **next to** the door.", "Постав драбину біля дверей."],
+      ["Gorey is **between** Wexford and Dublin.", "Горі розташоване між Вексфордом і Дубліном."],
+      ["Put a dust sheet **over** the sofa.", "Накрий диван захисним покривалом."],
+      ["It's five degrees **below** zero.", "П'ять градусів морозу."]
+    ] },
+    { "t": "h", "text": "Рух: куди і як" },
+    { "t": "p", "text": "Прийменники руху показують, **куди** або **як** рухаємося. Українською тут часто ті самі «в» і «на», а англійською — різні слова." },
+    { "t": "table", "head": ["Прийменник", "Значення", "Приклад"], "rows": [
+      ["to", "до, у, на (куди)", "go **to** Dublin"],
+      ["from", "з, від (звідки)", "come **from** work"],
+      ["into", "всередину", "get **into** the van"],
+      ["out of", "назовні, з", "get **out of** the car"],
+      ["onto", "на (поверхню)", "climb **onto** the roof"],
+      ["off", "з (поверхні)", "get **off** the bus"],
+      ["through", "крізь", "walk **through** the park"],
+      ["across", "через, на інший бік", "walk **across** the road"],
+      ["along", "уздовж", "walk **along** the beach"],
+      ["up / down", "вгору / вниз", "go **up** the stairs"],
+      ["past", "повз", "drive **past** the church"]
+    ] },
+    { "t": "tip", "text": "**Through** — крізь щось об'ємне: тунель, ліс, місто, двері. **Across** — по поверхні з одного боку на інший: дорогу, міст, поле. І знову транспорт: get **into** / **out of** the car, але get **on** / **off** the bus." },
+    { "t": "ex", "items": [
+      ["Get **into** the van, it's raining.", "Сідай у фургон, дощ іде."],
+      ["He fell **off** the ladder.", "Він упав з драбини."],
+      ["Carry the plasterboard **up** the stairs.", "Занеси гіпсокартон сходами нагору."],
+      ["We drove **through** Gorey.", "Ми проїхали через Горі."],
+      ["Go **past** the church and turn right.", "Проїдь повз церкву і поверни праворуч."],
+      ["Be careful when you walk **across** the road.", "Будь обережний, коли переходиш дорогу."]
+    ] },
+    { "t": "h", "text": "Arrive in, arrive at і go home" },
+    { "t": "p", "text": "Після **arrive** ніколи не буває to. **Arrive in** — місто або країна: arrive in Dublin, arrive in Ireland. **Arrive at** — будівля чи конкретне місце: arrive at the airport, arrive at the site. А от **get to** — з to: What time did you get **to** work?" },
+    { "t": "p", "text": "**Home** після дієслів руху йде **без to**: go home, come home, get home. А «бути вдома» — be **at home** (або просто be home)." },
+    { "t": "ex", "items": [
+      ["Olena arrived **in** Ireland last year.", "Олена приїхала до Ірландії минулого року."],
+      ["We arrived **at** the site at seven.", "Ми приїхали на об'єкт о сьомій."],
+      ["What time do you get **home**?", "О котрій ти приходиш додому?"],
+      ["Come **home** early tonight.", "Приходь сьогодні додому раніше."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I'm going to home.", "right": "I'm going home.", "why": "Після go, come, get слово home йде без to." },
+    { "t": "mistake", "wrong": "We arrived to Dublin at six.", "right": "We arrived in Dublin at six.", "why": "Після arrive не буває to: arrive in — місто чи країна, arrive at — будівля чи місце." },
+    { "t": "mistake", "wrong": "Look at the man on the photo.", "right": "Look at the man in the photo.", "why": "Українською «на фото», а англійською — in the photo, in the picture: люди й речі «всередині» знімка." },
+    { "t": "mistake", "wrong": "I'm waiting in the bus stop.", "right": "I'm waiting at the bus stop.", "why": "Зупинка — точка, а не приміщення, тому at." },
+    { "t": "mistake", "wrong": "I'm in the bus.", "right": "I'm on the bus.", "why": "Автобус, поїзд, літак — on. In — для машини, фургона, таксі." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Don't leave your tools ___ the floor.", "uk": "Не залишай інструменти на підлозі.", "opts": ["in", "on", "at"], "a": 1, "why": "Предмети лежать на поверхні, тому on: on the floor, on the table." },
+    { "type": "choice", "q": "Turn left ___ the traffic lights.", "uk": "На світлофорі поверни ліворуч.", "opts": ["in", "on", "at"], "a": 2, "why": "Світлофор — точка на дорозі, тому at, як і at the bus stop." },
+    { "type": "input", "q": "Tom isn't here, he's ___ work.", "uk": "Тома тут немає, він на роботі.", "a": ["at"], "why": "«На роботі» — at work, без the. In work почуєш в ірландській розмові, але стандартно — at work." },
+    { "type": "choice", "q": "Sarah is ___ the bus now.", "uk": "Сара зараз їде автобусом.", "opts": ["in", "on", "at"], "a": 1, "why": "Автобус, поїзд, літак — on. In — для машини, фургона, таксі." },
+    { "type": "input", "q": "You look great ___ this photo.", "uk": "Ти класно виглядаєш на цьому фото.", "a": ["in"], "why": "Українською «на фото», а англійською in the photo: людина «всередині» знімка." },
+    { "type": "choice", "q": "When did you arrive ___ Ireland?", "uk": "Коли ти приїхав до Ірландії?", "opts": ["to", "in", "at"], "a": 1, "why": "Після arrive не буває to. Ірландія — країна, тому arrive in. Arrive at — будівля чи місце: at the airport." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я вже йду додому.", "opts": ["I'm going to home now.", "I'm going home now.", "I'm going at home now."], "a": 1, "why": "Після go, come, get слово home йде без прийменника: go home." },
+    { "type": "input", "q": "The bathroom is ___ the kitchen and the bedroom.", "uk": "Ванна кімната між кухнею і спальнею.", "a": ["between"], "why": "«Між» двома предметами — between: between the kitchen and the bedroom." },
+    { "type": "choice", "q": "Get ___ the car, quick!", "uk": "Сідай у машину, швидше!", "opts": ["into", "onto", "at"], "a": 0, "why": "Рух усередину — into. Onto — на поверхню (onto the roof), а at не показує руху." },
+    { "type": "input", "q": "Get ___ the bus at the next stop.", "uk": "Вийди з автобуса на наступній зупинці.", "a": ["off"], "why": "З автобуса, поїзда, літака — get off. З машини — get out of the car." },
+    { "type": "order", "uk": "Фургон стоїть перед будинком.", "words": ["house", "front", "is", "the", "of", "van", "in", "the"], "a": ["The van is in front of the house."], "why": "«Перед» — три слова in front of, далі the house." },
+    { "type": "order", "uk": "О котрій ти приїхав на об'єкт?", "words": ["site", "arrive", "what", "the", "you", "did", "at", "time"], "a": ["What time did you arrive at the site?"], "why": "Об'єкт — конкретне місце, тому arrive at. Питання в минулому: what time + did + you + arrive." }
+  ]
+}

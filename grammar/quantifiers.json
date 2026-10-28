@@ -1,0 +1,107 @@
+{
+  "id": "quantifiers",
+  "level": "A2",
+  "title": "Some, any, much, many, a few, a little",
+  "uk": "Кількість: some, any, much, many",
+  "summary": "some, any, much, many, a few, a little: скільки чогось",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "Ці слова відповідають на питання **«скільки?»**: **some** (трохи, кілька), **any** (якийсь, жодного), **much** і **many** (багато), **a few** і **a little** (кілька, трохи). Щоб вибрати правильне, постав собі два питання: **чи можна це порахувати поштучно** і **яке це речення** — ствердження, заперечення чи питання." },
+    { "t": "h", "text": "Злічувані й незлічувані" },
+    { "t": "p", "text": "**Злічувані** іменники — те, що рахуємо поштучно: a brick, two bricks, a day, ten days. Вони мають однину й множину. **Незлічувані** — речовини, маса й поняття, які поштучно не рахуємо: water, sand, plaster, time, money. Вони не мають множини і не вживаються з a/an." },
+    { "t": "tip", "text": "Запам'ятай слова, які в англійській незлічувані, хоч українською частину з них рахуємо (порада, новина) або вживаємо в множині (гроші, меблі): **money** (гроші), **advice** (порада), **information** (інформація), **news** (новини), **furniture** (меблі), **equipment** (обладнання), **work** (робота як заняття; а посада — a job, злічуване). Тому кажемо some advice (а не an advice) і the money **is** (а не are)." },
+    { "t": "h", "text": "Some і any" },
+    { "t": "rule", "title": "Головне правило", "lines": ["ствердження: I've got **some** nails.", "заперечення: I haven't got **any** nails.", "питання: Have you got **any** nails?"] },
+    { "t": "p", "text": "Some і any ставимо і з множиною (some nails), і з незлічуваними (some water). Українською ми їх часто взагалі не перекладаємо: «Купи хліба» — Buy **some** bread, «Є питання?» — **Any** questions? У ствердженні some означає «трохи, кілька», у запереченні any — «жодного, ніскільки», у питанні — «якийсь, хоч трохи»." },
+    { "t": "tip", "text": "У питанні буває **some**, коли ти щось **пропонуєш** або **просиш**, бо чекаєш відповіді «так»: Would you like **some** coffee? Can I borrow **some** money?" },
+    { "t": "ex", "items": [
+      ["We need **some** screws for the plasterboard.", "Нам потрібні шурупи для гіпсокартону."],
+      ["There's **some** milk in the fridge.", "У холодильнику є трохи молока."],
+      ["We haven't got **any** plaster left.", "У нас не лишилося штукатурки."],
+      ["Are there **any** shops near the site?", "Біля об'єкта є якісь магазини?"],
+      ["Have you got **any** questions?", "У тебе є якісь питання?"],
+      ["Would you like **some** coffee?", "Хочеш кави?"],
+      ["Can I borrow **some** money till Friday?", "Можна позичити в тебе трохи грошей до п'ятниці?"]
+    ] },
+    { "t": "tip", "text": "У ствердженні **any** означає «будь-який»: You can take **any** van — «Можеш узяти будь-який фургон». Так само працюють **something / anything** (щось), **someone / anyone** (хтось), **somewhere / anywhere** (десь): I need **something** to eat. I didn't see **anyone**." },
+    { "t": "h", "text": "No і none: «зовсім немає»" },
+    { "t": "p", "text": "Замість not … any можна сказати **no** + іменник, а дієслово тоді стверджувальне: I haven't got **any** time = I've got **no** time. No звучить сильніше: «зовсім немає». **None** означає те саме, але стоїть **без іменника**: How many are left? — **None**. Перед the, them, us кажемо **none of**." },
+    { "t": "tip", "text": "В англійському реченні лише **одне** заперечення. Українською «я нічого не бачив» — нормально, а англійською або I didn't see **anything**, або I saw **nothing**. I didn't see nothing — помилка." },
+    { "t": "ex", "items": [
+      ["There are **no** chairs in the room.", "У кімнаті немає стільців."],
+      ["I've got **no** idea.", "Гадки не маю."],
+      ["How many are left? — **None**.", "Скільки лишилося? — Жодного."],
+      ["**None of** them came to work today.", "Ніхто з них сьогодні не прийшов на роботу."]
+    ] },
+    { "t": "h", "text": "Much, many, a lot of: «багато»" },
+    { "t": "rule", "title": "Багато", "lines": ["**many** + множина: many people, many tools", "**much** + незлічуване: much time, much money", "**a lot of** / **lots of** + будь-що: a lot of work", "**plenty of** + будь-що (з запасом): plenty of time"] },
+    { "t": "p", "text": "У живій мові **much** і **many** звучать природно здебільшого в **запереченнях** і **питаннях**: I haven't got much time. Have you got many friends here? У звичайному ствердженні кажемо **a lot of** або розмовне **lots of**: We've got **a lot of** work today. «We've got much work» звучить штучно." },
+    { "t": "ex", "items": [
+      ["We've got **a lot of** work this week.", "Цього тижня в нас багато роботи."],
+      ["There were **lots of** people in Lidl.", "У Lidl було багато людей."],
+      ["I haven't got **much** time.", "У мене небагато часу."],
+      ["There aren't **many** cars on the road today.", "Сьогодні на дорозі небагато машин."],
+      ["Do you drink **much** coffee?", "Ти п'єш багато кави?"],
+      ["Don't rush, we've got **plenty of** time.", "Не поспішай, у нас часу вдосталь."]
+    ] },
+    { "t": "tip", "text": "Після **too** і **so** слова much і many природні й у ствердженні: There's **too much** dust here. I've got **so many** messages. А **a lot** без іменника — без of: Thanks **a lot**. I like it **a lot**." },
+    { "t": "h", "text": "How much і how many" },
+    { "t": "p", "text": "**How many** — для того, що рахуємо: how many bags, how many hours. **How much** — для незлічуваного: how much sand, how much time. І для **ціни**: How much is it? Гроші незлічувані, тому how much **money**, але how many **euros**, бо євро рахуємо." },
+    { "t": "ex", "items": [
+      ["**How many** hours do you work a week?", "Скільки годин на тиждень ти працюєш?"],
+      ["**How much** sand is left?", "Скільки піску лишилося?"],
+      ["**How much** is this drill?", "Скільки коштує цей дриль?"]
+    ] },
+    { "t": "h", "text": "A few і a little — проти few і little" },
+    { "t": "p", "text": "**A few** (з множиною) і **a little** (з незлічуваними) — «кілька, трохи», і це звучить **позитивно**: небагато, але є. Без a: **few** і **little** — «мало, замало», звучить негативно. Одна буква a змінює настрій речення. У розмові замість few і little частіше кажуть **very few**, **very little** або not many, not much." },
+    { "t": "ex", "items": [
+      ["I've got **a few** friends in Dublin.", "У мене є кілька друзів у Дубліні."],
+      ["Can you wait **a few** minutes?", "Можеш почекати кілька хвилин?"],
+      ["I speak **a little** English.", "Я трохи розмовляю англійською."],
+      ["Add **a little** water to the mix.", "Додай у розчин трохи води."],
+      ["**Very few** people came.", "Прийшло дуже мало людей."],
+      ["There's **very little** sand left.", "Піску лишилося зовсім мало."]
+    ] },
+    { "t": "h", "text": "Every, each і all" },
+    { "t": "list", "items": [
+      "**every** + однина — «кожен, усі без винятку»: every day, every room",
+      "**each** + однина — «кожен окремо»: each worker, each wall",
+      "**all** + множина або незлічуване — «усі, весь»: all the tools, all the sand; а з часом — all day (весь день), all week (увесь тиждень)",
+      "після **every** і **each** дієслово в однині, як після he: every room **has**; так само everyone **is**"
+    ] },
+    { "t": "ex", "items": [
+      ["**Every** room has a window.", "У кожній кімнаті є вікно."],
+      ["**Each** worker gets a key.", "Кожен працівник отримує ключ."],
+      ["We worked **all** day.", "Ми працювали весь день."],
+      ["**All** the tools are in the van.", "Усі інструменти у фургоні."]
+    ] },
+    { "t": "h", "text": "Шпаргалка" },
+    { "t": "table", "head": ["Значення", "Злічувані", "Незлічувані"], "rows": [
+      ["трохи, кілька", "some, a few", "some, a little"],
+      ["багато", "many, a lot of", "much, a lot of"],
+      ["скільки?", "how many", "how much"],
+      ["мало", "few, not many", "little, not much"],
+      ["зовсім немає", "no, not any", "no, not any"]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "There are much people here.", "right": "There are a lot of people here.", "why": "People — множина, її рахуємо, тому much не підходить. У ствердженні найприродніше a lot of (many теж правильно, але звучить книжно)." },
+    { "t": "mistake", "wrong": "I know a little people here.", "right": "I know a few people here.", "why": "People рахуємо, тому a few. A little — лише з незлічуваним: a little time, a little water." },
+    { "t": "mistake", "wrong": "I don't have some money.", "right": "I don't have any money.", "why": "У запереченні — any. Some лише у ствердженні, проханнях і пропозиціях." },
+    { "t": "mistake", "wrong": "How many money have you got?", "right": "How much money have you got?", "why": "Money незлічуване, тому how much. How many — лише з множиною: how many euros." },
+    { "t": "mistake", "wrong": "There are a lot people in the shop.", "right": "There are a lot of people in the shop.", "why": "Перед іменником завжди a lot of. Без of — лише коли іменника після нього немає: I like it a lot." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "There are ___ biscuits in the kitchen.", "uk": "На кухні є печиво.", "opts": ["some", "any", "much"], "a": 0, "why": "Це ствердження, тому some. Any тут не підходить, а much не буває з множиною (biscuits)." },
+    { "type": "choice", "q": "I haven't got ___ cash on me.", "uk": "У мене немає з собою готівки.", "opts": ["some", "any", "many"], "a": 1, "why": "Заперечення (haven't), тому any. Many не підходить, бо cash (готівка) незлічувана." },
+    { "type": "choice", "q": "We haven't got ___ time.", "uk": "У нас небагато часу.", "opts": ["much", "many", "a few"], "a": 0, "why": "Time незлічуване, тому much. Many і a few — лише для того, що рахуємо поштучно." },
+    { "type": "input", "q": "How ___ money did you spend?", "uk": "Скільки грошей ти витратив?", "a": ["much"], "why": "Money незлічуване, хоч гроші й рахуємо, тому how much. How many було б з euros: how many euros." },
+    { "type": "choice", "q": "Can I have ___ water, please?", "uk": "Можна мені води, будь ласка?", "opts": ["some", "any", "many"], "a": 0, "why": "Це прохання: ти чекаєш відповіді «так», тому some, хоч це й питання. Many з незлічуваним water не вживаємо." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Сьогодні на об'єкті багато людей.", "opts": ["There are a lot people on the site today.", "There are a lot of people on the site today.", "There are much people on the site today."], "a": 1, "why": "Перед іменником завжди a lot of. Much не буває з people, бо це множина." },
+    { "type": "input", "q": "We'll finish in a ___ days.", "uk": "Ми закінчимо за кілька днів.", "a": ["few"], "why": "Days рахуємо, тому a few — «кілька». A little — лише з незлічуваним: a little time." },
+    { "type": "choice", "q": "Don't worry, we've still got ___ time.", "uk": "Не хвилюйся, у нас ще є трохи часу.", "opts": ["a little", "little", "a few"], "a": 0, "why": "«Трохи, але вистачить» — a little. Little без a означає «замало» і не пасує до don't worry. A few — лише зі злічуваним." },
+    { "type": "input", "q": "There's ___ milk left. Can you get some?", "uk": "Молока зовсім не лишилося. Купиш?", "a": ["no", "not any"], "why": "Дієслово стверджувальне (there's), тому «зовсім немає» — no. Те саме з not: There isn't any milk left." },
+    { "type": "choice", "q": "I wanted some cake, but there was ___ left.", "uk": "Я хотів торта, але нічого не лишилося.", "opts": ["none", "no", "any"], "a": 0, "why": "None стоїть сам, без іменника: «жодного, нічого». No потребує іменника (no cake), а any — заперечення з not." },
+    { "type": "input", "q": "Every worker ___ (need) a hard hat.", "uk": "Кожному працівнику потрібна каска.", "a": ["needs"], "why": "Після every іменник в однині, а дієслово як після he: needs." },
+    { "type": "order", "uk": "Скільки мішків штукатурки нам потрібно?", "words": ["need", "plaster", "how", "we", "bags", "many", "do", "of"], "a": ["How many bags of plaster do we need?"], "why": "Мішки рахуємо, тому how many. Далі звичайне питання: do + we + need." }
+  ]
+}

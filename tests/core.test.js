@@ -424,6 +424,37 @@ test('Слово з прикладу знаходиться в словнику 
   assert.deepStrictEqual(C.lemmaCandidates("plasterer's").slice(0, 2), ["plasterer's", 'plasterer']);
 });
 
+test('Граматика: точна перевірка вписаної відповіді', () => {
+  assert.ok(C.grammarMatch("weren't", ['were not']));
+  assert.ok(C.grammarMatch("'ve been", ['have been']));
+  assert.ok(C.grammarMatch("He's gone.", ['he has gone']));
+  assert.ok(C.grammarMatch('DOES', ['does']));
+  assert.ok(!C.grammarMatch('its', ["it's"]));
+  assert.ok(!C.grammarMatch('dont work', ["don't work"]));
+  assert.ok(!C.grammarMatch('watchs', ['watches']));
+  assert.ok(!C.grammarMatch('', ['x']));
+});
+
+test('Граматика: public/grammar.js зібрано з grammar/*.json (python3 tools/build_grammar.py)', () => {
+  const gctx = { window: {} };
+  vm.createContext(gctx);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/grammar.js'), 'utf8'), gctx);
+  const G = gctx.window.GRAMMAR;
+  const order = JSON.parse(fs.readFileSync(path.join(__dirname, '../grammar/_sections.json'), 'utf8'));
+  const built = G.sections.reduce((a, s) => a.concat(s.topics), []);
+  assert.ok(built.length >= 1);
+  for (const id of built) {
+    const src = JSON.parse(fs.readFileSync(path.join(__dirname, '../grammar', id + '.json'), 'utf8'));
+    const t = Object.assign({}, G.topics[id]); delete t.section;
+    assert.strictEqual(JSON.stringify(t), JSON.stringify(src), id + ': запусти python3 tools/build_grammar.py');
+    assert.strictEqual(G.topics[id].tasks.length, 12, id);
+  }
+  // Кожна тема з файла є в зібраному посібнику
+  const files = fs.readdirSync(path.join(__dirname, '../grammar')).filter(f => f.endsWith('.json') && !f.startsWith('_')).map(f => f.slice(0, -5));
+  for (const f of files) assert.ok(built.includes(f), f + ' немає в public/grammar.js');
+  assert.ok(built.every(id => order.some(s => s.topics.includes(id))));
+});
+
 test('Стилі й скрипти в index.html мають актуальні ?v= (python3 tools/stamp.py)', () => {
   const crypto = require('crypto');
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');

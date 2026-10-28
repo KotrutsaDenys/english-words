@@ -1,0 +1,92 @@
+{
+  "id": "past-continuous",
+  "level": "A2",
+  "title": "Past Continuous",
+  "uk": "Минулий тривалий час",
+  "summary": "що тривало в певний момент: I was working when…",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Past Continuous** показує дію, яка **тривала** в певний момент у минулому: була в процесі й ще не закінчилася. Українською це «працював», «їхав», «ішов» у значенні «саме тоді був зайнятий цим»." },
+    { "t": "ex", "items": [
+      ["At eight o'clock I **was driving** to work.", "О восьмій я їхав на роботу."],
+      ["This time yesterday we **were plastering** the ceiling.", "Учора в цей час ми штукатурили стелю."],
+      ["It **was raining** all morning.", "Увесь ранок ішов дощ."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "p", "text": "Формула проста: **was** або **were** + **форма з -ing** (дієслово із закінченням -ing: working, driving). Was чи were — залежить від **підмета**, тобто від того, хто виконує дію." },
+    { "t": "rule", "title": "Ствердження", "lines": ["I / he / she / it + **was** + work**ing**", "you / we / they + **were** + work**ing**"] },
+    { "t": "rule", "title": "Заперечення", "lines": ["I / he / she / it + **wasn't** + working", "you / we / they + **weren't** + working"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Was** + I / he / she / it + working?", "**Were** + you / we / they + working?", "What **were** you do**ing**?"] },
+    { "t": "table", "head": ["Дієслово", "Правило", "Приклад"], "rows": [
+      ["більшість", "+ -ing", "work → work**ing**"],
+      ["на німе -e", "e зникає", "make → mak**ing**"],
+      ["короткі: sit, run, stop", "подвоюємо", "sit → si**tting**"],
+      ["на -ie", "ie → y", "lie → l**ying**"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **wasn't sleeping**, I **was watching** TV.", "Я не спав, я дивився телевізор."],
+      ["**Were** you **working** at ten last night? — **Yes, I was.**", "Ти працював учора о десятій вечора? — Так."],
+      ["What **were** you **doing** when I called?", "Що ти робив, коли я подзвонив?"]
+    ] },
+    { "t": "h", "text": "Дію перервали: when" },
+    { "t": "p", "text": "Найчастіше Past Continuous стоїть разом з Past Simple. Довга дія **тривала** (Past Continuous), і тут її **перервала** коротка подія (Past Simple)." },
+    { "t": "rule", "title": "Довга дія + коротка подія", "lines": ["довга дія: was / were + -ing", "коротка подія: Past Simple", "I **was cutting** the board when the phone **rang**."] },
+    { "t": "ex", "items": [
+      ["I **was cutting** the board when the phone **rang**.", "Я різав дошку, коли задзвонив телефон."],
+      ["We **were having** lunch when the boss **arrived**.", "Ми обідали, коли приїхав бос."],
+      ["When I **got** to the site, Mick **was mixing** the plaster.", "Коли я приїхав на об'єкт, Мік замішував штукатурку."],
+      ["Kate **fell** while she **was running** for the bus.", "Кейт упала, коли бігла на автобус."]
+    ] },
+    { "t": "tip", "text": "**When** («коли») зазвичай ставимо перед короткою подією: …when the phone **rang**. **While** («поки, у той час як») — перед довгою дією: …while she **was running**." },
+    { "t": "p", "text": "Порівняй з українською. У нас різницю показує вид дієслова: «пішов» (подія сталася) і «йшов» (дія тривала). В англійській те саме робить час:" },
+    { "t": "ex", "items": [
+      ["When I arrived, Tom **left**.", "Коли я прийшов, Том пішов (спершу я прийшов, потім він пішов)."],
+      ["When I arrived, Tom **was leaving**.", "Коли я прийшов, Том якраз виходив."]
+    ] },
+    { "t": "tip", "text": "Але не кожне «робив» — це Past Continuous. Якщо дія **повторювалася**, бери Past Simple: «Я щодня ходив у зал» — I **went** to the gym every day. Past Continuous — лише про те, що тривало в конкретний момент." },
+    { "t": "h", "text": "Дві дії одночасно: while" },
+    { "t": "p", "text": "Коли дві довгі дії тривали **паралельно**, обидві стоять у Past Continuous, а з'єднує їх **while**." },
+    { "t": "ex", "items": [
+      ["While I **was plastering**, Mick **was sanding** the walls.", "Поки я штукатурив, Мік шліфував стіни."],
+      ["She **was cooking** while the kids **were doing** their homework.", "Вона готувала, поки діти робили домашнє завдання."]
+    ] },
+    { "t": "h", "text": "Фон в історії" },
+    { "t": "p", "text": "Коли розповідаєш історію, Past Continuous малює «картинку» на початку: що відбувалося, яка була погода. Самі події, які йдуть одна за одною, — у Past Simple." },
+    { "t": "ex", "items": [
+      ["It **was raining** and we **were waiting** for the bus.", "Ішов дощ, і ми чекали на автобус."],
+      ["Suddenly a van **stopped** and the driver **opened** the window.", "Раптом зупинився фургон, і водій відчинив вікно."]
+    ] },
+    { "t": "h", "text": "Дієслова стану: без -ing" },
+    { "t": "p", "text": "Деякі дієслова означають не дію, а **стан**: знати, хотіти, любити, мати. Їх не ставлять у форму з -ing, навіть коли мова про конкретний момент. Замість Past Continuous — звичайний Past Simple." },
+    { "t": "list", "items": [
+      "**know**, **understand**, **believe** — знати, розуміти, вірити",
+      "**want**, **need**, **like**, **love**, **hate** — хотіти, потребувати, подобатися, любити, ненавидіти",
+      "**have** у значенні «мати»: I **had** a car",
+      "**belong**, **seem**, **mean** — належати, здаватися, означати"
+    ] },
+    { "t": "tip", "text": "**Have** як дія — можна з -ing: We **were having** lunch (обідали). I **was having** a shower (приймав душ). А «мати» — ні: I **had** a car, а не I was having a car." },
+    { "t": "ex", "items": [
+      ["I **didn't know** the answer.", "Я не знав відповіді."],
+      ["He **wanted** to go home early.", "Він хотів піти додому раніше."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "When I was arriving, he left.", "right": "When I arrived, he was leaving.", "why": "Хочеш сказати «коли я приїхав, він якраз виїжджав»? «Приїхав» — коротка подія, тому Past Simple (arrived). «Виїжджав» — дія, яка саме тривала, тому Past Continuous (was leaving)." },
+    { "t": "mistake", "wrong": "I was knowing the answer.", "right": "I knew the answer.", "why": "Know — дієслово стану, у формі з -ing його не вживають." },
+    { "t": "mistake", "wrong": "While I cooked, the phone was ringing.", "right": "While I was cooking, the phone rang.", "why": "Довга дія після while — Past Continuous, коротка подія («задзвонив») — Past Simple." },
+    { "t": "mistake", "wrong": "They was working.", "right": "They were working.", "why": "Was — для I, he, she, it. Для you, we, they — were." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "At seven o'clock yesterday, I ___ breakfast.", "uk": "Учора о сьомій я якраз снідав.", "opts": ["was having", "were having", "am having"], "a": 0, "why": "Дія тривала в конкретний момент у минулому, тому Past Continuous. Для I — was." },
+    { "type": "choice", "q": "___ you sleeping when I called?", "uk": "Ти спав, коли я подзвонив?", "opts": ["Did", "Was", "Were"], "a": 2, "why": "Питання в Past Continuous: Were + you + форма з -ing. Did з формою -ing не вживаємо." },
+    { "type": "choice", "q": "They ___ football when it started to rain.", "uk": "Вони якраз грали у футбол, коли почався дощ.", "opts": ["was playing", "were playing", "played"], "a": 1, "why": "Гра тривала, а дощ її перервав: довга дія — Past Continuous. Для they — were." },
+    { "type": "input", "q": "We ___ (wait) for the bus when we saw the accident.", "uk": "Ми чекали на автобус, коли побачили аварію.", "a": ["were waiting"], "why": "Довга дія (чекали), яку перервала коротка (побачили): were + -ing." },
+    { "type": "input", "q": "At ten last night I ___ (not / sleep). I was watching the match.", "uk": "Учора о десятій вечора я не спав. Я дивився матч.", "a": ["wasn't sleeping", "was not sleeping"], "why": "Конкретний момент у минулому, і мова про те, що (не) тривало саме тоді: wasn't + -ing." },
+    { "type": "input", "q": "What ___ you doing at nine o'clock last night?", "uk": "Що ти робив учора о дев'ятій вечора?", "a": ["were"], "why": "Питання: What + were + you + -ing. Для you завжди were." },
+    { "type": "choice", "q": "Mick ___ his hand while he was cutting the tiles.", "uk": "Мік порізав руку, коли різав плитку.", "opts": ["cut", "was cutting", "cuts"], "a": 0, "why": "«Порізав» — коротка подія, тому Past Simple (cut – cut – cut). «Різав» — тривала дія, вона вже в Past Continuous." },
+    { "type": "input", "q": "While I ___ (paint) the door, Tom was fixing the lock.", "uk": "Поки я фарбував двері, Том лагодив замок.", "a": ["was painting"], "why": "Дві дії тривали одночасно, тому обидві в Past Continuous: while I was painting." },
+    { "type": "choice", "q": "I ___ that he was married.", "uk": "Я не знав, що він одружений.", "opts": ["didn't know", "wasn't knowing", "weren't knowing"], "a": 0, "why": "Know — дієслово стану, з -ing його не вживаємо. Тому Past Simple: didn't know." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Поки я готував, задзвонив телефон.", "opts": ["While I cooked, the phone was ringing.", "While I was cooking, the phone rang.", "While I were cooking, the phone rang."], "a": 1, "why": "Довга дія після while — Past Continuous (was cooking), коротка подія — Past Simple (rang). Для I — was." },
+    { "type": "order", "uk": "Коли я прийшов, вони обідали.", "words": ["when", "they", "having", "I", "lunch", "were", "arrived"], "a": ["When I arrived, they were having lunch.", "They were having lunch when I arrived.", "I arrived when they were having lunch.", "When they were having lunch, I arrived."], "why": "Обідали — тривала дія, тому Past Continuous (were having). Прийшов — коротка подія, тому Past Simple (arrived)." },
+    { "type": "order", "uk": "Поки Олена спала, ми дивилися фільм.", "words": ["while", "film", "were", "Olena", "a", "we", "sleeping", "watching", "was"], "a": ["While Olena was sleeping, we were watching a film.", "We were watching a film while Olena was sleeping.", "While we were watching a film, Olena was sleeping.", "Olena was sleeping while we were watching a film."], "why": "Дві дії тривали одночасно: обидві в Past Continuous, а з'єднує їх while." }
+  ]
+}

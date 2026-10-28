@@ -1,0 +1,116 @@
+{
+  "id": "plurals",
+  "level": "A1",
+  "title": "Plurals, countable and uncountable",
+  "uk": "Множина; злічувані й незлічувані іменники",
+  "summary": "bricks, men, people; money, advice, news — без -s",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "Іменник — слово, що називає людину, річ чи явище: brick, man, sand. Множину більшості іменників утворюємо просто — додаємо **-s**: a brick → two brick**s**. Але є дві пастки: **неправильна множина** (man → men) і **незлічувані** іменники (money, advice, news), які взагалі не мають множини, хоча в українській вони часто саме у множині: «гроші», «поради», «новини»." },
+    { "t": "h", "text": "Правопис: -s, -es, -ies, -ves" },
+    { "t": "table", "head": ["Слово закінчується на", "Додаємо", "Приклад"], "rows": [
+      ["більшість слів", "-s", "brick → brick**s**"],
+      ["-s, -ss, -sh, -ch, -x", "-es", "box → box**es**"],
+      ["приголосна + y", "y → -ies", "delivery → deliver**ies**"],
+      ["голосна + y", "-s", "day → day**s**"],
+      ["-f / -fe (часто)", "f → -ves", "knife → kni**ves**"],
+      ["-o (деякі)", "-es", "tomato → tomato**es**"]
+    ] },
+    { "t": "p", "text": "Після -s, -sh, -ch, -x закінчення **-es** читається як окремий склад [із]: bus — bus**es**, sandwich — sandwich**es**. Слова на -o: деякі з -es (tomato**es**, potato**es**), але photo**s**, radio**s**. І не всі слова на -f міняються: shelf → shel**ves**, але roof → roof**s**." },
+    { "t": "ex", "items": [
+      ["Two **boxes** of screws, please.", "Дві коробки шурупів, будь ласка."],
+      ["I need three new **brushes**.", "Мені потрібні три нові пензлі."],
+      ["We worked there for five **days**.", "Ми працювали там п'ять днів."],
+      ["The **shelves** are in the van.", "Полиці у фургоні."],
+      ["We've got two **deliveries** today.", "Сьогодні в нас дві доставки."]
+    ] },
+    { "t": "h", "text": "Неправильна множина" },
+    { "t": "table", "head": ["Один", "Багато"], "rows": [
+      ["a man", "two **men**"],
+      ["a woman", "two **women**"],
+      ["a child", "two **children**"],
+      ["a person", "two **people**"],
+      ["a foot", "two **feet**"],
+      ["a tooth", "two **teeth**"],
+      ["a mouse", "two **mice**"],
+      ["a sheep", "two **sheep**"]
+    ] },
+    { "t": "tip", "text": "**People** — це вже множина: one person, two **people**, a lot of **people**. Слово «peoples» означає «народи» і в побуті майже не трапляється." },
+    { "t": "ex", "items": [
+      ["There are ten **people** on the site today.", "Сьогодні на об'єкті десять людей."],
+      ["Two **women** work in the office.", "У конторі працюють дві жінки."],
+      ["My **feet** hurt.", "У мене болять ноги."],
+      ["How many **children** have you got?", "Скільки в тебе дітей?"]
+    ] },
+    { "t": "h", "text": "Злічувані й незлічувані" },
+    { "t": "p", "text": "**Злічувані** (countable) — те, що можна порахувати штуками: a brick, two bricks; a job, three jobs. **Незлічувані** (uncountable) — речовини, матеріали, абстрактні поняття: water, sand, money, advice. Множини в них немає, тому: **без a / an**, **без -s**, дієслово як для однини (**is**), а «скільки» — **much**." },
+    { "t": "list", "items": [
+      "**Матеріали й речовини**: water, sand, cement, plaster, concrete, paint, wood, bread, milk",
+      "**Абстрактні**: work, advice, information, news, help, weather, time, fun",
+      "**Збірні**: money, furniture, equipment, luggage, rubbish, traffic"
+    ] },
+    { "t": "table", "head": ["Що", "Злічувані", "Незлічувані"], "rows": [
+      ["одне", "a brick", "sand (без a)"],
+      ["багато", "brick**s**", "sand (без -s)"],
+      ["дієслово", "the bricks **are**", "the sand **is**"],
+      ["скільки?", "how **many** bricks", "how **much** sand"],
+      ["трохи, кілька", "some bricks", "some sand"]
+    ] },
+    { "t": "ex", "items": [
+      ["The sand **is** wet.", "Пісок мокрий."],
+      ["We need **some** cement.", "Нам потрібно трохи цементу."],
+      ["How **much** paint have we got?", "Скільки в нас фарби?"],
+      ["Can I give you **some advice**?", "Можна тобі дещо порадити?"],
+      ["The furniture **is** in the van.", "Меблі у фургоні."],
+      ["The money **is** on the table.", "Гроші на столі."]
+    ] },
+    { "t": "tip", "text": "Пастка для українців: **гроші, меблі, новини, поради, відомості** в нас — множина, а англійською money, furniture, news, advice, information — незлічувані. Тому The money **is**…, The news **is**…, Your advice **was**…" },
+    { "t": "h", "text": "Як порахувати незлічуване" },
+    { "t": "p", "text": "Щоб порахувати незлічуване, додай слово-«упаковку» чи «порцію»: **a bag of** cement, **a bottle of** water, **a piece of** advice, **a loaf of** bread, **a cup of** tea. Множину отримує саме це слово: two **bags** of cement (а не two cements)." },
+    { "t": "ex", "items": [
+      ["Get five **bags of plaster**.", "Візьми п'ять мішків штукатурки."],
+      ["Let me give you **a piece of advice**.", "Дам тобі одну пораду."],
+      ["Can you buy **a loaf of bread**?", "Можеш купити хлібину?"],
+      ["I'll have **a cup of tea**, thanks.", "Мені чашку чаю, дякую."]
+    ] },
+    { "t": "h", "text": "News і people" },
+    { "t": "p", "text": "**News** закінчується на -s, але це незлічуване слово в однині: The news **is** good. «Одна новина» — просто news або **a piece of news**, але не «a news». А **people**, навпаки, множина: People **are** friendly here." },
+    { "t": "ex", "items": [
+      ["I've got **good news**!", "У мене хороша новина!"],
+      ["The news **is** on at nine.", "Новини о дев'ятій."],
+      ["People **are** very friendly in Wexford.", "Люди у Вексфорді дуже привітні."],
+      ["How many people **are** coming?", "Скільки людей прийде?"]
+    ] },
+    { "t": "h", "text": "Job чи work" },
+    { "t": "p", "text": "**Job** — злічуване: a job, two jobs. Це посада («у мене нова робота») або конкретне завдання, об'єкт. **Work** — незлічуване: робота взагалі, справи, зайнятість. Тому a lot of **work**, але ніколи не «a work» і не «works» у цьому значенні." },
+    { "t": "ex", "items": [
+      ["I've got **a new job**.", "У мене нова робота."],
+      ["He's got **two jobs**.", "У нього дві роботи."],
+      ["I'm looking for **work**.", "Я шукаю роботу."],
+      ["There's **no work** on Sunday.", "У неділю роботи немає."]
+    ] },
+    { "t": "h", "text": "Much чи many" },
+    { "t": "rule", "title": "Скільки?", "lines": ["**many** + множина: many bricks, many people", "**much** + незлічуване: much sand, much money", "**a lot of** + будь-що: a lot of work, a lot of jobs"] },
+    { "t": "tip", "text": "У стверджувальних реченнях природніше **a lot of**: There's a lot of work this week (а не much work). Much і many частіше в питаннях і запереченнях: How much? I haven't got many tools." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "Thanks for the informations and advices.", "right": "Thanks for the information and advice.", "why": "Information і advice незлічувані: без -s і без a. Одна порада — a piece of advice." },
+    { "t": "mistake", "wrong": "We need new equipments.", "right": "We need new equipment.", "why": "Equipment (обладнання) незлічуване, форми з -s немає. Так само furniture, luggage." },
+    { "t": "mistake", "wrong": "I have a good news.", "right": "I have good news.", "why": "News незлічуване, тому без a. Можна ще a piece of good news." },
+    { "t": "mistake", "wrong": "The news are bad.", "right": "The news is bad.", "why": "News — однина, хоча закінчується на -s: the news is." },
+    { "t": "mistake", "wrong": "There were a lot of peoples.", "right": "There were a lot of people.", "why": "People — уже множина від person. Peoples означає «народи»." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Two ___ came to fix the roof.", "uk": "Двоє чоловіків прийшли полагодити дах.", "opts": ["mans", "men", "mens"], "a": 1, "why": "Man має неправильну множину: one man — two men. Закінчення -s тут не додаємо." },
+    { "type": "input", "q": "My ___ (foot) hurt after work.", "uk": "Після роботи в мене болять ноги.", "a": ["feet"], "why": "Foot — неправильна множина: one foot, two feet." },
+    { "type": "input", "q": "We need three new ___ (shelf) in the kitchen.", "uk": "Нам потрібні три нові полиці на кухні.", "a": ["shelves"], "why": "Багато слів на -f / -fe змінюють f на -ves: shelf → shelves, knife → knives (але roof → roofs)." },
+    { "type": "choice", "q": "How ___ people work for your boss?", "uk": "Скільки людей працює на твого боса?", "opts": ["much", "many"], "a": 1, "why": "People — множина, тож many. Much — лише з незлічуваними: much money." },
+    { "type": "choice", "q": "Can you give me some ___?", "uk": "Можеш мені щось порадити?", "opts": ["advice", "advices", "an advice"], "a": 0, "why": "Advice незлічуване: без -s і без an. Одна порада — a piece of advice." },
+    { "type": "choice", "q": "The news ___ good today.", "uk": "Сьогодні новини хороші.", "opts": ["is", "are"], "a": 0, "why": "News — незлічуване слово в однині, хоч і закінчується на -s: the news is." },
+    { "type": "input", "q": "These people ___ (work) for Mick.", "uk": "Ці люди працюють на Міка.", "a": ["work", "are working"], "why": "People — множина (вони), тому дієслово без -s: people work." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Нам потрібне нове обладнання.", "opts": ["We need a new equipment.", "We need new equipments.", "We need new equipment."], "a": 2, "why": "Equipment незлічуване: без a і без -s." },
+    { "type": "choice", "q": "Sorry, I can't come. I've got too much ___ today.", "uk": "Вибач, не можу прийти. У мене сьогодні забагато роботи.", "opts": ["work", "works", "job"], "a": 0, "why": "Work у значенні «робота, справи» незлічуване: much work, без -s. Job злічуване (a job), з much не вживається." },
+    { "type": "input", "q": "We need ten ___ (bag) of cement.", "uk": "Нам потрібно десять мішків цементу.", "a": ["bags"], "why": "Цемент не рахуємо, рахуємо мішки: ten bags of cement. Множину отримує bag." },
+    { "type": "order", "uk": "Можеш купити дві пляшки води?", "words": ["water", "can", "two", "you", "of", "buy", "bottles"], "a": ["Can you buy two bottles of water?"], "why": "Воду не рахуємо штуками, тож two bottles of water. У питанні can стоїть перед you." },
+    { "type": "order", "uk": "Скільки грошей тобі потрібно?", "words": ["need", "money", "you", "how", "do", "much"], "a": ["How much money do you need?"], "why": "Money незлічуване, тому how much (не many) і без -s." }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "id": "pronouns",
+  "level": "A1",
+  "title": "Pronouns: I, me, my, mine",
+  "uk": "Займенники і присвійні форми",
+  "summary": "I – me – my – mine, it для речей, Tom's van, myself",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "Займенник — слово замість імені: я, він, вона, вони. В англійській у кожного займенника кілька форм, і вибір залежить від ролі в реченні: **I** — хто діє, **me** — кого / кому, **my** — чий (перед іменником), **mine** — чий (замість іменника). В українській ідея схожа (я, мене, мій), тож головне — запам'ятати таблицю." },
+    { "t": "table", "head": ["Хто", "Кого / кому", "Чий + річ", "Чий (сам)"], "rows": [
+      ["I", "me", "my", "mine"],
+      ["you", "you", "your", "yours"],
+      ["he", "him", "his", "his"],
+      ["she", "her", "her", "hers"],
+      ["it", "it", "its", "—"],
+      ["we", "us", "our", "ours"],
+      ["they", "them", "their", "theirs"]
+    ] },
+    { "t": "h", "text": "I чи me" },
+    { "t": "p", "text": "**I, he, she, we, they** — підмет (хто виконує дію), стоять перед дієсловом: **I** work, **they** live. **Me, him, her, us, them** — після дієслова або після прийменника (for, with, to): call **me**, come with **us**. Наші «мене», «мені», «мною» — усе це **me**." },
+    { "t": "ex", "items": [
+      ["**She** called **me** yesterday.", "Учора вона мені дзвонила."],
+      ["I don't know **him**.", "Я його не знаю."],
+      ["Can you help **us**?", "Можеш нам допомогти?"],
+      ["Wait for **me**!", "Зачекай мене!"],
+      ["Tell **them** we're late.", "Скажи їм, що ми запізнюємося."]
+    ] },
+    { "t": "tip", "text": "Коли ти і ще хтось виконуєте дію, кажи **Tom and I**: себе називаємо останнім, і форма — I. Перевірка: прибери Tom — залишиться «I went», а не «me went». Після дієслова — me: The boss called Tom and **me**." },
+    { "t": "mistake", "wrong": "Me and Tom went to Lidl.", "right": "Tom and I went to Lidl.", "why": "Підмет — I, а не me. У розмові «me and Tom» почуєш, але правильно Tom and I: себе називаємо останнім." },
+    { "t": "h", "text": "My чи mine" },
+    { "t": "p", "text": "**My, your, his, her, its, our, their** — завжди перед іменником: **my** van, **our** boss. **Mine, yours, his, hers, ours, theirs** — без іменника, замість нього: This van is **mine**. Whose is it? — It's **hers**." },
+    { "t": "ex", "items": [
+      ["**Our** boss is Irish.", "Наш бос — ірландець."],
+      ["Is this **your** jacket? — No, it's not **mine**.", "Це твоя куртка? — Ні, не моя."],
+      ["**Their** house is near Gorey.", "Їхній будинок біля Горі."],
+      ["This drill is **hers**.", "Цей дриль її."],
+      ["Kate is a friend of **mine**.", "Кейт — моя подруга."]
+    ] },
+    { "t": "tip", "text": "Слова «свій» в англійській немає. Обираєш за тим, **хто власник**: я — my, ти — your, він — his, вона — her, ми — our, вони — their. «Він узяв свої інструменти» → He took **his** tools. «Я бачив свого брата» → I saw **my** brother." },
+    { "t": "tip", "text": "Англійською «чий» кажуть навіть там, де ми його пропускаємо: «Я пошкодив спину» → I hurt **my** back. «Помий руки» → Wash **your** hands. «Він забув телефон» → He forgot **his** phone." },
+    { "t": "mistake", "wrong": "Sarah forgot his phone.", "right": "Sarah forgot her phone.", "why": "«Свій» перекладаємо за власником. Sarah — вона, тож her phone. His — лише коли власник — чоловік." },
+    { "t": "h", "text": "It — для речей і тварин" },
+    { "t": "p", "text": "В українській речі мають рід: стіна — вона, фургон — він. В англійській про будь-яку річ кажемо **it**, а про кілька — **they**. **He** і **she** — лише про людей (і хіба що про свого собаку чи кота). «Його / її» для речі — **its**." },
+    { "t": "ex", "items": [
+      ["Where's the drill? — **It's** in the van.", "Де дриль? — У фургоні."],
+      ["I like this van, but **it's** old.", "Мені подобається цей фургон, але він старий."],
+      ["The wall is dry. You can paint **it** now.", "Стіна суха. Тепер її можна фарбувати."],
+      ["The company changed **its** name.", "Компанія змінила свою назву."]
+    ] },
+    { "t": "mistake", "wrong": "I've got a new ladder. She's very light.", "right": "I've got a new ladder. It's very light.", "why": "Драбина — річ, тому it, хоча українською «вона». He і she — тільки про людей." },
+    { "t": "h", "text": "Its чи it's" },
+    { "t": "rule", "title": "Не плутай", "lines": ["**its** = чий (його, її): the van and **its** doors", "**it's** = it is або it has: **It's** late."] },
+    { "t": "tip", "text": "Перевірка: якщо можна сказати **it is** або **it has** — пиши it's. Якщо ні — its. І запам'ятай: у присвійних займенниках апострофа немає ніколи: its, yours, hers, ours, theirs." },
+    { "t": "mistake", "wrong": "The van lost it's wing mirror.", "right": "The van lost its wing mirror.", "why": "«The van lost it is wing mirror» — безглуздя, тож тут its (його). It's = it is." },
+    { "t": "h", "text": "Чий: Tom's van" },
+    { "t": "p", "text": "Щоб сказати, чия річ, до імені чи слова-людини додаємо **'s**: **Tom's** van — фургон Тома. Порядок навпаки, ніж у нас: спочатку власник, потім річ. Якщо слово — множина на -s, додаємо лише апостроф: my **parents'** house." },
+    { "t": "table", "head": ["Власник", "Додаємо", "Приклад"], "rows": [
+      ["одна людина", "'s", "Tom**'s** van"],
+      ["однина на -s", "'s", "the boss**'s** office"],
+      ["множина на -s", "'", "my parents**'** house"],
+      ["множина без -s", "'s", "the children**'s** room"]
+    ] },
+    { "t": "ex", "items": [
+      ["This is **Tom's** van.", "Це фургон Тома."],
+      ["**Sarah's** brother works with us.", "Брат Сари працює з нами."],
+      ["The keys are in **the boss's** office.", "Ключі в кабінеті боса."],
+      ["My **parents'** house is in Lviv.", "Будинок моїх батьків у Львові."]
+    ] },
+    { "t": "p", "text": "Для речей замість 's зазвичай вживаємо **of**: the top **of** the wall (верх стіни), the end **of** the day (кінець дня), the back **of** the van (задня частина фургона). Порядок як в українській: спочатку що, потім чого." },
+    { "t": "ex", "items": [
+      ["The tools are in **the back of the van**.", "Інструменти ззаду у фургоні."],
+      ["What's **the name of the street**?", "Як називається ця вулиця?"],
+      ["I'm free at **the end of the month**.", "Наприкінці місяця я вільний."]
+    ] },
+    { "t": "mistake", "wrong": "This is my friend car.", "right": "This is my friend's car.", "why": "Щоб показати власника, додаємо 's: my friend's car — машина мого друга." },
+    { "t": "h", "text": "Myself, yourself: сам, себе" },
+    { "t": "p", "text": "Коли дія повертається на того, хто її робить (наше «себе» або «-ся»), вживаємо **myself, yourself, himself, herself, itself, ourselves, yourselves, themselves**: I cut **myself** — я порізався. Ці ж слова означають «сам, без допомоги»: I did it **myself**." },
+    { "t": "ex", "items": [
+      ["I cut **myself** at work.", "Я порізався на роботі."],
+      ["Be careful, don't hurt **yourself**.", "Обережно, не травмуйся."],
+      ["He built the house **himself**.", "Він сам збудував будинок."],
+      ["Help **yourself**!", "Пригощайся!"]
+    ] },
+    { "t": "tip", "text": "Не кожне «-ся» — це myself. Кажемо просто: We **met** at the site (ми зустрілися), I **feel** tired (я почуваюся втомленим), I **got dressed** (я одягнувся), **Relax**! (розслабся)." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Sarah is my friend. I see ___ every day.", "uk": "Сара — моя подруга. Я бачу її щодня.", "opts": ["she", "her", "hers"], "a": 1, "why": "Після дієслова (see) потрібна форма «кого»: her. She — лише перед дієсловом, коли вона виконує дію." },
+    { "type": "choice", "q": "Where's the drill? — ___ in the van.", "uk": "Де дриль? — У фургоні.", "opts": ["She's", "He's", "It's"], "a": 2, "why": "Дриль — річ, а про речі кажемо it, хоча українською «він»." },
+    { "type": "input", "q": "Can you help ___? We can't lift this board.", "uk": "Можеш нам допомогти? Ми не можемо підняти цей лист гіпсокартону.", "a": ["us"], "why": "Після дієслова help потрібна форма «кого / кому»: we → us." },
+    { "type": "choice", "q": "Is this your phone? — Yes, it's ___.", "uk": "Це твій телефон? — Так, мій.", "opts": ["my", "mine", "me"], "a": 1, "why": "Без іменника «мій» — це mine. My — тільки перед іменником: my phone." },
+    { "type": "input", "q": "Mick and Kate live near Gorey. ___ house is very big.", "uk": "Мік і Кейт живуть біля Горі. Їхній будинок дуже великий.", "a": ["Their"], "why": "Mick and Kate — вони (they), а «їхній» перед іменником — their." },
+    { "type": "choice", "q": "Sarah forgot ___ keys at home.", "uk": "Сара забула свої ключі вдома.", "opts": ["his", "her", "hers", "its"], "a": 1, "why": "«Свій» перекладаємо за власником: Sarah — вона, тому her keys. Hers вживаємо без іменника." },
+    { "type": "choice", "q": "This is my ___ car.", "uk": "Це машина мого друга.", "opts": ["friend", "friends", "friend's"], "a": 2, "why": "Власник + 's + річ: my friend's car. Friends без апострофа — це просто «друзі»." },
+    { "type": "order", "uk": "Ця куртка не моя.", "words": ["jacket", "this", "isn't", "mine"], "a": ["This jacket isn't mine."], "why": "Без іменника «моя» — це mine: This jacket isn't mine." },
+    { "type": "choice", "q": "Our van is old. ___ doors don't close properly.", "uk": "Наш фургон старий. Його двері погано зачиняються.", "opts": ["It's", "Its", "His"], "a": 1, "why": "«Його» для речі — its, без апострофа. It's = it is, а his — лише про людину." },
+    { "type": "input", "q": "Be careful! Don't cut ___.", "uk": "Обережно! Не поріжся.", "a": ["yourself"], "why": "Дія повертається на того, хто її робить (-ся): you → yourself." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ми з Томом ходили в Лідл.", "opts": ["Me and Tom went to Lidl.", "Tom and I went to Lidl.", "Tom and me went to Lidl."], "a": 1, "why": "«Ми з Томом» — підмет, тому I, а не me. Себе називаємо останнім: Tom and I." },
+    { "type": "order", "uk": "Почни з верху стіни.", "words": ["start", "the", "top", "of", "at", "the", "wall"], "a": ["Start at the top of the wall."], "why": "Для речей «чого» передаємо через of: the top of the wall — верх стіни." }
+  ]
+}

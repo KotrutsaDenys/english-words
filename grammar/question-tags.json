@@ -1,0 +1,115 @@
+{
+  "id": "question-tags",
+  "level": "B1",
+  "title": "Question tags and short answers",
+  "uk": "Хвостики-питання: isn't it?, don't you?",
+  "summary": "хвостики isn't it?, don't you? і відповіді So do I, Neither do I",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "**Question tag** — короткий «хвостик» у кінці речення, як наше «правда?», «так?», «еге ж?». Ним просять підтвердити або просто підтримують розмову. В Ірландії й Британії їх чуєш щодня. Можна сказати й «…, right?», але з хвостиками звучиш природніше й ввічливіше." },
+    { "t": "ex", "items": [
+      ["It's cold today, **isn't it**?", "Сьогодні холодно, правда?"],
+      ["You're from Ukraine, **aren't you**?", "Ти з України, так?"],
+      ["You don't smoke, **do you**?", "Ти ж не куриш?"]
+    ] },
+    { "t": "h", "text": "Як утворити хвостик" },
+    { "t": "rule", "title": "Формула", "lines": ["речення, + **допоміжне дієслово** + займенник?", "ствердження → **заперечний** хвостик", "заперечення → **стверджувальний** хвостик"] },
+    { "t": "p", "text": "**Допоміжне дієслово** — службове слово, яке допомагає будувати час, питання й заперечення: am, is, are, was, were, do, does, did, have, has, will, а також can, could, should. Беремо **те саме** допоміжне, що є в реченні, і ставимо після нього займенник. Ім'я замінюємо займенником: Tom → he, the van → it. Заперечний хвостик завжди скорочений: **isn't it**, а не is not it." },
+    { "t": "table", "head": ["Речення", "Хвостик"], "rows": [
+      ["She **is** at work,", "**isn't** she?"],
+      ["They **were** late,", "**weren't** they?"],
+      ["You **can** drive,", "**can't** you?"],
+      ["Tom **will** come,", "**won't** he?"],
+      ["You **have** finished,", "**haven't** you?"],
+      ["He **isn't** here,", "**is** he?"],
+      ["You **can't** swim,", "**can** you?"]
+    ] },
+    { "t": "h", "text": "Немає допоміжного? Бери do, does, did" },
+    { "t": "p", "text": "У стверджувальних реченнях Present Simple і Past Simple допоміжного дієслова не видно: You live here. He called. Тоді в хвостику з'являється **do**, **does** або **did** — так само, як у питанні." },
+    { "t": "table", "head": ["Речення", "Хвостик"], "rows": [
+      ["You **live** here,", "**don't** you?"],
+      ["She **works** in Gorey,", "**doesn't** she?"],
+      ["He **called** you,", "**didn't** he?"],
+      ["They **don't** know,", "**do** they?"],
+      ["Tom **didn't** pay,", "**did** he?"]
+    ] },
+    { "t": "ex", "items": [
+      ["You work with Mick, **don't you**?", "Ти працюєш з Міком, так?"],
+      ["Kate lives in Gorey, **doesn't she**?", "Кейт живе в Горі, правда?"],
+      ["The bus left at six, **didn't it**?", "Автобус поїхав о шостій, так?"],
+      ["You didn't see my keys, **did you**?", "Ти ж не бачив моїх ключів?"]
+    ] },
+    { "t": "tip", "text": "**Have** без got (має, обідає, приймає душ) — звичайне дієслово, тож хвостик з do: She **has** a van, **doesn't** she? А з have got — has: She**'s got** a van, **hasn't** she?" },
+    { "t": "h", "text": "Особливі випадки" },
+    { "t": "table", "head": ["Речення", "Хвостик"], "rows": [
+      ["**I'm** right,", "**aren't I**?"],
+      ["**Let's** start,", "**shall we**?"],
+      ["Close the door,", "**will you**?"],
+      ["**There's** a problem,", "**isn't there**?"],
+      ["He **never** helps,", "**does** he?"],
+      ["**That's** your van,", "**isn't it**?"]
+    ] },
+    { "t": "list", "items": [
+      "**I'm** → **aren't I?** В Ірландії почуєш і amn't I, але це місцева розмовна форма. Стандартно — aren't I.",
+      "**Let's** («давай») → завжди **shall we?**",
+      "Прохання у формі наказу → **will you?** Ввічливіше — **could you?**",
+      "**There is / there are** → у хвостику теж **there**: isn't there?",
+      "**never, nobody, nothing** роблять речення заперечним, тому хвостик стверджувальний: does he?",
+      "**this, that** у хвостику стають **it**, а **nobody, everyone** — **they**: Nobody called, did they?"
+    ] },
+    { "t": "ex", "items": [
+      ["I'm late again, **aren't I**?", "Я знову запізнився, так?"],
+      ["Let's have a break, **shall we**?", "Може, зробимо перерву?"],
+      ["Pass me that bucket, **will you**?", "Подай-но мені те відро."],
+      ["There's a chemist near here, **isn't there**?", "Тут поблизу є аптека, так?"],
+      ["Tom never helps, **does he**?", "Том ніколи не допомагає, правда?"]
+    ] },
+    { "t": "h", "text": "Інтонація: питаю чи чекаю згоди" },
+    { "t": "p", "text": "Від інтонації залежить зміст. Голос іде **вниз** на хвостику — ти впевнений і просто чекаєш згоди: It's a lovely day, isn't it? ↘ Голос іде **вгору** — ти справді не знаєш і питаєш: You've got the keys, haven't you? ↗ Тобто: «Ключі ж у тебе? Бо я не певен»." },
+    { "t": "h", "text": "Як відповідати" },
+    { "t": "p", "text": "Відповідай за фактами, а не за формою хвостика: **Yes** — якщо так і є, **No** — якщо ні. Краще не просто Yes чи No, а коротка відповідь з тим самим допоміжним дієсловом." },
+    { "t": "ex", "items": [
+      ["You're Ukrainian, aren't you? — **Yes, I am.**", "Ти ж українець? — Так."],
+      ["You don't smoke, do you? — **No, I don't.**", "Ти ж не куриш? — Ні, не курю."],
+      ["Tom can drive, can't he? — **Yes, he can.**", "Том уміє водити, так? — Так, уміє."]
+    ] },
+    { "t": "tip", "text": "Пастка: на «Ти ж не куриш?» українець часто каже «Так» у значенні «так, не курю». Англійською це **No, I don't**, бо ти не куриш. Yes, I do означало б «ні, курю»." },
+    { "t": "h", "text": "Я теж: So do I, Neither do I" },
+    { "t": "p", "text": "Щоб погодитися («я теж»), кажуть **So + допоміжне + I**. На заперечення («я теж ні») — **Neither + допоміжне + I**. Допоміжне беремо з речення співрозмовника, як у хвостику. У розмові можна простіше: **Me too** на ствердження, **Me neither** на заперечення." },
+    { "t": "table", "head": ["Хтось каже", "Ти погоджуєшся"], "rows": [
+      ["I'm tired.", "**So am I.** / Me too."],
+      ["I like tea.", "**So do I.** / Me too."],
+      ["I can swim.", "**So can I.** / Me too."],
+      ["I went home early.", "**So did I.** / Me too."],
+      ["I'm not hungry.", "**Neither am I.** / Me neither."],
+      ["I don't smoke.", "**Neither do I.** / Me neither."],
+      ["I can't drive.", "**Neither can I.** / Me neither."]
+    ] },
+    { "t": "tip", "text": "Після so і neither спочатку допоміжне, потім I: **So do I**, а не So I do. Після neither дієслово стверджувальне: Neither **do** I, а не Neither don't I. **Nor do I** — те саме, що Neither do I." },
+    { "t": "p", "text": "Не погоджуєшся — скажи коротко: займенник і допоміжне з протилежним змістом." },
+    { "t": "ex", "items": [
+      ["I love Mondays. — Oh, **I don't**.", "Я люблю понеділки. — А я ні."],
+      ["I can't swim. — **I can**.", "Я не вмію плавати. — А я вмію."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "You work here, isn't it?", "right": "You work here, don't you?", "why": "Isn't it — не універсальне «правда?». Беремо допоміжне з речення: work — це Present Simple, тому don't you." },
+    { "t": "mistake", "wrong": "She's from Dublin, isn't it?", "right": "She's from Dublin, isn't she?", "why": "Займенник у хвостику відповідає підмету (хто або що виконує дію): she → isn't she." },
+    { "t": "mistake", "wrong": "I'm right, amn't I?", "right": "I'm right, aren't I?", "why": "Стандартно після I'm хвостик aren't I. Amn't I почуєш в Ірландії, але це місцева розмовна форма, сам кажи aren't I." },
+    { "t": "mistake", "wrong": "I don't like mushrooms. — Me too.", "right": "I don't like mushrooms. — Me neither.", "why": "На заперечення («я теж ні») — Me neither або Neither do I. Me too кажемо лише на ствердження." },
+    { "t": "mistake", "wrong": "I like football. — So I do.", "right": "I like football. — So do I.", "why": "У значенні «я теж» після so спочатку допоміжне, потім підмет: So do I." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "It's cold today, ___?", "uk": "Сьогодні холодно, правда?", "opts": ["isn't it", "doesn't it", "is not it"], "a": 0, "why": "It's = It is. Ствердження з is → заперечний хвостик isn't it. Хвостик завжди скорочений: is not it не кажуть." },
+    { "type": "choice", "q": "Sarah lives in Wexford, ___?", "uk": "Сара живе у Вексфорді, так?", "opts": ["isn't she", "doesn't she", "don't she"], "a": 1, "why": "Present Simple: допоміжне does. Ствердження → заперечний хвостик, а Sarah — це she: doesn't she." },
+    { "type": "input", "q": "He called you yesterday, ___ he?", "uk": "Він дзвонив тобі вчора, так?", "a": ["didn't"], "why": "Past Simple (called) — допоміжне did. Ствердження → заперечний хвостик: didn't he." },
+    { "type": "input", "q": "They can't come tomorrow, ___ they?", "uk": "Вони ж не зможуть прийти завтра?", "a": ["can"], "why": "У реченні заперечення can't, тому хвостик стверджувальний з тим самим can: can they." },
+    { "type": "choice", "q": "I'm next, ___?", "uk": "Я наступний, так?", "opts": ["aren't I", "am not I", "isn't I"], "a": 0, "why": "Після I'm хвостик aren't I. Це виняток, його треба просто запам'ятати." },
+    { "type": "choice", "q": "Let's have a break, ___?", "uk": "Може, зробимо перерву?", "opts": ["shall we", "don't we", "aren't we"], "a": 0, "why": "Після Let's («давай») хвостик завжди shall we." },
+    { "type": "input", "q": "There's a Lidl in Gorey, ___ there?", "uk": "У Горі ж є Lidl, так?", "a": ["isn't"], "why": "There is → у хвостику теж there: isn't there. It тут не ставимо." },
+    { "type": "choice", "q": "Mick never says no, ___?", "uk": "Мік ніколи не відмовляє, правда?", "opts": ["doesn't he", "does he", "isn't he"], "a": 1, "why": "Never робить речення заперечним, тому хвостик стверджувальний: does he." },
+    { "type": "choice", "q": "You don't smoke, do you? — ___", "uk": "Ти ж не куриш? — Ні, не курю.", "opts": ["Yes, I do.", "No, I don't.", "Yes, I don't."], "a": 1, "why": "Відповідаємо за фактами: не куриш — No, I don't. Yes, I do означало б «курю», а Yes з don't не поєднують." },
+    { "type": "choice", "q": "I'm really tired. — ___", "uk": "Я дуже втомився. — Я теж.", "opts": ["So do I.", "So am I.", "Neither am I."], "a": 1, "why": "У реченні співрозмовника am (I'm), тому So am I. Neither — лише у відповідь на заперечення." },
+    { "type": "input", "q": "I don't like this music. — Neither ___ I.", "uk": "Мені не подобається ця музика. — Мені теж не подобається.", "a": ["do"], "why": "Present Simple, допоміжне do. Після neither дієслово стверджувальне: Neither do I, а не Neither don't I." },
+    { "type": "order", "uk": "Ти ж не замкнув фургон?", "words": ["lock", "didn't", "you", "van", "did", "the", "you"], "a": ["You didn't lock the van, did you?"], "why": "Заперечення з didn't → стверджувальний хвостик did you. Хвостик стоїть у самому кінці, після коми." }
+  ]
+}

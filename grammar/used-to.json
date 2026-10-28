@@ -1,0 +1,73 @@
+{
+  "id": "used-to",
+  "level": "B1",
+  "title": "Used to, would, be used to",
+  "uk": "Used to: так було раніше",
+  "summary": "раніше було, а тепер ні: I used to…; звик: I'm used to…",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Used to** + **початкова форма дієслова** (як у словнику: work, live) означає: **раніше так було, а тепер ні**. Так говорять про звички й стани в минулому, які вже закінчилися. Українською кажемо «раніше…», «колись…»." },
+    { "t": "ex", "items": [
+      ["Olena **used to live** in Kyiv.", "Олена раніше жила в Києві."],
+      ["Tom **used to smoke**, but he stopped last year.", "Том колись курив, але минулого року кинув."],
+      ["There **used to be** a shop on this corner.", "Колись на цьому розі був магазин."],
+      ["We **used to work** on Saturdays, but now we don't.", "Раніше ми працювали по суботах, а тепер ні."]
+    ] },
+    { "t": "rule", "title": "Ствердження", "lines": ["I / you / he / she / we / they + **used to** + work"] },
+    { "t": "p", "text": "Used to однакове для всіх: I used to, she used to, без жодного -s. Вимова: «юст-ту», зі звуком **с**, а не «з». Не плутай з простим used «юзд» — «використав»: I **used** a drill (я скористався дрилем)." },
+    { "t": "tip", "text": "Used to буває **лише про минуле**. Про теперішні звички кажемо Present Simple: I **usually start** at eight. «I use to…» про теперішнє не кажуть." },
+    { "t": "tip", "text": "Used to не кажемо про **одну** подію, а також коли називаємо, **скільки разів** або **скільки часу** щось тривало. Тут потрібен Past Simple: I **lived** in Kyiv for ten years (а не used to live… for ten years). I **went** to Dublin three times last year." },
+    { "t": "h", "text": "Заперечення і питання: use без d" },
+    { "t": "rule", "title": "Заперечення", "lines": ["I / he / they + **didn't use to** + work"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Did** + you / he / they + **use to** + work?"] },
+    { "t": "tip", "text": "Після **did** і **didn't** пишемо **use to**, без d: після did дієслово завжди в початковій формі (так само didn't **go**, а не didn't went). На слух різниці немає, тому помилку видно лише на письмі." },
+    { "t": "ex", "items": [
+      ["I **didn't use to like** coffee.", "Раніше я не любив каву."],
+      ["**Did** you **use to play** football at school?", "Ти в школі грав у футбол?"],
+      ["Where **did** you **use to work**?", "Де ти раніше працював?"]
+    ] },
+    { "t": "p", "text": "У розмові замість didn't use to часто кажуть **never used to** («раніше ніколи не…»): Mick **never used to** eat breakfast. Тут d є, бо did немає." },
+    { "t": "h", "text": "Would: так бувало раніше" },
+    { "t": "p", "text": "У розповідях про минуле замість used to часто вживають **would** + початкова форма. Але **лише для дій, що повторювалися**: що ми робили раз у раз. Українською — «бувало» або просто «ходили», «їздили»." },
+    { "t": "ex", "items": [
+      ["Every summer we **would go** to my grandmother's village.", "Щоліта ми їздили до бабусі в село."],
+      ["My dad **would** always **bring** us sweets on Fridays.", "По п'ятницях тато завжди приносив нам цукерки."]
+    ] },
+    { "t": "tip", "text": "**Would** не вживаємо для **станів**: жити, мати, знати, любити, бути. Тут лише used to. Olena **used to live** in Kyiv (а не would live). I **used to have** a dog (а не would have)." },
+    { "t": "table", "head": ["Що описуємо", "used to", "would"], "rows": [
+      ["дії, що повторювалися", "так", "так"],
+      ["стани: live, have, know", "так", "ні"]
+    ] },
+    { "t": "h", "text": "Головна пастка: be used to" },
+    { "t": "p", "text": "**Be used to** — зовсім інше значення: «**звик** до чогось», тобто для тебе це вже нормально й не важко. Тут **to** означає «до» (звик **до** чогось), тому після нього йде **іменник** (назва предмета чи явища: the cold, the job) або **форма з -ing** (working, getting), але не початкова форма дієслова." },
+    { "t": "rule", "title": "Порівняй", "lines": ["I **used to start** at six. — раніше починав о шостій", "I'm **used to starting** at six. — звик починати о шостій"] },
+    { "t": "rule", "title": "Звик і звикаю", "lines": ["**be used to** + -ing / іменник = звик", "**get used to** + -ing / іменник = звикаю, звикну"] },
+    { "t": "ex", "items": [
+      ["I'm **used to working** long hours.", "Я звик до довгих робочих днів."],
+      ["She **isn't used to** the cold.", "Вона не звикла до холоду."],
+      ["**Are** you **used to** the noise yet?", "Ти вже звик до шуму?"],
+      ["I'm **getting used to** the Irish weather.", "Я звикаю до ірландської погоди."],
+      ["You'll soon **get used to** driving on the left.", "Ти скоро звикнеш їздити лівою стороною."]
+    ] },
+    { "t": "tip", "text": "Як не сплутати: подивись, що стоїть **перед** used to. Є **am / is / are / was / were** або **get** — значить «звик», а далі -ing чи іменник. Нічого немає (I used to) — «раніше так було», а далі початкова форма." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I use to work in Kyiv.", "right": "I used to work in Kyiv.", "why": "Про минуле — used to, з d. Use to без d пишемо лише після did / didn't." },
+    { "t": "mistake", "wrong": "I didn't used to smoke.", "right": "I didn't use to smoke.", "why": "Після didn't — початкова форма: use, без d." },
+    { "t": "mistake", "wrong": "I'm used to work long hours.", "right": "I'm used to working long hours.", "why": "Після be used to («звик») — форма з -ing або іменник." },
+    { "t": "mistake", "wrong": "When I was a child, I would live in Kyiv.", "right": "When I was a child, I used to live in Kyiv.", "why": "Would — лише для дій, що повторювалися. «Жити» — це стан, тому used to." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Olena ___ in Kyiv, but now she lives in Gorey.", "uk": "Олена раніше жила в Києві, а тепер живе в Горі.", "opts": ["used to live", "is used to living", "use to live"], "a": 0, "why": "Раніше так було, а тепер ні: used to + початкова форма. Is used to living означало б «звикла жити»." },
+    { "type": "input", "q": "My dad ___ to work in Poland.", "uk": "Мій тато колись працював у Польщі.", "a": ["used"], "why": "Так було раніше, а тепер ні: used to + початкова форма (work)." },
+    { "type": "choice", "q": "There ___ a pub in our village, but it closed down.", "uk": "Колись у нашому селі був паб, але він закрився.", "opts": ["used to be", "would be", "was used to be"], "a": 0, "why": "«Був» — це стан, тому лише used to. Would — тільки для дій, що повторювалися." },
+    { "type": "input", "q": "Tom didn't ___ to drink coffee.", "uk": "Раніше Том не пив каву.", "a": ["use"], "why": "Після didn't — початкова форма: use to, без d." },
+    { "type": "input", "q": "___ you use to live in Cork?", "uk": "Ти раніше жив у Корку?", "a": ["Did"], "why": "Питання з used to будуємо через Did, а далі use to без d." },
+    { "type": "choice", "q": "When I was a child, I ___ a dog called Rex.", "uk": "У дитинстві в мене був пес на ім'я Рекс.", "opts": ["would have", "used to have", "was used to having"], "a": 1, "why": "«Мати» — це стан, а would вживаємо лише для дій, що повторювалися. Тому used to have." },
+    { "type": "choice", "q": "Every Sunday my grandad ___ take us to the river.", "uk": "Щонеділі дідусь водив нас на річку.", "opts": ["would", "was used to", "uses to"], "a": 0, "why": "Дія повторювалася в минулому, тому would + початкова форма. Was used to означає «звик», а uses to не буває." },
+    { "type": "input", "q": "I'm not used to ___ (get) up so early.", "uk": "Я не звик вставати так рано.", "a": ["getting"], "why": "Be used to = «звик», після нього — форма з -ing: getting." },
+    { "type": "choice", "q": "I can't ___ used to this cold weather.", "uk": "Я ніяк не можу звикнути до цієї холодної погоди.", "opts": ["get", "be", "use"], "a": 0, "why": "«Звикати, звикнути» — get used to. Be used to — це результат: «уже звик»." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я звик працювати на вихідних.", "opts": ["I'm used to work at weekends.", "I'm used to working at weekends.", "I used to working at weekends."], "a": 1, "why": "«Звик» — be used to (I'm used to), а після нього форма з -ing: working." },
+    { "type": "order", "uk": "Раніше Сара не працювала по суботах.", "words": ["didn't", "on", "Sarah", "use", "work", "Saturdays", "to"], "a": ["Sarah didn't use to work on Saturdays.", "On Saturdays Sarah didn't use to work."], "why": "Заперечення: didn't use to + початкова форма. Після didn't — use без d." },
+    { "type": "order", "uk": "Я звикаю до нової роботи.", "words": ["used", "new", "I'm", "the", "job", "getting", "to"], "a": ["I'm getting used to the new job."], "why": "«Звикаю» — це процес, тому get used to, тут у формі I'm getting. Після to — іменник (the new job)." }
+  ]
+}

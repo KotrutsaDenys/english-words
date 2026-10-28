@@ -103,6 +103,35 @@ def answer(page, wrong=False, scheme='light'):
     return True
 
 
+def grammar_answer(page, wrong=False):
+    """Відповісти на поточне завдання граматики за ключем (або навмисно хибно)"""
+    t = page.evaluate('(() => { const g = window.EW.gt; return g.tasks[g.i]; })()')
+    if t['type'] == 'choice':
+        right = t['opts'][t['a']]
+        btns = page.locator('.opt-btn')
+        for k in range(btns.count()):
+            if (btns.nth(k).locator('span').nth(1).inner_text() == right) != wrong:
+                btns.nth(k).click()
+                break
+    elif t['type'] == 'input':
+        page.fill('.answer', 'qqq' if wrong else t['a'][0])
+        click_text(page, 'Перевірити')
+    else:
+        ans = t['a'][0] if isinstance(t['a'], list) else t['a']
+        toks = page.evaluate('([a]) => EWCore.tokens(a)', [ans])
+        if wrong:
+            toks = list(reversed(toks))
+        for tk in toks:
+            tiles = page.locator('.build-bank .tile:not(.used)')
+            for k in range(tiles.count()):
+                if tiles.nth(k).inner_text().lower() == tk.lower():
+                    tiles.nth(k).click()
+                    break
+        click_text(page, 'Перевірити')
+    page.wait_for_timeout(60)
+    return t
+
+
 def run_day(page, wrong_rate=0.0, scheme='light', limit=400):
     page.wait_for_timeout(300)
     if visible(page, '#learnHome button:has-text("Почати")'):
@@ -487,6 +516,48 @@ try:
         pri = page.evaluate('window.EW.meta.priority')
         assert len(pri) >= 5 and all(page.evaluate('([id]) => window.WORDS.find(w => w.id === id).cat', [x]) == 'weather' for x in pri[-5:]), pri[-5:]
         assert visible(page, '.act:has-text("Не першими")')
+        # Граматика: кожна тема відкривається, а відповіді з ключа дають рівно 12 з 12
+        page.evaluate('window.EW.settings.autoplay = false')
+        page.click('.tab[data-tab="grammar"]')
+        page.wait_for_timeout(200)
+        assert visible(page, '.gnext') and page.locator('.gitem').count() == page.evaluate('Object.keys(window.GRAMMAR.topics).length')
+        gids = page.evaluate('window.GRAMMAR.sections.flatMap(s => s.topics)')
+        for gi, tid in enumerate(gids):
+            page.evaluate('([id]) => window.EW.openTopic(id)', [tid])
+            page.wait_for_timeout(80)
+            assert page.inner_text('.gtitle') == page.evaluate('([id]) => window.GRAMMAR.topics[id].title', [tid])
+            assert page.locator('.gsheet > *').count() == page.evaluate('([id]) => window.GRAMMAR.topics[id].blocks.length', [tid]), tid
+            page.click('.gtest .btn-primary')
+            page.wait_for_timeout(80)
+            for i in range(12):
+                wrong = gi == 0 and i in (2, 7)
+                t = grammar_answer(page, wrong)
+                ok = page.locator('#foot.sheet.right').count() > 0
+                assert ok != wrong, '%s, завдання %d: ключ не приймається: %s' % (tid, i, json.dumps(t, ensure_ascii=False)[:300])
+                page.locator('#foot .btn-primary').click()
+                page.wait_for_timeout(60)
+            assert page.evaluate('window.EW.mode') == 'gresult'
+            assert page.evaluate('([id]) => window.EW.gres[id].best', [tid]) == (10 if gi == 0 else 12), tid
+            if gi == 0:
+                assert page.locator('.gres-item').count() == 2 and 'добре' not in page.inner_text('.gres-grade')
+            page.click('#exitBtn')
+            page.wait_for_timeout(80)
+            assert page.evaluate('window.EW.mode') is None and visible(page, '.gtitle'), 'з результату назад до теми'
+        # Список: бали біля тем, «назад» з теми повертає до списку
+        page.go_back()
+        page.wait_for_timeout(200)
+        assert visible(page, '#gramList') and not visible(page, '#gramTopic')
+        assert page.locator('.gmark.g-top').count() == len(gids), 'бали біля тем'
+        # Перерваний тест не зберігає бал
+        page.evaluate('([id]) => window.EW.startGramTest(id)', [gids[0]])
+        page.wait_for_timeout(100)
+        grammar_answer(page, True)
+        page.click('#exitBtn')
+        page.wait_for_timeout(100)
+        assert page.evaluate('([id]) => window.EW.gres[id].last', [gids[0]]) == 10
+        page.evaluate('window.EW.showTab("report")')
+        page.wait_for_timeout(150)
+        assert 'Граматика' in page.inner_text('#docket'), 'бал теми у звіті за день'
         # Записи для офлайну: за замовчуванням не всі 660 МБ
         page.evaluate('window.EW.showTab("settings")')
         page.wait_for_timeout(200)

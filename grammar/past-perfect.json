@@ -1,0 +1,74 @@
+{
+  "id": "past-perfect",
+  "level": "B1",
+  "title": "Past Perfect",
+  "uk": "Минулий доконаний час: had done",
+  "summary": "що сталося ще раніше в минулому: the bus had already left",
+  "minutes": 6,
+  "blocks": [
+    { "t": "p", "text": "**Past Perfect** (had + V3) — це «минуле в минулому». Розповідаєш про минуле, і треба показати, що одна дія сталася **ще раніше** за іншу або за певний момент. Тоді для ранішої дії беремо had + V3, а для пізнішої — звичайний Past Simple." },
+    { "t": "ex", "items": [
+      ["When I got to the stop, the bus **had** already **left**.", "Коли я дійшов до зупинки, автобус уже поїхав."],
+      ["I didn't recognise Tom. He **had grown** a beard.", "Я не впізнав Тома: він відпустив бороду."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "p", "text": "**Had** однакове для всіх, жодних has: I had, she had, they had. **V3** — третя форма дієслова: finished, gone, seen (неправильні — у темі «Неправильні дієслова»). **Підмет** — хто або що виконує дію: I, Tom, the bus. Скорочено: I'd, she'd, they'd; hadn't." },
+    { "t": "rule", "title": "Ствердження", "lines": ["I / you / he / she / it / we / they + **had** + V3"] },
+    { "t": "rule", "title": "Заперечення", "lines": ["підмет + **hadn't** (had not) + V3"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Had** + підмет + V3?"] },
+    { "t": "ex", "items": [
+      ["Andrii **hadn't driven** on the left before he came to Ireland.", "Андрій не їздив лівим боком, доки не приїхав до Ірландії."],
+      ["**Had** you **met** Kate before the party?", "Ти був знайомий з Кейт до вечірки?"]
+    ] },
+    { "t": "tip", "text": "**'d** буває і had, і would (I'd like). Підказка — наступне слово: після had іде V3 (I'd **finished**), після would — початкова форма дієслова (I'd **like**)." },
+    { "t": "h", "text": "Головне: порядок подій" },
+    { "t": "p", "text": "Порівняй. Різниця в одному слові, а події йдуть у різному порядку." },
+    { "t": "ex", "items": [
+      ["When I arrived, the bus **left**.", "Коли я прийшов, автобус рушив. (Я ще його бачив.)"],
+      ["When I arrived, the bus **had left**.", "Коли я прийшов, автобуса вже не було. (Він поїхав раніше.)"],
+      ["When we got to the site, the boss **went** home.", "Коли ми приїхали на об'єкт, бос поїхав додому. (Відразу після нашого приїзду.)"],
+      ["When we got to the site, the boss **had gone** home.", "Коли ми приїхали на об'єкт, бос уже поїхав додому."]
+    ] },
+    { "t": "tip", "text": "Українською ранішу дію показує слово «вже»: «автобус уже поїхав». В англійській already саме цього не зробить: When I came, he already left — помилка. Потрібно had + V3, а already лише підсилює: he **had** already **left**." },
+    { "t": "h", "text": "Слова-підказки" },
+    { "t": "p", "text": "Past Perfect часто стоїть поруч із **when** (коли), **before** (до того як), **after** (після того як), **by the time** (на той час, коли), **by** + час (by ten — до десятої), **already** (вже), **just** (щойно), **never … before** (ніколи раніше не)." },
+    { "t": "ex", "items": [
+      ["By the time we finished, everyone **had gone** home.", "Коли ми закінчили, всі вже розійшлися додому."],
+      ["By ten o'clock we **had finished** the first coat.", "До десятої ми вже нанесли перший шар."],
+      ["She **had** just **left** when I called.", "Вона щойно пішла, коли я подзвонив."],
+      ["I **had** never **seen** such a big house before.", "Я ніколи раніше не бачив такого великого будинку."]
+    ] },
+    { "t": "h", "text": "Коли Past Perfect не потрібен" },
+    { "t": "p", "text": "Якщо розповідаєш події **по черзі**, як вони й сталися, — просто Past Simple: I got up, had a shower and went to work. Не додавай had «для солідності»: Past Perfect потрібен, лише коли повертаєшся назад, до ранішої події." },
+    { "t": "p", "text": "З **before** і **after** порядок і так зрозумілий із самого слова, тому Past Perfect тут не обов'язковий. Обидва речення правильні:" },
+    { "t": "ex", "items": [
+      ["After he **finished** work, he went to the gym.", "Після роботи він пішов у спортзал."],
+      ["After he **had finished** work, he went to the gym.", "Після роботи він пішов у спортзал."]
+    ] },
+    { "t": "h", "text": "Непряма мова" },
+    { "t": "p", "text": "Коли переказуєш чужі слова через said або told (сказав), час часто «зсувається» назад: I've finished → she said she **had finished**; I lost my keys → he said he **had lost** his keys. Докладніше — у темі «Непряма мова: he said that…»." },
+    { "t": "ex", "items": [
+      ["She said she **had finished**.", "Вона сказала, що закінчила."],
+      ["Tom told me he **had lost** his keys.", "Том сказав мені, що загубив ключі."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "When I came, he already left.", "right": "When I came, he had already left.", "why": "Без had виходить, що він пішов саме тоді, коли ти прийшов. Щоб показати, що раніше, — had + V3." },
+    { "t": "mistake", "wrong": "I had seen him yesterday.", "right": "I saw him yesterday.", "why": "Звичайна подія в минулому — Past Simple. Past Perfect потрібен лише щодо іншої, пізнішої події в минулому." },
+    { "t": "mistake", "wrong": "I had got up, had a shower and went to work.", "right": "I got up, had a shower and went to work.", "why": "Події по черзі — тільки Past Simple." },
+    { "t": "mistake", "wrong": "He had never drove a van before.", "right": "He had never driven a van before.", "why": "Після had — V3: drive → drove → driven." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "When I got to the stop, the bus ___ already left.", "uk": "Коли я дійшов до зупинки, автобус уже поїхав.", "opts": ["had", "has", "was"], "a": 0, "why": "Автобус поїхав раніше, ніж я дійшов: had + V3. Has — для теперішнього часу, а was left тут не має сенсу." },
+    { "type": "choice", "q": "By the time I arrived, they had ___ all the pizza.", "uk": "Коли я приїхав, вони вже з'їли всю піцу.", "opts": ["ate", "eaten", "eat"], "a": 1, "why": "Після had — V3: eat → ate → eaten. Ate — це V2 для Past Simple." },
+    { "type": "input", "q": "When we got to the site, the boss ___ (go) home.", "uk": "Коли ми приїхали на об'єкт, бос уже поїхав додому.", "a": ["had gone", "had already gone"], "why": "Бос поїхав раніше, ніж ми приїхали: had + V3 (go → went → gone)." },
+    { "type": "choice", "q": "Andrii ___ never driven on the left before he came to Ireland.", "uk": "Андрій ніколи не їздив лівим боком, доки не приїхав до Ірландії.", "opts": ["had", "has", "was"], "a": 0, "why": "Ідеться про час до іншої події в минулому (before he came), тому had + V3. Has never driven означало б «досі ніколи»." },
+    { "type": "input", "q": "I didn't know Kate. I ___ (not / meet) her before.", "uk": "Я не знав Кейт: раніше ми з нею не бачилися.", "a": ["hadn't met", "had not met"], "why": "Ідеться про час до того моменту в минулому (I didn't know Kate), тому hadn't + V3: meet → met → met." },
+    { "type": "choice", "task": "Мік пішов ще до того, як я прийшов. Яке речення про це?", "q": "", "opts": ["When I arrived, Mick left.", "When I arrived, Mick had left.", "When I arrived, Mick has left."], "a": 1, "why": "Had left — пішов ще до мого приходу. Просто left — пішов, коли я вже прийшов. Has left з минулим (when I arrived) не поєднується." },
+    { "type": "choice", "q": "I was hungry because I ___ breakfast.", "uk": "Я був голодний, бо не снідав.", "opts": ["hadn't had", "haven't had", "didn't had"], "a": 0, "why": "Не поснідав раніше, ніж відчув голод: hadn't + V3 (have → had → had). Haven't had — теперішній час, а після didn't — лише початкова форма." },
+    { "type": "input", "q": "By the time I got home, Sarah ___ (cook) dinner.", "uk": "Коли я дістався додому, Сара вже приготувала вечерю.", "a": ["had cooked", "had already cooked"], "why": "By the time — на той момент дія вже завершилася: had + V3." },
+    { "type": "choice", "q": "I ___ Sarah yesterday.", "uk": "Я бачив Сару вчора.", "opts": ["saw", "had seen", "have seen"], "a": 0, "why": "Звичайна подія з часом, без іншої події в минулому, — Past Simple. Had тут не потрібне, а Present Perfect з yesterday не вживаємо." },
+    { "type": "input", "q": "___ you ever been to Ireland before you moved here?", "uk": "Ти колись бував в Ірландії до того, як переїхав сюди?", "a": ["Had"], "why": "Питання про час до іншої події в минулому (before you moved): Had + підмет + V3." },
+    { "type": "order", "uk": "Коли я прийшов, вони вже пішли.", "words": ["had", "they", "already", "left", "when", "I", "arrived"], "a": ["When I arrived, they had already left.", "They had already left when I arrived."], "why": "Пізніша подія (I arrived) — Past Simple, раніша — had + V3. Already стоїть між had і V3." },
+    { "type": "order", "uk": "Я ніколи раніше не бачив такого великого будинку.", "words": ["had", "I", "seen", "never", "such", "a", "big", "house", "before"], "a": ["I had never seen such a big house before.", "I had never before seen such a big house.", "Never before had I seen such a big house."], "why": "Had + never + V3, а before (раніше) — у кінці речення." }
+  ]
+}

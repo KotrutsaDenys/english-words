@@ -1,0 +1,97 @@
+{
+  "id": "to-be",
+  "level": "A1",
+  "title": "To be: am, is, are, was, were",
+  "uk": "Дієслово to be",
+  "summary": "бути: I'm tired, she's at work, we were late",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**To be** означає «бути». В українській у теперішньому часі ми це слово пропускаємо: «Я втомлений», «Він на роботі». В англійській без нього не можна: **I am** tired, **he is** at work. Якщо в реченні немає іншого дієслова, потрібне **am**, **is** або **are**." },
+    { "t": "ex", "items": [
+      ["I**'m** a plasterer.", "Я штукатур."],
+      ["She**'s** at work.", "Вона на роботі."],
+      ["We**'re** from Ukraine.", "Ми з України."],
+      ["It**'s** cold today.", "Сьогодні холодно."]
+    ] },
+    { "t": "h", "text": "Теперішній час: am, is, are" },
+    { "t": "table", "head": ["Хто", "Повна форма", "Скорочено"], "rows": [
+      ["I", "I am", "I**'m**"],
+      ["he / she / it", "he is", "he**'s**"],
+      ["you / we / they", "you are", "you**'re**"]
+    ] },
+    { "t": "p", "text": "Якщо підмет (хто або що виконує дію) — одна людина чи річ, ставимо **is**: my boss is, the van is. Якщо їх кілька — **are**: the tools are, Tom and Sarah are. Винятки: з **I** — am, а з **you** завжди are, навіть коли це одна людина." },
+    { "t": "p", "text": "У розмові майже завжди кажуть скорочено: I'm, he's, it's, we're, they're. Повну форму пишуть в офіційних листах або вживають для наголосу. Скорочення працює і після імені: **Tom's** at work = Tom is at work." },
+    { "t": "h", "text": "Заперечення: not" },
+    { "t": "rule", "title": "Заперечення", "lines": ["I **am not** = I**'m not**", "he / she / it **is not** = **isn't**", "you / we / they **are not** = **aren't**"] },
+    { "t": "tip", "text": "У стандартній англійській форми «amn't» немає (хоча в Ірландії її іноді почуєш), кажи **I'm not**. Для інших осіб є два однаково правильні варіанти: he **isn't** = he**'s not**, they **aren't** = they**'re not**." },
+    { "t": "ex", "items": [
+      ["I**'m not** ready yet.", "Я ще не готовий."],
+      ["The boss **isn't** here today.", "Боса сьогодні немає."],
+      ["They**'re not** from Dublin.", "Вони не з Дубліна."],
+      ["It **isn't** far.", "Це недалеко."]
+    ] },
+    { "t": "h", "text": "Питання й короткі відповіді" },
+    { "t": "rule", "title": "Питання", "lines": ["**Am** I …?", "**Is** he / she / it …?", "**Are** you / we / they …?"] },
+    { "t": "p", "text": "Щоб поставити питання, просто міняємо місцями підмет і am / is / are. Ніякого do тут не треба: **Are you** tired? (а не Do you tired?). Відповідаємо коротко тим самим словом: Yes, I am. No, he isn't." },
+    { "t": "ex", "items": [
+      ["**Are** you cold? — **Yes, I am.**", "Тобі холодно? — Так."],
+      ["**Is** Tom at work? — **No, he isn't.**", "Том на роботі? — Ні."],
+      ["**Where's** the van? — It's outside.", "Де фургон? — Надворі."],
+      ["How old **are** you?", "Скільки тобі років?"]
+    ] },
+    { "t": "tip", "text": "У короткій відповіді «так» скорочення **не** вживаємо: Yes, I **am**. Yes, she **is**. «Yes, I'm» — помилка. А в «ні» скорочення звичайне: No, I'm not. No, it isn't." },
+    { "t": "h", "text": "Минулий час: was, were" },
+    { "t": "p", "text": "У минулому все ще простіше — лише дві форми: **was** для I, he, she, it (і однини: the van was) і **were** для you, we, they (і множини: the tools were). Питання й короткі відповіді будуємо так само: **Were** you at work? — Yes, I **was**. / No, I **wasn't**." },
+    { "t": "table", "head": ["Хто", "Був / була", "Не був"], "rows": [
+      ["I / he / she / it", "was", "wasn't"],
+      ["you / we / they", "were", "weren't"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **was** tired yesterday.", "Учора я був утомлений."],
+      ["We **were** in Dublin last week.", "Минулого тижня ми були в Дубліні."],
+      ["The shop **wasn't** open.", "Магазин не працював."],
+      ["It **was** very windy this morning.", "Сьогодні вранці був сильний вітер."],
+      ["**Were** you at work on Saturday? — **No, I wasn't.**", "Ти був на роботі в суботу? — Ні."]
+    ] },
+    { "t": "h", "text": "Коли вживаємо to be" },
+    { "t": "list", "items": [
+      "**Хто ти і звідки**: I'm Andrii. I'm from Ukraine.",
+      "**Професія** (з a / an): I'm **a** plasterer. She's **an** electrician.",
+      "**Вік**: I'm 24. Tom is 30.",
+      "**Стан і відчуття**: I'm cold. I'm hungry. I'm tired.",
+      "**Місце**: He's at work. The keys are in the van.",
+      "**Погода й час**: It's windy. It's six o'clock.",
+      "**Опис**: The wall is wet. The job is easy."
+    ] },
+    { "t": "p", "text": "Будь уважний: багато фраз, які в українській будуються з «мені» чи «маю», англійською кажуть через to be. Дослівно **I'm cold** — «я холодний», а означає «мені холодно»." },
+    { "t": "ex", "items": [
+      ["I'm **24**.", "Мені 24 роки."],
+      ["I'm **cold**.", "Мені холодно."],
+      ["Are you **hungry**?", "Ти голодний?"],
+      ["You're **right**.", "Ти маєш рацію."],
+      ["Sorry, I'm **late**.", "Вибач, я запізнився."],
+      ["I'm **afraid** of dogs.", "Я боюся собак."]
+    ] },
+    { "t": "tip", "text": "Перед професією в однині завжди **a** або **an**: I'm **a** plasterer, he's **an** electrician. У множині без них: They're plasterers." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I have 24 years.", "right": "I'm 24.", "why": "Вік — через to be: I'm 24 або I'm 24 years old. Have тут не підходить, а «I'm 24 years» без old — теж помилка." },
+    { "t": "mistake", "wrong": "She tired.", "right": "She's tired.", "why": "Без is речення неповне. Там, де в українській «є» пропускаємо, англійською ставимо am, is або are." },
+    { "t": "mistake", "wrong": "I am agree.", "right": "I agree.", "why": "Agree — звичайне дієслово «погоджуватися», am перед ним не потрібне. «Я не згоден» — I don't agree." },
+    { "t": "mistake", "wrong": "I am work here.", "right": "I work here.", "why": "Am, is, are не ставимо перед звичайним дієсловом. «Я тут працюю» — просто I work here." },
+    { "t": "mistake", "wrong": "I'm plasterer.", "right": "I'm a plasterer.", "why": "Перед професією в однині потрібне a або an." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "My brother ___ a plasterer.", "uk": "Мій брат штукатур.", "opts": ["am", "is", "are"], "a": 1, "why": "My brother — це він (he), тому is." },
+    { "type": "input", "q": "The tools ___ in the van.", "uk": "Інструменти у фургоні.", "a": ["are"], "why": "The tools — кілька речей (they), тому are." },
+    { "type": "input", "q": "I ___ cold. Can you close the window?", "uk": "Мені холодно. Можеш зачинити вікно?", "a": ["am"], "why": "«Мені холодно» англійською — I am cold (I'm cold): стан і відчуття передаємо через to be." },
+    { "type": "choice", "q": "Is Sarah at home? — No, she ___.", "uk": "Сара вдома? — Ні.", "opts": ["isn't", "doesn't", "not"], "a": 0, "why": "Питання з is — і коротка відповідь з is: No, she isn't. Doesn't — для звичайних дієслів." },
+    { "type": "choice", "q": "Are you hungry? — Yes, ___.", "uk": "Ти голодний? — Так.", "opts": ["I'm", "I am", "I do"], "a": 1, "why": "У короткій відповіді «так» скорочення не вживаємо: Yes, I am. Do не підходить, бо в питанні are." },
+    { "type": "order", "uk": "Ти втомився?", "words": ["tired", "you", "are"], "a": ["Are you tired?"], "why": "У питанні are стоїть перед підметом: Are you tired? Do тут не потрібне." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Мені 24 роки.", "opts": ["I have 24 years.", "I'm 24.", "I'm 24 years."], "a": 1, "why": "Вік — через to be: I'm 24 або I'm 24 years old. Have не підходить, а years без old не кажуть." },
+    { "type": "choice", "q": "I ___ with you.", "uk": "Я з тобою згоден.", "opts": ["am agree", "agree", "agreeing"], "a": 1, "why": "Agree — звичайне дієслово «погоджуватися», тому am не потрібне: I agree." },
+    { "type": "choice", "q": "___ you at work yesterday?", "uk": "Ти був учора на роботі?", "opts": ["Was", "Were", "Did"], "a": 1, "why": "Минуле to be для you — were (навіть про одну людину). Did не підходить, бо іншого дієслова в реченні немає." },
+    { "type": "input", "q": "They ___ (not) ready yet.", "uk": "Вони ще не готові.", "a": ["aren't", "are not"], "why": "Заперечення для they: are not, скорочено aren't." },
+    { "type": "input", "q": "Tom ___ (not) at work yesterday. He was ill.", "uk": "Учора Тома не було на роботі. Він хворів.", "a": ["wasn't", "was not"], "why": "Минулий час, Tom — він, тому was not, скорочено wasn't." },
+    { "type": "order", "uk": "Чому ти вчора запізнився?", "words": ["late", "you", "why", "yesterday", "were"], "a": ["Why were you late yesterday?"], "why": "«Запізнитися» — be late. Питання: why + were + you, а час у кінці." }
+  ]
+}

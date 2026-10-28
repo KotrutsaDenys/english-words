@@ -1,0 +1,159 @@
+{
+  "id": "articles",
+  "level": "A2",
+  "title": "Articles: a, an, the",
+  "uk": "Артиклі a, an, the",
+  "summary": "коли a/an, коли the, а коли без артикля: a job, the boss, at work",
+  "minutes": 12,
+  "blocks": [
+    { "t": "p", "text": "**Артикль** — коротке слово перед іменником (іменник — назва людини, предмета чи місця: boss, van, job). В українській артиклів немає, тому здається, що це дрібниця. Але англієць одразу чує, коли їх бракує, як ми чуємо «я хотіти кава». Добра новина: варіантів лише три — **a/an**, **the** або **нічого**." },
+    { "t": "table", "head": ["Що ставимо", "Коли", "Приклад"], "rows": [
+      ["**a / an**", "якийсь, один із багатьох", "I need **a** ladder."],
+      ["**the**", "той самий, відомий обом", "Hold **the** ladder."],
+      ["нічого", "загалом, не про конкретне", "**Cement** is heavy."]
+    ] },
+    { "t": "ex", "items": [
+      ["I need **a** ladder.", "Мені потрібна драбина (якась, будь-яка)."],
+      ["Can you hold **the** ladder?", "Можеш потримати драбину? (ось цю, що тут стоїть)"],
+      ["**Cement** is heavy.", "Цемент важкий (будь-який, загалом)."]
+    ] },
+
+    { "t": "h", "text": "A чи an: слухай перший звук" },
+    { "t": "p", "text": "**A** і **an** — одне й те саме слово, просто an легше вимовити перед голосним. **A** ставимо перед приголосним **звуком**, **an** — перед голосним звуком (а, е, і, о). Важить саме **звук**, а не буква. І дивимося на **перше слово після артикля**, навіть якщо це прикметник: **an** old van, але **a** new van." },
+    { "t": "table", "head": ["a + приголосний звук", "an + голосний звук"], "rows": [
+      ["a **v**an", "an **a**pple"],
+      ["a **h**ard job", "an **e**asy job"],
+      ["a **u**niform [ю-]", "an **u**mbrella [а-]"],
+      ["a **e**uro [ю-]", "an **X**-ray [екс-]"],
+      ["a **h**ammer [г-]", "an **h**our [ау-], h не чути"]
+    ] },
+    { "t": "ex", "items": [
+      ["We get **an** hour for lunch.", "У нас година на обід."],
+      ["He wears **a** uniform at work.", "Він носить на роботі форму."],
+      ["Take **an** umbrella, it's going to rain.", "Візьми парасолю, буде дощ."],
+      ["Can you lend me **a** euro?", "Можеш позичити мені євро?"],
+      ["It's **an** old house, but it's warm.", "Це старий будинок, але теплий."]
+    ] },
+
+    { "t": "h", "text": "Коли ставимо a/an" },
+    { "t": "list", "items": [
+      "**Одна якась річ**, будь-яка з багатьох: Have you got **a** pen?",
+      "**Згадуємо вперше**, співрозмовник ще не знає, про що мова: There's **a** man at the door.",
+      "**Професія або хто ти**: I'm **a** plasterer. She's **a** nurse.",
+      "**Описуємо**, що це таке: It's **a** good van. He's **a** nice guy.",
+      "**«На», «за»** в ціні й частоті: €15 **an** hour, twice **a** week.",
+      "**Вигуки**: What **a** mess! What **a** day!"
+    ] },
+    { "t": "ex", "items": [
+      ["I'm **a** plasterer.", "Я штукатур."],
+      ["Olena is **a** nurse.", "Олена — медсестра."],
+      ["There's **a** man at the door.", "Біля дверей якийсь чоловік."],
+      ["We work five days **a** week.", "Ми працюємо п'ять днів на тиждень."],
+      ["He gets €18 **an** hour.", "Він отримує 18 євро за годину."],
+      ["What **a** mess!", "Ну й безлад!"]
+    ] },
+    { "t": "tip", "text": "Українською професію називаємо просто: «Я штукатур». Англійською в однині **обов'язково** a/an: I'm **a** plasterer, he's **an** electrician. А в множині артикля немає: We're plasterers." },
+    { "t": "p", "text": "A/an означає «один», тому стоїть лише з **однією** річчю, яку можна порахувати. **Злічуване** — те, що рахуємо поштучно: a van, two vans. **Незлічуване** — те, що поштучно не рахуємо: water, cement, sand, money, work, advice, information. З незлічуваним a/an **не буває**: some advice, some money." },
+
+    { "t": "h", "text": "The: обидва знаємо, про що мова" },
+    { "t": "p", "text": "**The** — ніби вказати пальцем: і ти, і співрозмовник розумієте, про яку **саме** річ ідеться. Українською тут часто можна підставити «цей», «той самий», «наш». The ставимо перед будь-яким іменником: в однині, у множині, перед незлічуваним (the van, the vans, the cement)." },
+    { "t": "list", "items": [
+      "**Згадуємо вдруге**: I bought **a** drill. **The** drill was cheap.",
+      "**Зрозуміло з обставин**: Close **the** door. Where's **the** boss? (наш бос, на нашому об'єкті)",
+      "**Єдине у світі чи тут**: **the** sun, **the** sky, **the** sea, **the** government",
+      "**Найвищий ступінь, порядок і same**:**the** best, **the** biggest, **the** first, **the** last, **the** same",
+      "**Уточнюємо, яке саме**: **the** van outside, **the** man from Gorey"
+    ] },
+    { "t": "ex", "items": [
+      ["I bought **a** drill and **a** level. **The** drill was cheap.", "Я купив дриль і рівень. Дриль був дешевий."],
+      ["Where's **the** boss?", "Де бос? (наш, усі знають, який)"],
+      ["Can you close **the** window?", "Можеш зачинити вікно?"],
+      ["**The** sun's out today.", "Сьогодні світить сонце."],
+      ["This is **the** best café in Gorey.", "Це найкраще кафе в Горі."],
+      ["He's always **the** first one on site.", "Він завжди приходить на об'єкт першим."],
+      ["**The** van outside is Mick's.", "Фургон надворі — Міків."]
+    ] },
+    { "t": "tip", "text": "Порівняй: Is there **a** toilet here? — чи є тут якийсь туалет? Where's **the** toilet? — де туалет? (він тут точно є, питаю, де саме)." },
+
+    { "t": "h", "text": "The з місцями й назвами" },
+    { "t": "p", "text": "Звичні місця, куди ми ходимо в місті, зазвичай з **the**, навіть якщо їх там кілька: **the** bank, **the** station, **the** cinema, **the** shops, **the** gym, **the** post office, **the** doctor's (у лікаря). А країни й міста — **без артикля**: Ireland, Dublin. The мають лише країни зі словами Kingdom, States, Republic у назві (**the** UK, **the** USA), а ще річки, моря, океани й траси (**the** Slaney, **the** Atlantic, **the** N11)." },
+    { "t": "ex", "items": [
+      ["I'm going to **the** bank.", "Я йду в банк."],
+      ["Let's go to **the** cinema on Saturday.", "Ходімо в суботу в кіно."],
+      ["He's at **the** doctor's.", "Він у лікаря."],
+      ["I go to **the** gym after work.", "Я ходжу в спортзал після роботи."],
+      ["Tom is from **the** UK, but he lives in Ireland.", "Том з Великої Британії, але живе в Ірландії."],
+      ["Take **the** N11 to Gorey.", "Їдь до Горі трасою N11."]
+    ] },
+    { "t": "table", "head": ["Без артикля", "З the"], "rows": [
+      ["Ireland, Ukraine, Poland", "**the** UK, **the** USA"],
+      ["Dublin, Wexford, Gorey", "**the** Republic of Ireland"],
+      ["Europe, Africa", "**the** Atlantic, **the** Slaney"],
+      ["Main Street", "**the** N11, **the** M50"]
+    ] },
+
+    { "t": "h", "text": "Без артикля: говоримо загалом" },
+    { "t": "p", "text": "Коли говоримо про речі **взагалі**, а не про конкретні, артикля немає: множина (dogs, tools, people) або незлічуване (cement, money, life, work). Тут українці найчастіше ставлять зайве the, бо «життя» чи «гроші» звучать як щось конкретне. Але **Life** is hard — без the. The з'являється, лише коли маємо на увазі конкретне." },
+    { "t": "ex", "items": [
+      ["I like **dogs**.", "Я люблю собак (усіх, загалом)."],
+      ["I like **the** dogs next door.", "Мені подобаються сусідські собаки (саме ці)."],
+      ["**Cement** is heavy.", "Цемент важкий (будь-який)."],
+      ["**The** cement is in the van.", "Цемент у фургоні (той, що ми купили)."],
+      ["**Life** is hard sometimes.", "Життя іноді буває важким."],
+      ["**Money** isn't everything.", "Гроші — це ще не все."],
+      ["**Good tools** are expensive.", "Хороші інструменти дорогі."]
+    ] },
+
+    { "t": "h", "text": "Без артикля: сталі вирази" },
+    { "t": "p", "text": "У деяких звичних виразах артикля немає, бо думаємо про **дію**, а не про будівлю чи предмет. Їх найпростіше запам'ятати готовими." },
+    { "t": "table", "head": ["Вираз", "Значення"], "rows": [
+      ["at work / go to work", "на роботі / іти на роботу"],
+      ["at home / go home", "вдома / іти додому"],
+      ["in bed / go to bed", "у ліжку / лягати спати"],
+      ["by bus / by car / by train", "автобусом / машиною / потягом"],
+      ["have breakfast / lunch / dinner", "снідати / обідати / вечеряти"],
+      ["speak English", "говорити англійською"],
+      ["on Monday, in May, at night", "у понеділок, у травні, вночі"],
+      ["next week, last year", "наступного тижня, торік"]
+    ] },
+    { "t": "ex", "items": [
+      ["I'm **at work** till six.", "Я на роботі до шостої."],
+      ["Let's **go home**.", "Ходімо додому."],
+      ["I go to work **by bus**.", "Я їжджу на роботу автобусом."],
+      ["We **have lunch** at one.", "Ми обідаємо о першій."],
+      ["Do you **speak English**?", "Ти розмовляєш англійською?"],
+      ["See you **next week**.", "Побачимося наступного тижня."]
+    ] },
+    { "t": "tip", "text": "**Go home** — без to і без артикля: home тут уже означає «додому». А от частини дня з the: **in the morning**, **in the afternoon**, **in the evening**. Без артикля лише **at night**." },
+
+    { "t": "h", "text": "Якщо сумніваєшся" },
+    { "t": "rule", "title": "Перевір по черзі", "lines": [
+      "Обидва знаємо, яке саме? → **the**",
+      "Одне якесь, можна порахувати? → **a / an**",
+      "Множина чи незлічуване загалом? → **нічого**",
+      "Ім'я, місто, більшість країн, мова, день → **нічого**"
+    ] },
+    { "t": "tip", "text": "Найгірше для однієї злічуваної речі — **голий іменник**: «I need ladder» звучить найбільш ламано. Не знаєш, a чи the, — постав хоч щось. І не зупиняйся посеред речення: помилка в артиклі майже ніколи не заважає тебе зрозуміти." },
+
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I am plasterer.", "right": "I'm a plasterer.", "why": "Професію в однині кажемо з a/an. Так само: He's an electrician." },
+    { "t": "mistake", "wrong": "The life is hard.", "right": "Life is hard.", "why": "Про життя, гроші, роботу загалом кажемо без артикля." },
+    { "t": "mistake", "wrong": "I go to the work at seven.", "right": "I go to work at seven.", "why": "Go to work, at work, go home, by bus — сталі вирази без артикля." },
+    { "t": "mistake", "wrong": "She plays the football.", "right": "She plays football.", "why": "Види спорту без артикля: play football, play golf. А от музичні інструменти з the: play the guitar." },
+    { "t": "mistake", "wrong": "Can I give you a advice?", "right": "Can I give you some advice?", "why": "Advice незлічуване, тому a/an з ним не буває: some advice або a piece of advice. І перед голосним звуком було б an, а не a." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I'm ___ plasterer.", "uk": "Я штукатур.", "opts": ["a", "an", "— (без артикля)"], "a": 0, "why": "Професію в однині кажемо з a/an. Plasterer починається з приголосного звуку, тому a." },
+    { "type": "choice", "q": "We waited for ___ hour.", "uk": "Ми чекали годину.", "opts": ["a", "an", "the"], "a": 1, "why": "У hour літера h не читається, слово починається з голосного звуку [ау], тому an." },
+    { "type": "input", "q": "We work five days ___ (a / an / the) week.", "uk": "Ми працюємо п'ять днів на тиждень.", "a": ["a"], "why": "«На тиждень», «за годину» — через a/an: five days a week, €15 an hour. Week починається з приголосного, тому a." },
+    { "type": "input", "q": "Andrii works as ___ (a / an / the) electrician.", "uk": "Андрій працює електриком.", "a": ["an"], "why": "Професія — з a/an, а electrician починається з голосного звуку [і], тому an." },
+    { "type": "choice", "q": "I bought a drill and a level. ___ drill was really cheap.", "uk": "Я купив дриль і рівень. Дриль був дуже дешевий.", "opts": ["A", "The", "— (без артикля)"], "a": 1, "why": "Дриль уже згадали, тепер ми обидва знаємо, який саме. Удруге — the." },
+    { "type": "input", "q": "___ (a / an / the) sun is very hot today.", "uk": "Сонце сьогодні дуже пече.", "a": ["the"], "why": "Сонце одне на всіх, тому the. Так само the sky, the sea." },
+    { "type": "choice", "q": "___ is hard sometimes.", "uk": "Життя іноді буває важким.", "opts": ["Life", "The life", "A life"], "a": 0, "why": "Про життя загалом — без артикля. Українці часто ставлять тут the, але це помилка." },
+    { "type": "choice", "q": "Sarah lives in ___.", "uk": "Сара живе у Великій Британії.", "opts": ["UK", "the UK", "a UK"], "a": 1, "why": "Більшість країн без артикля (Ireland, Poland), але назви з Kingdom, States, Republic — з the: the UK, the USA." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "opts": ["I go to work by bus.", "I go to the work by bus.", "I go to work by the bus."], "a": 0, "why": "Go to work і by bus — сталі вирази без артикля, як at home, go home, have lunch." },
+    { "type": "choice", "q": "Can you give me ___ advice?", "uk": "Можеш мені щось порадити?", "opts": ["a", "an", "some"], "a": 2, "why": "Advice незлічуване (поштучно не рахуємо), тому a/an з ним не буває. Кажемо some advice або a piece of advice." },
+    { "type": "input", "q": "He's ___ (a / an / the) best plasterer I know.", "uk": "Він найкращий штукатур, якого я знаю.", "a": ["the"], "why": "Найвищий ступінь (the best, the biggest, the cheapest) завжди з the." },
+    { "type": "order", "uk": "Ходімо в суботу в кіно.", "words": ["go", "cinema", "let's", "on", "the", "Saturday", "to"], "a": ["Let's go to the cinema on Saturday.", "On Saturday, let's go to the cinema."], "why": "Звичні місця в місті — з the (the cinema), а дні тижня без артикля (on Saturday). Коли — зазвичай у кінці." }
+  ]
+}

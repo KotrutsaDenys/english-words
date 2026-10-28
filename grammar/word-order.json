@@ -1,0 +1,97 @@
+{
+  "id": "word-order",
+  "level": "A1",
+  "title": "Word order",
+  "uk": "Порядок слів у реченні",
+  "summary": "хто → що робить → що: Tom paints the walls; It's cold",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "В українській порядок слів вільний: «Я люблю каву», «Каву я люблю», «Люблю я каву» — усе правильно, бо закінчення показують, хто що робить. В англійській закінчень майже немає, тому роль слова показує **його місце**. Порядок жорсткий: **підмет** (хто або що виконує дію) → **дієслово** (що робить) → **додаток** (кого або що)." },
+    { "t": "rule", "title": "Основна схема", "lines": ["**хто** + **що робить** + **кого / що** + **де** + **коли**", "Tom + painted + the walls + in the hall + yesterday."] },
+    { "t": "ex", "items": [
+      ["Sarah **called** Tom.", "Сара подзвонила Томові."],
+      ["Tom **called** Sarah.", "Том подзвонив Сарі."],
+      ["I **don't drink** coffee.", "Каву я не п'ю."],
+      ["We **fixed** the roof yesterday.", "Учора ми полагодили дах."]
+    ] },
+    { "t": "p", "text": "Поміняв місцями Sarah і Tom — і зміст став протилежним. Українською «Томові подзвонила Сара» означає те саме, що «Сара подзвонила Томові», а англійською так не вийде. Тому будуй речення не так, як звучить по-нашому, а за схемою: спочатку той, хто діє." },
+    { "t": "h", "text": "Підмет обов'язковий" },
+    { "t": "p", "text": "Українською ми часто обходимося без підмета: «Холодно», «Уже пізно», «Працюю в Дубліні». В англійському реченні підмет є **завжди**. Навіть коли й так зрозуміло, хто діє, його називаємо: **I** work in Dublin. А коли справжнього «хто» немає (погода, час, відстань, загальна оцінка), ставимо **it**, яке не перекладається." },
+    { "t": "ex", "items": [
+      ["**It's** cold today.", "Сьогодні холодно."],
+      ["**It's** raining again.", "Знову йде дощ."],
+      ["**It's** half past seven.", "Пів на восьму."],
+      ["**It's** ten kilometres to Gorey.", "До Горі десять кілометрів."],
+      ["**It's** too late to start now.", "Уже запізно починати."],
+      ["**I** work in Dublin.", "Працюю в Дубліні."]
+    ] },
+    { "t": "tip", "text": "Наше «є, існує» («Є проблема», «На об'єкті є вода») — це не it, а **there is / there are**: There's a problem. Про це окрема тема." },
+    { "t": "mistake", "wrong": "Is cold today.", "right": "It's cold today.", "why": "Без підмета речення неповне. Для погоди, часу й відстані підмет — it: It's cold. It's late." },
+    { "t": "h", "text": "Дієслово і додаток не розриваємо" },
+    { "t": "p", "text": "Те, на що спрямована дія (додаток), стоїть **одразу після дієслова**. Слова «добре», «дуже», «щодня» між ними не вставляємо: вони йдуть після додатка. Слова часу (every day, yesterday) можна ще поставити на початок речення." },
+    { "t": "ex", "items": [
+      ["I speak **English** well.", "Я добре розмовляю англійською."],
+      ["I like **this job** very much.", "Мені дуже подобається ця робота."],
+      ["We clean **the van** every Friday.", "Ми щоп'ятниці миємо фургон."]
+    ] },
+    { "t": "mistake", "wrong": "I like very much football.", "right": "I like football very much.", "why": "Like football — одне ціле. Very much ставимо після додатка, а не між дієсловом і додатком." },
+    { "t": "h", "text": "Спочатку де, потім коли" },
+    { "t": "p", "text": "Коли в реченні є і місце, і час, зазвичай кажуть спочатку **де**, потім **коли**: I work **in Wexford** **every day**. Час також можна поставити на початок речення: **Every day** I work in Wexford." },
+    { "t": "ex", "items": [
+      ["I go **to the gym** **three times a week**.", "Я ходжу в спортзал тричі на тиждень."],
+      ["She arrived **at the site** **at seven**.", "Вона приїхала на об'єкт о сьомій."],
+      ["We're working **in Dublin** **this week**.", "Цього тижня ми працюємо в Дубліні."],
+      ["**On Monday** we start a new job in Gorey.", "У понеділок ми починаємо новий об'єкт у Горі."]
+    ] },
+    { "t": "h", "text": "Прикметник перед іменником" },
+    { "t": "p", "text": "Ознака (прикметник: big, new, wet) стоїть **перед** предметом: a **big** van, **new** boots. В українській можна сказати й «черевики нові купив», а англійською — лише new boots. Якщо прикметників два, розмір зазвичай перед кольором: a **big white** van. Після am, is, are прикметник може стояти й без іменника, після них: The wall is **wet**." },
+    { "t": "ex", "items": [
+      ["She's got a **big white** van.", "У неї великий білий фургон."],
+      ["I need a **long** ladder.", "Мені потрібна довга драбина."],
+      ["I bought **new** boots.", "Я купив нові черевики."],
+      ["The wall is still **wet**.", "Стіна ще мокра."]
+    ] },
+    { "t": "h", "text": "Кому і що: give me the trowel" },
+    { "t": "p", "text": "Після give, pass, send, show, bring, lend часто є і **кому**, і **що**. Для цього є два порядки:" },
+    { "t": "rule", "title": "Два варіанти", "lines": ["give + **кому** + **що**: Give **me** the trowel.", "give + **що** + **to** + **кому**: Give the trowel **to me**.", "з it / them: Give **it to me**. Send **them to Tom**."] },
+    { "t": "p", "text": "Запам'ятай: **to** ставимо тільки тоді, коли «кому» йде **після** речі. Якщо «кому» одразу після дієслова — просто give me, pass him, без to." },
+    { "t": "ex", "items": [
+      ["Can you pass **me** the drill?", "Можеш передати мені дриль?"],
+      ["I'll show **you** the kitchen.", "Я покажу тобі кухню."],
+      ["Tom sent the photos **to Sarah**.", "Том надіслав фото Сарі."],
+      ["Give **it to me**, please.", "Дай мені це, будь ласка."]
+    ] },
+    { "t": "mistake", "wrong": "Give to me the trowel.", "right": "Give me the trowel.", "why": "Коли «кому» стоїть одразу після give, to не потрібне. З to — тільки після речі: Give the trowel to me." },
+    { "t": "mistake", "wrong": "Explain me the job.", "right": "Explain the job to me.", "why": "Explain (пояснити) і say (сказати) так не працюють: «кому» в них тільки з to. Explain it to me. What did he say to you?" },
+    { "t": "h", "text": "Куди ставити always, usually, never" },
+    { "t": "p", "text": "Слова «як часто» (always, usually, often, never) ставимо **перед** звичайним дієсловом, але **після** am, is, are. Детальніше — у темі Present Simple." },
+    { "t": "ex", "items": [
+      ["I **always start** at eight.", "Я завжди починаю о восьмій."],
+      ["He's **never** late.", "Він ніколи не запізнюється."],
+      ["We **usually have** lunch in the van.", "Ми зазвичай обідаємо у фургоні."]
+    ] },
+    { "t": "h", "text": "У питаннях порядок інший" },
+    { "t": "p", "text": "В українській питання часто відрізняється від ствердження лише інтонацією: «Ти готовий?» В англійській міняється порядок: допоміжне дієслово (am, is, are, do, does, did) або can стає **перед** підметом. Детальніше — у темі «Questions»." },
+    { "t": "ex", "items": [
+      ["**Are you** ready?", "Ти готовий?"],
+      ["**Is it** far to Dublin?", "До Дубліна далеко?"],
+      ["Where **do you** live?", "Де ти живеш?"],
+      ["What time **does the shop** open?", "О котрій відчиняється магазин?"]
+    ] },
+    { "t": "mistake", "wrong": "Where you live?", "right": "Where do you live?", "why": "Після питального слова потрібне допоміжне дієслово перед підметом: Where do you live? Where is the van?" }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "___ cold in the van this morning.", "uk": "Сьогодні вранці у фургоні холодно.", "opts": ["Is", "It's", "It"], "a": 1, "why": "Підмет обов'язковий: для погоди й температури це it. І дієслово is пропустити не можна: It's cold." },
+    { "type": "input", "q": "___ raining again.", "uk": "Знову йде дощ.", "a": ["It's", "It is"], "why": "Про погоду кажемо з підметом it: It's raining. Без it речення неповне." },
+    { "type": "choice", "q": "Sarah has got a ___.", "uk": "У Сари великий білий фургон.", "opts": ["van big white", "big white van", "white van big"], "a": 1, "why": "Прикметники стоять перед іменником, а розмір (big) зазвичай перед кольором (white)." },
+    { "type": "choice", "q": "I like ___.", "uk": "Мені дуже подобається ця робота.", "opts": ["very much this job", "this job very much", "this very much job"], "a": 1, "why": "Дієслово й додаток (like this job) не розриваємо. Very much ставимо після додатка." },
+    { "type": "order", "uk": "Учора я пофарбував кухню.", "words": ["painted", "yesterday", "the", "I", "kitchen"], "a": ["I painted the kitchen yesterday.", "Yesterday I painted the kitchen."], "why": "Хто (I) + що зробив (painted) + що (the kitchen). Час — у кінці або на початку, але не між дієсловом і додатком." },
+    { "type": "choice", "q": "He ___ on time.", "uk": "Він завжди приходить вчасно.", "opts": ["always comes", "comes always", "is always come"], "a": 0, "why": "Always ставимо перед звичайним дієсловом: he always comes. Is перед звичайним дієсловом у такому реченні не потрібне." },
+    { "type": "choice", "q": "Where ___?", "uk": "Де ти живеш?", "opts": ["you live", "do you live", "you do live"], "a": 1, "why": "У питанні допоміжне дієслово do стоїть перед підметом: Where do you live?" },
+    { "type": "order", "uk": "На вулиці холодно?", "words": ["cold", "it", "outside", "is"], "a": ["Is it cold outside?"], "why": "Підмет it потрібен і в питанні, а is переходить на початок: Is it cold outside?" },
+    { "type": "input", "q": "Can you pass ___ the hammer?", "uk": "Можеш передати мені молоток?", "a": ["me"], "why": "Кому + що: pass me the hammer. To не потрібне, бо «кому» стоїть одразу після дієслова." },
+    { "type": "input", "q": "Give the trowel ___ me, please.", "uk": "Дай мені кельму, будь ласка.", "a": ["to"], "why": "Коли «кому» йде після речі, перед ним ставимо to: give the trowel to me." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Поясни мені це, будь ласка.", "opts": ["Explain me it, please.", "Explain it to me, please.", "Explain to me it, please."], "a": 1, "why": "Після explain «кому» завжди з to, а it ставимо перед to me: explain it to me. Explain me — помилка." },
+    { "type": "order", "uk": "Можеш мені це дати?", "words": ["me", "can", "it", "you", "to", "give"], "a": ["Can you give it to me?"], "why": "Питання: can стоїть перед підметом you. Коли річ — it, кажемо give it to me." }
+  ]
+}

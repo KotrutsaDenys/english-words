@@ -1,0 +1,84 @@
+{
+  "id": "indirect-questions",
+  "level": "B1",
+  "title": "Indirect questions",
+  "uk": "Ввічливі непрямі питання",
+  "summary": "ввічливо спитати: Can you tell me where the station is?",
+  "minutes": 6,
+  "blocks": [
+    { "t": "p", "text": "Пряме питання (Where is the station?) — нормальне, але в незнайомої людини, у магазині, по телефону чи в боса ввічливіше спитати **непрямо**: спершу м'який початок (Can you tell me…, Do you know…), а потім саме питання. Головне правило: у другій частині **звичайний порядок слів**, як у стверджувальному реченні." },
+    { "t": "ex", "items": [
+      ["Where **is** the station?", "Де вокзал?"],
+      ["Can you tell me where the station **is**?", "Не підкажете, де вокзал?"],
+      ["What time **does** Lidl open?", "О котрій відчиняється «Лідл»?"],
+      ["Do you know what time Lidl **opens**?", "Ви не знаєте, о котрій відчиняється «Лідл»?"]
+    ] },
+    { "t": "tip", "text": "Чому це ввічливіше: ти не вимагаєш відповіді, а питаєш, чи людина знає або чи може підказати. Українською так само: «Не підкажете, де вокзал?» звучить м'якше за «Де вокзал?». Зі знайомими колегами можна й прямо." },
+    { "t": "h", "text": "Ввічливий початок" },
+    { "t": "list", "items": [
+      "**Can you tell me** …? — Скажіть / підкажіть, будь ласка…",
+      "**Could you tell me** …? — те саме, ще ввічливіше",
+      "**Do you know** …? — Ви не знаєте…?",
+      "**Do you have any idea** …? — Ви часом не знаєте…?",
+      "**I wonder** … — Цікаво… (це не питання, тому в кінці крапка)"
+    ] },
+    { "t": "h", "text": "Порядок слів: спершу підмет" },
+    { "t": "p", "text": "Після питального слова (where, what, when, how much…) ставимо **підмет** — хто або що виконує дію (the station, he, you), а вже потім дієслово. Is, are, can, will переходять **за** підмет." },
+    { "t": "rule", "title": "Порядок", "lines": ["Where **is the station**?", "→ Can you tell me where **the station is**?", "When **will he** be back?", "→ Do you know when **he will** be back?"] },
+    { "t": "ex", "items": [
+      ["Could you tell me where the toilets **are**?", "Підкажіть, будь ласка, де туалети?"],
+      ["Do you know when he**'ll** be back?", "Ви не знаєте, коли він повернеться?"],
+      ["Can you tell me how long it **will** take?", "Скажіть, скільки часу це займе?"]
+    ] },
+    { "t": "h", "text": "Без do, does, did" },
+    { "t": "p", "text": "У прямих питаннях у Present Simple і Past Simple є **допоміжне дієслово** do, does або did — службове слово, яке будує питання. У непрямому питанні воно **зникає**, а основне дієслово має звичайну форму: -s після he, she, it або **V2** для минулого (друга форма: went, bought, arrived)." },
+    { "t": "table", "head": ["Пряме питання", "Непряме"], "rows": [
+      ["What time **does** Lidl open?", "…what time Lidl **opens**?"],
+      ["Where **does** he live?", "…where he **lives**?"],
+      ["What **do** you need?", "…what you **need**?"],
+      ["When **did** the van arrive?", "…when the van **arrived**?"],
+      ["Where **did** Tom go?", "…where Tom **went**?"]
+    ] },
+    { "t": "ex", "items": [
+      ["Could you tell me how much this drill **costs**?", "Скажіть, будь ласка, скільки коштує цей дриль?"],
+      ["Do you know where Tom **went**?", "Ти не знаєш, куди пішов Том?"],
+      ["I wonder why she **left** so early.", "Цікаво, чому вона пішла так рано."]
+    ] },
+    { "t": "h", "text": "Питання «так чи ні»: if, whether" },
+    { "t": "p", "text": "Якщо питального слова немає і відповідь — «так» або «ні», додаємо **if** або **whether** («чи»). Do, does, did так само зникають." },
+    { "t": "rule", "title": "Так / ні", "lines": ["**Is** he coming?", "→ Do you know **if** he**'s** coming?", "**Does** he work here?", "→ Can you tell me **if** he **works** here?"] },
+    { "t": "ex", "items": [
+      ["Do you know **if** the shop is open on Sunday?", "Ви не знаєте, чи магазин працює в неділю?"],
+      ["Can you tell me **whether** there's a bus to Gorey?", "Не підкажете, чи є автобус до Горі?"],
+      ["Do you know **if** I can park here?", "Ви не знаєте, чи можна тут паркуватися?"],
+      ["I wonder **if** they're hiring.", "Цікаво, чи вони набирають людей."]
+    ] },
+    { "t": "tip", "text": "Якщо питальне слово саме є підметом (who? what?), порядок і так звичайний, нічого не міняємо: Who called? → Do you know **who called**? What happened? → Can you tell me **what happened**?" },
+    { "t": "h", "text": "Знак питання чи крапка" },
+    { "t": "p", "text": "Знак питання ставимо, коли **вся фраза** — питання: Can you tell me…? Do you know…? Після **I wonder** (цікаво), **I'd like to know** (я хотів би знати) і **I don't know** (я не знаю) — крапка: це не питання, а звичайне речення. Порядок слів після них той самий: спершу підмет." },
+    { "t": "ex", "items": [
+      ["I wonder where he **is**.", "Цікаво, де він."],
+      ["I'd like to know why the van **isn't** ready.", "Я хотів би знати, чому фургон не готовий."],
+      ["I don't know where he **lives**.", "Я не знаю, де він живе."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "Can you tell me where is the station?", "right": "Can you tell me where the station is?", "why": "Після Can you tell me порядок слів як у звичайному реченні: спершу підмет (the station), потім is." },
+    { "t": "mistake", "wrong": "Do you know what time does the bus leave?", "right": "Do you know what time the bus leaves?", "why": "Do вже є на початку (Do you know). У другій частині does зникає, а -s повертається до дієслова: leaves." },
+    { "t": "mistake", "wrong": "I wonder where is he.", "right": "I wonder where he is.", "why": "Після I wonder — звичайний порядок слів і крапка в кінці." },
+    { "t": "mistake", "wrong": "Can you tell me does he work here?", "right": "Can you tell me if he works here?", "why": "Питання «так/ні» всередині іншого вводимо через if або whether, без does, а дієслово отримує -s." }
+  ],
+  "tasks": [
+    { "type": "choice", "task": "Як найввічливіше спитати незнайому людину?", "q": "", "opts": ["Where's the toilet?", "Could you tell me where the toilet is?", "Tell me where the toilet is."], "a": 1, "why": "Непряме питання з Could you tell me… звучить найм'якше: ти не вимагаєш, а просиш підказати." },
+    { "type": "choice", "q": "Can you tell me where ___?", "uk": "Не підкажете, де пошта?", "opts": ["is the post office", "the post office is", "does the post office"], "a": 1, "why": "Після Can you tell me — звичайний порядок слів: спершу підмет (the post office), потім is." },
+    { "type": "input", "q": "Could you tell me where the changing rooms ___?", "uk": "Підкажіть, будь ласка, де роздягальні?", "a": ["are"], "why": "У непрямому питанні дієслово стоїть після підмета, у кінці. Changing rooms — множина, тому are." },
+    { "type": "choice", "q": "Do you know what time the bus ___?", "uk": "Ви не знаєте, о котрій відходить автобус?", "opts": ["leaves", "does leave", "leave"], "a": 0, "why": "Do вже є на початку (Do you know). У другій частині does немає, а дієслово отримує -s: the bus leaves." },
+    { "type": "input", "q": "Do you know where Tom ___ (live)?", "uk": "Ти не знаєш, де живе Том?", "a": ["lives", "is living"], "why": "Без does: Tom — це він, тому live отримує -s, як у звичайному реченні: Tom lives." },
+    { "type": "choice", "q": "Do you know ___ Kate is working tomorrow?", "uk": "Ти не знаєш, чи Кейт завтра працює?", "opts": ["if", "what", "does"], "a": 0, "why": "Питання «так/ні» («чи працює?») у непрямій формі вводимо через if або whether." },
+    { "type": "input", "q": "Can you tell me ___ this train stops in Arklow?", "uk": "Не підкажете, чи зупиняється цей потяг в Арклоу?", "a": ["if", "whether"], "why": "«Чи» в непрямому питанні — if або whether. Does зникло, тому stops з -s." },
+    { "type": "choice", "q": "Do you know what time ___?", "uk": "Ти не знаєш, о котрій пішов Мік?", "opts": ["did Mick leave", "Mick left", "Mick did leave"], "a": 1, "why": "Did у непрямому питанні зникає, а дієслово стає в минулому часі (V2): Mick left." },
+    { "type": "input", "q": "Do you know how much Sarah ___ (pay) for her car?", "uk": "Ти не знаєш, скільки Сара заплатила за машину?", "a": ["paid", "has paid"], "why": "Без did: дієслово у V2, як у звичайному реченні: Sarah paid. Pay неправильне: pay – paid – paid." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "opts": ["I wonder why she is angry?", "I wonder why she is angry.", "I wonder why is she angry."], "a": 1, "why": "Після I wonder — звичайний порядок слів (she is). І це не питання, а думка («цікаво…»), тому в кінці крапка." },
+    { "type": "order", "uk": "Ви не знаєте, де він працює?", "words": ["works", "know", "he", "do", "where", "you"], "a": ["Do you know where he works?"], "why": "Do стоїть лише на початку (Do you know). Далі звичайний порядок: where + he + works, без does." },
+    { "type": "order", "uk": "Цікаво, чи потрібні їм ще штукатури.", "words": ["need", "wonder", "they", "more", "I", "if", "plasterers"], "a": ["I wonder if they need more plasterers."], "why": "I wonder + if («чи») + підмет (they) + дієслово. Це не питання, тому в кінці крапка." }
+  ]
+}

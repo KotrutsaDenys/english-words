@@ -1,0 +1,99 @@
+{
+  "id": "present-perfect",
+  "level": "A2",
+  "title": "Present Perfect",
+  "uk": "Теперішній доконаний час: have done",
+  "summary": "досвід, результат зараз, just/already/yet: I've done it",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "**Present Perfect** (have/has + V3, тобто третя форма дієслова) пов'язує минуле з **теперішнім**. Дія вже сталася, але важливо не коли, а що з цього маємо **зараз**: досвід («я бував у Дубліні»), результат («я загубив ключі — їх досі немає»), свіжу новину або те, що почалося раніше й триває досі. Українською ми просто скажемо «я зробив», а англієць обирає між I did і I have done." },
+    { "t": "ex", "items": [
+      ["I**'ve lost** my keys.", "Я загубив ключі. (Їх досі немає.)"],
+      ["**Have** you ever **been** to Spain?", "Ти колись був в Іспанії?"],
+      ["The boss **has** just **paid** us.", "Бос щойно нам заплатив."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Ствердження", "lines": ["I / you / we / they + **have** + V3", "he / she / it + **has** + V3"] },
+    { "t": "p", "text": "**Have** і **has** тут — допоміжні дієслова: службові слова, які будують час. «Мати» вони тут не означають. Зміст несе **V3** — третя форма дієслова (V2 — друга, для Past Simple). У правильних дієслів V2 і V3 однакові й пишуться за тими самими правилами, що в Past Simple: work → **worked**, stop → **stopped**, study → **studied**. Неправильні треба знати: go → went → **gone**, see → saw → **seen**, do → did → **done**. Найчастіші з них зібрано в темі «Неправильні дієслова»." },
+    { "t": "table", "head": ["Повна форма", "Скорочено"], "rows": [
+      ["I have, you have", "I've, you've"],
+      ["we have, they have", "we've, they've"],
+      ["he has, she has, it has", "he's, she's, it's"],
+      ["have not, has not", "haven't, hasn't"]
+    ] },
+    { "t": "tip", "text": "У розмові майже завжди скорочують. **He's** буває і he is, і he has. Підказка — наступне слово: якщо далі V3 (left, gone, been), то це зазвичай has. She**'s** tired = she **is**. She**'s** left = she **has**." },
+    { "t": "h", "text": "Заперечення і питання" },
+    { "t": "rule", "title": "Заперечення", "lines": ["I / you / we / they + **haven't** + V3", "he / she / it + **hasn't** + V3"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Have** + I / you / we / they + V3?", "**Has** + he / she / it + V3?"] },
+    { "t": "p", "text": "Do, does і did у цьому часі не потрібні: їхню роботу виконують have і has. Коротка відповідь — теж з have або has: Yes, I **have**. No, she **hasn't**." },
+    { "t": "ex", "items": [
+      ["I **haven't met** his wife.", "Я ще не знайомився з його дружиною."],
+      ["**Has** Mick **called** you? — Yes, he **has**.", "Мік тобі дзвонив? — Так."],
+      ["**Have** you **finished**? — No, I **haven't**.", "Ти закінчив? — Ні."]
+    ] },
+    { "t": "h", "text": "Досвід: ever, never, скільки разів" },
+    { "t": "p", "text": "Тут ідеться про те, що людина **робила чи не робила** щось за життя (до сьогодні), а коли саме — неважливо. У питаннях часто **ever** (колись, хоч раз), у відповідях **never** (ніколи), **before** (раніше), а ще **once** (раз), **twice** (двічі), **three times** (тричі)." },
+    { "t": "ex", "items": [
+      ["**Have** you ever **worked** on a farm?", "Ти колись працював на фермі?"],
+      ["I**'ve never driven** a van.", "Я ніколи не водив фургон."],
+      ["She**'s been** to Dublin three times.", "Вона тричі бувала в Дубліні."],
+      ["This is the best pizza I**'ve** ever **eaten**.", "Це найкраща піца, яку я коли-небудь їв."]
+    ] },
+    { "t": "tip", "text": "**Never** уже означає «ніколи не», тому haven't з ним не ставимо: I've never been there. В українському «я ніколи **не** був» два заперечення, а в англійському — лише одне." },
+    { "t": "h", "text": "Результат зараз" },
+    { "t": "p", "text": "Дія відбулася раніше, а **наслідок є зараз**. Англієць думає не «коли це було», а «що маємо тепер»." },
+    { "t": "ex", "items": [
+      ["Someone **has broken** the window.", "Хтось розбив вікно. (Воно й досі розбите.)"],
+      ["The price of petrol **has gone up**.", "Бензин подорожчав."],
+      ["Tom **has cut** his hand. He can't work.", "Том порізав руку. Він не може працювати."]
+    ] },
+    { "t": "h", "text": "Слова just, already, yet" },
+    { "t": "table", "head": ["Слово", "Значення", "Приклад"], "rows": [
+      ["just", "щойно", "has **just** left"],
+      ["already", "вже (раніше, ніж чекали)", "have **already** paid"],
+      ["yet — у питанні", "вже?", "Have you eaten **yet**?"],
+      ["yet — у запереченні", "ще не", "I haven't eaten **yet**."]
+    ] },
+    { "t": "p", "text": "**Just** і **already** ставимо між have/has і V3, а **yet** — у кінці речення. У цьому значенні yet буває лише в питаннях і запереченнях." },
+    { "t": "ex", "items": [
+      ["The boss **has just arrived**.", "Бос щойно приїхав."],
+      ["We**'ve already plastered** the kitchen.", "Ми вже заштукатурили кухню."],
+      ["**Have** you **paid** for the tiles **yet**?", "Ти вже заплатив за плитку?"],
+      ["The paint **hasn't dried yet**.", "Фарба ще не висохла."]
+    ] },
+    { "t": "tip", "text": "В Ірландії часто почуєш **I'm after finishing** — це те саме, що I've just finished (я щойно закінчив). Це ірландська особливість: розумій цей вираз, а в листах і на іспитах пиши I've just finished." },
+    { "t": "h", "text": "been чи gone" },
+    { "t": "p", "text": "Для «поїхав, пішов» є дві «треті форми» з різним змістом. **been** (V3 від be) — з'їздив і повернувся (бував). **gone** (V3 від go) — поїхав і досі там, тут його немає." },
+    { "t": "ex", "items": [
+      ["Mick **has been** to Dublin.", "Мік їздив у Дублін. (Уже повернувся.)"],
+      ["Mick **has gone** to Dublin.", "Мік поїхав у Дублін. (Він зараз там.)"],
+      ["Where **have** you **been**? — I**'ve** just **been** to Lidl.", "Де ти був? — Щойно ходив у Лідл."]
+    ] },
+    { "t": "h", "text": "Досі триває: for і since" },
+    { "t": "p", "text": "Ще одне значення: щось почалося в минулому й **триває досі**, а ти кажеш, скільки часу (**for** two years) чи з якого моменту (**since** 2024). Українською тут теперішній час («живу», «знаю»), а англійською — Present Perfect. Докладніше — у темах «Present Perfect чи Past Simple» і «Present Perfect Continuous»." },
+    { "t": "ex", "items": [
+      ["I**'ve lived** in Wexford for two years.", "Я живу у Вексфорді вже два роки."],
+      ["How long **have** you **known** Tom?", "Як давно ти знаєш Тома?"]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "Tom has went home.", "right": "Tom has gone home.", "why": "Після have/has потрібна V3: go → went → gone. Went — це V2, вона лише для Past Simple." },
+    { "t": "mistake", "wrong": "Have you finish?", "right": "Have you finished?", "why": "Після have завжди V3, а не початкова форма дієслова: finish → finished." },
+    { "t": "mistake", "wrong": "Did you ever be in Spain?", "right": "Have you ever been to Spain?", "why": "Про досвід за життя питаємо в Present Perfect: Have you ever been…? До того ж did з be не вживається взагалі." },
+    { "t": "mistake", "wrong": "I haven't never been to London.", "right": "I've never been to London.", "why": "Never уже заперечення, друге (haven't) не потрібне." },
+    { "t": "mistake", "wrong": "I have seen him yesterday.", "right": "I saw him yesterday.", "why": "Коли названо, коли саме (yesterday, last week, in 2023), — тільки Past Simple. Докладніше в темі «Present Perfect чи Past Simple»." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "They ___ painted the kitchen.", "uk": "Вони пофарбували кухню.", "opts": ["have", "has", "did"], "a": 0, "why": "They + have + V3. Has — лише для he, she, it, а did з V3 не поєднується." },
+    { "type": "choice", "q": "I've ___ this film before.", "uk": "Я вже бачив цей фільм.", "opts": ["saw", "seen", "see"], "a": 1, "why": "Після have потрібна V3: see → saw → seen. Saw — це V2, її вживаємо без have, у Past Simple." },
+    { "type": "input", "q": "___ Tom finished the wall yet?", "uk": "Том уже закінчив стіну?", "a": ["Has"], "why": "Tom — це he, тому питання починаємо з Has. Yet у кінці питання означає «вже?»." },
+    { "type": "input", "q": "Have you ever ___ (eat) Irish stew?", "uk": "Ти колись куштував ірландське рагу?", "a": ["eaten"], "why": "Після have — V3. Eat — неправильне дієслово: eat → ate → eaten." },
+    { "type": "choice", "q": "___ you ever been to Cork?", "uk": "Ти колись бував у Корку?", "opts": ["Have", "Did", "Were"], "a": 0, "why": "Питання про досвід за життя: Have + you + ever + V3. Did і were з been не поєднуються." },
+    { "type": "input", "q": "She ___ (not / call) me yet.", "uk": "Вона мені ще не подзвонила.", "a": ["hasn't called", "has not called"], "why": "Заперечення для she: hasn't + V3 (called). Yet у кінці речення означає «ще не»." },
+    { "type": "choice", "q": "Sarah isn't here. She ___ to Gorey.", "uk": "Сари тут немає. Вона поїхала в Горі.", "opts": ["has been", "has gone", "have gone"], "a": 1, "why": "Gone — поїхала і досі там. Has been означало б, що вона вже повернулася. Have не підходить, бо для she — has." },
+    { "type": "input", "q": "We've already ___ (do) the ceiling.", "uk": "Ми вже зробили стелю.", "a": ["done"], "why": "Після have — V3: do → did → done. Did — це V2 для Past Simple." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я ніколи не був у Лондоні.", "opts": ["I haven't never been to London.", "I've never been to London.", "I've never went to London."], "a": 1, "why": "Never уже означає «ніколи не», тому haven't не додаємо. А після have — V3 been, а не V2 went." },
+    { "type": "input", "q": "I ___ (be) to Dublin three times.", "uk": "Я тричі бував у Дубліні.", "a": ["have been"], "why": "Скільки разів за життя — Present Perfect: have + V3. Be → was/were → been, а been to означає «бував у»." },
+    { "type": "order", "uk": "Я ще не заплатив за оренду.", "words": ["paid", "rent", "I", "yet", "the", "haven't"], "a": ["I haven't paid the rent yet.", "I haven't yet paid the rent."], "why": "Заперечення: I + haven't + V3 (paid), а yet — у кінці речення." },
+    { "type": "order", "uk": "Бос щойно приїхав.", "words": ["just", "boss", "arrived", "the", "has"], "a": ["The boss has just arrived."], "why": "Just стоїть між has і V3: has just arrived." }
+  ]
+}

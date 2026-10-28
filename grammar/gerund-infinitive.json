@@ -1,0 +1,149 @@
+{
+  "id": "gerund-infinitive",
+  "level": "B1",
+  "title": "Gerund or infinitive",
+  "uk": "-ing чи to + дієслово",
+  "summary": "коли -ing, а коли to: I enjoy working, I want to work",
+  "minutes": 9,
+  "blocks": [
+    { "t": "p", "text": "Коли одне дієслово йде за іншим (люблю **працювати**, хочу **піти**), друге стоїть або у **формі з -ing** (working), або з **to** (to work). Українською в обох випадках «працювати», тому вибір доводиться **запам'ятовувати**: він залежить від **першого** дієслова." },
+    { "t": "ex", "items": [
+      ["I **enjoy working** outside.", "Мені подобається працювати надворі."],
+      ["I **want to work** outside.", "Я хочу працювати надворі."],
+      ["We **finished plastering** at five.", "Ми закінчили штукатурити о п'ятій."],
+      ["We **decided to stop** at five.", "Ми вирішили зупинитися о п'ятій."]
+    ] },
+    { "t": "p", "text": "У підручниках ці форми називають так: **gerund** (герундій) — форма з -ing, яка працює майже як іменник (smoking — «куріння»); **infinitive** (інфінітив) — to + початкова форма дієслова (to work — «працювати»)." },
+    { "t": "h", "text": "Після цих дієслів — -ing" },
+    { "t": "table", "head": ["Дієслово", "Значення"], "rows": [
+      ["enjoy", "подобатися, любити (щось робити)"],
+      ["finish", "закінчити"],
+      ["mind", "бути проти (Do you mind…?)"],
+      ["avoid", "уникати"],
+      ["keep", "постійно, не припиняти"],
+      ["suggest", "пропонувати"],
+      ["practise", "тренуватися, практикувати"],
+      ["miss", "сумувати за, бракувати"],
+      ["consider", "обмірковувати, думати про"],
+      ["give up", "кинути (звичку)"],
+      ["can't stand", "терпіти не можу"]
+    ] },
+    { "t": "ex", "items": [
+      ["Do you **mind waiting** a few minutes?", "Ти не проти почекати кілька хвилин?"],
+      ["He **keeps making** the same mistake.", "Він постійно робить ту саму помилку."],
+      ["Kate **suggested going** to Gorey for lunch.", "Кейт запропонувала поїхати на обід у Горі."],
+      ["I **can't stand working** in the rain.", "Терпіти не можу працювати під дощем."],
+      ["Mick **gave up smoking** last year.", "Мік кинув курити торік."],
+      ["Are you **considering moving** to Dublin?", "Ти думаєш про переїзд у Дублін?"]
+    ] },
+    { "t": "tip", "text": "**Go** + -ing — для занять і розваг: go **swimming**, go **shopping**, go **fishing**. We went **fishing** at the weekend." },
+    { "t": "h", "text": "Правопис форми з -ing" },
+    { "t": "table", "head": ["Дієслово", "З -ing", "Що змінюється"], "rows": [
+      ["work", "work**ing**", "просто + -ing"],
+      ["make", "mak**ing**", "німе e зникає"],
+      ["stop", "stop**ping**", "подвоюємо p"],
+      ["forget", "forget**ting**", "подвоюємо t"],
+      ["lie", "l**ying**", "ie → y"]
+    ] },
+    { "t": "tip", "text": "Останню приголосну подвоюємо, коли слово закінчується на **одну голосну + одну приголосну** і наголос падає саме на цей склад: stop → stopping, get → getting, forget → forgetting. Але visit → visiting (наголос на початку), а w, x, y не подвоюємо: fix → fixing, play → playing. У британському правописі кінцеве l після однієї голосної подвоюють і без наголосу: travel → travelling." },
+    { "t": "h", "text": "Після цих дієслів — to + дієслово" },
+    { "t": "table", "head": ["Дієслово", "Значення"], "rows": [
+      ["want", "хотіти"],
+      ["need", "потребувати, треба"],
+      ["decide", "вирішити"],
+      ["hope", "сподіватися"],
+      ["plan", "планувати"],
+      ["promise", "обіцяти"],
+      ["agree", "погодитися"],
+      ["refuse", "відмовитися"],
+      ["learn", "навчитися"],
+      ["manage", "зуміти, встигнути"],
+      ["afford", "дозволити собі (за гроші)"],
+      ["would like", "хотів би"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **need to buy** new work boots.", "Мені треба купити нові робочі черевики."],
+      ["Sarah **promised to call** me.", "Сара пообіцяла мені подзвонити."],
+      ["The boss **refused to pay** us extra.", "Бос відмовився нам доплатити."],
+      ["We **managed to finish** on time.", "Ми встигли закінчити вчасно."],
+      ["I can't **afford to buy** a new van.", "Я не можу дозволити собі купити новий фургон."],
+      ["Andrii is **learning to drive**.", "Андрій вчиться водити."],
+      ["I**'d like to book** a table for two.", "Я хотів би забронювати столик на двох."],
+      ["I **want you to help** me with the ceiling.", "Я хочу, щоб ти допоміг мені зі стелею."]
+    ] },
+    { "t": "tip", "text": "**Хочу, щоб ти…** — англійською без that і без окремого «щоб»: **want** + хтось + **to** + дієслово. I want **you to help** me, а не I want that you help me. Так само **would like**, **ask**, **tell**: The boss asked **us to stay** late." },
+    { "t": "tip", "text": "Підказка: після дієслів з **to** дія зазвичай ще **попереду** — бажання, план, рішення, обіцянка (want, plan, decide, promise). Після дієслів з **-ing** дія часто вже **є або була** (enjoy, finish, keep, give up). Це не залізне правило, але допомагає здогадатися." },
+    { "t": "h", "text": "Обидва варіанти: like, love, hate, start, begin" },
+    { "t": "p", "text": "Після **like, love, hate, start, begin** можна і -ing, і to — значення майже однакове. Але **would like** (хотів би) — завжди з to." },
+    { "t": "ex", "items": [
+      ["It **started raining**.", "Почався дощ."],
+      ["It **started to rain**.", "Почався дощ."],
+      ["I **love working** with my hands.", "Я люблю працювати руками."],
+      ["Tom **hates getting** up early.", "Том ненавидить рано вставати."]
+    ] },
+    { "t": "h", "text": "Stop, remember, forget, try: різне значення" },
+    { "t": "table", "head": ["Дієслово", "+ -ing", "+ to"], "rows": [
+      ["stop", "кинути, припинити", "зупинитися, щоб…"],
+      ["remember", "пам'ятати, що робив", "не забути зробити"],
+      ["forget", "забути, що робив", "забути зробити"],
+      ["try", "спробувати (як варіант)", "намагатися, старатися"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **stopped smoking** last year.", "Я кинув курити торік."],
+      ["The driver **stopped to smoke**.", "Водій зупинився покурити."],
+      ["**Remember to lock** the van.", "Не забудь замкнути фургон."],
+      ["I **remember locking** the van.", "Я пам'ятаю, що замикав фургон."],
+      ["Don't **forget to bring** your gloves.", "Не забудь узяти рукавиці."],
+      ["If the mix is too thick, **try adding** some water.", "Якщо розчин надто густий, спробуй додати трохи води."],
+      ["I **tried to lift** the board, but it was too heavy.", "Я намагався підняти лист гіпсокартону, але він був заважкий."]
+    ] },
+    { "t": "h", "text": "Після прийменника — завжди -ing" },
+    { "t": "p", "text": "**Прийменники** — короткі слова на зразок **in, on, at, for, about, of, before, after, without**. Якщо після прийменника йде дієслово, воно **завжди** з -ing: не з to і не в початковій формі." },
+    { "t": "ex", "items": [
+      ["Tom is **interested in becoming** an electrician.", "Том хотів би стати електриком."],
+      ["Thanks **for coming**.", "Дякую, що прийшов."],
+      ["Wash your hands **before eating**.", "Мий руки перед їжею."],
+      ["He left **without saying** goodbye.", "Він пішов, не попрощавшись."],
+      ["I'm **tired of waiting**.", "Я втомився чекати."],
+      ["**How about going** to the cinema?", "Може, сходимо в кіно?"]
+    ] },
+    { "t": "tip", "text": "Пастка: у виразі **look forward to** (чекати з нетерпінням) to — це прийменник, тому далі -ing: I'm looking forward to **seeing** you." },
+    { "t": "h", "text": "To — «щоб» (мета)" },
+    { "t": "p", "text": "Щоб сказати, **навіщо** щось робиш, ставимо просто **to** + дієслово. Українське «щоб» або «для того, щоб» — це **to**. Не **for to** і не **for** + дієслово." },
+    { "t": "ex", "items": [
+      ["Olena came to Ireland **to work**.", "Олена приїхала до Ірландії працювати."],
+      ["I went to Lidl **to buy** some bread.", "Я пішов у Lidl купити хліба."],
+      ["We need a ladder **to reach** the ceiling.", "Нам потрібна драбина, щоб дістати до стелі."]
+    ] },
+    { "t": "tip", "text": "**For** + іменник теж буває про мету: I went to Lidl **for** bread. А про призначення речі кажуть **for** + -ing: This knife is **for cutting** plasterboard." },
+    { "t": "h", "text": "-ing як підмет" },
+    { "t": "p", "text": "**Підмет** — це хто або що виконує дію, про кого чи про що речення. Коли підметом є сама дія, англійською беремо форму з -ing. Українською тут зазвичай «курити», «працювати» або іменник." },
+    { "t": "ex", "items": [
+      ["**Smoking** is bad for you.", "Курити шкідливо."],
+      ["**Working** at heights can be dangerous.", "Працювати на висоті буває небезпечно."],
+      ["**Learning** a language takes time.", "Вивчення мови потребує часу."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I enjoy to work outside.", "right": "I enjoy working outside.", "why": "Після enjoy — завжди -ing." },
+    { "t": "mistake", "wrong": "I want going home.", "right": "I want to go home.", "why": "Після want — to + дієслово." },
+    { "t": "mistake", "wrong": "I'm learning English for to get a better job.", "right": "I'm learning English to get a better job.", "why": "Мету («щоб») передає просто to. For to так не кажуть." },
+    { "t": "mistake", "wrong": "Thanks for help me.", "right": "Thanks for helping me.", "why": "Після прийменника (for) — форма з -ing." },
+    { "t": "mistake", "wrong": "I'm interested to learn Spanish.", "right": "I'm interested in learning Spanish.", "why": "Interested вимагає прийменника in, а після прийменника — -ing." },
+    { "t": "mistake", "wrong": "We decided don't work on Sunday.", "right": "We decided not to work on Sunday.", "why": "Заперечення перед to + дієслово — просто not: not to work. Don't тут не ставимо. З -ing так само: sorry for not calling." },
+    { "t": "mistake", "wrong": "I stopped to smoke last year.", "right": "I stopped smoking last year.", "why": "Кинути звичку — stop + -ing. Stop + to означає «зупинитися, щоб…»." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I really enjoy ___ in the garden.", "uk": "Мені дуже подобається працювати в саду.", "opts": ["working", "to work", "work"], "a": 0, "why": "Після enjoy — завжди форма з -ing." },
+    { "type": "choice", "q": "I'm saving money ___ a car.", "uk": "Я відкладаю гроші, щоб купити машину.", "opts": ["to buy", "for buy", "for to buy"], "a": 0, "why": "Мета («щоб») — просто to + дієслово. For + дієслово чи for to так не кажуть." },
+    { "type": "choice", "q": "Thanks for ___ me yesterday.", "uk": "Дякую, що вчора мені допоміг.", "opts": ["helping", "help", "to help"], "a": 0, "why": "For — прийменник, а після прийменника дієслово завжди з -ing." },
+    { "type": "choice", "q": "I stopped ___ two years ago, and now I feel much better.", "uk": "Я кинув курити два роки тому, і тепер почуваюся набагато краще.", "opts": ["smoking", "to smoke", "smoke"], "a": 0, "why": "Кинути звичку — stop + -ing. Stopped to smoke означало б «зупинився, щоб покурити»." },
+    { "type": "choice", "q": "Don't forget ___ the van when you leave.", "uk": "Не забудь замкнути фургон, коли йтимеш.", "opts": ["to lock", "locking", "lock"], "a": 0, "why": "«Не забути зробити» — forget + to. Forget + -ing — забути те, що вже колись робив." },
+    { "type": "choice", "q": "___ too much coffee is bad for you.", "uk": "Пити забагато кави шкідливо.", "opts": ["Drinking", "Drink", "Drinks"], "a": 0, "why": "Дія тут — підмет речення, тому форма з -ing: Drinking." },
+    { "type": "input", "q": "Would you mind ___ (open) the window?", "uk": "Ти не міг би відчинити вікно?", "a": ["opening"], "why": "Після mind — форма з -ing. Would you mind opening…? — ввічливе прохання." },
+    { "type": "input", "q": "We finally managed ___ (find) a flat in Gorey.", "uk": "Нарешті ми зуміли знайти квартиру в Горі.", "a": ["to find"], "why": "Після manage (зуміти) — to + дієслово: to find." },
+    { "type": "input", "q": "Mick keeps ___ (forget) his keys.", "uk": "Мік постійно забуває ключі.", "a": ["forgetting"], "why": "Після keep — форма з -ing. У forget наголос на останньому складі -get, тому t подвоюємо: forgetting." },
+    { "type": "input", "q": "Sarah can't afford ___ (go) on holiday this year.", "uk": "Сара не може дозволити собі поїхати у відпустку цього року.", "a": ["to go"], "why": "Після afford (дозволити собі) — to + дієслово: to go." },
+    { "type": "order", "uk": "Він вирішив кинути курити.", "words": ["he", "decided", "to", "give", "up", "smoking"], "a": ["He decided to give up smoking.", "He decided to give smoking up."], "why": "Після decide — to + дієслово (to give up), а після give up — форма з -ing (smoking)." },
+    { "type": "order", "uk": "Тобі було б цікаво працювати по суботах?", "words": ["would", "you", "be", "interested", "in", "working", "on", "Saturdays"], "a": ["Would you be interested in working on Saturdays?"], "why": "Після interested стоїть прийменник in, тому далі -ing: working. Питання починається з would." }
+  ]
+}

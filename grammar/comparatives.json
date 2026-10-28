@@ -1,0 +1,102 @@
+{
+  "id": "comparatives",
+  "level": "A2",
+  "title": "Comparatives and superlatives",
+  "uk": "Ступені порівняння",
+  "summary": "порівняння: cheaper, more expensive, the best, as big as",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "Коли порівнюємо **дві** речі, беремо **вищий ступінь**: cheaper — дешевший. Коли виділяємо **одну з багатьох** — **найвищий**: the cheapest — найдешевший. Як і в українській (дешевий — дешевший — найдешевший), слово змінюється: додаємо **-er / -est** або ставимо перед ним **more / the most**." },
+    { "t": "ex", "items": [
+      ["This ladder is **cheaper than** that one.", "Ця драбина дешевша за ту."],
+      ["Dublin is **bigger than** Wexford.", "Дублін більший за Вексфорд."],
+      ["It's **the cheapest** shop in Gorey.", "Це найдешевший магазин у Горі."],
+      ["Today is **the coldest** day of the year.", "Сьогодні найхолодніший день року."]
+    ] },
+    { "t": "h", "text": "Короткі слова: -er, -est" },
+    { "t": "rule", "title": "Короткий прикметник", "lines": ["вищий: cheap**er** (than …)", "найвищий: **the** cheap**est**"] },
+    { "t": "p", "text": "Так змінюються **короткі** прикметники: з одного складу (cheap, old, long, warm) і з двох складів на -y (easy, busy, heavy). Коли порівнюєш з чимось, після прикметника ставимо **than** — «ніж», «за». Перед найвищим ступенем майже завжди **the**." },
+    { "t": "table", "head": ["Прикметник", "Правило", "Приклад"], "rows": [
+      ["більшість", "+ er, + est", "cheap → cheap**er**, cheap**est**"],
+      ["на -e", "+ r, + st", "nice → nice**r**, nice**st**"],
+      ["одна голосна + приголосна", "подвоюємо приголосну", "big → big**ger**, big**gest**"],
+      ["на -y", "y → i", "easy → eas**ier**, eas**iest**"]
+    ] },
+    { "t": "ex", "items": [
+      ["The bus is **cheaper**, but the train is **faster**.", "Автобус дешевший, але потяг швидший."],
+      ["It's **hotter** in Spain than in Ireland.", "В Іспанії спекотніше, ніж в Ірландії."],
+      ["Friday is **the busiest** day of the week.", "П'ятниця — найзавантаженіший день тижня."],
+      ["Kate is **the nicest** person on the team.", "Кейт — наймиліша людина в команді."]
+    ] },
+    { "t": "h", "text": "Довші слова: more, the most" },
+    { "t": "rule", "title": "Довгий прикметник", "lines": ["вищий: **more** expensive (than …)", "найвищий: **the most** expensive"] },
+    { "t": "p", "text": "Для довших прикметників — з двох складів і більше (крім тих, що на -y): expensive, dangerous, modern, careful. Саме слово не змінюється, а перед ним ставимо **more** (більш) або **the most** (найбільш) — як у нас «більш небезпечний». Так само з прислівниками на -ly: more slowly." },
+    { "t": "ex", "items": [
+      ["This van is **more expensive than** mine.", "Цей фургон дорожчий за мій."],
+      ["Working on the roof is **more dangerous**.", "Працювати на даху небезпечніше."],
+      ["It's **the most comfortable** chair in the house.", "Це найзручніше крісло в домі."],
+      ["Can you speak **more slowly**, please?", "Можеш говорити повільніше, будь ласка?"]
+    ] },
+    { "t": "tip", "text": "Кілька слів із двох складів (**quiet**, **simple**, **narrow**, **clever**) мають обидві форми: quieter або more quiet. Обидві правильні." },
+    { "t": "tip", "text": "**More** і **-er** разом не вживаємо: або cheaper, або more expensive. More cheaper, more better — помилка." },
+    { "t": "h", "text": "Неправильні форми" },
+    { "t": "table", "head": ["Звичайна", "Вищий", "Найвищий"], "rows": [
+      ["good (добрий)", "**better**", "**the best**"],
+      ["well (добре)", "**better**", "**the best**"],
+      ["bad (поганий)", "**worse**", "**the worst**"],
+      ["far (далеко)", "**further**", "**the furthest**"],
+      ["much, many (багато)", "**more**", "**the most**"],
+      ["little (мало)", "**less**", "**the least**"]
+    ] },
+    { "t": "ex", "items": [
+      ["I feel **better** today.", "Сьогодні я почуваюся краще."],
+      ["That was **the worst** day of my life.", "Це був найгірший день у моєму житті."],
+      ["This is **the best** pizza in Wexford.", "Це найкраща піца у Вексфорді."],
+      ["My house is **further** from the site **than** yours.", "Мій дім далі від об'єкта, ніж твій."],
+      ["I spend **less** money on food now.", "Тепер я витрачаю менше грошей на їжу."]
+    ] },
+    { "t": "tip", "text": "У значенні «далі» є ще **farther**, **the farthest**, але в британській англійській частіше кажуть **further**." },
+    { "t": "h", "text": "As … as — такий самий, як" },
+    { "t": "rule", "title": "Порівняння «так само»", "lines": ["**as** + прикметник + **as** — такий самий, як", "**not as** + прикметник + **as** — не такий, як"] },
+    { "t": "ex", "items": [
+      ["Tom is **as tall as** his dad.", "Том такий самий високий, як його тато."],
+      ["The bus isn't **as fast as** the train.", "Автобус не такий швидкий, як потяг."],
+      ["My new boots aren't **as good as** the old ones.", "Мої нові черевики не такі хороші, як старі."]
+    ] },
+    { "t": "tip", "text": "Після as + прикметник знову **as**: as fast **as**. **Than** ставимо лише після вищого ступеня: faster **than**, more expensive **than**, better **than**." },
+    { "t": "tip", "text": "Після than і as у розмові кажуть **me, him, her, us**: He's taller **than me**. He's as fast **as me**. Можна й повніше: than I am." },
+    { "t": "h", "text": "Набагато чи трохи" },
+    { "t": "p", "text": "Щоб сказати «набагато дешевший» або «трохи більший», перед вищим ступенем ставимо **much** / **a lot** / **far** (набагато, значно) або **a bit** / **a little** (трохи). **Very** тут не підходить: very cheaper — помилка." },
+    { "t": "ex", "items": [
+      ["The train is **a lot faster** than the bus.", "Потяг набагато швидший за автобус."],
+      ["It's **a bit colder** today.", "Сьогодні трохи холодніше."],
+      ["My new job is **far better**.", "Моя нова робота значно краща."]
+    ] },
+    { "t": "h", "text": "The … the — чим …, тим …" },
+    { "t": "rule", "title": "Чим …, тим …", "lines": ["**the** + вищий ступінь …, **the** + вищий ступінь …"] },
+    { "t": "ex", "items": [
+      ["**The sooner, the better.**", "Чим раніше, тим краще."],
+      ["**The more** you practise, **the better** you speak.", "Чим більше практикуєш, тим краще говориш."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "This one is more better.", "right": "This one is better.", "why": "Better уже означає «кращий». More не додаємо." },
+    { "t": "mistake", "wrong": "This van is more cheap.", "right": "This van is cheaper.", "why": "Cheap — короткий прикметник (один склад), тому -er, а не more." },
+    { "t": "mistake", "wrong": "It's the most good café in town.", "right": "It's the best café in town.", "why": "Good — неправильний: good, better, the best." },
+    { "t": "mistake", "wrong": "He's as fast than me.", "right": "He's as fast as me.", "why": "Після as + прикметник знову as. Than — лише після вищого ступеня: faster than." },
+    { "t": "mistake", "wrong": "He is taller then me.", "right": "He is taller than me.", "why": "Than — «ніж», then — «потім», «тоді». Звучать схоже, але це різні слова." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "My room is ___ than yours.", "uk": "Моя кімната більша за твою.", "opts": ["bigger", "more big", "biggest"], "a": 0, "why": "Порівнюємо дві кімнати, big — короткий прикметник: -er з подвоєною g. More тут не потрібне." },
+    { "type": "choice", "q": "Mick is ___ man on the site.", "uk": "Мік — найстарший чоловік на об'єкті.", "opts": ["the oldest", "the most old", "older"], "a": 0, "why": "Один з багатьох — найвищий ступінь. Old короткий, тому the + -est: the oldest." },
+    { "type": "input", "q": "This box is ___ (heavy) than that one.", "uk": "Ця коробка важча за ту.", "a": ["heavier"], "why": "Прикметник на -y: y змінюємо на i і додаємо -er — heavy → heavier." },
+    { "type": "input", "q": "It was the ___ (hot) day of the summer.", "uk": "Це був найспекотніший день літа.", "a": ["hottest"], "why": "Одна голосна + приголосна в кінці: подвоюємо t — hot → hottest." },
+    { "type": "input", "q": "It's the ___ (expensive) hotel in Wexford.", "uk": "Це найдорожчий готель у Вексфорді.", "a": ["most expensive"], "why": "Expensive — довгий прикметник, тому the most + слово без змін." },
+    { "type": "choice", "q": "My English is ___ than it was last year.", "uk": "Моя англійська краща, ніж була торік.", "opts": ["more good", "better", "more better"], "a": 1, "why": "Good — неправильний: good, better, the best. More до better не додаємо." },
+    { "type": "input", "q": "The traffic is ___ (bad) today than yesterday.", "uk": "Сьогодні затори гірші, ніж учора.", "a": ["worse"], "why": "Bad — неправильний: bad, worse, the worst." },
+    { "type": "choice", "q": "This hotel isn't as nice ___ the last one.", "uk": "Цей готель не такий гарний, як попередній.", "opts": ["than", "as", "then"], "a": 1, "why": "Конструкція not as … as: після as + прикметник знову as. Than — лише після вищого ступеня (nicer than)." },
+    { "type": "choice", "q": "Petrol is ___ more expensive this year.", "uk": "Цього року бензин набагато дорожчий.", "opts": ["very", "much", "most"], "a": 1, "why": "«Набагато» перед вищим ступенем — much (або a lot, far). Very з вищим ступенем не вживаємо." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Він вищий за мене.", "opts": ["He's taller then me.", "He's more tall than me.", "He's taller than me."], "a": 2, "why": "Tall короткий, тому taller. «Ніж» — than; then означає «потім»." },
+    { "type": "order", "uk": "Новий фургон не такий великий, як старий.", "words": ["the", "new", "van", "isn't", "as", "big", "as", "the", "old", "one"], "a": ["The new van isn't as big as the old one."], "why": "Not as + прикметник + as: isn't as big as. One замінює слово van, щоб не повторювати його." },
+    { "type": "order", "uk": "Чим раніше почнемо, тим швидше закінчимо.", "words": ["the", "earlier", "we", "start", "the", "sooner", "we", "finish"], "a": ["The earlier we start, the sooner we finish.", "The sooner we start, the earlier we finish."], "why": "«Чим …, тим …» — the + вищий ступінь на початку кожної частини: the earlier …, the sooner …" }
+  ]
+}

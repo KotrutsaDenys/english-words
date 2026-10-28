@@ -1,0 +1,85 @@
+{
+  "id": "future-continuous-perfect",
+  "level": "B1",
+  "title": "Future Continuous and Future Perfect",
+  "uk": "Will be doing і will have done",
+  "summary": "дія в процесі чи вже завершена: I'll be working, I'll have finished",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "Дві форми, щоб точно сказати, що буде **в певний момент майбутнього**: дія тоді ще **триватиме** (will be doing) чи вже **закінчиться** (will have done). Уяви, що дивишся на годинник завтра о шостій: що ти робиш саме тоді і що вже встиг зробити?" },
+    { "t": "ex", "items": [
+      ["This time tomorrow I**'ll be flying** to Kraków.", "Завтра в цей час я летітиму до Кракова."],
+      ["By Friday we**'ll have finished** the ceiling.", "До п'ятниці ми вже закінчимо стелю."]
+    ] },
+    { "t": "h", "text": "Will be + -ing: дія в процесі" },
+    { "t": "rule", "title": "Форми", "lines": ["**will be** + форма з -ing: I'll be working", "заперечення: I **won't be** working", "питання: **Will** you **be** working?"] },
+    { "t": "p", "text": "**Future Continuous** вживаємо, коли дія **триватиме** в конкретний момент майбутнього: о дев'ятій, завтра в цей час, коли ти приїдеш. Вона почнеться раніше і ще не закінчиться. Українською — «працюватиму», «якраз їхатиму». Will be однакове для всіх: I'll be, she'll be, they'll be." },
+    { "t": "ex", "items": [
+      ["Don't call me at ten — I**'ll be driving**.", "Не дзвони мені о десятій — я буду за кермом."],
+      ["This time next week we**'ll be lying** on a beach in Spain.", "Наступного тижня в цей час ми лежатимемо на пляжі в Іспанії."],
+      ["When you arrive, I**'ll be waiting** at the bus stop.", "Коли ти приїдеш, я чекатиму на зупинці."],
+      ["Tom **won't be working** tomorrow — it's his day off.", "Том завтра не працюватиме — у нього вихідний."]
+    ] },
+    { "t": "p", "text": "Порівняй з простим will: **will** — дія почнеться саме в цей момент, **will be + -ing** — у цей момент дія вже йде." },
+    { "t": "ex", "items": [
+      ["When you get home, I**'ll cook** dinner.", "Коли ти прийдеш, я приготую вечерю (тоді й почну)."],
+      ["When you get home, I**'ll be cooking** dinner.", "Коли ти прийдеш, я якраз готуватиму вечерю."]
+    ] },
+    { "t": "h", "text": "Ввічливе питання про плани" },
+    { "t": "p", "text": "**Will you be + -ing…?** — м'який спосіб спитати про чиїсь плани, часто перед проханням. Will you use…? може прозвучати як прохання чи навіть вимога, а Will you be using…? — просто питання: «у тебе такі плани?»" },
+    { "t": "ex", "items": [
+      ["**Will** you **be using** the van tomorrow? I need to pick up some boards.", "Ти завтра користуватимешся фургоном? Мені треба забрати плити."],
+      ["**Will** you **be coming** to the site on Monday?", "Ти будеш на об'єкті в понеділок?"],
+      ["How long **will** you **be staying** in Dublin?", "Скільки ти пробудеш у Дубліні?"]
+    ] },
+    { "t": "h", "text": "Will have + V3: дія вже завершена" },
+    { "t": "rule", "title": "Форми", "lines": ["**will have** + V3: I'll have finished", "заперечення: I **won't have** finished", "питання: **Will** you **have** finished?"] },
+    { "t": "p", "text": "**V3** — третя форма дієслова: у правильних + -ed (finished, painted), неправильні треба знати (done, gone, left, bought). **Future Perfect** (will have + V3) вживаємо, коли дія **закінчиться до певного моменту** в майбутньому. Українською — «вже зроблю», «встигну зробити»." },
+    { "t": "p", "text": "Майже завжди поруч **by**: by Friday (до п'ятниці), by six (до шостої), by the end of the month (до кінця місяця), by then (на той час), by the time you get here (на той час, коли ти приїдеш)." },
+    { "t": "ex", "items": [
+      ["The plaster **will have dried** by tomorrow morning.", "До завтрашнього ранку штукатурка вже висохне."],
+      ["By the time you get here, the film **will have started**.", "Коли ти приїдеш, фільм уже почнеться."],
+      ["**Will** you **have finished** by six?", "Ти встигнеш закінчити до шостої?"],
+      ["Don't worry, they **won't have left** by the time we get there.", "Не хвилюйся, до нашого приїзду вони ще не поїдуть."]
+    ] },
+    { "t": "tip", "text": "Простий will з by теж правильний: We'll finish **by** Friday. Will have done наголошує, що **на той момент усе вже буде готово**. А з **by the time** + подія найчастіше потрібне саме will have done: By the time you get here, I**'ll have finished**." },
+    { "t": "h", "text": "By чи until" },
+    { "t": "p", "text": "Обидва українською «до». **By** — не пізніше ніж: дія **закінчиться** будь-коли до цього моменту. **Until** — аж до: дія **триває** весь час до цього моменту. Тому by часто з will have done, а until — з will be doing або простим will." },
+    { "t": "ex", "items": [
+      ["We**'ll have finished** by Friday.", "Ми закінчимо до п'ятниці (не пізніше)."],
+      ["We**'ll be working** here until Friday.", "Ми працюватимемо тут аж до п'ятниці."]
+    ] },
+    { "t": "tip", "text": "Після **by the time** і **until** — теперішній час, а не will: by the time you **get** here, until the boss **arrives**. Це правило з теми «When, as soon as, until + теперішній час»." },
+    { "t": "h", "text": "Три форми поруч" },
+    { "t": "table", "head": ["Форма", "Що означає", "Приклад"], "rows": [
+      ["will + дієслово", "дія відбудеться тоді", "I'll call you at six."],
+      ["will be + -ing", "о шостій дія ще триває", "I'll be driving home at six."],
+      ["will have + V3", "до шостої вже зроблено", "I'll have left by six."]
+    ] },
+    { "t": "ex", "items": [
+      ["I**'ll call** you at six.", "Я подзвоню тобі о шостій."],
+      ["I**'ll be driving** home at six.", "О шостій я якраз їхатиму додому."],
+      ["I**'ll have left** the site by six.", "До шостої я вже поїду з об'єкта."]
+    ] },
+    { "t": "tip", "text": "Дієслова стану — **know, like, want, need, understand, believe** — зазвичай не мають форми з -ing. Тому й will be + -ing з ними зазвичай не вживають: **I'll know** tomorrow (не I'll be knowing)." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "We'll have finished the ceiling until Friday.", "right": "We'll have finished the ceiling by Friday.", "why": "«До» в значенні «не пізніше ніж» — by. Until означає, що дія триває весь час аж до цього моменту." },
+    { "t": "mistake", "wrong": "By the time you get here, I'll finish.", "right": "By the time you get here, I'll have finished.", "why": "Хочеш сказати, що на момент твого приїзду все вже буде зроблено, — will have + V3. I'll finish звучить так, ніби тільки тоді почнеш закінчувати." },
+    { "t": "mistake", "wrong": "I'll have finish it by six.", "right": "I'll have finished it by six.", "why": "Після have — третя форма (V3): finished, done, gone." },
+    { "t": "mistake", "wrong": "I'll be knowing the results tomorrow.", "right": "I'll know the results tomorrow.", "why": "Know — дієслово стану, форми з -ing у нього зазвичай немає." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "At eight tomorrow ___ to work.", "uk": "Завтра о восьмій я якраз їхатиму на роботу.", "opts": ["I'll be driving", "I'll driving", "I'll be drive"], "a": 0, "why": "Дія буде в процесі в певний момент майбутнього — will be + форма з -ing: I'll be driving. Без be або без -ing так не можна." },
+    { "type": "choice", "q": "By six o'clock ___ home.", "uk": "До шостої вона вже піде додому.", "opts": ["she'll have gone", "she'll have went", "she has gone"], "a": 0, "why": "Дія завершиться до певного моменту — will have + V3. V3 від go — gone (went — це V2). She has gone — теперішній час, а тут майбутнє." },
+    { "type": "choice", "q": "I'll have saved enough money ___ the summer.", "uk": "До літа я вже накопичу достатньо грошей.", "opts": ["by", "until", "since"], "a": 0, "why": "«До» в значенні «не пізніше ніж» — by. З will have done майже завжди by, а until — коли дія триває весь час аж до моменту." },
+    { "type": "choice", "q": "___ the drill this afternoon? I need it for an hour.", "uk": "Ти сьогодні після обіду користуватимешся дрилем? Мені він потрібен на годину.", "opts": ["Will you be using", "Will you using", "Are you be using"], "a": 0, "why": "Ввічливе питання про чиїсь плани — Will you be + форма з -ing? Без be або з are замість will так не можна." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Завтра я знатиму результати.", "opts": ["I'll know the results tomorrow.", "I'll be knowing the results tomorrow.", "I'll have knowing the results tomorrow."], "a": 0, "why": "Know — дієслово стану, у формі з -ing його зазвичай не вживають. Тому просто will know." },
+    { "type": "choice", "q": "Don't come at seven — ___ dinner then.", "uk": "Не приходь о сьомій — ми якраз вечерятимемо.", "opts": ["we'll be having", "we'll have had", "we'll having"], "a": 0, "why": "О сьомій вечеря ще триватиме — will be + -ing. We'll have had означало б, що ми вже повечеряємо, і тоді якраз можна приходити." },
+    { "type": "input", "q": "This time tomorrow I'll ___ (work) in Dublin.", "uk": "Завтра в цей час я якраз працюватиму в Дубліні.", "a": ["be working"], "why": "Завтра в цей час дія буде в процесі, тому will be + форма з -ing: I'll be working." },
+    { "type": "input", "q": "By the time you arrive, I ___ (finish).", "uk": "Коли ти приїдеш, я вже закінчу.", "a": ["will have finished", "'ll have finished", "will have already finished", "'ll have already finished", "will already have finished", "'ll already have finished", "will be finished", "'ll be finished"], "why": "Дія закінчиться до моменту твого приїзду — will have + V3. Після by the time — теперішній час (arrive), а will — у другій частині." },
+    { "type": "input", "q": "By the time we get there, Tom will have ___ (go) home.", "uk": "Коли ми доберемося, Том уже піде додому.", "a": ["gone"], "why": "Після will have — V3. Від go це gone, а went — друга форма (V2), її тут не вживають." },
+    { "type": "input", "q": "We'll be working here ___ Christmas.", "uk": "Ми працюватимемо тут аж до Різдва.", "a": ["until", "till", "up until", "up till"], "why": "Дія триває весь час аж до моменту — until (till). By означало б «не пізніше ніж» і пасує до завершених дій." },
+    { "type": "order", "uk": "Ти працюватимеш у суботу?", "words": ["you", "be", "will", "on", "working", "Saturday"], "a": ["Will you be working on Saturday?"], "why": "Питання: Will + підмет (хто діє) + be + форма з -ing. Так ввічливо питають про чиїсь плани." },
+    { "type": "order", "uk": "До п'ятниці ми не встигнемо закінчити.", "words": ["won't", "we", "finished", "have", "Friday", "by"], "a": ["We won't have finished by Friday.", "By Friday we won't have finished."], "why": "Заперечення: won't have + V3 (finished). By Friday може стояти в кінці або на початку речення." }
+  ]
+}

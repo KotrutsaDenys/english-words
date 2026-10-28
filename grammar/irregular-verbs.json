@@ -1,0 +1,161 @@
+{
+  "id": "irregular-verbs",
+  "level": "A2",
+  "title": "Irregular verbs",
+  "uk": "Неправильні дієслова",
+  "summary": "go – went – gone: понад 60 найчастіших дієслів групами",
+  "minutes": 10,
+  "blocks": [
+    { "t": "p", "text": "Більшість англійських дієслів **правильні**: минула форма з -ed (work → worked). Але найчастіші дієслова — go, have, make, take — **неправильні**: у них свої форми, які треба запам'ятати. Їх не так багато, і понад 60 дієслів з цієї теми покривають більшість щоденних розмов на роботі й удома." },
+    { "t": "h", "text": "Три форми: V1, V2, V3" },
+    { "t": "p", "text": "Кожне неправильне дієслово має три форми. **V1** — початкова форма, як у словнику: go. **V2** — друга форма, минулий час: went. **V3** — третя форма: gone. У правильних дієслів V2 і V3 однакові й закінчуються на -ed (worked – worked), тому з ними проблем немає." },
+    { "t": "table", "head": ["Форма", "Де вживаємо", "Приклад"], "rows": [
+      ["V1: go", "теперішній; після did, will, can", "Did you **go**?"],
+      ["V2: went", "Past Simple (минулий час)", "I **went** home."],
+      ["V3: gone", "після have / has / had", "She **has gone** home."],
+      ["V3: made", "пасив: be + V3", "It **was made** in Italy."]
+    ] },
+    { "t": "p", "text": "Простими словами: **V2** — коли розповідаєш, що сталося (вчора, минулого тижня). **V3** сама як минулий час не вживається: перед нею потрібне **have / has / had** (часи Present Perfect і Past Perfect, це окремі теми) або **be** (пасив: «щось зроблено»). Українською V3 часто схожа на слова на -но, -то: done — «зроблено», broken — «зламано», built — «збудовано»." },
+    { "t": "ex", "items": [
+      ["I **took** the van this morning.", "Я взяв фургон сьогодні вранці."],
+      ["Have you ever **taken** the ferry to Wales?", "Ти колись плавав поромом до Уельсу?"],
+      ["The house **was built** in 1990.", "Будинок збудували в 1990 році."],
+      ["When we arrived, the boss **had** already **left**.", "Коли ми приїхали, бос уже поїхав."]
+    ] },
+    { "t": "tip", "text": "Не вчи список за алфавітом. Вчи **групами**, де форми змінюються однаково: sleep – slept, keep – kept, feel – felt. Шаблон запам'ятати легше, ніж кожне слово окремо. Кажи всі три форми вголос, як скоромовку: **buy – bought – bought**." },
+    { "t": "h", "text": "Група 1: усі три форми однакові" },
+    { "t": "p", "text": "Найлегша група: V1, V2 і V3 пишуться однаково, а час видно з речення. Підказка: у теперішньому часі з he, she, it є -s (he **cuts**), а в минулому його немає (he **cut**)." },
+    { "t": "table", "head": ["V1", "V2", "V3"], "rows": [
+      ["cut (різати)", "cut", "cut"],
+      ["put (класти, ставити)", "put", "put"],
+      ["let (дозволяти)", "let", "let"],
+      ["hit (вдаряти)", "hit", "hit"],
+      ["cost (коштувати)", "cost", "cost"],
+      ["set (ставити, налаштовувати)", "set", "set"],
+      ["shut (зачиняти)", "shut", "shut"],
+      ["hurt (боліти, травмувати)", "hurt", "hurt"],
+      ["read «рід» (читати)", "read «ред»", "read «ред»"]
+    ] },
+    { "t": "tip", "text": "**Read** пишеться однаково, але V2 і V3 звучать «ред», як колір red. I **read** («рід») the news every day. I **read** («ред») it yesterday." },
+    { "t": "ex", "items": [
+      ["I **cut** my finger yesterday.", "Я вчора порізав палець."],
+      ["Mick **put** the tools in the van.", "Мік поклав інструменти у фургон."],
+      ["How much **did** the drill **cost**?", "Скільки коштував дриль?"],
+      ["I **read** the instructions last night.", "Я прочитав інструкцію вчора ввечері."]
+    ] },
+    { "t": "h", "text": "Група 2: V2 і V3 однакові" },
+    { "t": "p", "text": "Найбільша група: друга й третя форми однакові, тож вивчив одну — знаєш обидві. Усередині є «сімейки» зі схожими закінченнями: **-ought / -aught** (bought, taught), на **-t** (sent, kept, felt), **-aid** (paid, said), **-old** (sold, told), **-ood** (stood, understood)." },
+    { "t": "table", "head": ["V1", "V2", "V3"], "rows": [
+      ["buy (купувати)", "bought", "bought"],
+      ["bring (приносити)", "brought", "brought"],
+      ["think (думати)", "thought", "thought"],
+      ["teach (навчати)", "taught", "taught"],
+      ["catch (ловити; встигати на)", "caught", "caught"],
+      ["send (надсилати)", "sent", "sent"],
+      ["spend (витрачати)", "spent", "spent"],
+      ["build (будувати)", "built", "built"],
+      ["lend (позичати комусь)", "lent", "lent"],
+      ["keep (тримати, зберігати)", "kept", "kept"],
+      ["sleep (спати)", "slept", "slept"],
+      ["feel (відчувати)", "felt", "felt"],
+      ["leave (іти, їхати; залишати)", "left", "left"],
+      ["meet (зустрічати)", "met", "met"]
+    ] },
+    { "t": "table", "head": ["V1", "V2", "V3"], "rows": [
+      ["pay (платити)", "paid", "paid"],
+      ["say (казати)", "said", "said"],
+      ["sell (продавати)", "sold", "sold"],
+      ["tell (розповідати, казати)", "told", "told"],
+      ["find (знаходити)", "found", "found"],
+      ["have (мати)", "had", "had"],
+      ["make (робити, виготовляти)", "made", "made"],
+      ["hear (чути)", "heard", "heard"],
+      ["lose (губити, програвати)", "lost", "lost"],
+      ["stand (стояти)", "stood", "stood"],
+      ["understand (розуміти)", "understood", "understood"],
+      ["sit (сидіти)", "sat", "sat"],
+      ["get (отримувати, ставати)", "got", "got"]
+    ] },
+    { "t": "tip", "text": "Вимова: **said** — «сед» (не «сейд»), **heard** — «хьорд». У bought, brought, thought, caught, taught звучить довге «о»: «боот», «коот». **Get – got – got**: у британській англійській V3 — got: The weather **has got** worse (погода погіршилася). Gotten — американський варіант, хоча в Ірландії його теж почуєш." },
+    { "t": "tip", "text": "Кілька дієслів мають дві правильні V2 і V3: **learn – learnt / learned**, **burn – burnt / burned**, **dream – dreamt / dreamed**, **spell – spelt / spelled**, **smell – smelt / smelled**. В Америці зазвичай кажуть з -ed, а в Британії та Ірландії вживають обидві. Обидва варіанти правильні." },
+    { "t": "ex", "items": [
+      ["We **built** the extension in two weeks.", "Ми збудували прибудову за два тижні."],
+      ["I've **lost** my keys again.", "Я знову загубив ключі."],
+      ["Sarah **told** me about the new job.", "Сара розповіла мені про нову роботу."],
+      ["Tom **paid** for the coffee.", "Том заплатив за каву."],
+      ["Have you **heard** the news?", "Ти чув новину?"]
+    ] },
+    { "t": "h", "text": "Група 3: усі три форми різні" },
+    { "t": "p", "text": "Тут треба вчити всі три форми. Допомагає те, що в багатьох дієслів V3 закінчується на **-n / -en**: gone, seen, taken, written, done." },
+    { "t": "table", "head": ["V1", "V2", "V3"], "rows": [
+      ["go (іти, їхати)", "went", "gone"],
+      ["see (бачити)", "saw", "seen"],
+      ["take (брати)", "took", "taken"],
+      ["give (давати)", "gave", "given"],
+      ["write (писати)", "wrote", "written"],
+      ["drive (кермувати)", "drove", "driven"],
+      ["ride (їздити на велосипеді)", "rode", "ridden"],
+      ["eat (їсти)", "ate", "eaten"],
+      ["do (робити)", "did", "done"],
+      ["break (ламати)", "broke", "broken"],
+      ["speak (розмовляти)", "spoke", "spoken"],
+      ["choose (вибирати)", "chose", "chosen"],
+      ["fall (падати)", "fell", "fallen"],
+      ["forget (забувати)", "forgot", "forgotten"],
+      ["wear (носити одяг)", "wore", "worn"]
+    ] },
+    { "t": "p", "text": "Ще дві сімейки: **-ew / -own** (know – knew – known) і **i – a – u**, де змінюється лише голосна (begin – began – begun)." },
+    { "t": "table", "head": ["V1", "V2", "V3"], "rows": [
+      ["know (знати)", "knew", "known"],
+      ["grow (рости, вирощувати)", "grew", "grown"],
+      ["throw (кидати)", "threw", "thrown"],
+      ["fly (літати)", "flew", "flown"],
+      ["begin (починати)", "began", "begun"],
+      ["drink (пити)", "drank", "drunk"],
+      ["swim (плавати)", "swam", "swum"],
+      ["ring (дзвонити)", "rang", "rung"],
+      ["sing (співати)", "sang", "sung"]
+    ] },
+    { "t": "p", "text": "І кілька особливих: у **come**, **become** і **run** V3 збігається з V1, а **be** має дві V2: **was** (I, he, she, it) і **were** (you, we, they)." },
+    { "t": "table", "head": ["V1", "V2", "V3"], "rows": [
+      ["come (приходити)", "came", "come"],
+      ["become (ставати)", "became", "become"],
+      ["run (бігати)", "ran", "run"],
+      ["be (бути)", "was / were", "been"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **forgot** my lunch today.", "Я сьогодні забув обід."],
+      ["Someone **has broken** the window.", "Хтось розбив вікно."],
+      ["The meeting **began** at nine.", "Нарада почалася о дев'ятій."],
+      ["Olena **has** never **flown** before.", "Олена ще ніколи не літала літаком."],
+      ["Have you ever **driven** on the left?", "Тобі доводилося їздити з лівостороннім рухом?"]
+    ] },
+    { "t": "h", "text": "V1, V2 чи V3: як вибрати" },
+    { "t": "table", "head": ["Що в реченні", "Форма", "Приклад"], "rows": [
+      ["ствердження в минулому", "V2", "I **saw** him."],
+      ["did / didn't", "V1", "I didn't **see** him."],
+      ["have / has / had", "V3", "I've **seen** him."],
+      ["be (пасив)", "V3", "It was **made** here."]
+    ] },
+    { "t": "tip", "text": "Найважливіше: **V2 ніколи не стоїть після did і have**. Після did — завжди V1, після have / has / had — завжди V3." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "They have went home.", "right": "They have gone home.", "why": "Після have / has — V3: go – went – gone. Went — це V2, вона буває лише без have." },
+    { "t": "mistake", "wrong": "I buyed a new phone.", "right": "I bought a new phone.", "why": "Buy — неправильне дієслово, -ed до нього не додаємо: buy – bought – bought." },
+    { "t": "mistake", "wrong": "I have saw this film.", "right": "I have seen this film.", "why": "Після have — V3 (seen). Saw — V2, вона для Past Simple без have: I saw it yesterday." },
+    { "t": "mistake", "wrong": "Did you went to the gym?", "right": "Did you go to the gym?", "why": "Після did — завжди V1. Минулий час уже показує did." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I ___ a new drill last week.", "uk": "Я купив новий дриль минулого тижня.", "opts": ["buyed", "bought", "buy"], "a": 1, "why": "Buy — неправильне дієслово: buy – bought – bought. Last week — минуле, тому V2: bought." },
+    { "type": "input", "q": "We ___ (meet) Sarah at the bus stop yesterday.", "uk": "Ми вчора зустріли Сару на зупинці.", "a": ["met"], "why": "Meet – met – met. Yesterday — це Past Simple, тому V2: met." },
+    { "type": "input", "q": "Mick ___ (put) the ladder in the van an hour ago.", "uk": "Мік поклав драбину у фургон годину тому.", "a": ["put"], "why": "Put однакове у всіх трьох формах: put – put – put. Ago показує минуле, тому без -s." },
+    { "type": "choice", "q": "Did you ___ my message?", "uk": "Ти отримав моє повідомлення?", "opts": ["got", "get", "gotten"], "a": 1, "why": "Після did — завжди V1 (get). Минулий час уже показує did." },
+    { "type": "choice", "q": "Sarah has ___ home.", "uk": "Сари вже немає, вона пішла додому.", "opts": ["went", "gone", "go"], "a": 1, "why": "Після has — V3: go – went – gone. Went — це V2, після have / has вона не стоїть." },
+    { "type": "input", "q": "Oh no, I've ___ (lose) my phone!", "uk": "Ой, я загубив телефон!", "a": ["lost"], "why": "Після have ('ve) — V3: lose – lost – lost." },
+    { "type": "choice", "q": "Have you ever ___ a van in Dublin?", "uk": "Ти колись водив фургон у Дубліні?", "opts": ["drove", "driven", "drive"], "a": 1, "why": "Have + V3: drive – drove – driven. Drove — це V2, вона лише для Past Simple без have." },
+    { "type": "input", "q": "This house was ___ (build) in 1975.", "uk": "Цей будинок збудували в 1975 році.", "a": ["built"], "why": "Пасив («був збудований»): was + V3. Build – built – built." },
+    { "type": "input", "q": "Tom ___ (break) his arm at work last year.", "uk": "Том зламав руку на роботі минулого року.", "a": ["broke"], "why": "Last year — Past Simple, тому V2: break – broke – broken. Broken — V3, їй потрібне have або be." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я бачив цей фільм двічі.", "opts": ["I've saw this film twice.", "I've seen this film twice.", "I seen this film twice."], "a": 1, "why": "Після have ('ve) — V3: see – saw – seen. Без have форма seen як минулий час не вживається." },
+    { "type": "order", "uk": "Де ти купив ці черевики?", "words": ["buy", "you", "these", "where", "did", "boots"], "a": ["Where did you buy these boots?"], "why": "Питання в Past Simple: Where + did + you + V1 (buy). Bought після did не ставимо." },
+    { "type": "order", "uk": "Ми ще не заплатили за матеріали.", "words": ["paid", "the", "we", "yet", "for", "haven't", "materials"], "a": ["We haven't paid for the materials yet.", "We haven't yet paid for the materials."], "why": "Після haven't — V3: pay – paid – paid. Yet («ще») зазвичай ставимо в кінці." }
+  ]
+}

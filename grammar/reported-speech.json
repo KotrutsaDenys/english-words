@@ -1,0 +1,101 @@
+{
+  "id": "reported-speech",
+  "level": "B1",
+  "title": "Reported speech",
+  "uk": "Непряма мова: he said that…",
+  "summary": "переказати чужі слова: he said he was tired",
+  "minutes": 9,
+  "blocks": [
+    { "t": "p", "text": "**Непряма мова** (reported speech) — це коли ти **переказуєш** чужі слова: «Бос сказав, що завтра роботи не буде». Українською ми просто міняємо займенники. Англійською ще й **час дієслова зазвичай зсувається на крок у минуле**, бо ти розповідаєш про те, що сказали раніше." },
+    { "t": "ex", "items": [
+      ["Tom: \"I **need** a day off.\"", "Том: «Мені потрібен вихідний»."],
+      ["Tom **said** he **needed** a day off.", "Том сказав, що йому потрібен вихідний."],
+      ["Sarah: \"I**'m** tired.\"", "Сара: «Я втомилася»."],
+      ["Sarah **said** she **was** tired.", "Сара сказала, що втомилася."]
+    ] },
+    { "t": "tip", "text": "Українською кажемо «Том сказав, що йому **потрібен** вихідний» — теперішній час. Англійською після **said** дієслово зазвичай іде в минуле: Tom said he **needed**… Це головне правило теми." },
+    { "t": "h", "text": "say чи tell" },
+    { "t": "rule", "title": "Хто кому сказав", "lines": ["**say** + що: He **said** (that) he was late.", "**tell** + кому + що: He **told me** (that) he was late."] },
+    { "t": "p", "text": "Після **tell** обов'язково кажемо, **кому**: told **me**, told **the boss**, told **us**. Після **say** «кому» не ставимо (якщо дуже треба, то через to: said **to me**, але простіше told me). Слово **that** («що») можна пропустити, у розмові його часто пропускають." },
+    { "t": "ex", "items": [
+      ["She **said** she was busy.", "Вона сказала, що зайнята."],
+      ["She **told me** she was busy.", "Вона сказала мені, що зайнята."],
+      ["What did the boss **say**?", "Що сказав бос?"],
+      ["Did you **tell** Mick about the meeting?", "Ти сказав Міку про зустріч?"]
+    ] },
+    { "t": "tip", "text": "Запам'ятай вирази: **tell** the truth (казати правду), **tell** a lie (брехати), **tell** a joke (розповісти жарт); **say** hello (привітатися), **say** sorry (перепросити), **say** goodbye (попрощатися)." },
+    { "t": "h", "text": "Зсув часів: крок у минуле" },
+    { "t": "table", "head": ["Він каже", "Ти переказуєш"], "rows": [
+      ["\"I **am** tired.\"", "He said he **was** tired."],
+      ["\"We **are** ready.\"", "They said they **were** ready."],
+      ["\"I **work** in Gorey.\"", "He said he **worked** in Gorey."],
+      ["\"I**'m working**.\"", "He said he **was working**."],
+      ["\"I **will** call you.\"", "He said he **would** call me."],
+      ["\"I **can** help.\"", "He said he **could** help."],
+      ["\"I **have finished**.\"", "He said he **had finished**."],
+      ["\"I **finished** it.\"", "He said he **had finished** it."]
+    ] },
+    { "t": "p", "text": "Could, would, should, might не змінюються: «I **could** help» → He said he **could** help. А Past Simple у розмові часто залишають як є, якщо й так зрозуміло, що було раніше: He said he **finished** at five — теж нормально." },
+    { "t": "ex", "items": [
+      ["The boss **said** the cement **would** arrive at ten.", "Бос сказав, що цемент привезуть о десятій."],
+      ["Andrii **told** me he **couldn't** come.", "Андрій сказав мені, що не зможе прийти."],
+      ["Kate **said** she **had lost** her keys.", "Кейт сказала, що загубила ключі."],
+      ["He **told** me he **was looking** for a job.", "Він сказав мені, що шукає роботу."]
+    ] },
+    { "t": "h", "text": "Коли час не зсуваємо" },
+    { "t": "p", "text": "Якщо сказане **досі правда**, час можна не зсувати: He said he **lives** in Gorey — він і зараз там живе (зсунути теж не помилка: lived). А після **says** (теперішній час: «каже») час не змінюється взагалі." },
+    { "t": "ex", "items": [
+      ["Tom **says** he **can't** come today.", "Том каже, що сьогодні не може прийти."],
+      ["The forecast **says** it**'ll** rain tomorrow.", "За прогнозом, завтра буде дощ."],
+      ["My boss always **says** safety **comes** first.", "Мій бос завжди каже, що безпека понад усе."]
+    ] },
+    { "t": "h", "text": "Займенники, час і місце" },
+    { "t": "p", "text": "Займенники міняються за змістом, як і в українській: «**I** will call **you**» → He said **he** would call **me**. Якщо переказуєш пізніше або в іншому місці, міняються й слова про час і місце:" },
+    { "t": "table", "head": ["Він каже", "Ти переказуєш пізніше"], "rows": [
+      ["today", "that day"],
+      ["tomorrow", "the next day"],
+      ["yesterday", "the day before"],
+      ["now", "then"],
+      ["here", "there"],
+      ["this", "that"]
+    ] },
+    { "t": "tip", "text": "Якщо переказуєш того самого дня, слова про час не міняй: Mick said he would come **tomorrow** — це «завтра» ще не настало. А через тиждень уже: Mick said he would come **the next day**." },
+    { "t": "h", "text": "Переказуємо питання" },
+    { "t": "p", "text": "Переказане питання — уже не питання, тому в ньому **звичайний порядок слів**: спершу **підмет** (хто або що виконує дію), потім дієслово. Do, does, did зникають, час, як завжди, зсувається, і знака питання в кінці немає. Якщо питального слова немає (відповідь «так» чи «ні»), додаємо **if** або **whether** — «чи»." },
+    { "t": "rule", "title": "Питання", "lines": ["asked + **where / what / when…** + підмет + дієслово", "asked + **if / whether** (чи) + підмет + дієслово"] },
+    { "t": "ex", "items": [
+      ["She asked where the office **was**.", "Вона спитала, де офіс."],
+      ["He asked me what time I **started**.", "Він спитав мене, о котрій я починаю."],
+      ["The boss asked **if** I **had** a car.", "Бос спитав, чи є в мене машина."],
+      ["Kate asked **whether** we **were** ready.", "Кейт спитала, чи ми готові."]
+    ] },
+    { "t": "h", "text": "Накази й прохання" },
+    { "t": "rule", "title": "Наказ, прохання, заборона", "lines": ["told + кого + **to** + дієслово (наказ)", "asked + кого + **to** + дієслово (прохання)", "told / asked + кого + **not to** + дієслово"] },
+    { "t": "p", "text": "Після to стоїть **початкова форма дієслова** — як у словнику: work, go, be. Заборону («не роби») переказуємо через **not to**." },
+    { "t": "ex", "items": [
+      ["The boss **told** us **to clean** the site.", "Бос сказав нам прибрати майданчик."],
+      ["Sarah **asked** me **to help** her.", "Сара попросила мене допомогти їй."],
+      ["The boss **told** us **not to park** there.", "Бос сказав нам не паркуватися там."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "He said me he was busy.", "right": "He told me he was busy.", "why": "Після say не ставимо одразу «кому». Хочеш сказати, кому, — told me." },
+    { "t": "mistake", "wrong": "She asked where was the office.", "right": "She asked where the office was.", "why": "У переказаному питанні звичайний порядок слів: спершу підмет (the office), потім дієслово (was)." },
+    { "t": "mistake", "wrong": "He told that he was tired.", "right": "He said that he was tired.", "why": "Після tell обов'язково «кому»: told me that… Якщо «кому» не кажемо — said." },
+    { "t": "mistake", "wrong": "He asked me do I want tea.", "right": "He asked me if I wanted tea.", "why": "Переказане питання — не питання: do зникає, з'являється if, а want зсувається в wanted. В Ірландії в розмові почуєш asked me did I want…, але стандартно — з if." },
+    { "t": "mistake", "wrong": "He told me don't be late.", "right": "He told me not to be late.", "why": "Наказ переказуємо через to + дієслово, а заборону — через not to." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "He ___ me he was tired.", "uk": "Він сказав мені, що втомився.", "opts": ["said", "told", "says"], "a": 1, "why": "Є «кому» (me) — потрібне tell: told me. Said me і says me — помилка." },
+    { "type": "choice", "q": "Kate ___ she would be late.", "uk": "Кейт сказала, що запізниться.", "opts": ["said", "told", "say"], "a": 0, "why": "«Кому» не названо — потрібне say: Kate said. Told без «кому» не кажуть, а Kate say — неправильна форма." },
+    { "type": "choice", "q": "Sarah says she ___ come to the party. She's just texted me.", "uk": "Сара каже, що не може прийти на вечірку. Вона щойно мені написала.", "opts": ["can't", "couldn't", "doesn't can"], "a": 0, "why": "Says — теперішній час («каже»), тому час не зсуваємо: can't. Doesn't can не буває: can не потребує do." },
+    { "type": "input", "q": "Mick said he ___ (be) at home, but I saw him in the pub.", "uk": "Мік сказав, що він удома, але я бачив його в пабі.", "a": ["was"], "why": "Після said час зсувається в минуле: am → was. До того ж Мік сказав неправду (я бачив його в пабі), тому is тут не підходить." },
+    { "type": "choice", "q": "Andrii said he ___ fix my car, but in the end he couldn't.", "uk": "Андрій сказав, що зможе полагодити мою машину, але врешті не зміг.", "opts": ["can", "could", "will can"], "a": 1, "why": "Після said can зсувається в could. Will can не буває: «буде могти» — will be able to." },
+    { "type": "input", "q": "Olena said she ___ (will) call me back, but she never did.", "uk": "Олена сказала, що передзвонить мені, але так і не передзвонила.", "a": ["would"], "why": "Після said will зсувається в would. Обіцянка вже в минулому (she never did), тому will тут не підходить." },
+    { "type": "choice", "q": "Tom said he ___ the job, but half of it wasn't done.", "uk": "Том сказав, що закінчив роботу, але половину не було зроблено.", "opts": ["has finished", "had finished", "have finished"], "a": 1, "why": "Після said Present Perfect (has finished) зсувається на крок у минуле: had finished. Залишити has finished не можна: сказане не було правдою." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "opts": ["She asked me how old was I.", "She asked me how old I was.", "She asked me how old am I."], "a": 1, "why": "Переказане питання має звичайний порядок слів: how old + підмет (I) + дієслово (was)." },
+    { "type": "input", "q": "My boss asked ___ I was free on Saturday.", "uk": "Мій бос спитав, чи я вільний у суботу.", "a": ["if", "whether", "me if", "me whether"], "why": "Питання «так/ні» переказуємо через if або whether — «чи»." },
+    { "type": "input", "q": "Kate asked me ___ (close) the window.", "uk": "Кейт попросила мене зачинити вікно.", "a": ["to close", "if I could close", "whether I could close", "if I would close", "whether I would close"], "why": "Прохання переказуємо так: asked + кого + to + дієслово. Можна й через питання: asked me if I could close." },
+    { "type": "order", "uk": "Вона спитала мене, де я живу.", "words": ["lived", "asked", "where", "she", "me", "I"], "a": ["She asked me where I lived."], "why": "Переказане питання: where + підмет (I) + дієслово, без do. Live після asked зсувається в lived." },
+    { "type": "order", "uk": "Мама сказала мені не хвилюватися.", "words": ["worry", "told", "to", "mum", "not", "me", "my"], "a": ["My mum told me not to worry."], "why": "Заборону переказуємо так: told + кого + not to + дієслово." }
+  ]
+}

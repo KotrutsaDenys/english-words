@@ -1,0 +1,85 @@
+{
+  "id": "conditionals-2",
+  "level": "B1",
+  "title": "Second conditional",
+  "uk": "Умовні речення: якби (зараз)",
+  "summary": "уявне й малоймовірне: If I had more money, I'd buy a house.",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Second conditional** (другий тип умовних речень) — для **уявних** ситуацій: того, чого **зараз немає**, або того, що **навряд чи станеться**. Українською це «**якби** …, то … **б**»." },
+    { "t": "ex", "items": [
+      ["If I **had** more money, I **would buy** a house.", "Якби в мене було більше грошей, я купив би будинок."],
+      ["If Tom **spoke** English, he**'d get** a better job.", "Якби Том розмовляв англійською, він отримав би кращу роботу."],
+      ["If I **lived** in Dublin, I**'d go** to work by tram.", "Якби я жив у Дубліні, я їздив би на роботу трамваєм."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Другий тип", "lines": ["If + **Past Simple**, **would** + дієслово", "If I **had** a car, I **would drive** to work."] },
+    { "t": "p", "text": "У частині з if — **Past Simple**: у правильних дієслів з -ed (lived, worked), у неправильних — **V2**, друга форма (had, knew, went). Але мова **не про минуле**, а про **зараз** або **майбутнє**: минула форма просто показує «це неправда, це уявне». У результаті — **would** + початкова форма дієслова (work, go — без to і без закінчень). Would однакове для всіх: I would, she would, they would." },
+    { "t": "tip", "text": "**Would** скорочують до **'d**: I'd, you'd, he'd, we'd. Заперечення — **wouldn't** (would not)." },
+    { "t": "h", "text": "Українське «б» і would" },
+    { "t": "p", "text": "Українською «б» стоїть в обох частинах: як**би** я мав… купив **би**. Англійською **would** — лише в частині з результатом. Після **if** would не ставимо: там Past Simple." },
+    { "t": "table", "head": ["Українською", "Англійською"], "rows": [
+      ["Якби я мав машину…", "If I **had** a car…"],
+      ["Якби він знав…", "If he **knew**…"],
+      ["…я б купив будинок.", "…I**'d buy** a house."],
+      ["…ми б не працювали.", "…we **wouldn't work**."]
+    ] },
+    { "t": "h", "text": "Заперечення і питання" },
+    { "t": "rule", "title": "Заперечення", "lines": ["If + **didn't** + дієслово, …", "…, **wouldn't** + дієслово"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Would** + you / he / they + дієслово … if …?", "What **would** you **do** if …?"] },
+    { "t": "ex", "items": [
+      ["If Sarah **didn't have** kids, she **would travel** more.", "Якби в Сари не було дітей, вона більше подорожувала б."],
+      ["I **wouldn't work** here if they **didn't pay** well.", "Я б тут не працював, якби тут погано платили."],
+      ["What **would** you **do** if you **won** the lottery?", "Що б ти зробив, якби виграв у лотерею?"],
+      ["**Would** you **move** to Canada if you **got** a job there?", "Ти переїхав би в Канаду, якби отримав там роботу?"]
+    ] },
+    { "t": "h", "text": "Were замість was" },
+    { "t": "p", "text": "З дієсловом **be** після if часто кажуть **were** для всіх осіб: if I **were**, if it **were**. У розмові вживають і **was** (if I was, if it was) — це теж нормально." },
+    { "t": "ex", "items": [
+      ["If Tom **were** here, he**'d know** what to do.", "Якби Том був тут, він знав би, що робити."],
+      ["If it **was** warmer, we**'d work** outside.", "Якби було тепліше, ми працювали б надворі."]
+    ] },
+    { "t": "h", "text": "If I were you — порада" },
+    { "t": "p", "text": "**If I were you, I'd…** — «на твоєму місці я б…». Дуже частий і ввічливий спосіб порадити. У цьому сталому виразі кажи **were**. Його можна ставити і на початок, і в кінець речення." },
+    { "t": "ex", "items": [
+      ["**If I were you**, I**'d ask** for more money.", "На твоєму місці я попросив би більше грошей."],
+      ["**If I were you**, I **wouldn't sign** that contract.", "На твоєму місці я б не підписував цей контракт."],
+      ["I**'d wear** gloves **if I were you**.", "На твоєму місці я вдягнув би рукавиці."]
+    ] },
+    { "t": "h", "text": "Could і might замість would" },
+    { "t": "p", "text": "**Could** — «міг би, зміг би», **might** — «можливо, …б». А в частині з if **could** означає «якби міг, якби вмів»." },
+    { "t": "ex", "items": [
+      ["If I **had** a van, I **could start** my own business.", "Якби в мене був фургон, я міг би відкрити власну справу."],
+      ["If you **asked** him nicely, he **might help** you.", "Якби ти ввічливо його попросив, він, може, і допоміг би."],
+      ["If Olena **could drive**, she**'d buy** a car.", "Якби Олена вміла водити, вона купила б машину."]
+    ] },
+    { "t": "h", "text": "Перший чи другий тип?" },
+    { "t": "p", "text": "Обидва бувають про майбутнє. Різниця в тому, як ти оцінюєш шанси. **Реально**, цілком може статися → перший тип: if + Present Simple, will. **Малоймовірно**, мрія або неправда зараз → другий: if + Past Simple, would." },
+    { "t": "ex", "items": [
+      ["If I **get** the job, I**'ll move** to Dublin.", "Якщо я отримаю цю роботу, то переїду в Дублін. (співбесіда пройшла добре)"],
+      ["If I **got** a job in Canada, I**'d move** there.", "Якби я отримав роботу в Канаді, я б туди переїхав. (поки що мрія)"],
+      ["If it **rains** tomorrow, we**'ll stay** at home.", "Якщо завтра буде дощ, ми залишимося вдома."],
+      ["If I **won** the lottery, I**'d stop** working.", "Якби я виграв у лотерею, я б кинув роботу."]
+    ] },
+    { "t": "tip", "text": "Простий тест: якщо українською природно сказати «**якби**» про зараз чи майбутнє, потрібен другий тип. Якщо «**якщо**» — перший. А «якби тоді…» про минуле — це третій тип (наступна тема)." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "If I would have money, I would buy a car.", "right": "If I had money, I would buy a car.", "why": "Would не ставимо в частину з if, там Past Simple: had. Українське «б» — в обох частинах, а would — лише в одній." },
+    { "t": "mistake", "wrong": "If I had more time, I will learn Spanish.", "right": "If I had more time, I would learn Spanish.", "why": "Уявна умова (had) — уявний результат: would, а не will." },
+    { "t": "mistake", "wrong": "If I am you, I would call him.", "right": "If I were you, I would call him.", "why": "Порада — сталий вираз If I were you: минула форма were, хоч ідеться про зараз." },
+    { "t": "mistake", "wrong": "If I had a car, I would to drive to work.", "right": "If I had a car, I would drive to work.", "why": "Після would — початкова форма дієслова без to: would drive." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "If I ___ more money, I would buy a house.", "uk": "Якби в мене було більше грошей, я купив би будинок.", "opts": ["had", "have", "would have"], "a": 0, "why": "Другий тип: після if — Past Simple (had), хоч ідеться про зараз. Would після if не ставимо." },
+    { "type": "choice", "q": "If Tom spoke English, he ___ a better job.", "uk": "Якби Том розмовляв англійською, він отримав би кращу роботу.", "opts": ["would get", "will get", "gets"], "a": 0, "why": "Умова уявна (spoke — Past Simple), тому в результаті would + дієслово. Will — для реальних умов." },
+    { "type": "choice", "q": "___, I'd ask for more money.", "uk": "На твоєму місці я попросив би більше грошей.", "opts": ["If I were you", "If I am you", "If I will be you"], "a": 0, "why": "«На твоєму місці» — сталий вираз If I were you: після if минула форма were." },
+    { "type": "choice", "q": "If I had a van, I ___ start my own business.", "uk": "Якби в мене був фургон, я міг би відкрити власну справу.", "opts": ["could", "can", "will"], "a": 0, "why": "«Міг би» — could. Can і will — для реальних ситуацій, а тут умова уявна (had)." },
+    { "type": "choice", "q": "I've got an interview tomorrow. If I ___ the job, I'll move to Dublin.", "uk": "Завтра в мене співбесіда. Якщо я отримаю цю роботу, то переїду в Дублін.", "opts": ["get", "got", "would get"], "a": 0, "why": "Шанс реальний, і в другій частині will, тому це перший тип: if + Present Simple (get)." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Якби я жив ближче, я ходив би на роботу пішки.", "opts": ["If I lived closer, I would walk to work.", "If I would live closer, I would walk to work.", "If I lived closer, I will walk to work."], "a": 0, "why": "Після if — Past Simple (lived), у результаті — would + дієслово (would walk)." },
+    { "type": "input", "q": "If I ___ (know) his number, I'd call him.", "uk": "Якби я знав його номер, я б йому подзвонив.", "a": ["knew"], "why": "Після if — Past Simple. Know — неправильне дієслово, його V2 — knew." },
+    { "type": "input", "q": "If we had more people, we ___ (finish) the job faster.", "uk": "Якби в нас було більше людей, ми закінчили б роботу швидше.", "a": ["would finish"], "why": "Результат уявної умови: would + початкова форма дієслова — would finish." },
+    { "type": "input", "q": "I ___ (not / work) here if they didn't pay well.", "uk": "Я б тут не працював, якби тут погано платили.", "a": ["wouldn't work", "would not work"], "why": "Заперечення в результаті — wouldn't + дієслово. Частина з if — у Past Simple: didn't pay." },
+    { "type": "input", "q": "If Sarah ___ (not / have) kids, she would travel more.", "uk": "Якби в Сари не було дітей, вона більше подорожувала б.", "a": ["didn't have", "did not have", "had no", "hadn't got", "had not got"], "why": "Після if — Past Simple: заперечення didn't + початкова форма (have, а не had)." },
+    { "type": "order", "uk": "Ти працював би по неділях, якби більше платили?", "words": ["would", "you", "work", "on", "Sundays", "if", "they", "paid", "more"], "a": ["Would you work on Sundays if they paid more?", "If they paid more, would you work on Sundays?"], "why": "Питання: would + you + дієслово. Уявна умова — Past Simple: they paid." },
+    { "type": "order", "uk": "Якби я вмів водити, я купив би машину.", "words": ["if", "I", "could", "drive", "I", "would", "buy", "a", "car"], "a": ["If I could drive, I would buy a car.", "I would buy a car if I could drive."], "why": "«Якби вмів» — if I could. Результат — would + дієслово. Коли речення починається з if, після умови ставимо кому." }
+  ]
+}

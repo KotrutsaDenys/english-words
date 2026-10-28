@@ -1,0 +1,95 @@
+{
+  "id": "will",
+  "level": "A2",
+  "title": "Will",
+  "uk": "Will: майбутнє й рішення",
+  "summary": "рішення зараз, прогнози, обіцянки: I'll help, it will rain",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Will** — найпростіший спосіб сказати про майбутнє. Це **допоміжне дієслово**: службове слово, яке саме не перекладається, а будує час (як do чи does). Після will завжди йде **початкова форма дієслова** — та, що в словнику: work, go, be. Без to, без -s, без -ing. Will вживаємо насамперед для чотирьох речей: **рішення просто зараз**, **прогноз-думка**, **обіцянка**, **пропозиція чи прохання**. Для планів, вирішених заздалегідь, є going to (наступна тема)." },
+    { "t": "ex", "items": [
+      ["I**'ll help** you with that.", "Я допоможу тобі з цим."],
+      ["I think it**'ll rain** tomorrow.", "Думаю, завтра буде дощ."],
+      ["I**'ll call** you tonight, I promise.", "Я подзвоню тобі ввечері, обіцяю."],
+      ["**Will** you **give** me a hand?", "Допоможеш мені?"]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Ствердження", "lines": ["I / you / he / she / we / they + **will** + work", "I will = I**'ll**, she will = she**'ll**, it will = it**'ll**"] },
+    { "t": "rule", "title": "Заперечення і питання", "lines": ["I / he / they… + **won't** + work (won't = will not)", "**Will** + you / he / they… + work?", "Yes, I **will**. / No, I **won't**."] },
+    { "t": "p", "text": "Will однаковий для всіх: I will, she will, they will — жодного -s. У розмові майже завжди скорочуємо: **I'll**, **you'll**, **he'll**, **we'll**, **they'll**. А will not скорочується до **won't**." },
+    { "t": "tip", "text": "**Won't** [воунт] легко сплутати з **want** [вонт] — «хочу». I **won't** go — я не піду. I **want** to go — я хочу піти. Слухай голосну: у won't вона протяжна, як «оу»." },
+    { "t": "ex", "items": [
+      ["I**'ll be** back in ten minutes.", "Я повернуся за десять хвилин."],
+      ["She **won't be** happy about this.", "Вона цьому не зрадіє."],
+      ["**Will** you **be** at work tomorrow? — Yes, I **will**.", "Ти завтра будеш на роботі? — Так."],
+      ["When **will** the boards **arrive**?", "Коли привезуть плити?"],
+      ["It **won't take** long.", "Це ненадовго."]
+    ] },
+    { "t": "tip", "text": "«Через» про майбутнє — це **in**: I'll be back **in** ten minutes (через десять хвилин), we'll finish **in** two weeks. After ten minutes кажуть здебільшого в розповіді про минуле: After ten minutes, he left (Через десять хвилин він пішов)." },
+    { "t": "h", "text": "1. Рішення просто зараз" },
+    { "t": "p", "text": "Вирішив щось **у момент розмови** — щойно почув новину чи прохання — кажи **I'll**. Українською тут часто додаємо «зараз» або навіть кажемо теперішнім часом: «Зараз візьму», «Зараз зачиняю». Англійською теперішній час тут не підходить, лише I'll." },
+    { "t": "ex", "items": [
+      ["The phone's ringing. — I**'ll get** it.", "Дзвонить телефон. — Я візьму."],
+      ["It's cold in here. — I**'ll close** the window.", "Тут холодно. — Я зачиню вікно."],
+      ["I'm hungry. — I**'ll make** you a sandwich.", "Я голодний. — Я зроблю тобі бутерброд."],
+      ["Tea or coffee? — I**'ll have** tea, please.", "Чай чи кава? — Мені чай, будь ласка."]
+    ] },
+    { "t": "h", "text": "2. Прогноз і факти про майбутнє" },
+    { "t": "p", "text": "Will — коли ти **думаєш, віриш чи припускаєш**, що щось станеться. Поруч часто стоять **I think** (думаю), **I'm sure** (я впевнений), **probably** (мабуть), **I hope** (сподіваюся). Так само will — про звичайні факти в майбутньому: Tom will be thirty in May." },
+    { "t": "ex", "items": [
+      ["You**'ll like** Wexford — it's a lovely town.", "Тобі сподобається Вексфорд — гарне містечко."],
+      ["I'm sure you**'ll pass** the test.", "Я впевнений, що ти складеш іспит."],
+      ["The boss **will** probably **call** later.", "Бос, мабуть, подзвонить пізніше."],
+      ["I hope it **won't be** too cold tomorrow.", "Сподіваюся, завтра не буде надто холодно."],
+      ["Tom **will be** thirty in May.", "У травні Томові буде тридцять."]
+    ] },
+    { "t": "tip", "text": "**Probably** ставимо **після** will, але **перед** won't: He**'ll probably** be late. He **probably won't** come." },
+    { "t": "p", "text": "Коли думаєш, що чогось **не** буде, англійці зазвичай кажуть **I don't think** + will: не «думаю, що не», а «не думаю, що». I think he won't come граматично можливо, але звучить різкіше й рідше." },
+    { "t": "ex", "items": [
+      ["**I don't think** the boss **will like** it.", "Думаю, босові це не сподобається."],
+      ["**I don't think** we**'ll finish** today.", "Думаю, сьогодні ми не закінчимо."]
+    ] },
+    { "t": "h", "text": "3. Обіцянки, пропозиції, прохання" },
+    { "t": "p", "text": "Will — для **обіцянок** (I'll call you), коли **пропонуєш допомогу** (I'll carry it) і коли **просиш** когось (Will you…?). Між колегами Will you…? звучить нормально, а ввічливіше — Could you…?" },
+    { "t": "ex", "items": [
+      ["I **won't forget**, I promise.", "Я не забуду, обіцяю."],
+      ["That box looks heavy. I**'ll carry** it for you.", "Ця коробка, здається, важка. Я понесу."],
+      ["I**'ll give** you a lift to Gorey.", "Я підвезу тебе до Горі."],
+      ["**Will** you **hold** this board for a second?", "Потримаєш цю плиту секунду?"]
+    ] },
+    { "t": "tip", "text": "**Won't** ще означає «ніяк не хоче, не піддається» — і про людей, і про речі: The van **won't** start (фургон не заводиться). This screw **won't** go in (цей шуруп ніяк не закручується). He **won't** listen (він не хоче слухати)." },
+    { "t": "h", "text": "Пропозиції: Shall I…? Shall we…?" },
+    { "t": "p", "text": "Коли **пропонуєш** щось зробити або **радишся**, з I і we кажуть **Shall** — лише в питаннях. Українською це «Мені…?», «Може, …?», «Давай…?»." },
+    { "t": "ex", "items": [
+      ["**Shall I** open the window?", "Відчинити вікно?"],
+      ["**Shall we** start? Everyone's here.", "Починаємо? Усі вже тут."],
+      ["What time **shall we** meet?", "О котрій зустрінемося?"]
+    ] },
+    { "t": "tip", "text": "В Ірландії часто почуєш **Will I…?** у тому самому значенні: Will I put the kettle on? — Поставити чайник? Це місцевий варіант, а Shall I…? зрозуміють скрізь." },
+    { "t": "tip", "text": "**Will can** не буває: два такі службові слова поспіль не ставлять. «Зможу» в майбутньому — **will be able to**: I'll be able to finish it tomorrow. Про домовленість на завтра часто кажуть і просто can: I can come tomorrow." },
+    { "t": "ex", "items": [
+      ["I**'ll be able to** finish the ceiling tomorrow.", "Я зможу закінчити стелю завтра."],
+      ["**Will** you **be able to** help me on Monday?", "Зможеш допомогти мені в понеділок?"]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I will to go there tomorrow.", "right": "I will go there tomorrow.", "why": "Після will дієслово без to: will go." },
+    { "t": "mistake", "wrong": "I'll going to the shop.", "right": "I'll go to the shop.", "why": "Після will — початкова форма, без -ing. I'll going — це суміш will і I'm going." },
+    { "t": "mistake", "wrong": "He wills help us.", "right": "He will help us.", "why": "Will не змінюється: без -s і для he, she, it. І дієслово після нього теж без -s (не will helps)." },
+    { "t": "mistake", "wrong": "It's cold. — I close the window.", "right": "It's cold. — I'll close the window.", "why": "Рішення, ухвалене просто зараз, — I'll close. Теперішній час I close тут неправильний, хоч українською можна сказати «зараз зачиняю»." },
+    { "t": "mistake", "wrong": "I think it won't rain.", "right": "I don't think it'll rain.", "why": "Граматично можливо, але звучить незвично. Англійці зазвичай заперечують think: «не думаю, що буде дощ»." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I think it ___ rain later.", "uk": "Думаю, пізніше буде дощ.", "opts": ["will", "wills", "will to"], "a": 0, "why": "Прогноз-думка — will. Воно однакове для всіх (без -s), а дієслово після нього без to: it will rain." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Він нам допоможе.", "opts": ["He wills help us.", "He will helps us.", "He will help us."], "a": 2, "why": "Will не змінюється, і дієслово після нього теж у початковій формі: he will help, без жодного -s." },
+    { "type": "choice", "q": "The phone's ringing. — OK, ___ it.", "uk": "Дзвонить телефон. — Добре, я відповім.", "opts": ["I'll answer", "I answer", "I answering"], "a": 0, "why": "Рішення, яке з'явилося просто зараз, у розмові, — I'll. Теперішній час тут не підходить, а форма з -ing без am не буває." },
+    { "type": "choice", "q": "Don't worry, I ___ anyone.", "uk": "Не хвилюйся, я нікому не скажу.", "opts": ["won't tell", "want tell", "will not to tell"], "a": 0, "why": "Обіцянка — won't (= will not) + дієслово без to. Want — це «хочу», зовсім інше слово, хоч і звучить схоже." },
+    { "type": "choice", "q": "___ I carry this for you?", "uk": "Тобі це понести?", "opts": ["Shall", "Am", "Does"], "a": 0, "why": "Пропонуючи допомогу, кажемо Shall I…? (Мені…?). Am з початковою формою не поєднується (am I carry — неможливо), а does не буває з I." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Думаю, він не прийде.", "opts": ["I don't think he'll come.", "I think he don't come.", "I not think he'll come."], "a": 0, "why": "Англійці заперечують think: I don't think he'll come. Not без do перед дієсловом не ставлять, а he don't — неправильна форма, ще й теперішній час." },
+    { "type": "input", "q": "I think you ___ (like) this film.", "uk": "Думаю, тобі сподобається цей фільм.", "a": ["will like", "are going to like"], "why": "Думка про майбутнє — will + початкова форма: you will like (скорочено you'll like). Going to like теж правильно." },
+    { "type": "input", "q": "I promise I ___ (not / be) late again.", "uk": "Обіцяю, що більше не запізнюся.", "a": ["won't be", "am not going to be"], "why": "Обіцянка — will. Заперечення: won't (= will not) + be. I'm not going to be теж правильно." },
+    { "type": "input", "q": "We've run out of screws. — Have we? OK, I ___ (get) some.", "uk": "У нас закінчилися шурупи. — Справді? Тоді я куплю.", "a": ["will get"], "why": "Have we? (Справді?) — новина для тебе, і рішення купити з'являється просто зараз, у розмові. Тому will: I'll get some, а не going to." },
+    { "type": "input", "q": "Sorry, I won't ___ come on Saturday.", "uk": "Вибач, я не зможу прийти в суботу.", "a": ["be able to"], "why": "Will can не буває, тому «зможу» в майбутньому — will be able to, «не зможу» — won't be able to." },
+    { "type": "order", "uk": "Коли ти повернешся?", "words": ["back", "you", "will", "when", "be"], "a": ["When will you be back?"], "why": "Питання: When + will + you + be back. Will стоїть перед you, як do чи does у Present Simple." },
+    { "type": "order", "uk": "Не думаю, що сьогодні буде дощ.", "words": ["think", "rain", "I", "it'll", "today", "don't"], "a": ["I don't think it'll rain today."], "why": "Заперечуємо think (I don't think), а далі звичайне ствердження з will: it'll rain." }
+  ]
+}

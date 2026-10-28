@@ -1,0 +1,102 @@
+{
+  "id": "linking-words",
+  "level": "B1",
+  "title": "Linking words",
+  "uk": "Сполучники: because, although, however",
+  "summary": "з'єднуємо думки: so, because, although, despite, however",
+  "minutes": 9,
+  "blocks": [
+    { "t": "p", "text": "**Linking words** — слова, що з'єднують думки: «і», «але», «бо», «хоча», «щоб». З ними ти говориш не окремими шматками (I was tired. I went to work.), а цілими реченнями: I was tired, **but** I went to work. Головне в цій темі — що стоїть **після** такого слова: ціле речення чи лише іменник. Ціле речення має **підмет** (хто або що виконує дію) і дієслово: **it was** cold, **he is** tired." },
+    { "t": "h", "text": "Найпростіші: and, but, or, so" },
+    { "t": "table", "head": ["Слово", "Значення", "Приклад"], "rows": [
+      ["**and**", "і, та", "Tom **and** Mick"],
+      ["**but**", "але", "old **but** good"],
+      ["**or**", "або, чи", "today **or** tomorrow"],
+      ["**so**", "тому, отже", "It's late, **so** let's go."]
+    ] },
+    { "t": "ex", "items": [
+      ["I finished the wall **and** went home.", "Я закінчив стіну й пішов додому."],
+      ["The work is hard, **but** the pay is good.", "Робота важка, але платять добре."],
+      ["Do you want tea **or** coffee?", "Тобі чай чи каву?"],
+      ["It was raining, **so** we worked inside.", "Ішов дощ, тому ми працювали всередині."]
+    ] },
+    { "t": "tip", "text": "Не плутай **so** і **because**. So — наслідок (що з цього вийшло), because — причина (чому). Те саме двома способами: I was tired, **so** I went to bed. = I went to bed **because** I was tired." },
+    { "t": "h", "text": "because чи because of" },
+    { "t": "rule", "title": "Причина", "lines": ["**because** + речення: because **it was raining**", "**because of** + іменник: because of **the rain**"] },
+    { "t": "ex", "items": [
+      ["We stopped **because** it was raining.", "Ми зупинилися, бо йшов дощ."],
+      ["We stopped **because of** the rain.", "Ми зупинилися через дощ."],
+      ["He was late **because of** the traffic.", "Він запізнився через затори."],
+      ["I can't come **because** I'm working on Saturday.", "Я не можу прийти, бо працюю в суботу."]
+    ] },
+    { "t": "tip", "text": "Підказка з української: «бо», «тому що» + речення → **because**; «через» + іменник → **because of**. В офіційних листах замість because часто пишуть **as** або **since** («оскільки»): **As** it was late, we stopped." },
+    { "t": "h", "text": "Хоча й незважаючи: although, despite" },
+    { "t": "p", "text": "Для «хоча» й «незважаючи на» є дві групи слів. **Although** і **even though** («хоча», «хоч і») — після них ціле речення. Even though звучить трохи сильніше. **Despite** і **in spite of** («незважаючи на», «попри») — після них іменник або форма з -ing (working, being), але не ціле речення." },
+    { "t": "rule", "title": "Протиставлення", "lines": ["**although / even though** + речення", "**despite / in spite of** + іменник", "**despite / in spite of** + форма з -ing"] },
+    { "t": "ex", "items": [
+      ["**Although** it was cold, we finished the job.", "Хоча було холодно, ми закінчили роботу."],
+      ["She still smokes **even though** she knows it's bad for her.", "Вона досі курить, хоч і знає, що це їй шкодить."],
+      ["**Despite** the cold, we finished the job.", "Незважаючи на холод, ми закінчили роботу."],
+      ["We worked outside **in spite of** the rain.", "Ми працювали надворі попри дощ."],
+      ["**Despite** working all day, he wasn't tired.", "Незважаючи на те, що працював цілий день, він не втомився."]
+    ] },
+    { "t": "tip", "text": "Хочеш після «незважаючи на те, що» поставити ціле речення? Бери **although** або кажи **despite the fact that**: Despite the fact that it was cold, we worked outside. Довше, але правильно." },
+    { "t": "tip", "text": "**Пастка «хоча…, але…».** Українською кажемо «Хоча йшов дощ, але ми працювали». Англійською — **або although, або but**, не обидва разом: **Although** it was raining, we worked. Або: It was raining, **but** we worked." },
+    { "t": "h", "text": "however і though" },
+    { "t": "p", "text": "**However** («однак», «проте») з'єднує два окремі речення. Зазвичай воно стоїть на початку другого речення, після крапки, а після нього кома. **But** з'єднує дві частини одного речення, і кома стоїть перед ним. However звучить офіційніше (листи, повідомлення босу), а в розмові частіше кажуть but або **though** у кінці речення: It's expensive. It's good, **though**. — Дорого. Зате добре." },
+    { "t": "rule", "title": "Порівняй", "lines": ["It's old, **but** it works.", "It's old. **However,** it works."] },
+    { "t": "ex", "items": [
+      ["The house is small. **However**, the garden is big.", "Будинок маленький. Однак сад великий."],
+      ["We wanted to finish today. **However**, the plaster isn't dry yet.", "Ми хотіли закінчити сьогодні. Проте штукатурка ще не висохла."],
+      ["It's a long drive. The pay is good, **though**.", "Їхати далеко. Зате платять добре."]
+    ] },
+    { "t": "h", "text": "Мета: to, in order to, so that" },
+    { "t": "p", "text": "Щоб сказати, **навіщо** ти щось робиш («щоб»), найчастіше вистачає **to** + початкова форма дієслова (як у словнику: work, buy, go). **In order to** — те саме, тільки офіційніше. **So that** — коли далі ціле речення зі своїм підметом, часто з can, could або will. Через so that найпростіше сказати й «щоб не…»: so that I **don't** oversleep («щоб не проспати»). У розмові that часто пропускають: so I don't oversleep." },
+    { "t": "rule", "title": "«Щоб»", "lines": ["**to** + дієслово: I came **to help**.", "**in order to** + дієслово (офіційніше)", "**so that** + речення: so that **he can** sleep"] },
+    { "t": "ex", "items": [
+      ["I went to Lidl **to buy** some milk.", "Я пішов у Lidl, щоб купити молока."],
+      ["We start early **in order to** finish by three.", "Ми починаємо рано, щоб закінчити до третьої."],
+      ["Speak slowly **so that** everyone can understand.", "Говори повільно, щоб усі могли зрозуміти."],
+      ["Open the windows **so that** the plaster dries faster.", "Відчини вікна, щоб штукатурка швидше висохла."],
+      ["I set two alarms **so that** I don't oversleep.", "Я ставлю два будильники, щоб не проспати."]
+    ] },
+    { "t": "tip", "text": "Після **for** стоїть іменник: I went out **for** a coffee. Якщо далі дієслово — тільки **to**: I went out **to get** a coffee. «For buy», «for to buy» — помилка." },
+    { "t": "h", "text": "also, too, as well — «теж, також»" },
+    { "t": "p", "text": "Усі три означають «теж, також», але стоять у різних місцях. **Too** і **as well** — у кінці речення. **Also** — у середині: перед звичайним дієсловом, але після am, is, are і після допоміжного дієслова (can, will, have). У запереченні замість too кажуть **either**: «теж не»." },
+    { "t": "ex", "items": [
+      ["I **also** do tiling.", "Я також кладу плитку."],
+      ["She's **also** from Ukraine.", "Вона теж з України."],
+      ["I'm tired. — I'm tired **too**.", "Я втомився. — Я теж."],
+      ["Can I come **as well**?", "Можна мені теж прийти?"],
+      ["I don't smoke. — I don't smoke **either**.", "Я не курю. — Я теж не курю."]
+    ] },
+    { "t": "h", "text": "while і whereas" },
+    { "t": "p", "text": "**While** і **whereas** протиставляють дві речі: «тоді як», «а». Whereas звучить офіційніше. While має ще одне значення: «поки», «у той час як»." },
+    { "t": "ex", "items": [
+      ["Tom likes tea, **while** Sarah prefers coffee.", "Том любить чай, а Сара — каву."],
+      ["Dublin is expensive, **whereas** Wexford is much cheaper.", "Дублін дорогий, тоді як Вексфорд набагато дешевший."],
+      ["He called **while** I was driving.", "Він подзвонив, поки я був за кермом."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "Although it was raining, but we worked.", "right": "Although it was raining, we worked.", "why": "Although і but разом не вживаємо, хоч українською й кажемо «хоча…, але…». Залиш одне з них." },
+    { "t": "mistake", "wrong": "Despite it was cold, we worked outside.", "right": "Although it was cold, we worked outside.", "why": "Після despite не буває цілого речення. Або although it was cold, або despite the cold." },
+    { "t": "mistake", "wrong": "Despite of the rain, we worked outside.", "right": "Despite the rain, we worked outside.", "why": "Після despite of не буває, хоч українською й кажемо «незважаючи на». Of є лише в in spite of: in spite of the rain." },
+    { "t": "mistake", "wrong": "We stopped because of it was late.", "right": "We stopped because it was late.", "why": "Because of — лише перед іменником (because of the rain). Перед цілим реченням просто because." },
+    { "t": "mistake", "wrong": "I also like it too.", "right": "I like it too.", "why": "Also і too означають одне й те саме, тож досить одного: I also like it або I like it too." },
+    { "t": "mistake", "wrong": "I went to Lidl for buy milk.", "right": "I went to Lidl to buy milk.", "why": "«Щоб» + дієслово — це to. Після for стоїть іменник: for some milk." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I was hungry, ___ I made a sandwich.", "uk": "Я був голодний, тому зробив собі бутерброд.", "opts": ["so", "because", "but"], "a": 0, "why": "«Тому» — so, воно показує наслідок. Because стоїть перед причиною (I made a sandwich because I was hungry), а but означає «але»." },
+    { "type": "choice", "q": "He went to work ___ he was sick.", "uk": "Він пішов на роботу, хоча був хворий.", "opts": ["although", "despite", "because of"], "a": 0, "why": "Після пропуску ціле речення (he was sick), тому although. Despite і because of ставимо лише перед іменником або формою з -ing." },
+    { "type": "input", "q": "I can't come tonight ___ I'm working late.", "uk": "Я не можу прийти сьогодні ввечері, бо працюю допізна.", "a": ["because", "as", "since"], "why": "Причина — ціле речення (I'm working late), тому because. Because of тут не підійде: після нього лише іменник." },
+    { "type": "order", "uk": "Ми запізнилися через затори.", "words": ["late", "the", "because", "we", "traffic", "were", "of"], "a": ["We were late because of the traffic.", "Because of the traffic, we were late."], "why": "«Через» + іменник (the traffic) — because of. Цю частину можна поставити і в кінці, і на початку речення." },
+    { "type": "input", "q": "We finished the job on time ___ the rain.", "uk": "Ми закінчили роботу вчасно, незважаючи на дощ.", "a": ["despite", "in spite of", "regardless of"], "why": "Перед іменником (the rain) — despite або in spite of. Although тут не підійде: після нього потрібне ціле речення." },
+    { "type": "choice", "q": "Despite ___ twelve hours, Andrii wasn't tired.", "uk": "Незважаючи на те, що працював дванадцять годин, Андрій не втомився.", "opts": ["he worked", "working", "work"], "a": 1, "why": "Після despite — іменник або форма з -ing: despite working. Ціле речення (he worked) після despite не ставимо, для нього є although." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Хоча було пізно, ми працювали далі.", "opts": ["Although it was late, but we kept working.", "Although it was late, we kept working.", "Despite it was late, we kept working."], "a": 1, "why": "Although і but разом не вживаємо, а після despite не буває цілого речення. Правильно лише although без but." },
+    { "type": "choice", "q": "The job pays well. ___, it's a long way from home.", "uk": "Робота добре оплачується. Однак вона далеко від дому.", "opts": ["However", "Although", "Despite"], "a": 0, "why": "However починає нове речення після крапки, і після нього кома. Although і despite не стоять окремо з комою: після них іде речення або іменник." },
+    { "type": "input", "q": "I'm saving money ___ buy a car.", "uk": "Я відкладаю гроші, щоб купити машину.", "a": ["to", "in order to", "so as to", "so that I can", "so I can", "to be able to"], "why": "«Щоб» + дієслово — to (офіційніше in order to). For тут не підійде: після for стоїть іменник, а не дієслово." },
+    { "type": "input", "q": "I'll write it down ___ I don't forget.", "uk": "Я запишу, щоб не забути.", "a": ["so that", "so", "in order that"], "why": "Після «щоб» тут ціле речення зі своїм підметом (I don't forget), тому so that (у розмові просто so). To ставимо лише перед дієсловом без підмета." },
+    { "type": "choice", "q": "Tom doesn't eat meat, and Sarah doesn't ___.", "uk": "Том не їсть м'яса, і Сара теж не їсть.", "opts": ["too", "either", "also"], "a": 1, "why": "У запереченні «теж не» — either. Too і also вживаємо у ствердженнях." },
+    { "type": "order", "uk": "Він пішов у спортзал, хоч і був утомлений.", "words": ["even", "he", "the", "tired", "went", "though", "to", "he", "gym", "was"], "a": ["He went to the gym even though he was tired.", "Even though he was tired, he went to the gym."], "why": "Even though («хоч і») + ціле речення (he was tired). Його можна поставити в кінці або на початку, тоді після цієї частини кома." }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "id": "can-could",
+  "level": "A2",
+  "title": "Can, could, be able to",
+  "uk": "Can і could: вміти, могти, можна",
+  "summary": "вміння, дозвіл, можливість: I can, I could, I'll be able to",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Can** — одне з найпотрібніших слів в англійській. Воно означає **«вмію»**, **«можу»** і **«можна»**. **Could** — його минула форма («умів, міг») і водночас ввічливіший варіант у проханнях: **Could I…?** — «Чи можна мені…?»" },
+    { "t": "ex", "items": [
+      ["I **can** drive, but I **can't** ride a motorbike.", "Я вмію водити машину, але не вмію їздити на мотоциклі."],
+      ["**Can** you help me with this ladder?", "Можеш допомогти мені з цією драбиною?"],
+      ["She **can't** come today. She's ill.", "Вона сьогодні не може прийти. Вона хвора."],
+      ["**Can** I park here?", "Тут можна паркуватися?"]
+    ] },
+    { "t": "h", "text": "Can — модальне дієслово" },
+    { "t": "p", "text": "Can — **модальне дієслово**. Так називають особливі дієслова (can, could, must, should, will), які стоять перед іншим дієсловом і додають до нього значення «можу», «треба», «варто». Вони поводяться не як звичайні дієслова. Запам'ятай три правила:" },
+    { "t": "list", "items": [
+      "**Без -s** після he, she, it: she **can** swim, а не she cans swim.",
+      "Після can — **початкова форма дієслова** (work, go) **без to**: I can **swim**, а не I can to swim.",
+      "**Без do** у питаннях і запереченнях. У питанні can стає перед **підметом** (хто або що виконує дію): **Can you** swim? Заперечення — просто **can't**."
+    ] },
+    { "t": "rule", "title": "Форми (однакові для всіх осіб)", "lines": [
+      "Ствердження: She **can** swim.",
+      "Заперечення: She **can't** (cannot) swim.",
+      "Питання: **Can** she swim?",
+      "Коротко: Yes, she **can**. / No, she **can't**."
+    ] },
+    { "t": "tip", "text": "Повна форма заперечення — **cannot**, пишеться **разом**. На слух can у реченні коротке й без наголосу, а **can't** звучить чітко й наголошено. Якщо почув виразне, наголошене слово, найімовірніше, це can't." },
+    { "t": "h", "text": "Вміння: зараз і в минулому" },
+    { "t": "p", "text": "**Can** — вміння зараз. **Could** — вміння в минулому, яке тривало якийсь час: «у дитинстві вмів», «раніше міг». Заперечення **couldn't** — «не міг, не вмів»." },
+    { "t": "ex", "items": [
+      ["I **could** swim when I was six.", "Я вмів плавати, коли мені було шість."],
+      ["My grandad **could** speak three languages.", "Мій дідусь умів говорити трьома мовами."],
+      ["**Could** you read when you were five?", "Ти вмів читати, коли тобі було п'ять?"],
+      ["I **couldn't** sleep last night.", "Минулої ночі я не міг заснути."]
+    ] },
+    { "t": "h", "text": "Be able to: зможу, досі не міг" },
+    { "t": "p", "text": "У can є лише дві форми: can і could. Немає «will can», «have can» чи «to can». Коли потрібен інший час, беремо **be able to** + початкова форма дієслова (дослівно «бути здатним»). Be змінюється як завжди (will be, have been), а **able to** лишається без змін." },
+    { "t": "table", "head": ["Час", "Форма", "Приклад"], "rows": [
+      ["зараз", "can", "I **can** lift it."],
+      ["минуле", "could", "I **could** swim at six."],
+      ["майбутнє", "will be able to", "I'**ll be able to** come."],
+      ["Present Perfect", "have been able to", "I **haven't been able to** sleep."],
+      ["після іншого дієслова", "to be able to", "I want **to be able to** cook."]
+    ] },
+    { "t": "ex", "items": [
+      ["I'**ll be able to** finish the job tomorrow.", "Я зможу закінчити роботу завтра."],
+      ["I **haven't been able to** sleep well this week.", "Цього тижня я не можу нормально виспатися."],
+      ["I'd like **to be able to** speak English better.", "Я хотів би вміти краще говорити англійською."],
+      ["**Will** you **be able to** come on Saturday?", "Ти зможеш прийти в суботу?"]
+    ] },
+    { "t": "tip", "text": "Про майбутнє можна сказати й просто **can**, якщо домовляєшся зараз: I **can** come tomorrow. — Я можу прийти завтра. А **will be able to** — коли вміння чи можливість з'явиться пізніше: When I get my licence, I'**ll be able to** drive to work." },
+    { "t": "h", "text": "Зміг один раз: managed to, was able to" },
+    { "t": "p", "text": "Пастка для українців. «Я зміг полагодити» про **один конкретний випадок** у минулому — це **не could**. Could означає загальне вміння («умів»). Для одного успіху, особливо коли було непросто, кажемо **managed to** («вдалося») або **was able to**." },
+    { "t": "ex", "items": [
+      ["The pipe was old, but I **managed to** fix it.", "Труба була стара, але мені вдалося її полагодити."],
+      ["We **were able to** finish before the rain.", "Нам вдалося закінчити до дощу."],
+      ["He **managed to** pass his driving test on his second attempt.", "Він склав іспит з водіння з другої спроби."]
+    ] },
+    { "t": "tip", "text": "У запереченні простіше: **couldn't** підходить і для одного випадку: I **couldn't** find my keys this morning. Також could можна про один раз із see, hear, understand: We **could see** the sea from the roof." },
+    { "t": "tip", "text": "З **see** і **hear** англійці зазвичай додають **can** там, де українець скаже просто «бачу», «чую»: I **can't hear** you. — Я тебе не чую. **Can** you **see** the van? — Бачиш фургон?" },
+    { "t": "h", "text": "Дозвіл: можна?" },
+    { "t": "p", "text": "**Can I…?** — просто «можна?». **Could I…?** — те саме, але ввічливіше: з незнайомими, з босом, у магазині. Відповідаємо з can, а не з could: Yes, of course you **can**. А **can't** у цьому значенні — «не можна, заборонено»." },
+    { "t": "ex", "items": [
+      ["**Can** I borrow your tape measure?", "Можна позичити твою рулетку?"],
+      ["**Could** I leave early today? — Yes, of course you **can**.", "Можна мені сьогодні піти раніше? — Так, звісно."],
+      ["You **can** use my van tomorrow.", "Завтра можеш узяти мій фургон."],
+      ["You **can't** park here. It's for residents only.", "Тут не можна паркуватися. Це лише для мешканців."]
+    ] },
+    { "t": "h", "text": "Можливість: буває" },
+    { "t": "p", "text": "Can також означає, що щось **буває**, **трапляється** час від часу, а не завжди." },
+    { "t": "ex", "items": [
+      ["It **can** get very windy in Wexford.", "У Вексфорді буває дуже вітряно."],
+      ["This job **can** be dangerous.", "Ця робота буває небезпечною."],
+      ["The traffic in Dublin **can** be terrible in the morning.", "Уранці в Дубліні бувають жахливі затори."]
+    ] },
+    { "t": "tip", "text": "Прохання **Can you…? / Could you…?** («Можеш…? Можете…?») розібрано в темі «Ввічливі прохання й пропозиції». А could у значенні «можливо, може статися» (It could rain later) — в іншій темі розділу «Модальні дієслова»." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I can to swim.", "right": "I can swim.", "why": "Після can дієслово без to." },
+    { "t": "mistake", "wrong": "He cans drive.", "right": "He can drive.", "why": "Can не змінюється: без -s навіть після he, she, it." },
+    { "t": "mistake", "wrong": "Do you can help me?", "right": "Can you help me?", "why": "Can сам утворює питання, do не потрібне: просто став can перед підметом." },
+    { "t": "mistake", "wrong": "I will can come tomorrow.", "right": "I'll be able to come tomorrow.", "why": "Два модальні дієслова поруч (will can) не ставлять. Майбутнє — will be able to, а про домовленість можна просто: I can come tomorrow." },
+    { "t": "mistake", "wrong": "I could fix the boiler yesterday.", "right": "I managed to fix the boiler yesterday.", "why": "Про один конкретний успіх у минулому — managed to або was able to. Could — це загальне вміння в минулому." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "She ___ speak three languages.", "uk": "Вона вміє говорити трьома мовами.", "opts": ["can", "cans", "can to"], "a": 0, "why": "Can однакове для всіх осіб: без -s навіть після she. Після нього дієслово без to." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ти вмієш водити фургон?", "opts": ["Can you drive a van?", "Do you can drive a van?", "Can you to drive a van?"], "a": 0, "why": "Can сам утворює питання: став його перед підметом. Do з can не поєднується, а to після can не буває." },
+    { "type": "choice", "q": "You ___ park here. It's a fire exit.", "uk": "Тут не можна паркуватися. Це пожежний вихід.", "opts": ["can't", "don't can", "couldn't"], "a": 0, "why": "«Не можна, заборонено» зараз — can't. Do з can не поєднується, а couldn't — це «не міг» у минулому." },
+    { "type": "choice", "q": "When I was a child, I ___ climb trees really fast.", "uk": "У дитинстві я вмів дуже швидко лазити по деревах.", "opts": ["can", "could", "managed to"], "a": 1, "why": "Загальне вміння в минулому, яке тривало (у дитинстві), — could. Managed to — про один конкретний випадок, can — про теперішнє." },
+    { "type": "choice", "q": "The roof was slippery, but we ___ to finish the job.", "uk": "Дах був слизький, але нам вдалося закінчити роботу.", "opts": ["could", "managed", "can"], "a": 1, "why": "Один конкретний успіх попри труднощі — managed to («вдалося»). Could і can тут не підходять: після них to не ставлять, а could ще й означає загальне вміння." },
+    { "type": "choice", "q": "After the course, you ___ drive a forklift.", "uk": "Після курсу ти зможеш керувати навантажувачем.", "opts": ["will can", "will be able to", "can to"], "a": 1, "why": "Два модальні дієслова поруч (will can) не ставлять. Вміння, яке з'явиться в майбутньому, — will be able to." },
+    { "type": "input", "q": "My little brother ___ (not / can) read yet. He's only four.", "uk": "Мій молодший брат ще не вміє читати. Йому лише чотири.", "a": ["can't", "cannot"], "why": "Заперечення від can — can't (повна форма cannot, пишеться разом). Doesn't тут не потрібне." },
+    { "type": "input", "q": "I ___ (not / can / sleep) last night because of the noise.", "uk": "Минулої ночі я не міг заснути через шум.", "a": ["couldn't sleep", "could not sleep", "wasn't able to sleep", "was not able to sleep"], "why": "«Не міг» у минулому — couldn't + дієслово. У запереченні couldn't підходить і для одного конкретного випадку." },
+    { "type": "input", "q": "I hope I'll ___ (can) speak English well next year.", "uk": "Сподіваюся, наступного року я зможу добре говорити англійською.", "a": ["be able to"], "why": "Після will can не ставлять. «Зможу» — will be able to, тому після I'll пишемо be able to." },
+    { "type": "input", "q": "I ___ (not / be) able to contact Mick since Monday.", "uk": "Я не можу зв'язатися з Міком з понеділка.", "a": ["haven't been", "have not been"], "why": "Since Monday — від минулого до тепер, тобто Present Perfect. У can такої форми немає, тому haven't been able to." },
+    { "type": "order", "uk": "Можна позичити твою драбину?", "words": ["borrow", "I", "your", "could", "ladder"], "a": ["Could I borrow your ladder?"], "why": "Ввічливо просимо дозволу: Could + I + дієслово без to." },
+    { "type": "order", "uk": "Узимку дороги бувають дуже слизькими.", "words": ["roads", "the", "can", "in", "be", "very", "slippery", "winter"], "a": ["The roads can be very slippery in winter.", "In winter the roads can be very slippery.", "The roads in winter can be very slippery."], "why": "Can тут означає «буває». Порядок: підмет + can + be. In winter можна поставити в кінці або на початку." }
+  ]
+}

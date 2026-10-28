@@ -1,0 +1,84 @@
+{
+  "id": "simple-vs-continuous",
+  "level": "A2",
+  "title": "Present Simple or Continuous",
+  "uk": "Present Simple чи Continuous",
+  "summary": "I work чи I'm working; know, want, like зазвичай без -ing",
+  "minutes": 6,
+  "blocks": [
+    { "t": "p", "text": "Головне питання: це **взагалі** чи **зараз**? **Present Simple** (I work) — звички, факти, те, що постійно. **Present Continuous** (I'm working) — те, що відбувається зараз або тимчасово. В українській обидва — «я працюю», тому щоразу треба вирішувати." },
+    { "t": "table", "head": ["Present Simple", "Present Continuous"], "rows": [
+      ["звичка, регулярно", "зараз, у цю хвилину"],
+      ["постійне, факти", "тимчасове, у цей період"],
+      ["usually, often, every day", "now, at the moment, this week"],
+      ["I **work** in Dublin.", "**I'm working** from home today."]
+    ] },
+    { "t": "ex", "items": [
+      ["I **drive** to work every day.", "Я щодня їжджу на роботу машиною."],
+      ["Sorry, I can't talk, **I'm driving**.", "Вибач, не можу говорити, я за кермом."],
+      ["Sarah **works** in a shop.", "Сара працює в магазині."],
+      ["Sarah **is working** from home this week.", "Цього тижня Сара працює з дому."],
+      ["It **rains** a lot in Ireland.", "В Ірландії часто йде дощ."],
+      ["Take an umbrella, **it's raining**.", "Візьми парасольку, іде дощ."]
+    ] },
+    { "t": "h", "text": "What do you do? чи What are you doing?" },
+    { "t": "p", "text": "Класична пастка. **What do you do?** — питання про роботу: «Ким ти працюєш?», «Чим займаєшся?». **What are you doing?** — «Що ти (зараз) робиш?»." },
+    { "t": "ex", "items": [
+      ["What **do** you **do**? — I'm a builder.", "Ким ти працюєш? — Я будівельник."],
+      ["What **are** you **doing**? — **I'm fixing** the door.", "Що ти робиш? — Лагоджу двері."],
+      ["What **does** Kate **do**? — She's a nurse.", "Ким працює Кейт? — Вона медсестра."]
+    ] },
+    { "t": "h", "text": "Дієслова стану: зазвичай без -ing" },
+    { "t": "p", "text": "Деякі дієслова означають не дію, а **стан**: що ти знаєш, відчуваєш, хочеш, що кому належить. Стан — не процес, тому -ing до таких дієслів зазвичай не додаємо, навіть коли мова про «зараз»: I **know** (не I'm knowing), I **want** a coffee (не I'm wanting)." },
+    { "t": "table", "head": ["Значення", "Дієслова"], "rows": [
+      ["знати, розуміти, пам'ятати", "know, understand, remember"],
+      ["вірити, означати, здаватися", "believe, mean, seem"],
+      ["почуття: подобається чи ні", "like, love, hate, prefer"],
+      ["хотіти, потребувати", "want, need"],
+      ["володіти, належати", "own, belong"],
+      ["коштувати", "cost"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **don't understand**. Can you say it again?", "Я не розумію. Можеш повторити?"],
+      ["Do you **know** where Tom is?", "Ти знаєш, де Том?"],
+      ["I **need** a bigger ladder.", "Мені потрібна більша драбина."],
+      ["This van **belongs** to my boss.", "Цей фургон належить моєму босу."],
+      ["You **seem** tired.", "Ти, здається, втомився."],
+      ["How much **does** it **cost**?", "Скільки це коштує?"]
+    ] },
+    { "t": "tip", "text": "У рекламі чи розмові можна почути **I'm loving it** або **I'm loving this weather**. Це емоційний розмовний стиль. Сам спокійно кажи **I love it**, **I like it** — так завжди правильно." },
+    { "t": "h", "text": "Дієслова з двома значеннями" },
+    { "t": "p", "text": "Деякі дієслова бувають і станом, і дією. Коли це стан — без -ing, коли дія — з -ing." },
+    { "t": "rule", "title": "think: вважати чи обмірковувати", "lines": ["**I think** it's fine. = я вважаю (думка)", "**I'm thinking** about it. = обмірковую (процес)"] },
+    { "t": "rule", "title": "have: мати чи робити щось", "lines": ["**I have** a van. / **I've got** a van. = у мене є", "**I'm having** lunch / a shower / a break. = дія"] },
+    { "t": "rule", "title": "see і taste", "lines": ["**I see.** = зрозуміло", "**I'm seeing** Tom tonight. = зустрічаюся", "It **tastes** good. = має смак", "He's **tasting** the soup. = куштує"] },
+    { "t": "ex", "items": [
+      ["Do you **think** it will rain?", "Думаєш, буде дощ?"],
+      ["**I'm thinking** about a new job.", "Я подумую про нову роботу."],
+      ["Kate **has** two kids.", "У Кейт двоє дітей."],
+      ["**We're having** a break.", "У нас перерва."],
+      ["I **see** what you mean.", "Я розумію, що ти маєш на увазі."],
+      ["This coffee **tastes** strange.", "У цієї кави дивний смак."]
+    ] },
+    { "t": "tip", "text": "«Бачу» й «чую» про те, що відбувається зараз, англійці зазвичай кажуть з can, а не з -ing: I **can see** the bus. I **can hear** you." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I am knowing him.", "right": "I know him.", "why": "Know — стан, а не дія, тому без -ing навіть «зараз»." },
+    { "t": "mistake", "wrong": "I'm wanting a coffee.", "right": "I want a coffee.", "why": "Want — бажання, тобто стан, тому без -ing. Ще ввічливіше: I'd like a coffee." },
+    { "t": "mistake", "wrong": "What are you do?", "right": "What are you doing?", "why": "Після are — форма з -ing. А якщо питаєш про професію, то What do you do?" },
+    { "t": "mistake", "wrong": "I am working here every day.", "right": "I work here every day.", "why": "Every day — звичка, а для звичок Present Simple." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Tom usually ___ to work by bus.", "uk": "Том зазвичай їздить на роботу автобусом.", "opts": ["goes", "is going", "go"], "a": 0, "why": "Usually — звичка, отже Present Simple. Tom — це he, тому goes." },
+    { "type": "choice", "q": "Listen! The phone ___.", "uk": "Слухай! Телефон дзвонить.", "opts": ["is ringing", "rings", "ring"], "a": 0, "why": "Listen! — дія відбувається саме зараз, тому Present Continuous: is ringing." },
+    { "type": "choice", "q": "What ___? — I'm an electrician.", "uk": "Ким ти працюєш? — Я електрик.", "opts": ["do you do", "are you doing", "you do"], "a": 0, "why": "Про професію питають What do you do? What are you doing? — це «Що ти зараз робиш?», а без do питання неправильне." },
+    { "type": "input", "q": "This jacket ___ (cost) 80 euros.", "uk": "Ця куртка коштує 80 євро.", "a": ["costs"], "why": "Cost — стан (ціна), а не дія, тому без -ing. This jacket — це it, тому costs." },
+    { "type": "choice", "q": "Sorry, I ___ your name.", "uk": "Вибач, я не пам'ятаю, як тебе звати.", "opts": ["don't remember", "am not remembering", "not remember"], "a": 0, "why": "Remember — стан, тому Present Simple: don't remember. Саме not перед дієсловом без don't не ставлять." },
+    { "type": "input", "q": "She ___ (not / like) her new job.", "uk": "Їй не подобається її нова робота.", "a": ["doesn't like", "does not like"], "why": "Like — стан, тому без -ing навіть зараз. Для she — doesn't, а like без -s." },
+    { "type": "input", "q": "We ___ (work) on a new school in Wexford this month.", "uk": "Цього місяця ми працюємо на будівництві школи у Вексфорді.", "a": ["are working"], "why": "This month — тимчасово, на певний період, тому Present Continuous: are working." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Мені зараз потрібна твоя допомога.", "opts": ["I need your help now.", "I'm needing your help now.", "I needing your help now."], "a": 0, "why": "Need — стан, тому навіть із now буде Present Simple: I need." },
+    { "type": "choice", "q": "I ___ about moving to Dublin.", "uk": "Я подумую про переїзд до Дубліна.", "opts": ["am thinking", "think", "thinks"], "a": 0, "why": "Think about у значенні «обмірковувати» — процес, тому з -ing: I'm thinking. I think = «я вважаю»." },
+    { "type": "input", "q": "Can you call back later? We ___ (have) dinner.", "uk": "Можеш передзвонити пізніше? Ми вечеряємо.", "a": ["are having"], "why": "Have dinner — дія (вечеряти), а не «мати», тому з -ing можна. Вечеряємо саме зараз — are having." },
+    { "type": "order", "uk": "Що ти думаєш про цей план?", "words": ["plan", "you", "of", "think", "what", "this", "do"], "a": ["What do you think of this plan?"], "why": "Тут think — думка (вважати), тобто стан, тому Present Simple: What do you think of…?" },
+    { "type": "order", "uk": "Про що ти думаєш?", "words": ["about", "you", "thinking", "are", "what"], "a": ["What are you thinking about?"], "why": "Тут think — процес, що йде зараз, тому are + thinking. Прийменник about — у кінці питання." }
+  ]
+}

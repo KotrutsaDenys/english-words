@@ -1,0 +1,99 @@
+{
+  "id": "must-have-to",
+  "level": "A2",
+  "title": "Must, have to, mustn't, don't have to",
+  "uk": "Must і have to: треба й не можна",
+  "summary": "треба, не можна, не обов'язково: must, have to, mustn't, had to",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Must** і **have to** обидва означають «треба», «мушу», «маю». У ствердженні різниця невелика, і часто підходять обидва. А от у запереченні вони розходяться повністю: **mustn't** — «не можна, заборонено», а **don't have to** — «не треба, можна не робити». Це найважливіше в темі." },
+    { "t": "ex", "items": [
+      ["I **must** call my mum tonight.", "Я мушу сьогодні ввечері подзвонити мамі."],
+      ["We **have to** wear helmets on site.", "На об'єкті ми мусимо носити каски."],
+      ["You **mustn't** smoke in the van.", "У фургоні не можна курити."],
+      ["You **don't have to** come in on Saturday.", "У суботу можеш не приходити на роботу."]
+    ] },
+    { "t": "h", "text": "Must: як утворюється" },
+    { "t": "p", "text": "Must — **модальне дієслово**, як can: однакове для всіх осіб (без -s), після нього **початкова форма дієслова** (work, go) **без to**, а заперечення без do: просто **mustn't**. У mustn't перше t не вимовляється: звучить приблизно «масн(т)»." },
+    { "t": "rule", "title": "Must для всіх осіб", "lines": [
+      "I / you / he / she / we / they + **must** + go",
+      "заперечення: **mustn't** (must not) + go"
+    ] },
+    { "t": "h", "text": "Have to: як утворюється" },
+    { "t": "p", "text": "**Have to** поводиться як звичайне дієслово have: після he, she, it — **has to**, а заперечення й питання — з **do / does**, як у Present Simple. Після нього — початкова форма дієслова. На слух have to звучить як «хефте», has to — як «хесте»." },
+    { "t": "table", "head": ["Форма", "I / you / we / they", "he / she / it"], "rows": [
+      ["ствердження", "I **have to** go", "she **has to** go"],
+      ["заперечення", "I **don't have to** go", "she **doesn't have to** go"],
+      ["питання", "**Do** I **have to** go?", "**Does** she **have to** go?"]
+    ] },
+    { "t": "p", "text": "Спитати «чи треба?» найприродніше саме через have to: **Do I have to**…? Must I…? граматично можливе, але звучить старомодно, у розмові його майже не почуєш." },
+    { "t": "ex", "items": [
+      ["**Do I have to** bring my own gloves?", "Мені треба брати свої рукавиці?"],
+      ["What time **do we have to** start?", "О котрій нам треба починати?"]
+    ] },
+    { "t": "h", "text": "Must чи have to?" },
+    { "t": "p", "text": "**Must** — обов'язок «від себе»: ти сам вирішив, що це важливо, або щиро радиш іншому. **Have to** — обов'язок ззовні: так вимагає правило, закон, бос чи обставини. Якщо сумніваєшся, кажи **have to**: у розмові воно звучить природніше й майже ніколи не буде помилкою." },
+    { "t": "ex", "items": [
+      ["I **must** stop eating so much chocolate.", "Мені треба перестати їсти стільки шоколаду."],
+      ["You **must** see the Cliffs of Moher. They're amazing!", "Ти обов'язково маєш побачити скелі Мохер. Вони неймовірні!"],
+      ["I **have to** be on site at half seven.", "Я маю бути на об'єкті о пів на восьму."],
+      ["In Ireland you **have to** drive on the left.", "В Ірландії треба їздити лівим боком дороги."],
+      ["Sarah **has to** wear glasses for driving.", "Сарі треба носити окуляри за кермом."]
+    ] },
+    { "t": "tip", "text": "**Must** часто пишуть в офіційних правилах і на табличках: All visitors **must** report to the site office. Але коли ти сам розповідаєш про правила, кажи have to: We **have to** sign in every morning." },
+    { "t": "h", "text": "Головна пастка: mustn't і don't have to" },
+    { "t": "p", "text": "Українське «не треба» може означати і «не можна», і «немає потреби». В англійській це два зовсім різні вирази:" },
+    { "t": "table", "head": ["Вираз", "Значення"], "rows": [
+      ["**mustn't**", "не можна, заборонено"],
+      ["**don't have to**", "не обов'язково, можна не робити"]
+    ] },
+    { "t": "ex", "items": [
+      ["You **mustn't** use your phone while you're driving.", "Не можна користуватися телефоном за кермом."],
+      ["You **don't have to** bring tools. We've got everything.", "Інструменти можеш не брати. У нас усе є."],
+      ["You **mustn't** tell anyone. It's a secret.", "Нікому не можна про це казати. Це таємниця."],
+      ["Tomorrow's Saturday. I **don't have to** get up early.", "Завтра субота. Мені не треба рано вставати."]
+    ] },
+    { "t": "tip", "text": "Перевірка: підстав слово «заборонено». Якщо сенс зберігся — **mustn't**. Якщо виходить «можна не робити, як хочеш» — **don't have to**." },
+    { "t": "p", "text": "**Can't** теж означає «не можна» за правилами, і в розмові його кажуть навіть частіше, ніж mustn't: You **can't** smoke here." },
+    { "t": "h", "text": "Минуле й майбутнє: had to, will have to" },
+    { "t": "p", "text": "У must **немає минулої форми**. «Мусив, довелося» — завжди **had to**, питання — **Did** you **have to**…? Майбутнє — **will have to** («доведеться»): will must не буває." },
+    { "t": "table", "head": ["Час", "Треба", "Не треба"], "rows": [
+      ["зараз", "must / have to", "don't have to"],
+      ["минуле", "had to", "didn't have to"],
+      ["майбутнє", "will have to", "won't have to"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **had to** work late yesterday.", "Учора мені довелося працювати допізна."],
+      ["We **didn't have to** pay for parking.", "Нам не довелося платити за паркування."],
+      ["**Did** you **have to** show your ID?", "Тобі довелося показувати посвідчення?"],
+      ["You'**ll have to** ask the boss.", "Тобі доведеться спитати боса."]
+    ] },
+    { "t": "h", "text": "Have got to — розмовний варіант" },
+    { "t": "p", "text": "У Британії та Ірландії в розмові часто кажуть **have got to** (скорочено **'ve got to**, **'s got to**). Значення те саме, що в have to, але лише для теперішнього часу. Для минулого — все одно had to." },
+    { "t": "ex", "items": [
+      ["I'**ve got to** go. See you tomorrow.", "Мені треба йти. До завтра."],
+      ["She'**s got to** finish it by Friday.", "Їй треба закінчити це до п'ятниці."]
+    ] },
+    { "t": "tip", "text": "У must є й інше значення — «мабуть, напевно»: You **must** be tired. — Ти, мабуть, утомився. Про це — у темі «Наскільки ти впевнений: might, must, can't»." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "You mustn't come if you're busy.", "right": "You don't have to come if you're busy.", "why": "Mustn't — це заборона («не смій приходити»). «Можеш не приходити» — don't have to." },
+    { "t": "mistake", "wrong": "I must to go now.", "right": "I must go now.", "why": "Після must дієслово без to. To є лише в have to." },
+    { "t": "mistake", "wrong": "Did you must work on Sunday?", "right": "Did you have to work on Sunday?", "why": "У must немає минулого часу і питань з do чи did. Для минулого — had to, питання — Did you have to…?" },
+    { "t": "mistake", "wrong": "I musted leave early.", "right": "I had to leave early.", "why": "Must не змінюється і не має форми на -ed. «Мусив, довелося» — had to." },
+    { "t": "mistake", "wrong": "She have to work today.", "right": "She has to work today.", "why": "Have to змінюється, як have: після he, she, it — has to." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "She ___ wear a uniform at work.", "uk": "Вона мусить носити форму на роботі.", "opts": ["has to", "have to", "has"], "a": 0, "why": "Have to змінюється, як have: після she — has to. Без to (she has wear) речення неправильне." },
+    { "type": "choice", "q": "I really ___ go to the dentist. My tooth hurts.", "uk": "Мені справді треба піти до стоматолога. Болить зуб.", "opts": ["must", "must to", "musts"], "a": 0, "why": "Must однакове для всіх осіб, без -s, а після нього дієслово без to." },
+    { "type": "choice", "q": "You ___ smoke inside the building. It's against the law.", "uk": "У будівлі не можна курити. Це заборонено законом.", "opts": ["mustn't", "don't have to", "haven't to"], "a": 0, "why": "Заборона — mustn't. Don't have to означало б «можна не курити, як хочеш», а haven't to так не кажуть." },
+    { "type": "choice", "q": "Tomorrow is a bank holiday, so we ___ go to work.", "uk": "Завтра державне свято, тож нам не треба йти на роботу.", "opts": ["mustn't", "don't have to", "must"], "a": 1, "why": "Немає потреби — don't have to. Mustn't означало б, що йти на роботу заборонено." },
+    { "type": "choice", "q": "Yesterday I ___ stay late to finish the ceiling.", "uk": "Учора мені довелося залишитися допізна, щоб закінчити стелю.", "opts": ["must", "had to", "musted"], "a": 1, "why": "У must немає минулого часу. «Довелося, мусив» — had to." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Тобі довелося за це платити?", "opts": ["Did you have to pay for it?", "Did you must pay for it?", "Did you had to pay for it?"], "a": 0, "why": "Питання в минулому — Did you have to…? Must з did не поєднується, а після did дієслово в початковій формі: have, не had." },
+    { "type": "input", "q": "My brother ___ (have to) get up at five every day.", "uk": "Моєму братові щодня треба вставати о п'ятій.", "a": ["has to", "has got to"], "why": "My brother — це he, тому has to. Після нього дієслово в початковій формі: get up." },
+    { "type": "input", "q": "You ___ (not / have to) bring lunch. The boss is buying pizza.", "uk": "Обід можеш не брати. Бос пригощає піцою.", "a": ["don't have to", "haven't got to"], "why": "Немає потреби — don't have to. Mustn't тут означало б «заборонено брати обід»." },
+    { "type": "input", "q": "You ___ (not / must) touch that cable! It's live.", "uk": "Цей кабель чіпати не можна! Він під напругою.", "a": ["mustn't", "must not"], "why": "Тут заборона, бо небезпечно, тому mustn't (must not) + дієслово без to." },
+    { "type": "input", "q": "We ___ (not / have to) wait long. The bus came quickly.", "uk": "Нам не довелося довго чекати. Автобус приїхав швидко.", "a": ["didn't have to", "did not have to"], "why": "Минуле, «не довелося» — didn't have to. У must немає минулої форми." },
+    { "type": "order", "uk": "Мені треба вдягати каску?", "words": ["I", "wear", "have", "a", "do", "helmet", "to"], "a": ["Do I have to wear a helmet?"], "why": "Питання з have to — через do: Do + I + have to + дієслово." },
+    { "type": "order", "uk": "Нам доведеться почекати до завтра.", "words": ["will", "we", "wait", "have", "to", "until", "tomorrow"], "a": ["We will have to wait until tomorrow."], "why": "У must немає форми майбутнього часу (will must не буває). «Доведеться» — will have to + дієслово." }
+  ]
+}

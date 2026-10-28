@@ -1,0 +1,89 @@
+{
+  "id": "too-enough-so-such",
+  "level": "B1",
+  "title": "Too, enough, so, such",
+  "uk": "Too, enough, so, such: занадто, досить, такий",
+  "summary": "занадто, досить, такий: too heavy, big enough, such a cold day",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "Чотири короткі слова, без яких не обходиться жодна розмова: **too** — занадто (і це проблема), **enough** — достатньо, **so** і **such** — так, такий (підсилюють). Значення прості, а помилки бувають через **місце** в реченні: що стоїть перед цим словом, а що після." },
+    { "t": "h", "text": "Too — занадто" },
+    { "t": "rule", "title": "Занадто", "lines": ["**too** + прикметник / прислівник: too heavy, too fast", "**too much** + незлічуване: too much noise", "**too many** + множина: too many people"] },
+    { "t": "p", "text": "**Too** завжди означає, що це **заважає**: занадто важке — не піднімеш. Якщо просто «дуже», кажи **very**: It's very heavy (важке, але впораємося). It's too heavy (не впораємося). **Незлічуване** — те, що не порахуєш поштучно: money, work, time, noise. Для нього **much**, а для того, що рахуємо (people, cars), — **many**." },
+    { "t": "ex", "items": [
+      ["This bag is **too heavy**. I can't lift it.", "Ця сумка надто важка: я не можу її підняти."],
+      ["You're driving **too fast**. Slow down!", "Ти їдеш надто швидко. Пригальмуй!"],
+      ["There's **too much** dust in here.", "Тут забагато пилу."],
+      ["There are **too many** cars on the road today.", "Сьогодні на дорозі забагато машин."],
+      ["I ate **too much**.", "Я переїв."]
+    ] },
+    { "t": "tip", "text": "Перед прикметником — лише **too**: too cold, too expensive. **Too much** і **too many** — перед іменником (too much work) або в кінці речення (I ate too much)." },
+    { "t": "tip", "text": "Не плутай з **too** «теж» у кінці речення: I'm tired **too** — я теж утомився. Me **too**! — Я теж!" },
+    { "t": "h", "text": "Enough — достатньо" },
+    { "t": "rule", "title": "Достатньо", "lines": ["прикметник / прислівник + **enough**: big enough", "**enough** + іменник: enough time"] },
+    { "t": "p", "text": "Головне — місце. Enough стоїть **після** прикметника чи прислівника, але **перед** іменником. В українській «достатньо» зазвичай спереду («достатньо великий», «достатньо часу»), тому тут легко помилитися. «Недостатньо» — **not enough**." },
+    { "t": "ex", "items": [
+      ["Is the van **big enough** for all the boards?", "Фургон достатньо великий для всіх листів гіпсокартону?"],
+      ["He isn't **old enough** to drive.", "Він ще замалий, щоб водити машину."],
+      ["We don't have **enough time**.", "У нас недостатньо часу."],
+      ["Have we got **enough plasterboard**?", "У нас вистачить гіпсокартону?"],
+      ["You're not speaking **loudly enough**.", "Ти говориш недостатньо голосно."],
+      ["Thanks, that's **enough**.", "Дякую, досить."]
+    ] },
+    { "t": "h", "text": "Too і enough + to + дієслово" },
+    { "t": "rule", "title": "Для чого занадто або достатньо", "lines": ["too + прикметник + **to** + дієслово", "прикметник + enough + **to** + дієслово"] },
+    { "t": "ex", "items": [
+      ["It's **too cold to work** outside today.", "Сьогодні надто холодно, щоб працювати надворі."],
+      ["He's **too tired to drive**.", "Він надто втомлений, щоб сідати за кермо."],
+      ["The ladder isn't **long enough to reach** the roof.", "Драбина недостатньо довга, щоб дістати до даху."],
+      ["This box is **too heavy for me to lift**.", "Ця коробка надто важка, щоб я її підняв."]
+    ] },
+    { "t": "tip", "text": "Українське «щоб» тут — просто **to** + дієслово. А щоб сказати, для кого, додай **for** + me, him, her…: too heavy **for me** to lift. It у кінці не додаємо: to lift, а не to lift it." },
+    { "t": "h", "text": "So і such — так, такий" },
+    { "t": "p", "text": "Обидва підсилюють, як українські «так», «такий», «настільки». Різниця в тому, **що стоїть після**: після so — прикметник чи прислівник без іменника, після such — іменник (часто з прикметником перед ним)." },
+    { "t": "rule", "title": "So чи such", "lines": ["**so** + прикметник / прислівник: so cold, so fast", "**such a** + прикметник + іменник: such a cold day", "**such** + прикметник + множина: such nice people", "**such** + прикметник + незлічуване: such bad weather", "**so much / so many** + іменник: so much work"] },
+    { "t": "ex", "items": [
+      ["It's **so cold** today!", "Сьогодні так холодно!"],
+      ["It's **such a cold day**!", "Такий холодний день!"],
+      ["They're **such nice people**.", "Вони такі приємні люди."],
+      ["Thanks, that's **such good news**!", "Дякую, це така добра новина!"],
+      ["I've got **so much work** this week.", "У мене цього тижня так багато роботи."]
+    ] },
+    { "t": "tip", "text": "Weather, work, news, advice, money — незлічувані, тому **без a**: such bad weather, such good news. З одним злічуваним предметом — **such a**: such a long day." },
+    { "t": "h", "text": "So … that, such … that — так …, що" },
+    { "t": "rule", "title": "Наслідок", "lines": ["**so** + прикметник + **that** …", "**such (a)** + прикметник + іменник + **that** …"] },
+    { "t": "ex", "items": [
+      ["It was **so cold that** we stopped work early.", "Було так холодно, що ми раніше закінчили роботу."],
+      ["It was **such a cold day that** we stopped early.", "Був такий холодний день, що ми закінчили раніше."],
+      ["The music was **so loud that** I couldn't sleep.", "Музика була така гучна, що я не міг заснути."]
+    ] },
+    { "t": "tip", "text": "У розмові **that** часто пропускають: It was **so hot** we went to the beach." },
+    { "t": "h", "text": "Very, too, so, enough — різниця" },
+    { "t": "table", "head": ["Слово", "Значення", "Приклад"], "rows": [
+      ["very", "дуже (просто факт)", "It's **very** cold."],
+      ["too", "надто (і це проблема)", "It's **too** cold to work."],
+      ["so", "так (з емоцією)", "It's **so** cold!"],
+      ["enough", "достатньо", "It's warm **enough**."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "It's very much expensive.", "right": "It's very expensive.", "why": "Перед прикметником much не ставимо: very expensive, too expensive. Much — перед іменником (much money) або перед вищим ступенем (much cheaper)." },
+    { "t": "mistake", "wrong": "It's too much cold today.", "right": "It's too cold today.", "why": "Перед прикметником — просто too. Too much — лише з іменником: too much work." },
+    { "t": "mistake", "wrong": "The room isn't enough big.", "right": "The room isn't big enough.", "why": "Enough стоїть після прикметника, але перед іменником: big enough, enough time." },
+    { "t": "mistake", "wrong": "It's such a cold weather.", "right": "It's such cold weather.", "why": "Weather — незлічуване, тому без a." },
+    { "t": "mistake", "wrong": "He's so a nice guy.", "right": "He's such a nice guy.", "why": "Перед a + прикметник + іменник — such. So — лише перед прикметником без іменника: He's so nice." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "The coffee is ___ hot. I can't drink it.", "uk": "Кава надто гаряча: я не можу її пити.", "opts": ["too", "too much", "enough"], "a": 0, "why": "Перед прикметником (hot) — просто too. Too much ставимо лише перед іменником." },
+    { "type": "choice", "q": "There are ___ people in the shop.", "uk": "У магазині забагато людей.", "opts": ["too much", "too many", "too"], "a": 1, "why": "People — їх можна порахувати, тому too many. Too much — для незлічуваного (too much noise)." },
+    { "type": "choice", "q": "This room isn't ___ for a party.", "uk": "Ця кімната недостатньо велика для вечірки.", "opts": ["enough big", "big enough", "too big"], "a": 1, "why": "Enough стоїть після прикметника: big enough. Too big означало б «завелика»." },
+    { "type": "input", "q": "Have we got ___ (enough / screws)?", "uk": "У нас достатньо шурупів?", "a": ["enough screws"], "why": "З іменником enough стоїть спереду: enough screws, enough time." },
+    { "type": "input", "q": "Is the cable ___ (enough / long)?", "uk": "Кабель достатньо довгий?", "a": ["long enough"], "why": "З прикметником enough стоїть після нього: long enough." },
+    { "type": "input", "q": "I'm ___ (tired) to go to the gym tonight.", "uk": "Я надто втомлений, щоб іти сьогодні ввечері в спортзал.", "a": ["too tired"], "why": "Too + прикметник + to + дієслово: too tired to go." },
+    { "type": "input", "q": "There's ___ (much) noise in here. I can't hear you.", "uk": "Тут забагато шуму. Я тебе не чую.", "a": ["too much"], "why": "Noise — незлічуване, тому much, а «забагато» — too much." },
+    { "type": "choice", "q": "It was ___ day!", "uk": "Це був такий довгий день!", "opts": ["so a long", "such a long", "such long"], "a": 1, "why": "Day — один злічуваний предмет з прикметником, тому such a long day. So перед a не ставимо." },
+    { "type": "choice", "q": "We've had ___ bad weather this week.", "uk": "Цього тижня в нас така погана погода.", "opts": ["such a", "such", "so"], "a": 1, "why": "Weather — незлічуване, тому such без a. So не ставимо перед прикметником з іменником." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Він говорив так швидко, що я не зрозумів.", "opts": ["He spoke so fast that I didn't understand.", "He spoke such fast that I didn't understand.", "He spoke too fast that I didn't understand."], "a": 0, "why": "Перед прислівником без іменника — so, а «так …, що» — so … that. Too з that не поєднуємо." },
+    { "type": "order", "uk": "Він так утомився, що заснув.", "words": ["he", "was", "so", "tired", "that", "he", "fell", "asleep"], "a": ["He was so tired that he fell asleep."], "why": "So + прикметник + that + наслідок: so tired that he fell asleep." },
+    { "type": "order", "uk": "Ти так добре впорався.", "words": ["you", "did", "such", "a", "good", "job"], "a": ["You did such a good job."], "why": "Перед a + прикметник + іменник — such: such a good job." }
+  ]
+}

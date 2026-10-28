@@ -1,0 +1,113 @@
+{
+  "id": "adjectives-adverbs",
+  "level": "A2",
+  "title": "Adjectives and adverbs",
+  "uk": "Прикметники і прислівники",
+  "summary": "a careful worker, he works carefully; good і well, bored і boring",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "**Прикметник** відповідає на питання «який?» і описує людину або річ: a **careful** worker — акуратний працівник. **Прислівник** відповідає на «як?» і описує дію: he works **carefully** — працює акуратно. В українській з «акуратний» робимо «акуратно», а в англійській до прикметника зазвичай додаємо **-ly**." },
+    { "t": "rule", "title": "Головне правило", "lines": ["прикметник + іменник: a **quick** job", "дієслово + прислівник: work **quickly**"] },
+    { "t": "ex", "items": [
+      ["He's a **careful** worker.", "Він акуратний працівник."],
+      ["He works **carefully**.", "Він працює акуратно."],
+      ["It was a **quick** job.", "Це була швидка робота."],
+      ["We did it **quickly**.", "Ми зробили її швидко."]
+    ] },
+    { "t": "tip", "text": "Прислівник зазвичай стоїть **після дієслова** або після того, на що спрямована дія: He speaks English **well**. He did the job **quickly**. А не He speaks well English." },
+    { "t": "h", "text": "Як утворити прислівник" },
+    { "t": "table", "head": ["Прикметник", "Що робимо", "Приклад"], "rows": [
+      ["більшість", "+ ly", "slow → slow**ly**"],
+      ["на -e", "залишаємо e, + ly", "nice → nice**ly**"],
+      ["на -y", "y → i, + ly", "easy → eas**ily**"],
+      ["на -le", "e → y", "gentle → gent**ly**"],
+      ["на -l (-ful)", "+ ly, виходить -lly", "careful → careful**ly**"],
+      ["на -ic", "+ ally", "basic → basic**ally**"]
+    ] },
+    { "t": "ex", "items": [
+      ["We found the house **easily**.", "Ми легко знайшли будинок."],
+      ["Close the door **gently**, please.", "Зачини двері тихенько, будь ласка."],
+      ["**Luckily**, nobody was hurt.", "На щастя, ніхто не постраждав."],
+      ["**Basically**, the job is finished.", "По суті, роботу закінчено."]
+    ] },
+    { "t": "tip", "text": "Обережно: **friendly**, **lovely**, **lonely** — це прикметники, хоч і закінчуються на -ly: a **friendly** boss. Прислівника від них немає, тому кажуть in a friendly way." },
+    { "t": "h", "text": "Без -ly: good → well, fast, hard" },
+    { "t": "p", "text": "Деякі прислівники утворюються не за правилом. Найважливіший: **good → well** (добре). А **fast, hard, late, early** однакові і для прикметника, і для прислівника." },
+    { "t": "table", "head": ["Прикметник", "Прислівник", "Приклад"], "rows": [
+      ["good", "**well**", "He works **well**."],
+      ["fast", "**fast**", "She drives **fast**."],
+      ["hard", "**hard**", "We work **hard**."],
+      ["late", "**late**", "The bus came **late**."],
+      ["early", "**early**", "I get up **early**."]
+    ] },
+    { "t": "ex", "items": [
+      ["Mick is a **good** plasterer. He works really **well**.", "Мік — хороший штукатур. Він дуже добре працює."],
+      ["Tom drives too **fast**.", "Том їздить надто швидко."],
+      ["We worked **hard** all week.", "Ми цілий тиждень важко працювали."],
+      ["I start **early** and finish **late**.", "Я рано починаю і пізно закінчую."]
+    ] },
+    { "t": "tip", "text": "**Well** буває і прикметником у значенні «здоровий»: I don't feel **well** — мені недобре, я погано почуваюся." },
+    { "t": "h", "text": "Пастки: hardly і lately" },
+    { "t": "p", "text": "Hard і late мають «двійників» з -ly, але значення в них зовсім інше: **hardly** — «майже не», **lately** — «останнім часом». Тому «важко працює» — works **hard**, а «пізно прийшов» — came **late**." },
+    { "t": "ex", "items": [
+      ["He works **hard**.", "Він старанно працює."],
+      ["He **hardly** works.", "Він майже не працює."],
+      ["I can **hardly** hear you.", "Я тебе майже не чую."],
+      ["Have you seen Tom **lately**?", "Ти бачив Тома останнім часом?"]
+    ] },
+    { "t": "h", "text": "Після look, feel, sound — прикметник" },
+    { "t": "p", "text": "Деякі дієслова описують не дію, а **стан** або **враження**: be, look (виглядати), feel (почуватися), seem (здаватися), sound (звучати), taste (мати смак), smell (пахнути), get (ставати). Після них ставимо **прикметник**, бо він описує саму людину чи річ. В українській тут часто «-о» («звучить добре»), а в англійській прикметник: sounds **good**." },
+    { "t": "ex", "items": [
+      ["You **look tired**.", "Вигляд у тебе втомлений."],
+      ["That **sounds good**.", "Звучить добре."],
+      ["This soup **tastes great**.", "Цей суп дуже смачний."],
+      ["The paint **smells awful**.", "Фарба жахливо пахне."],
+      ["It's **getting cold**.", "Стає холодно."]
+    ] },
+    { "t": "tip", "text": "Порівняй: He **looks angry** — у нього сердитий вигляд (прикметник, бо це про нього). He **looked at me angrily** — він сердито на мене подивився (прислівник, бо це про дію)." },
+    { "t": "h", "text": "-ed чи -ing: bored чи boring" },
+    { "t": "p", "text": "Прикметники на **-ed** кажуть, що **людина відчуває**: I'm bored — мені нудно. На **-ing** — що **викликає** це відчуття: the job is boring — робота нудна. Обережно: I'm boring означає «я нудна людина»." },
+    { "t": "table", "head": ["-ed: що я відчуваю", "-ing: яке воно"], "rows": [
+      ["bored — мені нудно", "boring — нудний"],
+      ["tired — я втомився", "tiring — виснажливий"],
+      ["interested — мені цікаво", "interesting — цікавий"],
+      ["confused — я заплутався", "confusing — заплутаний"],
+      ["surprised — я здивований", "surprising — несподіваний"],
+      ["excited — я в захваті", "exciting — захопливий"]
+    ] },
+    { "t": "ex", "items": [
+      ["I'm **tired**. It was a **tiring** day.", "Я втомився. Це був виснажливий день."],
+      ["Are you **interested** in football?", "Тебе цікавить футбол?"],
+      ["The film was really **interesting**.", "Фільм був дуже цікавий."],
+      ["These instructions are **confusing**. I'm totally **confused**.", "Ця інструкція заплутана. Я зовсім заплутався."]
+    ] },
+    { "t": "h", "text": "Кілька прикметників поспіль" },
+    { "t": "p", "text": "Прикметник стоїть **перед** іменником, як і в українській: a red car. Він ніколи не змінюється: one big van, two big vans (не bigs). Якщо прикметників кілька, природний порядок такий:" },
+    { "t": "rule", "title": "Порядок", "lines": ["думка → розмір → вік → колір → матеріал → іменник", "a **nice big old white** van"] },
+    { "t": "ex", "items": [
+      ["He drives a **nice big old white** van.", "Він їздить на гарному великому старому білому фургоні."],
+      ["We need a **long metal** ladder.", "Нам потрібна довга металева драбина."],
+      ["She's got a **lovely little** dog.", "У неї чудовий маленький песик."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "He works very good.", "right": "He works very well.", "why": "Як працює — це про дію, тому прислівник well. Good ставимо перед іменником (a good worker) або після be (The job is good)." },
+    { "t": "mistake", "wrong": "I'm boring at work.", "right": "I'm bored at work.", "why": "Bored — тобі нудно. I'm boring означає «я нудна людина»." },
+    { "t": "mistake", "wrong": "Drive careful!", "right": "Drive carefully!", "why": "Як їхати — це про дію, тому прислівник з -ly." },
+    { "t": "mistake", "wrong": "I feel badly today.", "right": "I feel bad today.", "why": "Після feel, look, sound ставимо прикметник: feel bad, feel tired, feel good." },
+    { "t": "mistake", "wrong": "He's got a car red.", "right": "He's got a red car.", "why": "Прикметник завжди стоїть перед іменником, як і в українській." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Mick is a very ___ driver.", "uk": "Мік — дуже обережний водій.", "opts": ["careful", "carefully"], "a": 0, "why": "Driver — іменник (хто?), а іменник описуємо прикметником: a careful driver." },
+    { "type": "choice", "q": "He did the job really ___.", "uk": "Він дуже добре зробив роботу.", "opts": ["good", "well"], "a": 1, "why": "Як зробив — це про дію, тому прислівник well. Good описує іменник: a good job." },
+    { "type": "choice", "q": "The meeting was really ___.", "uk": "Нарада була дуже нудна.", "opts": ["bored", "boring"], "a": 1, "why": "Нарада викликає нудьгу — прикметник на -ing. Bored — про людину, якій нудно." },
+    { "type": "choice", "q": "Your plan sounds ___.", "uk": "Твій план звучить добре.", "opts": ["good", "well"], "a": 0, "why": "Після sound (як і після look, feel, seem) ставимо прикметник: sounds good." },
+    { "type": "choice", "q": "He ___ works. He's always on his phone.", "uk": "Він майже не працює: весь час сидить у телефоні.", "opts": ["hard", "hardly"], "a": 1, "why": "Hardly — «майже не». Hard — «старанно, важко»: He works hard." },
+    { "type": "input", "q": "The boss explained everything very ___ (clear).", "uk": "Бос усе дуже зрозуміло пояснив.", "a": ["clearly"], "why": "Як пояснив — це про дію, тому прислівник: clear + -ly." },
+    { "type": "input", "q": "I slept ___ (terrible) last night.", "uk": "Я жахливо спав минулої ночі.", "a": ["terribly"], "why": "Прикметник на -le: e змінюємо на y — terrible → terribly." },
+    { "type": "input", "q": "It's raining ___ (heavy).", "uk": "Іде сильний дощ.", "a": ["heavily"], "why": "Прикметник на -y: y → i, потім -ly — heavy → heavily." },
+    { "type": "input", "q": "I'm really ___ (interest) in history.", "uk": "Мене дуже цікавить історія.", "a": ["interested"], "why": "Про те, що людина відчуває, — прикметник на -ed: I'm interested. Interesting — про саму історію." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ми купили великий білий фургон.", "opts": ["We bought a van big white.", "We bought a big white van.", "We bought a white big van."], "a": 1, "why": "Прикметники стоять перед іменником, і розмір іде перед кольором: a big white van." },
+    { "type": "order", "uk": "Ти сьогодні маєш утомлений вигляд.", "words": ["tired", "look", "today", "you"], "a": ["You look tired today.", "Today you look tired."], "why": "Після look — прикметник (tired), а не прислівник. Today зазвичай ставимо в кінці." },
+    { "type": "order", "uk": "Він дуже добре говорить англійською.", "words": ["English", "speaks", "very", "he", "well"], "a": ["He speaks English very well."], "why": "Well стоїть після дієслова і того, на що спрямована дія: speaks English very well. Між speaks і English його не ставимо." }
+  ]
+}

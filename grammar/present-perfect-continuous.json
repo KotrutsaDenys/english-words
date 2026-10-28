@@ -1,0 +1,85 @@
+{
+  "id": "present-perfect-continuous",
+  "level": "B1",
+  "title": "Present Perfect Continuous",
+  "uk": "Теперішній доконано-тривалий: have been doing",
+  "summary": "скільки вже триває дія: I've been working here for two years",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Present Perfect Continuous** (have/has been + форма з -ing) — для дії, що **почалася в минулому й триває досі**, коли ми кажемо, **як довго** вона триває. Українською тут теперішній час: «я працюю тут два роки». Англійською ні: I work — це «взагалі», I'm working — «зараз», а для «вже два роки» кажуть I've been working." },
+    { "t": "ex", "items": [
+      ["I**'ve been working** here for two years.", "Я працюю тут уже два роки."],
+      ["How long **have** you **been waiting**?", "Скільки ти вже чекаєш?"],
+      ["It**'s been raining** since this morning.", "Дощ іде з самого ранку."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Ствердження", "lines": ["I / you / we / they + **have been** + -ing", "he / she / it + **has been** + -ing"] },
+    { "t": "p", "text": "**Форма з -ing** — дієслово із закінченням -ing: work → working, make → making, sit → sitting (правопис той самий, що в Present Continuous). **Been** не змінюється ніколи. У розмові скорочують: I've been, she's been, haven't been, hasn't been." },
+    { "t": "rule", "title": "Заперечення", "lines": ["I / you / we / they + **haven't been** + -ing", "he / she / it + **hasn't been** + -ing"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Have** + I / you / we / they + **been** + -ing?", "**Has** + he / she / it + **been** + -ing?"] },
+    { "t": "ex", "items": [
+      ["**Has** Tom **been working** here long?", "Том давно тут працює?"],
+      ["She **hasn't been sleeping** well lately.", "Вона останнім часом погано спить."],
+      ["We**'ve been living** in Gorey since March.", "Ми живемо в Горі з березня."]
+    ] },
+    { "t": "h", "text": "for чи since" },
+    { "t": "p", "text": "**for** — скільки часу, тобто відрізок: for two hours, for a year. **since** — з якого моменту (година, день, рік чи подія): since eight o'clock, since Monday, since 2024, since I came here (відколи я сюди приїхав)." },
+    { "t": "table", "head": ["for (скільки)", "since (з якого моменту)"], "rows": [
+      ["for ten minutes", "since eight o'clock"],
+      ["for three days", "since Monday"],
+      ["for two years", "since 2024"],
+      ["for a long time", "since I came here"]
+    ] },
+    { "t": "ex", "items": [
+      ["How long **have** you **been learning** English? — For about a year.", "Скільки ти вже вчиш англійську? — Близько року."],
+      ["He**'s been driving** since six this morning.", "Він за кермом з шостої ранку."]
+    ] },
+    { "t": "h", "text": "Недавня дія, наслідки якої видно" },
+    { "t": "p", "text": "Ще одне значення: дія тривала до недавнього часу (може, щойно закінчилася), і зараз видно її **наслідки**: втому, бруд, мокру землю. Скільки вона тривала, можна й не казати." },
+    { "t": "ex", "items": [
+      ["I'm tired because I**'ve been plastering** all day.", "Я втомився, бо цілий день штукатурив."],
+      ["Your hands are dirty. What **have** you **been doing**?", "У тебе брудні руки. Що ти робив?"],
+      ["The ground is wet. It**'s been raining**.", "Земля мокра: ішов дощ."]
+    ] },
+    { "t": "h", "text": "have been doing чи have done" },
+    { "t": "p", "text": "**have done** (Present Perfect Simple) — про **результат**: що зроблено, скільки штук, скільки разів. **have been doing** — про **процес**: чим займався і як довго. Якщо називаєш кількість зробленого — тільки have done." },
+    { "t": "table", "head": ["have been doing", "have done"], "rows": [
+      ["процес, як довго", "результат, скільки"],
+      ["може ще тривати", "уже зроблено"],
+      ["How long…?", "How many…? How much…?"]
+    ] },
+    { "t": "ex", "items": [
+      ["I**'ve been painting** all morning.", "Я фарбую з самого ранку."],
+      ["I**'ve painted** two rooms.", "Я пофарбував дві кімнати."],
+      ["She**'s been calling** you all day.", "Вона дзвонить тобі цілий день."],
+      ["She**'s called** you three times.", "Вона дзвонила тобі тричі."]
+    ] },
+    { "t": "h", "text": "Дієслова стану: зазвичай have done" },
+    { "t": "p", "text": "Деякі дієслова означають **стан**, а не дію: know (знати), like, love, hate, want, need, believe, understand, own (володіти), be, а також have у значенні «мати». Їх зазвичай не вживають з -ing, навіть коли кажемо «як довго». Тоді просто Present Perfect: have/has + V3 (третя форма дієслова)." },
+    { "t": "ex", "items": [
+      ["I**'ve known** him for years.", "Я знаю його багато років."],
+      ["We**'ve had** this van since 2020.", "Цей фургон у нас з 2020 року."],
+      ["She**'s been** in Ireland for six months.", "Вона в Ірландії вже пів року."]
+    ] },
+    { "t": "tip", "text": "З **live** і **work** можна обидва варіанти майже без різниці: I've lived here for five years = I've been living here for five years." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I am working here for two years.", "right": "I've been working here for two years.", "why": "Present Continuous — лише про «зараз». Коли кажеш, скільки вже триває, — have been + -ing." },
+    { "t": "mistake", "wrong": "I work here since 2024.", "right": "I've been working here since 2024.", "why": "Почалося в минулому й триває досі — have been + -ing, а не Present Simple, як в українському «працюю з 2024 року»." },
+    { "t": "mistake", "wrong": "I've been knowing him for years.", "right": "I've known him for years.", "why": "Know — дієслово стану, з -ing його не вживають." },
+    { "t": "mistake", "wrong": "I've been waiting since two hours.", "right": "I've been waiting for two hours.", "why": "Two hours — відрізок часу, тому for. Since — лише перед моментом: since two o'clock." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I ___ waiting for twenty minutes.", "uk": "Я чекаю вже двадцять хвилин.", "opts": ["have been", "am", "have"], "a": 0, "why": "Чекаю досі й кажу, скільки, — have been + -ing. Am waiting — лише «зараз», без тривалості, а have waiting — такої форми немає." },
+    { "type": "choice", "q": "She's been working here ___ March.", "uk": "Вона працює тут з березня.", "opts": ["for", "since", "from"], "a": 1, "why": "March — момент, з якого все почалося, тому since. For — перед відрізком часу (for two months), а from без to чи until тут не вживаємо." },
+    { "type": "input", "q": "I've been learning English ___ a year.", "uk": "Я вчу англійську вже рік.", "a": ["for"], "why": "A year — відрізок часу (скільки), тому for. Since — лише перед моментом: since May." },
+    { "type": "input", "q": "It ___ been raining since Monday.", "uk": "Дощ іде з понеділка.", "a": ["has"], "why": "It — як he і she, тому has been + -ing." },
+    { "type": "choice", "q": "___ Mick been working here long?", "uk": "Мік давно тут працює?", "opts": ["Has", "Have", "Is"], "a": 0, "why": "Питання: Has + he/she/it + been + -ing. Mick — це he, тому Has." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я працюю тут з 2024 року.", "opts": ["I work here since 2024.", "I've been working here since 2024.", "I'm working here since 2024."], "a": 1, "why": "Почалося 2024 року й триває досі — have been + -ing. Present Simple і Present Continuous із since не вживаємо." },
+    { "type": "input", "q": "He ___ (drive) since six this morning.", "uk": "Він за кермом з шостої ранку.", "a": ["has been driving"], "why": "Дія почалася о шостій і триває досі: he + has been + форма з -ing." },
+    { "type": "choice", "q": "I ___ Tom since we were kids.", "uk": "Я знаю Тома з дитинства.", "opts": ["have known", "have been knowing", "know"], "a": 0, "why": "Know — дієслово стану, тому без -ing: have known. Present Simple know із since не вживаємо." },
+    { "type": "choice", "q": "Kate ___ three walls today.", "uk": "Кейт сьогодні заштукатурила три стіни.", "opts": ["has plastered", "has been plastering", "have plastered"], "a": 0, "why": "Скільки зроблено (три стіни) — результат, тому has + V3. Has been plastering — про процес і тривалість. Have не підходить, бо Kate — це she." },
+    { "type": "choice", "q": "I'm tired because I ___ plasterboard all morning.", "uk": "Я втомився, бо цілий ранок носив гіпсокартон.", "opts": ["have been carrying", "am carrying", "have been carried"], "a": 0, "why": "Дія тривала весь ранок, і зараз видно наслідок (втому) — have been + -ing. Am carrying — лише «зараз», а have been carried означало б «мене носили»." },
+    { "type": "order", "uk": "Скільки ти вже чекаєш?", "words": ["long", "you", "been", "how", "have", "waiting"], "a": ["How long have you been waiting?"], "why": "Питання: How long + have + you + been + форма з -ing." },
+    { "type": "order", "uk": "Ми живемо тут з березня.", "words": ["living", "since", "we've", "here", "March", "been"], "a": ["We've been living here since March.", "Since March we've been living here."], "why": "We've been + -ing, далі місце (here), а since March — зазвичай у кінці речення." }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "id": "this-that",
+  "level": "A1",
+  "title": "This, that, these, those",
+  "uk": "Цей, той: this, that, these, those, one",
+  "summary": "цей/той, ці/ті й one замість повтору: this one, the red ones",
+  "minutes": 5,
+  "blocks": [
+    { "t": "p", "text": "Ці чотири слова вказують, **про яку саме** річ мова, як українські «цей» і «той». Вибір залежить від двох питань: річ **близько чи далеко** і чи вона **одна, чи їх кілька**." },
+    { "t": "table", "head": ["Де", "Одна річ", "Кілька речей"], "rows": [
+      ["близько, тут", "**this** — цей", "**these** — ці"],
+      ["далеко, там", "**that** — той", "**those** — ті"]
+    ] },
+    { "t": "ex", "items": [
+      ["**This** drill is new.", "Цей дриль новий (він у мене в руках)."],
+      ["**That** van over there is Mick's.", "Он той фургон — Міків."],
+      ["**These** boots are really comfortable.", "Ці черевики дуже зручні."],
+      ["Who are **those** men?", "Хто ті чоловіки?"],
+      ["I like **this** song.", "Мені подобається ця пісня (що грає зараз)."]
+    ] },
+    { "t": "tip", "text": "Не плутай на слух: **this** — коротке «і» і глухе «с» у кінці, **these** — довге «іі» і дзвінке «з»: [зііз]. Якщо вимовиш these коротко, почують this." },
+
+    { "t": "h", "text": "This is…, That's…: без іменника" },
+    { "t": "p", "text": "This, that, these, those можуть стояти самі, без іменника, коли показуєш на щось, знайомиш людей або називаєш себе в телефонній розмові. **That is** у розмові скорочують до **that's**, а this is на письмі не скорочують ніколи." },
+    { "t": "ex", "items": [
+      ["**This is** my van.", "Це мій фургон."],
+      ["Kate, **this is** Andrii.", "Кейт, познайомся, це Андрій."],
+      ["**What's that**?", "Що то таке?"],
+      ["**Is this** your phone?", "Це твій телефон?"],
+      ["**These are** my tools.", "Це мої інструменти."],
+      ["Hello, **this is** Tom.", "Алло, це Том."]
+    ] },
+    { "t": "tip", "text": "Українське «це» буває і про одну річ, і про кілька: «Це мої інструменти». Англійською дивись на кількість: **This is** my tool, але **These are** my tools." },
+
+    { "t": "h", "text": "That's great! — про щойно сказане" },
+    { "t": "p", "text": "Коли реагуєш на чиїсь слова, кажи **that**: слова вже прозвучали, вони ніби «там». Українською тут просто «Це…», «Чудово!», «Правильно»." },
+    { "t": "ex", "items": [
+      ["I got the job! — **That's** great!", "Мене взяли на роботу! — Це чудово!"],
+      ["Let's start at seven. — **That's** a good idea.", "Почнімо о сьомій. — Гарна ідея."],
+      ["Is it twenty euros? — Yes, **that's** right.", "Це двадцять євро? — Так, правильно."],
+      ["Sorry I'm late. — **That's** OK.", "Вибач, що запізнився. — Нічого страшного."],
+      ["**That's** not true!", "Це неправда!"]
+    ] },
+
+    { "t": "h", "text": "Про час: this morning, that day" },
+    { "t": "p", "text": "З часом **this** означає «цей, сьогоднішній, найближчий»: **this** morning (сьогодні вранці), **this** evening (сьогодні ввечері), **this** week (цього тижня), **this** Saturday (цієї суботи). Без in, on і без the! А **that** — про інший, частіше минулий час: **that** day (того дня)." },
+    { "t": "ex", "items": [
+      ["I saw Mick **this** morning.", "Я бачив Міка сьогодні вранці."],
+      ["I'm busy **this** week.", "Цього тижня я зайнятий."],
+      ["We finished early **that** day.", "Того дня ми закінчили рано."],
+      ["**These** days everything is expensive.", "Тепер усе дороге."]
+    ] },
+
+    { "t": "h", "text": "One / ones: щоб не повторювати" },
+    { "t": "p", "text": "Щоб не повторювати той самий іменник, англійці ставлять **one** (замість однієї речі) або **ones** (замість кількох). Українською ми просто кажемо «чорні» чи «оцей». Англійською після прикметника one/ones **обов'язкове** (the black ones), а після this, that, which його дуже часто додають: this one, which one?" },
+    { "t": "rule", "title": "Замість повтору", "lines": [
+      "this **one** / that **one** — оцей / он той",
+      "the red **one** — червоний (одна річ)",
+      "the red **ones** — червоні (кілька)",
+      "which **one**? / which **ones**? — котрий? / котрі?",
+      "a big **one** — якийсь великий"
+    ] },
+    { "t": "ex", "items": [
+      ["Which drill do you want? — **This one**.", "Який дриль тобі дати? — Оцей."],
+      ["These gloves are too small. Have you got any bigger **ones**?", "Ці рукавиці замалі. У тебе є більші?"],
+      ["My van is the white **one**.", "Мій фургон — білий."],
+      ["**Which one** is yours?", "Котрий твій?"],
+      ["I need a ladder. — There's **one** in the van.", "Мені потрібна драбина. — У фургоні є одна."]
+    ] },
+    { "t": "tip", "text": "One/ones — лише замість того, що можна порахувати. З незлічуваним (water, cement, money) one не вживають: I need some cement. — There's **some** in the van. Без прикметника a перед one не ставимо: There's **one** in the van (а не a one). А після these і those ones зазвичай не потрібне: I'll take **these**." },
+
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "This cars are new.", "right": "These cars are new.", "why": "Cars — кілька, тому these. This лише з однією річчю: this car." },
+    { "t": "mistake", "wrong": "I like those car.", "right": "I like that car.", "why": "Car — одна, тому that. Those лише з множиною: those cars." },
+    { "t": "mistake", "wrong": "These is my tools.", "right": "These are my tools.", "why": "These — множина, тому are, а не is." },
+    { "t": "mistake", "wrong": "I want the red.", "right": "I want the red one.", "why": "Після прикметника потрібен іменник або one: the red one, the red ones." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "___ boots are new.", "uk": "Ці черевики нові.", "opts": ["This", "These", "That"], "a": 1, "why": "Boots — кілька, і вони близько («ці»), тому these." },
+    { "type": "choice", "q": "Look at ___ van over there!", "uk": "Подивись он на той фургон!", "opts": ["this", "that", "those"], "a": 1, "why": "Фургон один і далеко (over there), тому that. Those — лише для кількох речей." },
+    { "type": "choice", "q": "Who are ___ people over there?", "uk": "Хто он ті люди?", "opts": ["this", "that", "these", "those"], "a": 3, "why": "People — множина, і вони далеко (over there), тому those." },
+    { "type": "input", "q": "___ (this) are my tools.", "uk": "Це мої інструменти.", "a": ["These"], "why": "Tools — кілька, тому this змінюємо на these. І дієслово are, бо множина." },
+    { "type": "input", "q": "Kate, ___ is my friend Andrii.", "uk": "Кейт, познайомся, це мій друг Андрій.", "a": ["this"], "why": "Коли знайомимо людей, кажемо this is: людина поруч із нами." },
+    { "type": "choice", "q": "I got the job! — ___ great!", "uk": "Мене взяли на роботу! — Це чудово!", "opts": ["That's", "This's", "Those are"], "a": 0, "why": "Реагуємо на щойно сказане — that's. This is до this's не скорочують, а those — для кількох речей." },
+    { "type": "input", "q": "I'll see you ___ evening.", "uk": "Побачимося сьогодні ввечері.", "a": ["this"], "why": "«Сьогодні ввечері» — this evening, без in і без the. Так само this morning, this week." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "opts": ["Those car is mine.", "That car is mine.", "That cars are mine."], "a": 1, "why": "Car — одна, тому that. Those і these — лише з множиною: those cars." },
+    { "type": "choice", "q": "Which gloves do you want? — The black ___.", "uk": "Які рукавиці ти хочеш? — Чорні.", "opts": ["one", "ones", "— (нічого)"], "a": 1, "why": "Щоб не повторювати gloves, ставимо ones, бо рукавиць кілька. Голий прикметник (the black) тут не можна." },
+    { "type": "input", "q": "This ladder is too short. Have you got a longer ___ (one / ones)?", "uk": "Ця драбина закоротка. У тебе є довша?", "a": ["one"], "why": "Драбина одна, тому замість повтору слова ladder ставимо one: a longer one." },
+    { "type": "order", "uk": "Ці рукавиці кращі за ті.", "words": ["those", "gloves", "better", "these", "than", "are"], "a": ["These gloves are better than those."], "why": "Ці (близько, кілька) — these, ті (далі, кілька) — those. Після those іменник gloves не повторюємо." },
+    { "type": "order", "uk": "Мій фургон — отой білий.", "words": ["white", "van", "that", "my", "one", "is"], "a": ["My van is that white one.", "That white one is my van."], "why": "That one — «отой», а one замінює слово van, щоб його не повторювати." }
+  ]
+}

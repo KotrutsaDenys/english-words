@@ -1,0 +1,112 @@
+{
+  "id": "past-simple",
+  "level": "A1",
+  "title": "Past Simple",
+  "uk": "Минулий простий час",
+  "summary": "завершені дії в минулому: I worked, I went, did you…?",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "**Past Simple** — минулий час для дій, які **сталися й закінчилися** в минулому: вчора, минулого тижня, у 2020 році. Українською це звичайне «працював», «купив», «поїхав». Дія вже позаду, і зрозуміло, коли вона була." },
+    { "t": "ex", "items": [
+      ["I **worked** in Gorey yesterday.", "Я вчора працював у Горі."],
+      ["We **finished** the ceiling on Friday.", "Ми закінчили стелю в п'ятницю."],
+      ["Tom **bought** a new van last month.", "Том купив новий фургон минулого місяця."],
+      ["It **was** really cold this morning.", "Сьогодні вранці було дуже холодно."]
+    ] },
+    { "t": "h", "text": "Правильні дієслова: додаємо -ed" },
+    { "t": "rule", "title": "Ствердження", "lines": ["I / you / he / she / it / we / they + work**ed**"] },
+    { "t": "p", "text": "Більшість дієслів **правильні**: їхня минула форма (її називають **V2**, друга форма дієслова) утворюється за правилом: до **початкової форми** (як у словнику: work, start) додаємо **-ed**. Добра новина: форма **однакова для всіх**. I worked, he worked, they worked, без жодного -s для he, she, it." },
+    { "t": "table", "head": ["Дієслово", "Що робимо", "Приклад"], "rows": [
+      ["більшість дієслів", "+ -ed", "work → work**ed**"],
+      ["закінчується на -e", "+ -d", "live → live**d**"],
+      ["приголосна + y", "y → -ied", "carry → carr**ied**"],
+      ["голосна + y", "+ -ed", "play → play**ed**"],
+      ["короткі: stop, plan, drop", "подвоюємо + -ed", "stop → sto**pped**"],
+      ["одна голосна + l (британське)", "подвоюємо l", "travel → trave**lled**"]
+    ] },
+    { "t": "tip", "text": "Коли подвоювати: дієслово **з одного складу** закінчується на **одну голосну + одну приголосну**: stop → stopped, plan → planned, rob → robbed. Не подвоюємо, якщо голосних дві (rain → rained), приголосних дві (help → helped) або в кінці w, x (fix → fixed)." },
+    { "t": "h", "text": "Як вимовляти -ed" },
+    { "t": "p", "text": "-ed пишеться однаково, але звучить трьома способами. Запам'ятай головне: **окремий склад «ід»** буває лише після звуків **t** і **d** (want-ed, need-ed). В інших словах -ed складу не додає: worked — це одне коротке «воркт», а не «воркед». Дивимося на останній **звук**, а не на літеру: like закінчується на звук k, тому liked — «лайкт»." },
+    { "t": "table", "head": ["Звучить", "Коли", "Приклади"], "rows": [
+      ["/t/ «т»", "після p, k, s, f, sh, ch", "work**ed**, stopp**ed**, wash**ed**"],
+      ["/d/ «д»", "після інших звуків", "play**ed**, clean**ed**, liv**ed**"],
+      ["/ɪd/ «ід»", "після t і d", "want**ed**, need**ed**, start**ed**"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **worked** late and **washed** the van.", "Я працював допізна й помив фургон."],
+      ["We **cleaned** up and **played** cards.", "Ми прибрали й пограли в карти."],
+      ["He **started** at seven and **wanted** to finish early.", "Він почав о сьомій і хотів закінчити раніше."]
+    ] },
+    { "t": "h", "text": "Неправильні дієслова" },
+    { "t": "p", "text": "Частина дієслів, і саме найчастіших, **неправильні**: у них своя V2 без -ed, яку треба просто запам'ятати. Ось ті, без яких не обійтися й дня. Понад 60 найчастіших, розбитих на групи, — у наступній темі «Неправильні дієслова»." },
+    { "t": "table", "head": ["Дієслово", "V2", "Переклад"], "rows": [
+      ["go", "went", "іти, їхати"],
+      ["have", "had", "мати"],
+      ["get", "got", "отримувати, діставатися"],
+      ["do", "did", "робити"],
+      ["make", "made", "робити, виготовляти"],
+      ["see", "saw", "бачити"],
+      ["come", "came", "приходити, приїжджати"],
+      ["take", "took", "брати"],
+      ["buy", "bought", "купувати"],
+      ["say", "said", "казати"],
+      ["tell", "told", "розповідати, казати"],
+      ["leave", "left", "іти, їхати звідкись; залишати"]
+    ] },
+    { "t": "ex", "items": [
+      ["I **went** to Lidl after work.", "Я після роботи сходив у Lidl."],
+      ["We **had** a long day yesterday.", "У нас учора був довгий день."],
+      ["Sarah **got** a new job last week.", "Сара минулого тижня отримала нову роботу."],
+      ["Mick **left** the site at five.", "Мік поїхав з об'єкта о п'ятій."]
+    ] },
+    { "t": "h", "text": "Заперечення і питання: did" },
+    { "t": "p", "text": "Для заперечення й питання потрібне **did** — **допоміжне дієслово**: службове слово, яке будує питання й заперечення, а окремо не перекладається. Воно однакове для всіх осіб." },
+    { "t": "rule", "title": "Заперечення", "lines": ["I / he / we / they + **didn't** + work", "didn't = did not"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Did** + you / he / they + work?", "Where / When / Why + **did** + you + work?"] },
+    { "t": "tip", "text": "Головне правило: коли в реченні є **did** або **didn't**, дієслово стоїть у **початковій формі**. Минулий час уже «сидить» у did, двічі його не показуємо. Не didn't went, а didn't **go**. Не Did you saw, а Did you **see**." },
+    { "t": "ex", "items": [
+      ["I **didn't go** to work on Monday.", "Я не ходив на роботу в понеділок."],
+      ["Mick **didn't finish** the wall.", "Мік не закінчив стіну."],
+      ["**Did** you **see** the match last night? — **Yes, I did.**", "Ти бачив учорашній матч? — Так."],
+      ["**Did** Olena **call** you? — **No, she didn't.**", "Олена тобі дзвонила? — Ні."],
+      ["Where **did** you **buy** that drill?", "Де ти купив цей дриль?"],
+      ["What time **did** the bus **come**?", "О котрій приїхав автобус?"]
+    ] },
+    { "t": "p", "text": "Порівняй з українською: «Ти бачив матч?» — питання лише інтонацією. В англійській так не можна, на початку потрібне **Did**. З питальними словами (where, when, what, why) схема та сама: питальне слово + **did** + **підмет** (хто виконує дію) + дієслово." },
+    { "t": "h", "text": "Was і were" },
+    { "t": "p", "text": "Дієслово **be** (бути) — особливе: у минулому має дві форми, **was** і **were**, і будує заперечення й питання **без did**. Детально — у темі «Дієслово to be»." },
+    { "t": "rule", "title": "Be в минулому", "lines": ["I / he / she / it + **was**", "you / we / they + **were**", "**wasn't**, **weren't**", "**Was** he…? **Were** you…?"] },
+    { "t": "ex", "items": [
+      ["**Were** you at work yesterday? — No, I **wasn't**.", "Ти вчора був на роботі? — Ні."],
+      ["The shop **was** closed, so we **went** home.", "Магазин був зачинений, тож ми поїхали додому."]
+    ] },
+    { "t": "h", "text": "Слова-підказки" },
+    { "t": "p", "text": "Past Simple майже завжди поруч зі словами, які називають **конкретний час у минулому**: **yesterday** (учора), **last night** (учора ввечері), **last week / month / year** (минулого тижня / місяця / року), **two days ago** (два дні тому), **in 2020** (у 2020 році), **when I was a child** (коли я був дитиною)." },
+    { "t": "tip", "text": "**Ago** («тому») стоїть **після** проміжку часу, як і в українській: three years **ago** — три роки тому. Не кажи before three years. А з **last** не потрібні ні the, ні in: I was in Dublin **last week**." },
+    { "t": "ex", "items": [
+      ["Andrii came to Ireland three years **ago**.", "Андрій приїхав в Ірландію три роки тому."],
+      ["We moved to Wexford **in 2021**.", "Ми переїхали у Вексфорд у 2021 році."],
+      ["**When I was a child**, I lived in a small village.", "Коли я був дитиною, я жив у маленькому селі."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I didn't went to work.", "right": "I didn't go to work.", "why": "Після didn't — початкова форма дієслова. Минулий час уже показує did." },
+    { "t": "mistake", "wrong": "Did you saw the boss?", "right": "Did you see the boss?", "why": "У питанні з did дієслово теж у початковій формі: see, а не saw." },
+    { "t": "mistake", "wrong": "I goed home early.", "right": "I went home early.", "why": "Go — неправильне дієслово, його V2 — went. -ed додаємо лише до правильних." },
+    { "t": "mistake", "wrong": "Where you went yesterday?", "right": "Where did you go yesterday?", "why": "Після питального слова потрібне did, а дієслово — у початковій формі." },
+    { "t": "mistake", "wrong": "He didn't came on time.", "right": "He didn't come on time.", "why": "Після didn't — come, а не came: двічі минулий час не показуємо." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "We ___ the kitchen yesterday.", "uk": "Ми вчора пофарбували кухню.", "opts": ["paint", "painted", "painting"], "a": 1, "why": "Yesterday — це минуле, а paint — правильне дієслово, тому додаємо -ed: painted." },
+    { "type": "input", "q": "We ___ (stop) for lunch at one.", "uk": "О першій ми зробили перерву на обід.", "a": ["stopped"], "why": "Stop — один склад, у кінці голосна + приголосна, тому подвоюємо p: stopped." },
+    { "type": "input", "q": "Tom ___ (carry) the boards to the van.", "uk": "Том відніс дошки до фургона.", "a": ["carried"], "why": "Приголосна + y: y змінюємо на -ied (carry → carried). Після голосної y лишається: play → played." },
+    { "type": "choice", "task": "У якому слові -ed звучить як окремий склад «ід»?", "q": "", "opts": ["worked", "played", "wanted"], "a": 2, "why": "Склад «ід» з'являється лише після звуків t і d: want-ed. Worked звучить «воркт», played — «плейд»." },
+    { "type": "choice", "q": "Mick ___ to Dublin last weekend.", "uk": "Мік їздив у Дублін на минулих вихідних.", "opts": ["goed", "went", "go"], "a": 1, "why": "Go — неправильне дієслово, його V2 — went. До неправильних дієслів -ed не додаємо." },
+    { "type": "choice", "q": "They ___ very tired after work yesterday.", "uk": "Учора після роботи вони були дуже втомлені.", "opts": ["was", "were", "did"], "a": 1, "why": "Be в минулому: was для I, he, she, it, а для you, we, they — were." },
+    { "type": "input", "q": "I saw him two days ___.", "uk": "Я бачив його два дні тому.", "a": ["ago"], "why": "«Тому» — це ago, і воно стоїть після проміжку часу: two days ago." },
+    { "type": "input", "q": "We ___ (not / finish) the job on time.", "uk": "Ми не закінчили роботу вчасно.", "a": ["didn't finish", "did not finish"], "why": "Заперечення в минулому: didn't + початкова форма (finish, а не finished)." },
+    { "type": "input", "q": "___ you call the boss this morning?", "uk": "Ти подзвонив босові сьогодні вранці?", "a": ["Did"], "why": "Питання в Past Simple починаємо з Did, а дієслово call лишається в початковій формі." },
+    { "type": "choice", "q": "Where ___ yesterday?", "uk": "Куди ти ходив учора?", "opts": ["you went", "did you went", "did you go"], "a": 2, "why": "Питання: Where + did + you + початкова форма (go). Без did не можна, а went після did — помилка." },
+    { "type": "order", "uk": "Він учора не прийшов.", "words": ["come", "he", "yesterday", "didn't"], "a": ["He didn't come yesterday.", "Yesterday he didn't come."], "why": "Заперечення: he + didn't + початкова форма come. Yesterday зазвичай ставимо в кінці." },
+    { "type": "order", "uk": "Що ти робив на минулих вихідних?", "words": ["you", "last", "did", "what", "do", "weekend"], "a": ["What did you do last weekend?"], "why": "Питальне слово + did + you + початкова форма do. Did тут допоміжне, а do — саме дієслово «робити»." }
+  ]
+}

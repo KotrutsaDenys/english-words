@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap">
-<link rel="stylesheet" href="/app.css?v=8a2001f036">
+<link rel="stylesheet" href="/app.css?v=90c7bd6930">
 </head>
 <body>
 <div class="app">
@@ -79,6 +79,12 @@
     <div class="dict-meta"><span id="dictCount"></span><button class="link-btn" id="addOpen">Додати слово</button></div>
     <div class="dict-acts" id="dictActs" hidden></div>
     <ul class="list" id="list"></ul>
+  </section>
+
+  <!-- Граматика -->
+  <section id="screen-grammar" data-screen="grammar" hidden>
+    <div id="gramList"></div>
+    <article id="gramTopic" class="gtopic" hidden></article>
   </section>
 
   <!-- Звіт -->
@@ -193,6 +199,7 @@
         <p><b>Слухати.</b> У дорозі чи з одним навушником на роботі: Емма каже слово, дає секунду згадати, потім переклад і приклад. Можна ввімкнути паузу, щоб повторювати вголос слідом за нею: так звикаєш говорити, а не лише впізнавати. Пауза й наступне слово працюють і з кнопок навушників. Розклад повторень слухання не змінює.</p>
         <p><b>Слово з прикладу.</b> Торкнись будь-якого слова в прикладі чи фразі: з'явиться переклад, а нове слово можна одразу поставити вчити першим.</p>
         <p><b>Після пропусків.</b> Коли за пропущені дні накопичилось багато повторень, нові слова чекають, поки борг не розібрано. Інакше він тільки росте. Узяти нові все одно можна кнопкою на головній.</p>
+        <p><b>Граматика.</b> Окрема вкладка: правило простими словами, таблиці форм, приклади з озвучкою, типові помилки українців і 12 завдань. Кожна правильна відповідь — 1 бал з 12, як у школі: 10–12 відмінно, 7–9 добре. Після кожної відповіді видно, чому саме так, а наприкінці — розбір помилок. Пройти тему можна скільки завгодно разів, зберігається найкращий бал.</p>
         <p><b>Хоч 2 хвилини.</b> У важкий день зроби коротке заняття з найслабших повторень: серія жива, а звичка не рветься. Один пропущений день на тиждень серію теж не обриває.</p>
       </details>
       <details class="more">
@@ -204,7 +211,7 @@
     <div class="group bare">
       <button class="btn btn-danger" id="resetAll" style="width:100%">Скинути весь прогрес</button>
     </div>
-    <p class="version">Версія 8 від 28.10.2026</p>
+    <p class="version">Версія 9 від 28.10.2026</p>
   </section>
   </main>
 </div>
@@ -213,6 +220,7 @@
   <div class="tabs-inner">
     <button class="tab" data-tab="learn" aria-current="page"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="15" rx="2.5"/><path d="M7 3h11.5A2.5 2.5 0 0 1 21 5.5V17"/></svg></span>Вчити</button>
     <button class="tab" data-tab="dict"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/><path d="M9 8h6M9 11.5h4"/></svg></span>Словник</button>
+    <button class="tab" data-tab="grammar"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18.5 7.8 5.5h1.4l4.8 13"/><path d="M4.9 13.5h7.2"/><circle cx="18" cy="15.6" r="2.9"/><path d="M20.9 12.4v6.1"/></svg></span>Граматика</button>
     <button class="tab" data-tab="report"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M7 16v-5M12 16V6M17 16v-8"/></svg></span>Звіт</button>
     <button class="tab" data-tab="settings"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>Налаштування</button>
   </div>
@@ -224,10 +232,11 @@
 <script src="/words-base.js?v=3c46892823"></script>
 <script src="/phrases.js?v=0708003beb"></script>
 <script src="/phrases-base.js?v=eb2504cf00"></script>
+<script src="/grammar.js?v=f9ae711cc6"></script>
 <script src="/glossary.js?v=693595f7f6"></script>
 <script src="/audio.js?v=9cdb672632"></script>
 <script src="/js/fsrs.js?v=3951b09840"></script>
-<script src="/js/core.js?v=c893a61800"></script>
-<script src="/js/app.js?v=40ef16d5fb"></script>
+<script src="/js/core.js?v=0e181eb524"></script>
+<script src="/js/app.js?v=b7966db2a4"></script>
 </body>
 </html>

@@ -104,6 +104,33 @@
     return best;
   }
 
+  /* Граматика перевіряється точно: апостроф важливий (its ≠ it's), друкарська помилка — помилка.
+     Скорочення розгортаються в обидва боки (weren't = were not, 've been = have been, 's = is або has). */
+  function gNorm(s) {
+    return String(s || '').toLowerCase().replace(/[’‘`´]/g, "'").replace(/[.,!?;:"“”()]/g, ' ')
+      .replace(/\s+'/g, " '").replace(/\s+/g, ' ').trim();
+  }
+  function gVariants(s) {
+    let t = ' ' + gNorm(s) + ' ';
+    t = t.replace(/\bwon't\b/g, 'will not').replace(/\bcan't\b/g, 'cannot').replace(/\bshan't\b/g, 'shall not')
+      .replace(/\b(\w+)n't\b/g, '$1 not').replace(/\bcan not\b/g, 'cannot').replace(/\blet's\b/g, 'let us')
+      .replace(/(\w|^|\s)'m\b/g, '$1 am').replace(/(\w|^|\s)'re\b/g, '$1 are').replace(/(\w|^|\s)'ve\b/g, '$1 have')
+      .replace(/(\w|^|\s)'ll\b/g, '$1 will');
+    const out = new Set([gNorm(s)]);
+    const fin = x => x.replace(/\s+/g, ' ').trim();
+    // 's і 'd двозначні: is/has, would/had
+    for (const s1 of ['is', 'has']) for (const d1 of ['would', 'had']) {
+      out.add(fin(t.replace(/(\w)'s\b/g, '$1 ' + s1).replace(/(^|\s)'s\b/g, '$1' + s1).replace(/(\w)'d\b/g, '$1 ' + d1).replace(/(^|\s)'d\b/g, '$1' + d1)));
+    }
+    out.add(fin(t));
+    return out;
+  }
+  function grammarMatch(input, targets) {
+    const mine = gVariants(input);
+    if (!gNorm(input)) return false;
+    return [].concat(targets).some(tg => { for (const v of gVariants(tg)) if (mine.has(v)) return true; return false; });
+  }
+
   /* ---------- Речення з пропуском ---------- */
   const IRREGULAR = {
     get: ['got', 'gotten'], keep: ['kept'], bring: ['brought'], take: ['took', 'taken'], mean: ['meant'],
@@ -756,7 +783,7 @@
     wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
     EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
-    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit
+    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch
   };
   root.EWCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

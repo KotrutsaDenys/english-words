@@ -1,0 +1,86 @@
+{
+  "id": "time-clauses",
+  "level": "B1",
+  "title": "Future time clauses",
+  "uk": "When, as soon as, until + теперішній час",
+  "summary": "I'll call you when I get home: після when — без will",
+  "minutes": 6,
+  "blocks": [
+    { "t": "p", "text": "Головне правило теми: коли говоримо про майбутнє, після **when, as soon as, before, after, until, once, by the time** ставимо **теперішній час**, а не will. Will (чи інша форма майбутнього) — лише в іншій частині речення." },
+    { "t": "ex", "items": [
+      ["I'll call you **when** I **get** home.", "Я подзвоню тобі, коли прийду додому."],
+      ["**As soon as** the plaster **is** dry, we'll paint the walls.", "Щойно штукатурка висохне, ми пофарбуємо стіни."],
+      ["We'll wait **until** the rain **stops**.", "Ми почекаємо, доки не скінчиться дощ."],
+      ["**After** we **finish** the ceiling, we'll do the walls.", "Після того як закінчимо стелю, візьмемося за стіни."]
+    ] },
+    { "t": "p", "text": "Українською ми кажемо майбутнім в обох частинах: «Подзвоню, коли **прийду**». Англійською майбутнє вже зрозуміле з першої частини (I'll call), тому після when — теперішній час: when I **get** home, дослівно «коли я приходжу додому». Не забувай -s для he, she, it: when he **gets** home." },
+    { "t": "rule", "title": "Будова", "lines": ["**will** + дієслово … **when** + теперішній час", "I'll call you when I **get** home.", "**When** + теперішній час, **will** + дієслово", "When I **get** home, I'll call you."] },
+    { "t": "tip", "text": "Частини можна міняти місцями. Якщо речення починається з when, as soon as тощо, після цієї частини ставимо **кому**: When I get home, I'll call you." },
+    { "t": "h", "text": "Слова, після яких так роблять" },
+    { "t": "table", "head": ["Слово", "Значення", "Приклад"], "rows": [
+      ["when", "коли", "when I get home"],
+      ["as soon as", "щойно, як тільки", "as soon as he arrives"],
+      ["before", "перед тим як", "before you leave"],
+      ["after", "після того як", "after we finish"],
+      ["until (till)", "доки не, аж поки", "until the rain stops"],
+      ["once", "щойно, коли вже", "once it gets dark"],
+      ["by the time", "на той час, коли", "by the time we get there"],
+      ["if", "якщо", "if it rains"]
+    ] },
+    { "t": "ex", "items": [
+      ["Have something to eat **before** you **go**.", "Поїж чогось, перш ніж іти."],
+      ["**Once** the electrician **finishes**, we can start plastering.", "Щойно електрик закінчить, ми зможемо штукатурити."],
+      ["**By the time** you **get** here, I'll be ready.", "Коли ти приїдеш, я вже буду готовий."],
+      ["**If** you **need** help, I'll be in the van.", "Якщо буде потрібна допомога, я буду у фургоні."]
+    ] },
+    { "t": "tip", "text": "Те саме з **if**: If it **rains**, we'll stay inside (не if it will rain). Детальніше — у темі про умовні речення." },
+    { "t": "p", "text": "Правило діє і в питаннях, і в запереченнях: will стоїть у головній частині, а після when, until тощо — теперішній час." },
+    { "t": "ex", "items": [
+      ["Will you call me **as soon as** you **hear** something?", "Подзвониш мені, щойно щось дізнаєшся?"],
+      ["I won't sign anything **until** I **talk** to the boss.", "Я нічого не підписуватиму, доки не поговорю з босом."]
+    ] },
+    { "t": "h", "text": "Present Perfect: «коли вже зроблю»" },
+    { "t": "p", "text": "Коли треба наголосити, що перша дія **повністю закінчиться**, перш ніж почнеться друга, після when, after, as soon as, once, until ставлять **Present Perfect**: have / has + **V3** (третя форма дієслова: finished, done, gone). Значення майже те саме, просто з відтінком «коли вже»." },
+    { "t": "ex", "items": [
+      ["I'll leave **when** I**'ve finished** this wall.", "Я піду, коли закінчу цю стіну."],
+      ["**Once** you**'ve tried** it, you'll love it.", "Щойно спробуєш, тобі сподобається."],
+      ["Don't leave **until** you**'ve signed** the timesheet.", "Не йди, доки не підпишеш табель."]
+    ] },
+    { "t": "tip", "text": "Present Perfect — лише коли одна дія закінчується **до** початку іншої. Якщо дії майже одночасні, бери простий теперішній: When I **see** Tom, I'll tell him (побачу — і відразу скажу)." },
+    { "t": "h", "text": "Until чи by" },
+    { "t": "p", "text": "Обидва українською «до», але різниця велика. **Until** — дія **триває** аж до цього моменту. **By** — дія **закінчиться** не пізніше цього моменту (може, й раніше)." },
+    { "t": "ex", "items": [
+      ["We'll work **until** six.", "Ми працюватимемо до шостої (аж до)."],
+      ["We'll finish **by** six.", "Ми закінчимо до шостої (не пізніше)."],
+      ["I'll wait **until** you **finish**.", "Я почекаю, доки ти не закінчиш."]
+    ] },
+    { "t": "tip", "text": "**Until** уже містить «доки **не**», тому другого not не треба: Wait **until** I **come** back — «Чекай, доки я **не** повернуся». Українське «не» тут англійською не перекладаємо." },
+    { "t": "h", "text": "Коли will після when і if можна" },
+    { "t": "p", "text": "Правило стосується when у значенні «коли настане момент». Якщо **when** — питальне слово («Коли?») або після нього йде питання в непрямій формі («не знаю, коли…»), will ставимо як звичайно. Те саме з **if** у значенні «чи»." },
+    { "t": "ex", "items": [
+      ["**When will** you **finish** the bathroom?", "Коли ти закінчиш ванну?"],
+      ["I don't know **when** he**'ll be** back.", "Я не знаю, коли він повернеться."],
+      ["I'm not sure **if** the boss **will like** it.", "Я не впевнений, чи сподобається це босові."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I'll call you when I will get home.", "right": "I'll call you when I get home.", "why": "Після when про майбутнє — теперішній час, хоч українською «коли прийду»." },
+    { "t": "mistake", "wrong": "We'll go as soon as he will finish.", "right": "We'll go as soon as he finishes.", "why": "Після as soon as — теперішній час. Для he — finishes з -es." },
+    { "t": "mistake", "wrong": "Wait until he will arrive.", "right": "Wait until he arrives.", "why": "Після until — теперішній час, не will." },
+    { "t": "mistake", "wrong": "Don't start until the boss doesn't come.", "right": "Don't start until the boss comes.", "why": "Until уже означає «доки не», тому друге заперечення зайве." },
+    { "t": "mistake", "wrong": "If it will rain, we'll stay at home.", "right": "If it rains, we'll stay at home.", "why": "Після if про майбутнє — так само теперішній час." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I'll call you when I ___ home.", "uk": "Я подзвоню тобі, коли прийду додому.", "opts": ["get", "will get", "got"], "a": 0, "why": "Після when про майбутнє — теперішній час: when I get home. Will — лише в іншій частині (I'll call)." },
+    { "type": "choice", "q": "We'll start as soon as the boss ___.", "uk": "Ми почнемо, щойно приїде бос.", "opts": ["arrives", "will arrive", "arrive"], "a": 0, "why": "Після as soon as — теперішній час. The boss — це він, тому arrives з -s." },
+    { "type": "choice", "q": "Wait here until I ___ back.", "uk": "Чекай тут, доки я не повернуся.", "opts": ["come", "don't come", "will come"], "a": 0, "why": "Until уже означає «доки не», тому not не потрібне. І після until — теперішній час, не will." },
+    { "type": "choice", "q": "We'll work ___ six o'clock, then go home.", "uk": "Ми працюватимемо аж до шостої, а потім підемо додому.", "opts": ["until", "by", "since"], "a": 0, "why": "Робота триває аж до шостої — until. By означає «не пізніше ніж» і пасує до дій, які закінчуються: finish by six." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Що ти робитимеш, коли закінчиш цю роботу?", "opts": ["What will you do when you finish this job?", "What will you do when you will finish this job?", "What do you do when you will finish this job?"], "a": 0, "why": "Will — у головній частині (what will you do), а після when — теперішній час: when you finish." },
+    { "type": "choice", "q": "When ___ the plaster be dry?", "uk": "Коли висохне штукатурка?", "opts": ["will", "does", "is"], "a": 0, "why": "Тут when — питальне слово «Коли?», а не частина речення про час. Тому will ставимо як звичайно: When will…?" },
+    { "type": "input", "q": "We'll start plastering after the electrician ___ (finish).", "uk": "Ми почнемо штукатурити після того, як закінчить електрик.", "a": ["finishes", "has finished", "is finished"], "why": "Після after про майбутнє — теперішній час (finishes) або Present Perfect (has finished), але не will." },
+    { "type": "input", "q": "If it ___ (rain) tomorrow, we won't work outside.", "uk": "Якщо завтра буде дощ, ми не працюватимемо надворі.", "a": ["rains"], "why": "Після if про майбутнє — теперішній час, як і після when: if it rains." },
+    { "type": "input", "q": "Text me before you ___ (leave) the site.", "uk": "Напиши мені, перш ніж поїдеш з об'єкта.", "a": ["leave"], "why": "Після before — теперішній час: before you leave, хоч українською «поїдеш»." },
+    { "type": "input", "q": "You can go home as soon as you ___ (clean) the tools.", "uk": "Можеш іти додому, щойно почистиш інструменти.", "a": ["clean", "have cleaned", "'ve cleaned"], "why": "Після as soon as — теперішній час (clean) або Present Perfect (have cleaned), щоб наголосити «коли вже зробиш». Will тут не можна." },
+    { "type": "order", "uk": "Я скажу йому, щойно його побачу.", "words": ["I'll", "him", "as", "tell", "soon", "as", "I", "see", "him"], "a": ["I'll tell him as soon as I see him.", "As soon as I see him, I'll tell him."], "why": "Will — у частині «скажу» (I'll tell him), а після as soon as — теперішній час: I see him." },
+    { "type": "order", "uk": "Не торкайся стіни, доки вона не висохне.", "words": ["touch", "don't", "the", "wall", "until", "it's", "dry"], "a": ["Don't touch the wall until it's dry.", "Until it's dry, don't touch the wall."], "why": "Після until — теперішній час (it's dry = it is dry), і без not: until уже означає «доки не»." }
+  ]
+}

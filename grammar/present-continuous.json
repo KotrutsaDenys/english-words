@@ -1,0 +1,82 @@
+{
+  "id": "present-continuous",
+  "level": "A1",
+  "title": "Present Continuous",
+  "uk": "Теперішній тривалий час",
+  "summary": "що відбувається зараз: I'm working, she's sleeping",
+  "minutes": 6,
+  "blocks": [
+    { "t": "p", "text": "**Present Continuous** — час для того, що відбувається **зараз**, у цю хвилину, або **тимчасово**, у цей період. В українській «я працюю» може означати і «взагалі», і «саме зараз». В англійській це два різні часи: I **work** (взагалі) і I'**m working** (зараз)." },
+    { "t": "ex", "items": [
+      ["**I'm working** at the moment.", "Я зараз працюю."],
+      ["Look! **It's raining**.", "Дивись! Іде дощ."],
+      ["Mick **is talking** to the boss.", "Мік розмовляє з босом."],
+      ["**We're painting** the hall today.", "Сьогодні ми фарбуємо коридор."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Ствердження", "lines": ["I + **am** + work**ing**", "he / she / it + **is** + work**ing**", "you / we / they + **are** + work**ing**"] },
+    { "t": "p", "text": "Обов'язкові **дві частини**: am / is / are і **форма з -ing** (дієслово + -ing: work → working). Am, is, are тут — допоміжне дієслово: окремо не перекладається, але без нього речення неправильне. Яке саме — залежить від **підмета** (хто або що виконує дію)." },
+    { "t": "tip", "text": "У розмові am, is, are скорочуємо: **I'm**, **he's**, **she's**, **it's**, **we're**, **you're**, **they're** working." },
+    { "t": "h", "text": "Правопис -ing" },
+    { "t": "table", "head": ["Дієслово", "Що робимо", "Приклад"], "rows": [
+      ["більшість дієслів", "+ ing", "work → work**ing**"],
+      ["німе -e в кінці", "e відкидаємо", "make → mak**ing**"],
+      ["-ee в кінці", "нічого не міняємо", "see → see**ing**"],
+      ["-ie в кінці", "ie → y", "lie → l**y**ing"],
+      ["одна голосна + одна приголосна", "подвоюємо приголосну", "run → ru**nn**ing"]
+    ] },
+    { "t": "tip", "text": "Німе e — те, що не вимовляється: make → making, come → coming, write → writing, have → having. Останню приголосну подвоюємо, коли слово закінчується на **одну голосну + одну приголосну** і наголос падає на цей останній склад: sit → sitting, stop → stopping, get → getting, begin → beginning. Але rain → raining (дві голосні), visit → visiting (наголос на початку), а w, x, y не подвоюємо: fix → fixing, play → playing. У британській англійській l подвоюють і без наголосу: travel → trave**ll**ing." },
+    { "t": "h", "text": "Заперечення і питання" },
+    { "t": "rule", "title": "Заперечення", "lines": ["I'm **not** working.", "he / she / it **isn't** working.", "you / we / they **aren't** working."] },
+    { "t": "rule", "title": "Питання", "lines": ["**Am** I working?", "**Is** he / she / it working?", "**Are** you / we / they working?", "What **are** you do**ing**?"] },
+    { "t": "p", "text": "Do і does тут не потрібні: для питання am, is, are просто стають перед підметом. Коротка відповідь — теж з ними: Yes, I **am**. No, he **isn't**." },
+    { "t": "ex", "items": [
+      ["They **aren't working** today.", "Вони сьогодні не працюють."],
+      ["**Are** you **coming**? — Yes, I **am**.", "Ти йдеш? — Так."],
+      ["**Is** Tom **working** today? — No, he **isn't**.", "Том сьогодні працює? — Ні."],
+      ["Why **are** you **laughing**?", "Чому ти смієшся?"]
+    ] },
+    { "t": "h", "text": "Коли вживаємо" },
+    { "t": "p", "text": "**1. Зараз, у цю хвилину.** Дія відбувається, поки ми говоримо." },
+    { "t": "ex", "items": [
+      ["Sorry, I can't talk, **I'm driving**.", "Вибач, не можу говорити, я за кермом."],
+      ["**Listen!** Somebody **is knocking** at the door.", "Слухай! Хтось стукає у двері."]
+    ] },
+    { "t": "p", "text": "**2. Тимчасово, у цей період.** Не обов'язково саме цієї секунди: щось триває якийсь час, але не завжди." },
+    { "t": "ex", "items": [
+      ["**I'm living** with a friend this month.", "Цього місяця я живу в друга."],
+      ["**We're working** on a big house in Gorey this week.", "Цього тижня ми працюємо над великим будинком у Горі."],
+      ["Kate **is learning** to drive.", "Кейт учиться водити."]
+    ] },
+    { "t": "p", "text": "**3. Зміни.** Щось поступово стає більшим, кращим, дорожчим." },
+    { "t": "ex", "items": [
+      ["Prices **are going up**.", "Ціни ростуть."],
+      ["Your English **is getting** better.", "Твоя англійська покращується."],
+      ["The days **are getting** shorter.", "Дні стають коротшими."]
+    ] },
+    { "t": "h", "text": "Слова-підказки" },
+    { "t": "p", "text": "**now** (зараз), **right now** (просто зараз), **at the moment** (зараз, у цей момент), **today** (сьогодні), **this week** (цього тижня), **these days** (останнім часом), а також **Look!** (Дивись!) і **Listen!** (Слухай!) на початку." },
+    { "t": "tip", "text": "Деякі дієслова майже не бувають з -ing навіть «зараз»: **know**, **want**, **like**, **need**, **understand**. Кажемо I **know**, I **want** a coffee. Детальніше — у темі «Present Simple чи Continuous»." },
+    { "t": "tip", "text": "Present Continuous буває й про майбутнє, коли вже домовилися: **I'm meeting** Tom tomorrow. — «Завтра я зустрічаюся з Томом». Про це — у темі про going to." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I working now.", "right": "I'm working now.", "why": "Без am, is, are не можна: потрібні обидві частини, am і форма з -ing." },
+    { "t": "mistake", "wrong": "She is play in the garden.", "right": "She's playing in the garden.", "why": "Після is дієслово отримує -ing. Is + play — це лише половина форми." },
+    { "t": "mistake", "wrong": "Are you work today?", "right": "Are you working today?", "why": "Про «сьогодні, зараз» — Are you working? Про роботу взагалі — Do you work? Are + work без -ing не буває." },
+    { "t": "mistake", "wrong": "I am go to Lidl.", "right": "I'm going to Lidl.", "why": "Am + початкова форма не буває. Зараз — I'm going (am + форма з -ing), а регулярно, взагалі — I go." },
+    { "t": "mistake", "wrong": "We're siting in the van.", "right": "We're sitting in the van.", "why": "Sit — коротке слово на голосну + приголосну, тому t подвоюємо: sitting." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Be quiet! The baby ___.", "uk": "Тихо! Дитина спить.", "opts": ["is sleeping", "sleeps", "sleeping"], "a": 0, "why": "Зараз, у цю хвилину — Present Continuous: is + форма з -ing. Без is (просто sleeping) не можна." },
+    { "type": "choice", "q": "___ you listening to me?", "uk": "Ти мене слухаєш?", "opts": ["Are", "Do", "Is"], "a": 0, "why": "Питання в Present Continuous починаємо з am / is / are. Для you — are. Do з формою з -ing не поєднується." },
+    { "type": "choice", "q": "They ___ lunch at the moment.", "uk": "Вони зараз обідають.", "opts": ["are having", "is having", "having"], "a": 0, "why": "They — are, далі форма з -ing. Have lunch (обідати) — це дія, тому з -ing можна." },
+    { "type": "choice", "q": "Is it still raining? — No, it ___.", "uk": "Ще йде дощ? — Ні.", "opts": ["isn't", "doesn't", "not"], "a": 0, "why": "Коротка відповідь повторює допоміжне дієслово з питання: Is it…? — No, it isn't. Doesn't тут не підходить." },
+    { "type": "input", "q": "I can't talk now. I ___ (make) dinner.", "uk": "Не можу зараз говорити. Я готую вечерю.", "a": ["am making"], "why": "Зараз — Present Continuous: am + форма з -ing. Німе e в кінці відкидаємо: make → making." },
+    { "type": "input", "q": "Look! Tom ___ (run) for the bus.", "uk": "Дивись! Том біжить до автобуса.", "a": ["is running"], "why": "Look! — дія відбувається зараз: is + форма з -ing. Run — коротке слово на голосну + приголосну, тому n подвоюємо: running." },
+    { "type": "input", "q": "The dog ___ (lie) on my bed again!", "uk": "Пес знову лежить на моєму ліжку!", "a": ["is lying"], "why": "Пес лежить саме зараз — is + форма з -ing. У дієсловах на -ie: ie → y, тому lie → lying." },
+    { "type": "input", "q": "Mick ___ (not / work) at the moment. He's on his break.", "uk": "Мік зараз не працює, у нього перерва.", "a": ["isn't working", "is not working"], "why": "At the moment — мова про «зараз». Заперечення: isn't + форма з -ing." },
+    { "type": "choice", "q": "Look, it ___ dark. Let's go home.", "uk": "Дивись, уже темніє. Ходімо додому.", "opts": ["is getting", "gets", "getting"], "a": 0, "why": "Зміна, що відбувається зараз (стає темно), — Present Continuous: is getting. It gets dark — про те, що буває взагалі." },
+    { "type": "order", "uk": "Що ти зараз робиш?", "words": ["doing", "now", "what", "you", "are"], "a": ["What are you doing now?"], "why": "Питальне слово, потім are перед підметом you, далі форма з -ing. Now — у кінці." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Цього тижня Андрій живе в нас.", "opts": ["Andrii is staying with us this week.", "Andrii stays with us this week.", "Andrii staying with us this week."], "a": 0, "why": "Тимчасово (this week) — Present Continuous: is + форма з -ing. Stays — для постійного, а без is речення неповне." },
+    { "type": "order", "uk": "Вона зараз не слухає.", "words": ["listening", "the", "isn't", "she", "at", "moment"], "a": ["She isn't listening at the moment.", "At the moment she isn't listening."], "why": "Підмет she, далі isn't і форма з -ing. At the moment можна поставити в кінець або на початок." }
+  ]
+}

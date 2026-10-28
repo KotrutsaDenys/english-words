@@ -490,6 +490,102 @@ html.peek-open body{cursor:pointer}
 label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 .opt{color:var(--muted);font-weight:500}
 
+/* ---------- Граматика ---------- */
+.gintro{margin:0 0 10px;color:var(--muted);font-size:15px}
+.gintro.strong{color:var(--ink);font-weight:700}
+.gnext{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:8px 0 4px;padding:14px;border-radius:16px;border:1.5px solid var(--line-soft);border-left:5px solid var(--hivis-deep);background:var(--surface);color:var(--ink)}
+.gnext-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.gnext-text small{color:var(--muted);font-weight:700;font-size:13px}
+.gnext-text b{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.015em}
+.gnext-text span{color:var(--muted);font-size:14px;font-weight:600}
+.gnext .chev{flex:none;color:var(--muted)}
+.gnext .chev svg{width:18px;height:18px}
+.gsec{margin-top:28px}
+.gitem{gap:12px}
+.gitem .item-en{font-family:var(--display);font-weight:600;font-size:15.5px;letter-spacing:-.01em}
+.gmark{flex:none;width:34px;height:34px;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:14px}
+.gmark.read{border-style:solid}
+.gmark.g-top{border:0;background:var(--ok);color:var(--surface)}
+.gmark.g-ok{border:0;background:var(--hivis);color:var(--on-hivis)}
+.gmark.g-low{border:0;background:var(--orange-soft);color:var(--orange)}
+.glevel{flex:none;font-size:12px;font-weight:800;color:var(--muted);padding:3px 7px;border-radius:7px;border:1.5px solid var(--line-soft)}
+.gfoot{margin-top:18px}
+/* Сторінка теми: читається як аркуш, приклади й формули окремими плашками */
+.gtop{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 -16px;padding:calc(env(safe-area-inset-top) + 2px) 16px 2px;background:var(--plaster)}
+.gback{display:flex;align-items:center;gap:4px;min-height:44px;background:none;border:0;padding:0 8px 0 0;font-weight:800;font-size:15px;color:var(--ink)}
+.gback svg{width:18px;height:18px;transform:rotate(180deg)}
+.gmeta{color:var(--muted);font-size:13px;font-weight:700}
+.gtitle{font-family:var(--display);font-weight:700;font-size:29px;line-height:1.12;letter-spacing:-.025em;margin:8px 0 4px;overflow-wrap:break-word}
+.gsub{color:var(--muted);font-size:17px;font-weight:600;margin:0 0 14px}
+.gsheet{background:var(--surface);border-radius:22px;box-shadow:var(--lift);padding:4px 18px 20px}
+.gp{font-size:17px;line-height:1.55;margin:14px 0 0}
+.gp b,.gtip b,.glist b{font-weight:800}
+.gh{font-size:19px;font-weight:800;line-height:1.25;margin:28px 0 0}
+.gsheet > .gh:first-child,.gtest > .gh:first-child{margin-top:16px}
+mark.gm{background:color-mix(in srgb,var(--hivis) 70%,transparent);color:var(--on-hivis);border-radius:3px;padding:0 2px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.grule{margin:14px 0 0;padding:10px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--sunk)}
+.grule-t{margin:0 0 4px;color:var(--muted);font-size:13px;font-weight:800}
+.grule-l{margin:3px 0;font-family:var(--display);font-weight:600;font-size:15.5px;line-height:1.45;letter-spacing:-.01em}
+.gtable-wrap{margin:14px 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.gtable{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.35}
+.gtable th{text-align:left;color:var(--muted);font-size:12.5px;font-weight:800;padding:6px 8px 6px 0;border-bottom:1.5px solid var(--line)}
+.gtable td{padding:8px 8px 8px 0;border-bottom:1.5px dashed var(--line);vertical-align:top}
+.gtable td:first-child{font-weight:700}
+.gtable tr:last-child td{border-bottom:0}
+.gex{margin:14px 0 0;padding:2px 12px;border-radius:14px;background:var(--sunk)}
+.gex-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0}
+.gex-row + .gex-row{border-top:1px solid var(--line-soft)}
+.gex-text{flex:1;min-width:0}
+.gex-en{margin:0;font-size:17px;font-weight:600;line-height:1.4}
+.gex-uk{margin:2px 0 0;color:var(--muted);font-size:15px}
+.gex-row .say.sm,.gmist .say.sm{margin:0;flex:none}
+.gtip{margin:14px 0 0;padding:12px 14px;border-radius:12px;background:var(--amber-soft);border-left:4px solid var(--hivis-deep);font-size:15.5px;line-height:1.5}
+.glist{margin:10px 0 0;padding-left:20px}
+.glist li{font-size:16px;line-height:1.5;margin:4px 0}
+.gmist{margin:12px 0 0;padding:10px 14px;border-radius:14px;border:1.5px solid var(--line-soft)}
+.gmist-bad,.gmist-good{display:flex;align-items:center;gap:10px;margin:4px 0;font-size:16.5px;font-weight:700}
+.gmi{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:var(--surface)}
+.gmi svg{width:13px;height:13px}
+.gmist-bad .gmi{background:var(--orange)}
+.gmist-good .gmi{background:var(--ok)}
+.gmist-bad s{color:var(--orange);text-decoration-thickness:2px}
+.gmist-good span[lang]{flex:1;min-width:0}
+.gmist-why{margin:6px 0 2px;color:var(--muted);font-size:14.5px}
+.gtest{margin-top:16px;background:var(--surface);border-radius:22px;box-shadow:var(--lift);padding:4px 18px 18px;border-top:5px solid var(--hivis-deep)}
+.gtest .btn-big{width:100%;margin-top:16px}
+.gbest{margin:12px 0 0;font-size:15px}
+.gscore{font-family:var(--display);font-weight:700;padding:1px 8px;border-radius:8px}
+.gscore.g-top{background:var(--ok-soft);color:var(--ok)}
+.gscore.g-ok{background:var(--amber-soft);color:var(--amber)}
+.gscore.g-low{background:var(--orange-soft);color:var(--orange)}
+.gnav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 8px}
+.gnav-btn{display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 12px;min-height:56px;border-radius:14px;border:1.5px solid var(--line-soft);background:var(--surface);color:var(--ink)}
+.gnav-btn.next{grid-column:2;text-align:right;align-items:flex-end}
+.gnav-btn small{color:var(--muted);font-size:12px;font-weight:700}
+.gnav-btn span{font-family:var(--display);font-weight:600;font-size:13.5px;letter-spacing:-.01em;line-height:1.25}
+/* Тест теми */
+.prompt.gt{padding-top:8px;justify-content:flex-start}
+.gt-instr{margin-top:0}
+.gq{margin:10px 0 0;font-size:21px;font-weight:600;line-height:1.5}
+.gq.uk{font-weight:800;font-size:20px;line-height:1.35}
+.prompt.gt .ex-uk{margin-top:6px}
+.prompt.gt .blank{min-width:3.5ch}
+.prompt.gt .blank.filled{padding:0 4px}
+.verdict .gt-why{display:block}
+.verdict .why{display:block;margin:6px 0 0;font-size:14.5px;font-weight:600;color:var(--ink);opacity:.85;line-height:1.4}
+.gres-score{display:flex;align-items:baseline;gap:10px;margin:6px 0 0}
+.gres-score b{font-family:var(--display);font-weight:700;font-size:64px;line-height:1;letter-spacing:-.03em}
+.gres-score span{font-size:20px;font-weight:800;color:var(--muted)}
+.gres-grade{margin:4px 0 0;font-size:20px;font-weight:800}
+.gres-score.g-top b,.gres-grade.g-top{color:var(--ok)}
+.gres-score.g-low b,.gres-grade.g-low{color:var(--orange)}
+.gres-grade.g-ok{color:var(--amber)}
+.gres-item{padding:10px 0;border-top:1px solid var(--line-soft)}
+.gres-item:first-of-type{border-top:0}
+.gres-sent{margin:0;font-size:17px;font-weight:600;line-height:1.45}
+.gres-item .yours{margin:4px 0 0}
+.gres-why{margin:4px 0 0;color:var(--muted);font-size:14.5px}
+
 /* ---------- Звіт ---------- */
 .report-title{font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:-.02em;margin:6px 0 14px}
 .docket{background:var(--surface);border-radius:18px;border:1.5px solid var(--line-soft);padding:6px 18px 4px;margin:0;position:relative}
@@ -565,9 +661,9 @@ details.more p{margin:0 0 12px;font-size:15px}
   .tabs{background:color-mix(in srgb,var(--plaster) 85%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
 }
 body.typing .tabs{display:none}
-.tabs-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.tab{background:none;border:0;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;min-height:54px}
-.tab .ic{width:54px;height:32px;border-radius:999px;display:grid;place-items:center;transition:background .2s}
+.tabs-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.tab{background:none;border:0;font-size:10.5px;font-weight:700;letter-spacing:-.01em;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;min-height:54px;min-width:0;white-space:nowrap}
+.tab .ic{width:50px;height:32px;border-radius:999px;display:grid;place-items:center;transition:background .2s}
 .tab svg{width:22px;height:22px}
 .tab[aria-current="page"]{color:var(--ink)}
 .tab[aria-current="page"] .ic{background:var(--hivis);color:var(--on-hivis)}

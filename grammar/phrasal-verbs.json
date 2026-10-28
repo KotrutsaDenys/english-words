@@ -1,0 +1,112 @@
+{
+  "id": "phrasal-verbs",
+  "level": "B1",
+  "title": "Phrasal verbs",
+  "uk": "Фразові дієслова",
+  "summary": "pick up, turn off, give up: дієслово + частка = нове значення",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "**Фразове дієслово** — це звичайне дієслово + коротке слово-частка (**up, off, on, out, in, down, back, away**…). Разом вони мають **нове значення**, яке часто не вгадаєш з частин: give — давати, а **give up** — кинути (звичку), здатися. Look — дивитися, а **look after** — доглядати. Тому вчи їх як окремі слова." },
+    { "t": "p", "text": "В українській схожу роботу роблять префікси: писати — **за**писати — **пере**писати. В англійській такий «префікс» стоїть **після** дієслова й окремим словом: write — write **down** (записати). Носії вживають фразові дієслова постійно, особливо в розмові: на об'єкті ти почуєш **sort it out**, а не resolve the problem." },
+    { "t": "ex", "items": [
+      ["**Turn off** the light, please.", "Вимкни світло, будь ласка."],
+      ["Don't **give up**!", "Не здавайся!"],
+      ["Can you **pick up** that box?", "Можеш підняти ту коробку?"]
+    ] },
+    { "t": "h", "text": "Найкорисніші: на роботі" },
+    { "t": "table", "head": ["Дієслово", "Значення"], "rows": [
+      ["set up", "встановити, налаштувати"],
+      ["sort out", "владнати, розібратися"],
+      ["work out", "з'ясувати; тренуватися"],
+      ["carry on", "продовжувати"],
+      ["fill in", "заповнити (бланк)"],
+      ["find out", "дізнатися"],
+      ["run out of", "закінчитися (у тебе)"],
+      ["put off", "відкласти на потім"],
+      ["turn up", "з'явитися, прийти"],
+      ["pick up", "підняти; забрати когось"],
+      ["get on with", "ладнати з кимось"]
+    ] },
+    { "t": "ex", "items": [
+      ["We need to **set up** the scaffolding first.", "Спершу треба поставити риштування."],
+      ["Don't worry, I'll **sort** it **out**.", "Не хвилюйся, я все владнаю."],
+      ["We've **run out of** screws.", "У нас закінчилися шурупи."],
+      ["**Fill in** your name and address here.", "Впиши сюди своє ім'я та адресу."],
+      ["**Carry on**, you're doing great.", "Продовжуй, у тебе чудово виходить."],
+      ["The new guy **turned up** late again.", "Новенький знову прийшов пізно."],
+      ["I need to **find out** when the delivery is coming.", "Мені треба дізнатися, коли буде доставка."],
+      ["Let's **put off** the meeting until Monday.", "Давай перенесемо нараду на понеділок."]
+    ] },
+    { "t": "h", "text": "Найкорисніші: удома й щодня" },
+    { "t": "table", "head": ["Дієслово", "Значення"], "rows": [
+      ["get up", "вставати (з ліжка)"],
+      ["put on", "одягти, надягти"],
+      ["take off", "зняти (одяг); злетіти"],
+      ["turn on / off", "увімкнути / вимкнути"],
+      ["look for", "шукати"],
+      ["look after", "доглядати, наглядати"],
+      ["give up", "кинути (звичку); здатися"],
+      ["check in / out", "заселитися / виселитися"],
+      ["look forward to", "чекати з нетерпінням"]
+    ] },
+    { "t": "ex", "items": [
+      ["Tom **gets up** at six.", "Том встає о шостій."],
+      ["**Take off** your boots, please.", "Зніми, будь ласка, черевики."],
+      ["What are you **looking for**?", "Що ти шукаєш?"],
+      ["Olena **looks after** her mum.", "Олена доглядає маму."],
+      ["You can **check in** after three.", "Заселитися можна після третьої."],
+      ["Do you **get on with** your boss?", "Ти ладнаєш зі своїм босом?"],
+      ["I **work out** at the gym three times a week.", "Я тренуюся в спортзалі тричі на тиждень."]
+    ] },
+    { "t": "h", "text": "Роздільні: turn the light off" },
+    { "t": "p", "text": "У більшості фразових дієслів з **предметом** (тим, на що спрямована дія: світло, коробка, бланк, людина) частку можна поставити **двома способами**: одразу після дієслова або після предмета. Обидва варіанти правильні." },
+    { "t": "rule", "title": "Іменник: два варіанти", "lines": ["turn off **the light**", "turn **the light** off"] },
+    { "t": "rule", "title": "Займенник: лише посередині", "lines": ["turn **it** off — правильно", "turn off it — помилка"] },
+    { "t": "tip", "text": "Займенники **it, them, me, you, him, her, us** ставимо **тільки між** дієсловом і часткою: pick **me** up, fill **it** in, turn **them** off. Це найчастіша помилка з фразовими дієсловами." },
+    { "t": "ex", "items": [
+      ["**Turn off** the radio. **Turn** the radio **off**.", "Вимкни радіо. (обидва варіанти правильні)"],
+      ["The radio is too loud. **Turn** it **off**.", "Радіо надто гучне. Вимкни його."],
+      ["Here's the form. **Fill** it **in**, please.", "Ось бланк. Заповни його, будь ласка."],
+      ["My car is in the garage. Can you **pick** me **up**?", "Моя машина в ремонті. Можеш мене забрати?"],
+      ["**Put** your jacket **on**, it's cold.", "Одягни куртку, холодно."]
+    ] },
+    { "t": "tip", "text": "Якщо предмет довгий (кілька слів або ціле речення), став частку одразу після дієслова: **pick up** all the tools on the floor, **find out** what time the shop opens. Частка в кінці, після довгого предмета, губиться і звучить незграбно." },
+    { "t": "h", "text": "Нероздільні: look after them" },
+    { "t": "p", "text": "Деякі фразові дієслова **не розділяються**: частка стоїть одразу після дієслова, а предмет — і іменник, і займенник — після неї: look **after** the kids → look after **them**, look **for** your keys → look for **them**. Які саме не розділяються, доведеться запам'ятати; з наших списків це **look for**, **look after**, **get on with**, **run out of**, **look forward to**. А деякі зазвичай узагалі без предмета: **get up**, **carry on**, **turn up** (прийти)." },
+    { "t": "ex", "items": [
+      ["Who **looks after** your kids?", "Хто доглядає твоїх дітей?"],
+      ["I can't find my keys. Can you help me **look for** them?", "Не можу знайти ключі. Допоможеш їх пошукати?"]
+    ] },
+    { "t": "h", "text": "Три частини: run out of, look forward to" },
+    { "t": "p", "text": "Деякі фразові дієслова мають **три частини**: дієслово + частка + прийменник: **run out of** (закінчитися), **get on with** (ладнати з кимось), **look forward to** (чекати з нетерпінням), **put up with** (терпіти). Предмет стоїть **у кінці**, після всіх частин: We've run out of **them**." },
+    { "t": "tip", "text": "Після **look forward to** дієслово має форму з **-ing** (seeing, working), бо to тут — прийменник, як у to Dublin, а не to перед початковою формою дієслова (to see): I look forward to **seeing** you. У листах: I look forward to **hearing** from you." },
+    { "t": "ex", "items": [
+      ["The van has **run out of** petrol.", "У фургоні закінчився бензин."],
+      ["I **get on** well **with** my colleagues.", "Я добре ладнаю з колегами."],
+      ["I'm **looking forward to** the weekend.", "Чекаю не дочекаюся вихідних."],
+      ["I **look forward to hearing** from you.", "Чекаю на вашу відповідь."],
+      ["I can't **put up with** this noise any more.", "Я більше не можу терпіти цей шум."]
+    ] },
+    { "t": "tip", "text": "Одне фразове дієслово часто має **кілька значень**: **pick up** — підняти, забрати когось; **take off** — зняти (одяг), злетіти (про літак); **work out** — з'ясувати, тренуватися. Вчи їх цілими фразами: turn off the light, fill in the form, run out of petrol." },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "Turn off it, please.", "right": "Turn it off, please.", "why": "Займенник (it, them, me) стоїть лише між дієсловом і часткою." },
+    { "t": "mistake", "wrong": "Can you pick up me at six?", "right": "Can you pick me up at six?", "why": "Me — займенник, тому посередині: pick me up. З іменником можна обидва порядки: pick up Tom, pick Tom up." },
+    { "t": "mistake", "wrong": "I look forward to see you.", "right": "I look forward to seeing you.", "why": "Після look forward to — форма з -ing, бо to тут прийменник." },
+    { "t": "mistake", "wrong": "I'm looking my phone.", "right": "I'm looking for my phone.", "why": "«Шукати» — look for. Просто look без прийменника предмета не має: «дивитися на щось» — look at." },
+    { "t": "mistake", "wrong": "Can you look my dog after?", "right": "Can you look after my dog?", "why": "Look after не розділяється: і іменник, і займенник стоять після after: look after my dog, look after it." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "It's dark in here. Can you ___ the light?", "uk": "Тут темно. Можеш увімкнути світло?", "opts": ["turn on", "turn off", "take off"], "a": 0, "why": "Увімкнути — turn on, вимкнути — turn off. Take off — зняти (одяг)." },
+    { "type": "input", "q": "Mick gave ___ smoking last year.", "uk": "Мік кинув палити минулого року.", "a": ["up"], "why": "Кинути звичку — give up: give up smoking." },
+    { "type": "choice", "q": "We've run ___ milk.", "uk": "У нас закінчилося молоко.", "opts": ["out of", "out", "off"], "a": 0, "why": "«Закінчилося щось» — run out of + те, що закінчилося. Of тут обов'язкове." },
+    { "type": "input", "q": "I'm looking ___ my phone. Have you seen it?", "uk": "Я шукаю свій телефон. Ти його не бачив?", "a": ["for"], "why": "Шукати — look for. Look at — дивитися на, look after — доглядати." },
+    { "type": "choice", "q": "Tom will ___ the new TV for us.", "uk": "Том підключить нам новий телевізор.", "opts": ["set up", "give up", "put off"], "a": 0, "why": "Встановити, підключити техніку — set up. Give up — кинути, put off — відкласти." },
+    { "type": "choice", "q": "Mick didn't ___ today. Is he ill?", "uk": "Мік сьогодні не прийшов. Він захворів?", "opts": ["turn up", "carry on", "find out"], "a": 0, "why": "З'явитися, прийти — turn up. Carry on — продовжувати, find out — дізнатися." },
+    { "type": "input", "q": "Please fill ___ this form.", "uk": "Будь ласка, заповни цю форму.", "a": ["in", "out"], "why": "Заповнити бланк — fill in (у Британії й Ірландії найчастіше) або fill out." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Вимкни його, будь ласка.", "opts": ["Turn off it, please.", "Turn it off, please.", "Turn it, please, off."], "a": 1, "why": "Займенник it стоїть між дієсловом і часткою: turn it off." },
+    { "type": "input", "q": "Can you pick ___ up at seven?", "uk": "Можеш забрати мене о сьомій?", "a": ["me"], "why": "Займенник ставимо між дієсловом і часткою: pick me up." },
+    { "type": "choice", "q": "I'm looking forward to ___ you.", "uk": "Чекаю не дочекаюся зустрічі з тобою.", "opts": ["see", "seeing", "saw"], "a": 1, "why": "Після look forward to — форма з -ing, бо to тут прийменник: looking forward to seeing you." },
+    { "type": "order", "uk": "Надягни каску.", "words": ["hat", "on", "your", "put", "hard"], "a": ["Put your hard hat on.", "Put on your hard hat."], "why": "Put on — роздільне дієслово: з іменником частка може стояти до нього або після нього." },
+    { "type": "order", "uk": "Хто їх доглядає, коли ти на роботі?", "words": ["work", "them", "when", "looks", "at", "who", "you're", "after"], "a": ["Who looks after them when you're at work?", "When you're at work, who looks after them?"], "why": "Look after не розділяється, тому them після after. «На роботі» — at work." }
+  ]
+}

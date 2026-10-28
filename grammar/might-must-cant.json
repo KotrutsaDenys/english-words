@@ -1,0 +1,97 @@
+{
+  "id": "might-must-cant",
+  "level": "B1",
+  "title": "Might, may, must, can't: how sure you are",
+  "uk": "Наскільки ти впевнений: might, must, can't",
+  "summary": "здогадки: he might be late, you must be tired, it can't be Tom",
+  "minutes": 8,
+  "blocks": [
+    { "t": "p", "text": "Коли ти не знаєш чогось напевно, а лише **здогадуєшся**, в англійській для кожного рівня впевненості є своє слово: **might** (можливо), **must** (напевно, майже точно), **can't** (не може бути). Це **модальні дієслова** — короткі слова, які стоять перед іншим дієсловом і додають до нього відтінок: можливість, обов'язок, упевненість." },
+    { "t": "h", "text": "Шкала впевненості" },
+    { "t": "table", "head": ["Наскільки впевнений", "Англійською", "Українською"], "rows": [
+      ["100%: так", "He **is** at home.", "Він удома."],
+      ["майже точно так", "He **must** be at home.", "Він, мабуть, удома."],
+      ["50 на 50", "He **might** be at home.", "Може, він удома."],
+      ["майже точно ні", "He **can't** be at home.", "Не може бути, щоб він був удома."],
+      ["100%: ні", "He **isn't** at home.", "Його немає вдома."]
+    ] },
+    { "t": "p", "text": "**Is** та **isn't** — це факт: ти знаєш точно. **Must** і **can't** — ти сам не бачив, але маєш причину бути **майже впевненим**. **Might** — лише один з можливих варіантів, 50 на 50." },
+    { "t": "h", "text": "Might, may, could — можливо" },
+    { "t": "rule", "title": "Можливо", "lines": ["might / may / could + початкова форма дієслова", "He **might be** late. It **may rain**."] },
+    { "t": "p", "text": "Усі три означають «можливо», «може бути». У розмові найчастіше чути **might**, **may** звучить трохи офіційніше, а **could** — коли називаєш один з можливих варіантів. Після них іде **початкова форма дієслова** — та, що в словнику (be, go, know): без to і без -s навіть з he, she, it. He might **be**, а не He mights be." },
+    { "t": "ex", "items": [
+      ["Tom **might be** late. There's a lot of traffic.", "Том, можливо, запізниться: на дорогах великі затори."],
+      ["I **might go** to Dublin at the weekend.", "Можливо, я поїду до Дубліна на вихідних."],
+      ["Take a jacket. It **may rain** later.", "Візьми куртку. Пізніше може піти дощ."],
+      ["Where are the keys? — They **could be** in the van.", "Де ключі? — Може, у фургоні."]
+    ] },
+    { "t": "rule", "title": "Можливо, ні", "lines": ["might not / may not + початкова форма дієслова"] },
+    { "t": "ex", "items": [
+      ["He **might not know** about the meeting.", "Він, можливо, не знає про нараду."],
+      ["The shop **may not be** open on Sunday.", "Магазин у неділю, можливо, не працює."]
+    ] },
+    { "t": "tip", "text": "«Можливо, ні» — це лише **might not** або **may not**. **Couldn't** у здогадках означає інше: «не може бути», як can't." },
+    { "t": "h", "text": "Must — мабуть, точно так" },
+    { "t": "p", "text": "Ти вже знаєш must у значенні «мусиш»: You must wear a helmet. Але в здогадках must означає «мабуть», «напевно», «очевидно»: ти не знаєш цього точно, а **робиш висновок** з того, що бачиш чи чуєш. Найчастіше так кажуть **must be**." },
+    { "t": "ex", "items": [
+      ["You **must be** tired after twelve hours on site.", "Ти, мабуть, утомився після дванадцяти годин на об'єкті."],
+      ["The lights are on. Someone **must be** in the office.", "Світло горить. Мабуть, в офісі хтось є."],
+      ["Kate is from Dublin, so she **must know** the city well.", "Кейт з Дубліна, тож вона, напевно, добре знає місто."],
+      ["That van **must cost** a fortune.", "Цей фургон, напевно, коштує шалених грошей."]
+    ] },
+    { "t": "rule", "title": "Що відбувається саме зараз", "lines": ["must / might / can't + be + форма з -ing", "(форма з -ing: driving, working, sleeping)"] },
+    { "t": "ex", "items": [
+      ["Mick isn't answering. He **must be driving**.", "Мік не відповідає. Мабуть, він за кермом."],
+      ["Don't call Sarah now. She **might be sleeping**.", "Не телефонуй зараз Сарі: вона, може, спить."]
+    ] },
+    { "t": "h", "text": "Can't — не може бути" },
+    { "t": "p", "text": "Коли ти майже впевнений, що **ні**, кажи **can't** (повна форма cannot) — майже дослівно як українське «не може бути». А от **mustn't** тут не підходить: воно означає заборону, «не можна» (You mustn't smoke here)." },
+    { "t": "ex", "items": [
+      ["That **can't be** Tom. He's in Poland this week.", "Це не може бути Том: він цього тижня в Польщі."],
+      ["You **can't be** hungry. You've just had lunch.", "Не може бути, щоб ти зголоднів: ти ж щойно пообідав."],
+      ["This **can't be** the right address. It's an empty field.", "Це не може бути правильна адреса: тут порожнє поле."],
+      ["Twenty euro for a coffee? That **can't be** right.", "Двадцять євро за каву? Не може бути."]
+    ] },
+    { "t": "h", "text": "Can чи might?" },
+    { "t": "p", "text": "**Can be** у ствердженні означає «буває», «іноді таке трапляється» — загалом, а не в конкретний момент. Для здогадки про конкретну ситуацію (зараз, сьогодні, завтра) бери **might**, **may** або **could**. А от **can't** («не може бути») для здогадок підходить." },
+    { "t": "ex", "items": [
+      ["Wexford **can be** very windy in winter.", "У Вексфорді взимку буває дуже вітряно."],
+      ["Someone's at the door. It **might be** Tom.", "Хтось біля дверей. Може, це Том."]
+    ] },
+    { "t": "h", "text": "Здогадки про минуле" },
+    { "t": "rule", "title": "Модальне дієслово + have + V3", "lines": ["**must have** + V3 — мабуть, так і було", "**might / may / could have** + V3 — можливо, було", "**can't / couldn't have** + V3 — не може бути, щоб було"] },
+    { "t": "p", "text": "**V3** — третя форма дієслова: gone, left, seen, finished. Після модального дієслова **завжди have**, навіть з he, she, it: He must **have** gone. У швидкій розмові have звучить коротко, тому інколи пишуть must've, might've." },
+    { "t": "ex", "items": [
+      ["His van is gone. He **must have left** already.", "Його фургона немає. Мабуть, він уже поїхав."],
+      ["The ground is wet. It **must have rained** last night.", "Земля мокра. Мабуть, уночі йшов дощ."],
+      ["Where's the ladder? — Tom **may have taken** it.", "Де драбина? — Може, її взяв Том."],
+      ["I **might have left** my keys in the van.", "Може, я залишив ключі у фургоні."],
+      ["Andrii **can't have finished** the whole wall. He only started an hour ago.", "Не може бути, щоб Андрій закінчив усю стіну: він почав лише годину тому."]
+    ] },
+    { "t": "h", "text": "Питання" },
+    { "t": "p", "text": "У питаннях-здогадках must і can't майже не вживають. Коли питаєш про можливу причину чи варіант, починай з **Could …?** або кажи простіше: **Do you think …?** (Як думаєш…?)" },
+    { "t": "ex", "items": [
+      ["**Could** he **be** stuck in traffic?", "Може, він застряг у заторі?"],
+      ["**Do you think** he's still at work?", "Як думаєш, він ще на роботі?"]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "He mustn't be at home. His car isn't here.", "right": "He can't be at home. His car isn't here.", "why": "Mustn't — це заборона, «не можна». Коли впевнений, що ні, кажи can't." },
+    { "t": "mistake", "wrong": "Someone's at the door. It can be Tom.", "right": "Someone's at the door. It might be Tom.", "why": "Для здогадки про конкретний момент — might, may або could. Can be означає «буває взагалі»." },
+    { "t": "mistake", "wrong": "He must to be at work.", "right": "He must be at work.", "why": "Після must, might, may, can't — початкова форма дієслова без to." },
+    { "t": "mistake", "wrong": "He must has gone home.", "right": "He must have gone home.", "why": "Модальне дієслово не змінюється, а після нього завжди have, навіть з he, she, it." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "Sarah's been working since six. She ___ be hungry.", "uk": "Сара працює з шостої ранку. Вона, мабуть, зголодніла.", "opts": ["must", "can't", "mustn't"], "a": 0, "why": "Ти робиш висновок з фактів і майже впевнений, що так, тому must. Can't — «не може бути», а mustn't — заборона." },
+    { "type": "choice", "q": "That ___ be Andrii's car. He sold it last month.", "uk": "Це не може бути машина Андрія: він продав її минулого місяця.", "opts": ["must", "can't", "mustn't"], "a": 1, "why": "Ти впевнений, що ні, тому can't. Mustn't означає заборону («не можна») і для здогадок не підходить." },
+    { "type": "choice", "q": "I'm not sure where Mick is. He ___ be at lunch.", "uk": "Не знаю, де Мік. Може, він на обіді.", "opts": ["must", "could", "can't"], "a": 1, "why": "«Не знаю, може» — це 50 на 50, тому could (так само might або may). Must і can't — коли ти майже впевнений." },
+    { "type": "choice", "q": "Don't wait for me. I ___ be late tonight.", "uk": "Не чекай на мене. Можливо, я сьогодні запізнюся.", "opts": ["can", "might", "must"], "a": 1, "why": "Здогадка про конкретний вечір — might. Can be означає «буває взагалі», а must означало б, що ти майже впевнений." },
+    { "type": "input", "q": "Olena ___ be at work. I've just seen her in Lidl.", "uk": "Олена не може бути на роботі: я щойно бачив її в Lidl.", "a": ["can't", "couldn't"], "why": "Ти впевнений, що ні (щойно бачив її в магазині), тому can't. Не mustn't: це заборона." },
+    { "type": "order", "uk": "Він, можливо, сьогодні не прийде.", "words": ["come", "might", "today", "he", "not"], "a": ["He might not come today.", "Today he might not come."], "why": "«Можливо, ні» — might not + початкова форма дієслова. Not стоїть одразу після might." },
+    { "type": "input", "q": "Kate isn't answering. She ___ (might / talk) to a customer right now.", "uk": "Кейт не відповідає. Може, вона саме зараз розмовляє з клієнтом.", "a": ["might be talking"], "why": "Здогадка про те, що відбувається саме зараз: might + be + форма з -ing." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Він, мабуть, забув.", "opts": ["He must has forgotten.", "He must have forgotten.", "He must to have forgotten."], "a": 1, "why": "Про минуле: must have + V3. Після must завжди have (навіть з he) і без to." },
+    { "type": "input", "q": "The door's locked. Everyone ___ (must / go) home.", "uk": "Двері замкнені. Мабуть, усі пішли додому.", "a": ["must have gone"], "why": "Висновок про минуле: must have + V3. Go — неправильне дієслово: go, went, gone." },
+    { "type": "input", "q": "I can't find my keys. I ___ (might / put) them in my other jacket.", "uk": "Не можу знайти ключі. Може, я поклав їх в іншу куртку.", "a": ["might have put"], "why": "«Можливо, так було» — might have + V3. Put має однакові форми: put, put, put." },
+    { "type": "input", "q": "Tom ___ (can't / see) my message. His phone's been off all day.", "uk": "Не може бути, щоб Том бачив моє повідомлення: його телефон увесь день вимкнений.", "a": ["can't have seen", "couldn't have seen"], "why": "Впевнений, що ні, про минуле: can't have + V3. See — неправильне дієслово: see, saw, seen." },
+    { "type": "order", "uk": "Може, це неправильна адреса?", "words": ["be", "address", "could", "the", "it", "wrong"], "a": ["Could it be the wrong address?"], "why": "У питанні-здогадці could стоїть на початку, далі it і початкова форма be." }
+  ]
+}

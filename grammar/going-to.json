@@ -1,0 +1,89 @@
+{
+  "id": "going-to",
+  "level": "A2",
+  "title": "Be going to and plans",
+  "uk": "Going to і плани на майбутнє",
+  "summary": "намір, прогноз за ознаками, домовленості: I'm going to buy",
+  "minutes": 7,
+  "blocks": [
+    { "t": "p", "text": "**Be going to** + початкова форма дієслова (як у словнику: work, buy) — коли про майбутнє ти **вже вирішив заздалегідь**: намір, план. Українською «я збираюся», «я буду», «я куплю». Going to складається з трьох частин: **am / is / are** + **going to** + дієслово, і жодну з них пропустити не можна." },
+    { "t": "ex", "items": [
+      ["I**'m going to buy** a car next month.", "Наступного місяця я куплю машину."],
+      ["We**'re going to watch** the match at the weekend.", "На вихідних ми дивитимемося матч."],
+      ["Sarah **is going to start** a new job in May.", "Сара в травні починає нову роботу."],
+      ["Tom **is going to look** for a new flat.", "Том збирається шукати нову квартиру."]
+    ] },
+    { "t": "h", "text": "Як утворюється" },
+    { "t": "rule", "title": "Ствердження", "lines": ["I **am** going to + work → I**'m** going to work", "he / she / it **is** going to + work", "you / we / they **are** going to + work"] },
+    { "t": "rule", "title": "Заперечення", "lines": ["I**'m not** going to + work", "he / she / it **isn't** going to + work", "you / we / they **aren't** going to + work"] },
+    { "t": "rule", "title": "Питання", "lines": ["**Am** I / **Is** he / **Are** you + going to + work?", "Yes, I **am**. / No, he **isn't**. / Yes, they **are**."] },
+    { "t": "p", "text": "Am, is чи are залежить від **підмета** — того, хто або що виконує дію: I am, Tom is, we are. Після to — завжди початкова форма, без -s і без -ing: she's going to **buy**." },
+    { "t": "ex", "items": [
+      ["**Are** you **going to stay** late today? — No, I**'m not**.", "Ти сьогодні затримаєшся на роботі? — Ні."],
+      ["Mick **isn't going to come** to the party.", "Мік не прийде на вечірку."],
+      ["How long **is** it **going to take**?", "Скільки часу це забере?"]
+    ] },
+    { "t": "tip", "text": "У розмові going to часто звучить як **gonna**: I'm gonna call him. Так говорять, але в повідомленнях і листах пиши повністю: going to." },
+    { "t": "tip", "text": "**I'm going to Dublin** tomorrow — це просто «я їду в Дублін» (Present Continuous від go). Going to + місце — рух кудись, going to + дієслово — план." },
+    { "t": "h", "text": "Прогноз за ознаками" },
+    { "t": "p", "text": "Going to — і тоді, коли ти **бачиш ознаки**, що щось ось-ось станеться. Це не думка, а висновок з того, що перед очима: чорні хмари — буде дощ." },
+    { "t": "ex", "items": [
+      ["Careful! That ladder **is going to fall**!", "Обережно! Та драбина зараз упаде!"],
+      ["It's ten to eight and I'm still at home. I**'m going to be** late.", "Уже за десять восьма, а я ще вдома. Я запізнюся."],
+      ["That lorry's too wide. It**'s not going to fit** through the gate.", "Та вантажівка заширока. Вона не пролізе у ворота."]
+    ] },
+    { "t": "h", "text": "Going to чи will?" },
+    { "t": "p", "text": "Головне питання — **коли ти вирішив**. Вирішив **раніше**, уже маєш план — **going to**. Вирішуєш **просто зараз**, у розмові — **will**. З прогнозами схоже: просто думка — will, бачиш ознаки — going to. Порівняй:" },
+    { "t": "ex", "items": [
+      ["We've got no milk. — Oh, really? I**'ll get** some.", "У нас немає молока. — Справді? Тоді я куплю."],
+      ["Why have you got your coat on? — We've got no milk. I**'m going to get** some.", "Чого ти в куртці? — Молоко закінчилося. Збираюся купити."],
+      ["I think it**'ll be** sunny tomorrow.", "Думаю, завтра буде сонячно."],
+      ["The sky's getting dark. It**'s going to rain**.", "Небо темніє. Зараз піде дощ."]
+    ] },
+    { "t": "tip", "text": "У першому діалозі людина щойно дізналася новину й вирішила зараз — **will**. У другому вже вирішила до розмови (тому й одяглася) — **going to**." },
+    { "t": "h", "text": "Домовленості: Present Continuous" },
+    { "t": "p", "text": "Коли про майбутнє вже **домовлено** — є час, місце, інша людина знає — найприродніше **Present Continuous**: am / is / are + **форма з -ing** (та сама, що в «зараз роблю»). Зазвичай з часом (tomorrow, at ten, on Friday), інакше можуть зрозуміти як «зараз»." },
+    { "t": "ex", "items": [
+      ["I**'m seeing** the dentist on Thursday.", "У четвер я йду до стоматолога."],
+      ["We**'re starting** work on a new house in Gorey on Monday.", "У понеділок ми починаємо роботу на новому будинку в Горі."],
+      ["What **are** you **doing** tonight?", "Що ти робиш сьогодні ввечері?"],
+      ["Olena **is flying** to Kraków on Friday.", "Олена в п'ятницю летить до Кракова."]
+    ] },
+    { "t": "tip", "text": "I'm going to meet the boss at ten — теж правильно. А **I'll meet** him at ten звучить так, ніби ти вирішуєш просто зараз. Для того, що вже в календарі, це менш природно, хоч і не помилка." },
+    { "t": "h", "text": "Розклад: Present Simple" },
+    { "t": "p", "text": "Для **розкладу** — автобуси, потяги, кіно, години роботи магазину — Present Simple, навіть коли мова про завтра. Українською так само: «автобус відходить завтра о сьомій»." },
+    { "t": "ex", "items": [
+      ["The film **starts** at eight.", "Фільм починається о восьмій."],
+      ["What time **does** the train **get** to Dublin?", "О котрій потяг прибуває в Дублін?"],
+      ["Lidl **closes** at ten tonight.", "Лідл сьогодні зачиняється о десятій."]
+    ] },
+    { "t": "h", "text": "Коротко: що вибрати" },
+    { "t": "table", "head": ["Ситуація", "Форма", "Приклад"], "rows": [
+      ["рішення просто зараз", "will", "I'll help you."],
+      ["думка про майбутнє", "will", "I think he'll come."],
+      ["план, намір", "be going to", "I'm going to buy a car."],
+      ["бачу ознаки", "be going to", "It's going to rain."],
+      ["домовлено, є час", "Present Continuous", "I'm meeting Tom at six."],
+      ["розклад", "Present Simple", "The bus leaves at 7:10."]
+    ] },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "I going to buy a new phone.", "right": "I'm going to buy a new phone.", "why": "Без am, is чи are going to не працює: I'm going to, she's going to." },
+    { "t": "mistake", "wrong": "I'm going buy a new phone.", "right": "I'm going to buy a new phone.", "why": "Після going обов'язково to: going to buy." },
+    { "t": "mistake", "wrong": "She's going to buys a car.", "right": "She's going to buy a car.", "why": "Після to — лише початкова форма, без -s, навіть для she." },
+    { "t": "mistake", "wrong": "I meet Tom tomorrow at six.", "right": "I'm meeting Tom tomorrow at six.", "why": "Українською «зустрічаюся завтра» — теперішній час. Англійською для домовленостей між людьми — Present Continuous, а Present Simple лише для розкладів." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I ___ going to buy a new phone.", "uk": "Я збираюся купити новий телефон.", "opts": ["am", "is", "are"], "a": 0, "why": "З I завжди am: I am going to (скорочено I'm going to)." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ми збираємося пофарбувати кухню.", "opts": ["We going to paint the kitchen.", "We're going paint the kitchen.", "We're going to paint the kitchen."], "a": 2, "why": "Потрібні всі три частини: are (we're) + going to + paint. Без are чи без to речення неправильне." },
+    { "type": "choice", "q": "Look at those black clouds! ___", "uk": "Глянь на ті чорні хмари! Зараз піде дощ.", "opts": ["It's going to rain.", "It rains.", "It's raining."], "a": 0, "why": "Бачимо ознаки — прогноз з going to. It's raining означає, що дощ уже йде, а It rains — про те, що буває взагалі." },
+    { "type": "choice", "q": "The bus ___ at 7:10 tomorrow morning.", "uk": "Автобус відходить завтра о 7:10 ранку.", "opts": ["leaves", "leave", "leaving"], "a": 0, "why": "Розклад — Present Simple, навіть про завтра. The bus — це it, тому leaves з -s." },
+    { "type": "choice", "q": "___ this weekend?", "uk": "Що ти робиш на цих вихідних?", "opts": ["What are you doing", "What do you do", "What you are doing"], "a": 0, "why": "Питаємо про плани на конкретні вихідні — Present Continuous. What do you do at the weekend? — про звичку («що ти зазвичай робиш»). А в питанні are стоїть перед you." },
+    { "type": "choice", "q": "I've left my wallet at home! — Have you? Don't worry, ___ for you.", "uk": "Я забув гаманець удома! — Справді? Не хвилюйся, я за тебе заплачу.", "opts": ["I'll pay", "I'm going to pay", "I pay"], "a": 0, "why": "Про гаманець ти дізнався щойно (Have you? — Справді?) і вирішуєш просто зараз — will: I'll pay. Going to — для вирішеного раніше, а теперішній час I pay тут не підходить." },
+    { "type": "choice", "q": "Why have you bought all this paint? — ___ the kitchen.", "uk": "Навіщо ти купив стільки фарби? — Збираюся пофарбувати кухню.", "opts": ["I'm going to paint", "I'll paint", "I paint"], "a": 0, "why": "Ти вирішив ще до розмови, тому й купив фарбу. План, намір — going to. I'll paint звучало б як рішення, ухвалене щойно, а I paint — як звичка." },
+    { "type": "input", "q": "He ___ going to fix it today.", "uk": "Він сьогодні не збирається це лагодити.", "a": ["isn't", "is not", "'s not"], "why": "Заперечення: he + isn't (is not) + going to + дієслово." },
+    { "type": "input", "q": "___ you going to work on Saturday?", "uk": "Ти збираєшся працювати в суботу?", "a": ["Are"], "why": "У питанні am / is / are стає перед підметом (тим, хто діє). Для you — Are you going to…?" },
+    { "type": "input", "q": "Are you going to sell your car? — No, ___.", "uk": "Ти збираєшся продавати свою машину? — Ні, не збираюся.", "a": ["I'm not", "I'm not going to", "I'm not going to sell it"], "why": "Коротка відповідь повторює допоміжне дієслово з питання: Are you…? — No, I'm not. Можна й довше: No, I'm not going to." },
+    { "type": "order", "uk": "Що ти збираєшся робити після роботи?", "words": ["you", "what", "to", "going", "are", "do", "work", "after"], "a": ["What are you going to do after work?"], "why": "Питання: What + are + you + going to + do. Are стоїть перед you, після to — початкова форма do." },
+    { "type": "order", "uk": "Завтра о десятій я зустрічаюся з босом.", "words": ["meeting", "I'm", "boss", "the", "at", "tomorrow", "ten"], "a": ["I'm meeting the boss at ten tomorrow.", "I'm meeting the boss tomorrow at ten.", "Tomorrow I'm meeting the boss at ten.", "Tomorrow at ten I'm meeting the boss.", "At ten tomorrow I'm meeting the boss."], "why": "Домовленість з конкретним часом — Present Continuous: I'm meeting. Час (at ten tomorrow) зазвичай у кінці, але можна й на початку." }
+  ]
+}

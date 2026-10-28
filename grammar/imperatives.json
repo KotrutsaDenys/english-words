@@ -1,0 +1,108 @@
+{
+  "id": "imperatives",
+  "level": "A1",
+  "title": "Imperatives and let's",
+  "uk": "Наказовий спосіб і let's",
+  "summary": "прохання й інструкції: Close the door. Don't touch it. Let's go.",
+  "minutes": 5,
+  "blocks": [
+    { "t": "p", "text": "**Наказовий спосіб** — це коли просимо, наказуємо, даємо інструкцію чи пораду: «Подай», «Зачини», «Не чіпай». В англійській він найпростіший: береш **початкову форму дієслова** (як у словнику: pass, close, go) і нічого не додаєш. **Підмета** (того, хто виконує дію, тут you) теж немає. Форма одна для всіх: **Sit down** — і «сідай», і «сідайте»." },
+    { "t": "ex", "items": [
+      ["**Pass** me the trowel.", "Подай мені кельму."],
+      ["**Close** the door.", "Зачини двері."],
+      ["**Come** here a minute.", "Підійди сюди на хвилинку."],
+      ["**Wait** for me!", "Зачекай на мене!"],
+      ["**Turn** left at the roundabout.", "На кільці поверни ліворуч."]
+    ] },
+
+    { "t": "h", "text": "Заперечення: don't" },
+    { "t": "rule", "title": "Заперечення", "lines": [
+      "**Don't** + початкова форма дієслова",
+      "на знаках повна форма: **Do not** enter",
+      "на знаках ще **No** + -ing: No smoking, No parking"
+    ] },
+    { "t": "ex", "items": [
+      ["**Don't touch** that, it's hot.", "Не чіпай, воно гаряче."],
+      ["**Don't worry**.", "Не хвилюйся."],
+      ["**Don't forget** your keys.", "Не забудь ключі."],
+      ["**Don't park** in front of the gate.", "Не паркуйся перед воротами."]
+    ] },
+    { "t": "tip", "text": "Після don't — **без to** і без -s: Don't **go** (а не Don't to go). І заперечення завжди через don't: просто not на початку наказу не ставлять. **Don't touch**, а не Not touch." },
+
+    { "t": "h", "text": "З be: Be careful! Don't be late" },
+    { "t": "p", "text": "Коли далі йде не дія, а стан чи якість (careful — обережний, quiet — тихий, late — пізній, ready — готовий), потрібне дієслово **be**: **Be** careful. У запереченні — **Don't be**. Am, is, are тут не вживаємо. Українське «не запізнюйся» — дієслово, а англійською буквально «не будь пізнім»: **Don't be late**." },
+    { "t": "ex", "items": [
+      ["**Be careful!**", "Обережно!"],
+      ["**Be quiet**, please.", "Тихіше, будь ласка."],
+      ["**Be** ready at seven.", "Будь готовий о сьомій."],
+      ["**Don't be late** tomorrow.", "Не запізнюйся завтра."],
+      ["**Don't be** shy.", "Не соромся."]
+    ] },
+
+    { "t": "h", "text": "Ввічливіше: please, just, could you" },
+    { "t": "p", "text": "Голий наказ англійською звучить **різкіше**, ніж український. Між колегами на роботі «Pass me the level» — нормально, але англійці майже завжди трохи пом'якшують:" },
+    { "t": "list", "items": [
+      "**please** на початку чи в кінці: **Please** close the door. Pass me the level, **please**.",
+      "**just** — «лише, на хвилинку»: **Just** hold this for a second.",
+      "питання замість наказу: **Can you** help me? **Could you** open the door?",
+      "до незнайомих і до боса краще **Could you…?** (докладно — у темі про прохання)",
+      "побажання й запрошення — теж наказовий спосіб, і вони зовсім не грубі: **Have** a good weekend! **Help** yourself."
+    ] },
+    { "t": "ex", "items": [
+      ["Pass me the level, **please**.", "Подай мені рівень, будь ласка."],
+      ["**Just** hold this for a second.", "Потримай це секунду."],
+      ["**Could you** open the door, please?", "Ви не могли б відчинити двері?"],
+      ["**Have** a good weekend!", "Гарних вихідних!"],
+      ["**Help** yourself.", "Пригощайся."],
+      ["**Take** care!", "Бережи себе!"]
+    ] },
+
+    { "t": "h", "text": "Let's: пропонуємо зробити разом" },
+    { "t": "p", "text": "**Let's** (скорочено від let us) — українське «ходімо», «почнімо», «давай…». Пропонуєш зробити щось **разом**, і ти теж це робиш. Після let's — початкова форма дієслова **без to**. У розмові завжди кажи let's: повне let us звучить офіційно." },
+    { "t": "rule", "title": "Пропозиція", "lines": [
+      "**Let's** + початкова форма: Let's **go**.",
+      "**Let's not** + початкова форма: Let's not **wait**."
+    ] },
+    { "t": "ex", "items": [
+      ["**Let's go**.", "Ходімо."],
+      ["**Let's start** at eight.", "Почнімо о восьмій."],
+      ["**Let's have** a break.", "Зробімо перерву."],
+      ["**Let's not** tell the boss yet.", "Не кажімо поки що босові."],
+      ["**Let's get** a takeaway tonight.", "Візьмімо сьогодні їжу на виніс."],
+      ["I don't know. **Let's see**.", "Не знаю. Подивимося."]
+    ] },
+    { "t": "tip", "text": "Не плутай **let's** і **let me**. Let's — «давай разом». Let me — «дай я», «дозволь мені»: **Let me** help you (дай я допоможу)." },
+
+    { "t": "h", "text": "Always, never: правила й безпека" },
+    { "t": "p", "text": "В інструкціях і правилах безпеки на початок часто ставлять **always** (завжди) або **never** (ніколи). **Never** уже означає «ніколи не», тому don't з ним не потрібне." },
+    { "t": "ex", "items": [
+      ["**Always wear** a helmet on site.", "На об'єкті завжди носи каску."],
+      ["**Never leave** the site open.", "Ніколи не залишай об'єкт відчиненим."],
+      ["**Always check** the scaffolding first.", "Завжди спершу перевіряй риштування."],
+      ["**Never stand** on the top step of a ladder.", "Ніколи не ставай на верхню сходинку драбини."],
+      ["**Mind** your head!", "Обережно, голова!"],
+      ["**Watch out!**", "Стережися!"]
+    ] },
+
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "Not touch it!", "right": "Don't touch it!", "why": "Заперечний наказ починається з don't, а не з not." },
+    { "t": "mistake", "wrong": "Don't to go there.", "right": "Don't go there.", "why": "Після don't іде початкова форма дієслова без to." },
+    { "t": "mistake", "wrong": "Let's to start.", "right": "Let's start.", "why": "Після let's теж без to: Let's start, Let's go." },
+    { "t": "mistake", "wrong": "Don't late tomorrow.", "right": "Don't be late tomorrow.", "why": "Late — не дієслово, а «пізній», тому потрібне be: Don't be late." },
+    { "t": "mistake", "wrong": "Don't be worry.", "right": "Don't worry.", "why": "Worry — уже дієслово («хвилюватися»), тому be не потрібне. Be ставимо лише перед словами-станами: Don't be late, Don't be shy." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "___ the door, please.", "uk": "Зачини, будь ласка, двері.", "opts": ["Close", "Closes", "To close"], "a": 0, "why": "Наказ — це початкова форма дієслова без підмета, без -s і без to." },
+    { "type": "choice", "q": "___ touch that, it's hot!", "uk": "Не чіпай, воно гаряче!", "opts": ["Not", "Don't", "No"], "a": 1, "why": "Заперечний наказ — don't + дієслово. Not чи no перед дієсловом у наказі не ставлять." },
+    { "type": "choice", "q": "___ me a hand with this, please.", "uk": "Допоможи мені з цим, будь ласка.", "opts": ["Give", "Gives", "Giving"], "a": 0, "why": "Give me a hand — «допоможи». Наказ — початкова форма дієслова, без -s і без -ing." },
+    { "type": "input", "q": "___ (not / be) late tomorrow.", "uk": "Не запізнюйся завтра.", "a": ["Don't be"], "why": "Late — не дієслово, тому потрібне be. Заперечення: Don't be late." },
+    { "type": "choice", "q": "Let's ___ a break.", "uk": "Зробімо перерву.", "opts": ["have", "to have", "having"], "a": 0, "why": "Після let's — початкова форма дієслова без to: Let's have a break." },
+    { "type": "input", "q": "___ go home, it's late.", "uk": "Ходімо додому, вже пізно.", "a": ["Let's"], "why": "Пропонуємо щось зробити разом — Let's + дієслово." },
+    { "type": "input", "q": "___ wear a helmet on site.", "uk": "На об'єкті завжди носи каску.", "a": ["Always"], "why": "У правилах always ставимо на початок, перед дієсловом: Always wear…" },
+    { "type": "choice", "q": "Let's ___ the boss yet.", "uk": "Не кажімо поки що босові.", "opts": ["not tell", "don't tell", "not to tell"], "a": 0, "why": "Заперечення з let's — Let's not + дієслово, без don't і без to." },
+    { "type": "choice", "q": "___ stand on the top step of a ladder.", "uk": "Ніколи не ставай на верхню сходинку драбини.", "opts": ["Never", "Don't never", "Not ever"], "a": 0, "why": "Never уже означає «ніколи не», тому don't з ним не потрібне, а Not на початку наказу не ставлять." },
+    { "type": "choice", "task": "Як найввічливіше попросити незнайому людину?", "q": "", "opts": ["Give me the pen.", "You give me the pen!", "Could you pass me the pen, please?"], "a": 2, "why": "Голий наказ до незнайомої людини звучить різко, а з you і знаком оклику — ще й сердито. Краще питання: Could you…, please?" },
+    { "type": "order", "uk": "Будь ласка, не паркуйся біля воріт.", "words": ["park", "the", "please", "near", "don't", "gate"], "a": ["Please don't park near the gate.", "Don't park near the gate, please."], "why": "Please можна поставити на початок або в кінець. Далі don't + дієслово." },
+    { "type": "order", "uk": "Обережно на цій драбині.", "words": ["ladder", "careful", "this", "be", "on"], "a": ["Be careful on this ladder."], "why": "Careful — не дієслово, а «обережний», тому наказ будуємо з be: Be careful." }
+  ]
+}
