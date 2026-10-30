@@ -3182,6 +3182,9 @@ function renderList() {
   if (q) {
     base = base.map((w, i) => ({ w, i, s: searchScore(w, q) })).filter(x => x.s >= 0)
       .sort((a, b) => a.s - b.s || a.i - b.i).map(x => x.w);
+  } else if (dictCat !== 'mine') {
+    // Без пошуку — упереміш, щоб на початку не стояла одна тема; порядок новий щодня, але не стрибає протягом дня
+    base = C.dayShuffle(base, t);
   }
   const counts = { all: base.length };
   base.forEach(w => { const st = C.statusOf(cards[w.id]); counts[st] = (counts[st] || 0) + 1; });

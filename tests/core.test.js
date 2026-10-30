@@ -314,6 +314,15 @@ test('Серія: один вихідний на тиждень не обрив�
   assert.ok(!info.restReady);
 });
 
+test('Словник упереміш: стабільно протягом дня, інакше наступного дня, перші слова з різних тем', () => {
+  const a = C.dayShuffle(WORDS, 1000).map(w => w.id);
+  assert.deepStrictEqual(a, C.dayShuffle(WORDS.slice().reverse(), 1000).map(w => w.id));
+  assert.notDeepStrictEqual(a.slice(0, 20), C.dayShuffle(WORDS, 1001).map(w => w.id).slice(0, 20));
+  assert.strictEqual(a.length, WORDS.length);
+  const cats = new Set(C.dayShuffle(WORDS, 1000).slice(0, 10).map(w => w.cat));
+  assert.ok(cats.size >= 4, [...cats].join());
+});
+
 test('«Вчити першим» ставить слова на початок черги нових, але через одне з рештою', () => {
   const order = C.orderNew(WORDS, {}, null, 10, 1000, ['site-hawk', 'talk-lend']).map(w => w.id);
   assert.strictEqual(order[0], 'site-hawk');

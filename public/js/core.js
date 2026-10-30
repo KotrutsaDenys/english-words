@@ -139,6 +139,18 @@
     for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
     return h.toString(36);
   }
+  /* Перемішати список слів «випадково», але однаково протягом дня (seed = номер дня):
+     прокрутка й фільтри не перетасовують список щоразу */
+  function dayShuffle(items, seed) {
+    const key = w => {
+      const s = seed + ':' + w.id;
+      let h = 0x811c9dc5;
+      for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+      h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d) >>> 0; h ^= h >>> 12;
+      return h >>> 0;
+    };
+    return items.map(w => [key(w), w]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+  }
   /* Скільки завдань кожного типу щонайменше в тесті з n */
   function taskMix(n) { return { choice: Math.round(4 * n / 12), input: Math.round(3 * n / 12), order: n >= 8 ? 1 : 0 }; }
   /* Вибрати n завдань: спершу ті, де помилявся (seen = 1), потім ще не бачені, потім решта;
@@ -849,7 +861,7 @@
     wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
     EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
-    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, pickTasks, grammarSchedule, pickSectionTasks
+    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, pickTasks, grammarSchedule, pickSectionTasks
   };
   root.EWCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
