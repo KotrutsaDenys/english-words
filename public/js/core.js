@@ -619,7 +619,7 @@
 
   /* ---------- Порядок нових слів: свої першими, далі теми з вагами ---------- */
   // Розмовні слова з базового словника йдуть найчастіше: вони покривають більшість живої мови
-  const CAT_WEIGHT = { spoken: 12, core: 4, base1: 4, talk: 3, site: 3, idioms: 3, irish: 2, verbs: 2, work: 2, base2: 2,
+  const CAT_WEIGHT = { spoken: 12, core: 4, base1: 4, talk: 3, idioms: 3, irish: 2, verbs: 2, site: 2, work: 1, base2: 2,
     feel: 1, health: 1, phone: 1, shop: 1, car: 1, weather: 1, false: 1, travel: 1, base3: 1 };
   function orderNew(words, cards, cats, perDay, today, priority) {
     const first = new Set(priority || []);
@@ -660,7 +660,14 @@
       if (clash) deferred.push(w); else { result.push(w); placed.add(w.id); }
       if (result.length === n) { placed.clear(); }
     }
-    return mine.concat(pri, result, deferred);
+    // «Вчити першими» йдуть раніше, але не суцільним блоком: через одне з рештою, щоб теми лишалися впереміш
+    const merged = [];
+    const rest = result.concat(deferred);
+    for (let i = 0, j = 0; i < pri.length || j < rest.length;) {
+      if (i < pri.length) merged.push(pri[i++]);
+      if (j < rest.length) merged.push(rest[j++]);
+    }
+    return mine.concat(merged);
   }
 
   /* ---------- Спринт: швидке впізнавання вивчених слів ---------- */

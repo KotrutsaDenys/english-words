@@ -314,9 +314,15 @@ test('Серія: один вихідний на тиждень не обрив�
   assert.ok(!info.restReady);
 });
 
-test('«Вчити першим» ставить слова на початок черги нових', () => {
+test('«Вчити першим» ставить слова на початок черги нових, але через одне з рештою', () => {
   const order = C.orderNew(WORDS, {}, null, 10, 1000, ['site-hawk', 'talk-lend']).map(w => w.id);
-  assert.strictEqual(order.slice(0, 2).join(), 'site-hawk,talk-lend');
+  assert.strictEqual(order[0], 'site-hawk');
+  assert.strictEqual(order[2], 'talk-lend');
+  assert.ok(!['site-hawk', 'talk-lend'].includes(order[1]));
+  // Ціла тема «першими» не блокує решту: серед перших 10 нових є й інші теми
+  const sitePri = WORDS.filter(w => w.cat === 'site').map(w => w.id);
+  const o2 = C.orderNew(WORDS, {}, null, 10, 1000, sitePri);
+  assert.ok(o2.slice(0, 10).some(w => w.cat !== 'site'));
   assert.strictEqual(order.length, WORDS.length);
   assert.strictEqual(new Set(order).size, order.length);
   // Пріоритет діє навіть для вимкненої теми
