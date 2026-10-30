@@ -5,6 +5,12 @@
   "uk": "Фразові дієслова",
   "summary": "pick up, turn off, give up: дієслово + частка = нове значення",
   "minutes": 8,
+  "key": [
+    "Дієслово + частка = **нове значення**: give up — кинути, look after — доглядати, run out of — закінчитися. Вчи цілими фразами: turn off the light.",
+    "Роздільні з іменником — **два порядки**: turn off **the light** = turn **the light** off. Із займенником — **тільки посередині**: turn **it** off, pick **me** up.",
+    "Нероздільні — предмет завжди після частки: look after **them**, look for **it**, get on with **him**. Тричастинні теж: run out of **them**.",
+    "Після **look forward to** — форма з **-ing**: I look forward to **seeing** you."
+  ],
   "blocks": [
     { "t": "p", "text": "**Фразове дієслово** — це звичайне дієслово + коротке слово-частка (**up, off, on, out, in, down, back, away**…). Разом вони мають **нове значення**, яке часто не вгадаєш з частин: give — давати, а **give up** — кинути (звичку), здатися. Look — дивитися, а **look after** — доглядати. Тому вчи їх як окремі слова." },
     { "t": "p", "text": "В українській схожу роботу роблять префікси: писати — **за**писати — **пере**писати. В англійській такий «префікс» стоїть **після** дієслова й окремим словом: write — write **down** (записати). Носії вживають фразові дієслова постійно, особливо в розмові: на об'єкті ти почуєш **sort it out**, а не resolve the problem." },
@@ -107,6 +113,18 @@
     { "type": "input", "q": "Can you pick ___ up at seven?", "uk": "Можеш забрати мене о сьомій?", "a": ["me"], "why": "Займенник ставимо між дієсловом і часткою: pick me up." },
     { "type": "choice", "q": "I'm looking forward to ___ you.", "uk": "Чекаю не дочекаюся зустрічі з тобою.", "opts": ["see", "seeing", "saw"], "a": 1, "why": "Після look forward to — форма з -ing, бо to тут прийменник: looking forward to seeing you." },
     { "type": "order", "uk": "Надягни каску.", "words": ["hat", "on", "your", "put", "hard"], "a": ["Put your hard hat on.", "Put on your hard hat."], "why": "Put on — роздільне дієслово: з іменником частка може стояти до нього або після нього." },
-    { "type": "order", "uk": "Хто їх доглядає, коли ти на роботі?", "words": ["work", "them", "when", "looks", "at", "who", "you're", "after"], "a": ["Who looks after them when you're at work?", "When you're at work, who looks after them?"], "why": "Look after не розділяється, тому them після after. «На роботі» — at work." }
+    { "type": "order", "uk": "Хто їх доглядає, коли ти на роботі?", "words": ["work", "them", "when", "looks", "at", "who", "you're", "after"], "a": ["Who looks after them when you're at work?", "When you're at work, who looks after them?"], "why": "Look after не розділяється, тому them після after. «На роботі» — at work." },
+    {"type": "choice", "q": "What time do you ___ on weekdays?", "uk": "О котрій ти встаєш у будні?", "opts": ["get up", "put on", "turn up"], "a": 0, "why": "Вставати з ліжка — get up. Put on — одягти, turn up — з'явитися, прийти."},
+    {"type": "choice", "q": "___ your wet jacket and hang it by the heater.", "uk": "Зніми мокру куртку й повісь біля обігрівача.", "opts": ["Take off", "Put on", "Turn off"], "a": 0, "why": "Зняти одяг — take off. Put on — навпаки, одягти; turn off — вимкнути."},
+    {"type": "input", "q": "Don't stop, ___ on! We're nearly finished.", "uk": "Не зупиняйся, продовжуй! Ми майже закінчили.", "a": ["carry", "keep", "go"], "why": "Продовжувати — carry on (також keep on, go on). На об'єкті Carry on! чуєш щодня."},
+    {"type": "input", "q": "Can you find ___ what time the shop closes?", "uk": "Можеш дізнатися, о котрій закривається магазин?", "a": ["out"], "why": "Дізнатися — find out. Просто find — знайти (річ). Предмет тут довгий (what time the shop closes), тому стоїть після out."},
+    {"type": "input", "q": "I usually work ___ at the gym after work.", "uk": "Я зазвичай тренуюся в спортзалі після роботи.", "a": ["out"], "why": "Тренуватися — work out. Друге значення work out — з'ясувати, вирахувати."},
+    {"type": "choice", "q": "Don't worry about the invoice, I'll sort it ___.", "uk": "Не хвилюйся за рахунок, я все владнаю.", "opts": ["out", "up", "off"], "a": 0, "why": "Владнати, розібратися — sort out. Займенник it стоїть між дієсловом і часткою: sort it out."},
+    {"type": "choice", "q": "We can't ___ the delivery again, the client is waiting.", "uk": "Ми не можемо знову відкласти доставку: клієнт чекає.", "opts": ["put off", "put on", "put up with"], "a": 0, "why": "Відкласти на потім — put off. Put on — одягти, put up with — терпіти."},
+    {"type": "choice", "q": "Kate gets on really well ___ her new boss.", "uk": "Кейт дуже добре ладнає з новим босом.", "opts": ["with", "to", "at"], "a": 0, "why": "Ладнати з кимось — get on with: три частини, людина стоїть у кінці. Well можна вставити всередину: get on well with."},
+    {"type": "input", "q": "These boots are dirty. Take ___ off before you come in.", "uk": "Ці черевики брудні. Зніми їх, перш ніж зайти.", "a": ["them"], "why": "Boots — множина, тому «їх» — them. Займенник стоїть лише між дієсловом і часткою: take them off, а не take off them."},
+    {"type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ось бланк. Заповни його й віддай Сарі.", "opts": ["Here's the form. Fill it in and give it to Sarah.", "Here's the form. Fill in it and give it to Sarah.", "Here's the form. Fill it in and give to Sarah it."], "a": 0, "why": "Займенник it у фразовому дієслові стоїть посередині: fill it in. А give — звичайне дієслово: give it to Sarah."},
+    {"type": "order", "uk": "Можеш забрати їх зі школи?", "words": ["them", "could", "up", "school", "pick", "you", "from"], "a": ["Could you pick them up from school?"], "why": "Забрати когось — pick up. Them — займенник, тому тільки посередині: pick them up. Pick up them — помилка."},
+    {"type": "order", "uk": "Чекаємо не дочекаємося зустрічі з вами.", "words": ["meeting", "we're", "to", "you", "looking", "forward"], "a": ["We're looking forward to meeting you."], "why": "Look forward to — три частини, а після to тут форма з -ing: meeting. We're looking forward to meet you — помилка."}
   ]
 }

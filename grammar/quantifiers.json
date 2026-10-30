@@ -5,6 +5,13 @@
   "uk": "Кількість: some, any, much, many",
   "summary": "some, any, much, many, a few, a little: скільки чогось",
   "minutes": 7,
+  "key": [
+    "**Злічуване** (a brick, two days) — **many, a few, how many**. **Незлічуване** (water, money, advice, information: без a й множини) — **much, a little, how much**.",
+    "**some** — у ствердженні, проханні й пропозиції: Can I have some water? **any** — у запереченні й питанні: I haven't got any nails.",
+    "«Багато» у ствердженні — **a lot of**: a lot of work. **much / many** — переважно в запереченні й питанні: not much time, not many people.",
+    "**a few / a little** — кілька, трохи (і цього вистачає). **few / little** без a — замало: very few people came.",
+    "Заперечення в реченні одне: **not … any** або **no**: I didn't see anyone = I saw nobody. **none** — без іменника: How many? — None."
+  ],
   "blocks": [
     { "t": "p", "text": "Ці слова відповідають на питання **«скільки?»**: **some** (трохи, кілька), **any** (якийсь, жодного), **much** і **many** (багато), **a few** і **a little** (кілька, трохи). Щоб вибрати правильне, постав собі два питання: **чи можна це порахувати поштучно** і **яке це речення** — ствердження, заперечення чи питання." },
     { "t": "h", "text": "Злічувані й незлічувані" },
@@ -102,6 +109,18 @@
     { "type": "input", "q": "There's ___ milk left. Can you get some?", "uk": "Молока зовсім не лишилося. Купиш?", "a": ["no", "not any"], "why": "Дієслово стверджувальне (there's), тому «зовсім немає» — no. Те саме з not: There isn't any milk left." },
     { "type": "choice", "q": "I wanted some cake, but there was ___ left.", "uk": "Я хотів торта, але нічого не лишилося.", "opts": ["none", "no", "any"], "a": 0, "why": "None стоїть сам, без іменника: «жодного, нічого». No потребує іменника (no cake), а any — заперечення з not." },
     { "type": "input", "q": "Every worker ___ (need) a hard hat.", "uk": "Кожному працівнику потрібна каска.", "a": ["needs"], "why": "Після every іменник в однині, а дієслово як після he: needs." },
-    { "type": "order", "uk": "Скільки мішків штукатурки нам потрібно?", "words": ["need", "plaster", "how", "we", "bags", "many", "do", "of"], "a": ["How many bags of plaster do we need?"], "why": "Мішки рахуємо, тому how many. Далі звичайне питання: do + we + need." }
+    { "type": "order", "uk": "Скільки мішків штукатурки нам потрібно?", "words": ["need", "plaster", "how", "we", "bags", "many", "do", "of"], "a": ["How many bags of plaster do we need?"], "why": "Мішки рахуємо, тому how many. Далі звичайне питання: do + we + need." },
+    { "type": "choice", "q": "Were there ___ people at the match?", "uk": "На матчі було багато людей?", "opts": ["many", "much", "a little"], "a": 0, "why": "People — множина, тому many, і в питанні many звучить природно. Much і a little — лише з незлічуваним: much time, a little water." },
+    { "type": "input", "q": "How ___ times a week do you go to the gym?", "uk": "Скільки разів на тиждень ти ходиш у спортзал?", "a": ["many"], "why": "Рази рахуємо (one time, two times), тому how many. How much — для незлічуваного й ціни: how much water, how much is it?" },
+    { "type": "choice", "q": "Do you eat ___ meat?", "uk": "Ти їси багато м'яса?", "opts": ["much", "many", "a few"], "a": 0, "why": "Meat (м'ясо) незлічуване, тому much, і в питанні much звучить природно. Many і a few — лише з тим, що рахуємо: many eggs, a few eggs." },
+    { "type": "order", "uk": "У мене до тебе кілька питань.", "words": ["questions", "a", "I've", "for", "got", "you", "few"], "a": ["I've got a few questions for you."], "why": "Питання рахуємо, тому a few — «кілька». A little — лише з незлічуваним: a little time." },
+    { "type": "choice", "q": "The doctor gave me ___ useful advice.", "uk": "Лікар дав мені корисну пораду.", "opts": ["a", "some", "many"], "a": 1, "why": "Advice (порада) в англійській незлічуване: без a і без множини. Тому some advice, а «одна порада» — a piece of advice." },
+    { "type": "input", "q": "I like this gym a ___.", "uk": "Мені дуже подобається цей спортзал.", "a": ["lot"], "why": "Після a lot тут немає іменника, тому of не потрібне: I like it a lot. A lot of — лише перед іменником: a lot of people." },
+    { "type": "choice", "q": "There are ___ buses to Courtown on Sundays.", "uk": "По неділях до Кортауна ходить дуже мало автобусів.", "opts": ["very few", "a few", "very little"], "a": 0, "why": "«Дуже мало» зі злічуваним (buses) — very few. A few — «кілька», звучить позитивно, а little — лише з незлічуваним: very little time." },
+    { "type": "order", "uk": "У тебе є якісь плани на вихідні?", "words": ["plans", "you", "the", "any", "got", "for", "have", "weekend"], "a": ["Have you got any plans for the weekend?"], "why": "У питанні — any: any plans. Питання з have got: have + you + got, а «на вихідні» — for the weekend." },
+    { "type": "choice", "q": "There ___ a lot of information on the website.", "uk": "На сайті багато інформації.", "opts": ["is", "are"], "a": 0, "why": "Information незлічуване, тому дієслово в однині: there is. A lot of цього не змінює: a lot of people — are, a lot of information — is." },
+    { "type": "input", "q": "Don't worry, I didn't tell ___.", "uk": "Не хвилюйся, я нікому не казав.", "a": ["anyone", "anybody"], "why": "Заперечення в реченні одне: didn't уже є, тому anyone, а не nobody. Без not було б: I told nobody." },
+    { "type": "input", "q": "___ of the lads on the site speak Ukrainian.", "uk": "Ніхто з хлопців на об'єкті не говорить українською.", "a": ["none"], "why": "«Ніхто з, жоден з» — none of. Дієслово стверджувальне (speak), бо заперечення вже є в none: друге not не додаємо." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Цього тижня в мене зовсім немає вільного часу.", "opts": ["I've got no free time this week.", "I haven't got no free time this week.", "I've got any free time this week."], "a": 0, "why": "No + іменник, а дієслово стверджувальне: I've got no time. Або з not: I haven't got any time. Два заперечення разом — помилка." }
   ]
 }

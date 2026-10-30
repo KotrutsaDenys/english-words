@@ -5,6 +5,13 @@
   "uk": "Прикметники і прислівники",
   "summary": "a careful worker, he works carefully; good і well, bored і boring",
   "minutes": 8,
+  "key": [
+    "Людину чи річ описує **прикметник**, дію — **прислівник** на **-ly**: a careful worker, he works carefully. Прислівник — після дієслова й доповнення: speaks English well.",
+    "Правопис: easy → eas**ily**, gentle → gent**ly**, careful → careful**ly**, basic → basic**ally**. Але friendly, lovely — прикметники.",
+    "Без -ly: **good → well**; **fast, hard, late, early** однакові. Пастки: **hardly** — майже не, **lately** — останнім часом.",
+    "Після **be, look, feel, seem, sound, taste, smell, get** — прикметник, бо це про річ або людину: You look tired. It sounds good.",
+    "**-ed** — що відчуває людина (I'm bored), **-ing** — яке воно (a boring film). Кілька прикметників: думка → розмір → вік → колір → матеріал."
+  ],
   "blocks": [
     { "t": "p", "text": "**Прикметник** відповідає на питання «який?» і описує людину або річ: a **careful** worker — акуратний працівник. **Прислівник** відповідає на «як?» і описує дію: he works **carefully** — працює акуратно. В українській з «акуратний» робимо «акуратно», а в англійській до прикметника зазвичай додаємо **-ly**." },
     { "t": "rule", "title": "Головне правило", "lines": ["прикметник + іменник: a **quick** job", "дієслово + прислівник: work **quickly**"] },
@@ -108,6 +115,18 @@
     { "type": "input", "q": "I'm really ___ (interest) in history.", "uk": "Мене дуже цікавить історія.", "a": ["interested"], "why": "Про те, що людина відчуває, — прикметник на -ed: I'm interested. Interesting — про саму історію." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ми купили великий білий фургон.", "opts": ["We bought a van big white.", "We bought a big white van.", "We bought a white big van."], "a": 1, "why": "Прикметники стоять перед іменником, і розмір іде перед кольором: a big white van." },
     { "type": "order", "uk": "Ти сьогодні маєш утомлений вигляд.", "words": ["tired", "look", "today", "you"], "a": ["You look tired today.", "Today you look tired."], "why": "Після look — прикметник (tired), а не прислівник. Today зазвичай ставимо в кінці." },
-    { "type": "order", "uk": "Він дуже добре говорить англійською.", "words": ["English", "speaks", "very", "he", "well"], "a": ["He speaks English very well."], "why": "Well стоїть після дієслова і того, на що спрямована дія: speaks English very well. Між speaks і English його не ставимо." }
+    { "type": "order", "uk": "Він дуже добре говорить англійською.", "words": ["English", "speaks", "very", "he", "well"], "a": ["He speaks English very well."], "why": "Well стоїть після дієслова і того, на що спрямована дія: speaks English very well. Між speaks і English його не ставимо." },
+    { "type": "choice", "q": "Kate drives very ___.", "uk": "Кейт їздить дуже швидко.", "opts": ["fast", "fastly"], "a": 0, "why": "Fast — і прикметник, і прислівник, форми fastly не існує: a fast car, drives fast." },
+    { "type": "choice", "q": "We got to the airport ___.", "uk": "Ми приїхали в аеропорт пізно.", "opts": ["late", "lately"], "a": 0, "why": "«Пізно» — late, однакове для прикметника й прислівника. Lately означає «останнім часом»: Have you seen him lately?" },
+    { "type": "choice", "q": "This paint smells ___.", "uk": "Ця фарба дивно пахне.", "opts": ["strange", "strangely"], "a": 0, "why": "Після smell (як і після look, feel, taste, sound) — прикметник, бо описуємо саму фарбу: smells strange. Українське «-о» тут не підказка." },
+    { "type": "choice", "q": "The nurse spoke to me ___.", "uk": "Медсестра говорила зі мною привітно.", "opts": ["in a friendly way", "friendly", "friendlily"], "a": 0, "why": "Friendly — прикметник, хоч і на -ly, і прислівника від нього немає. Про дію кажуть in a friendly way." },
+    { "type": "choice", "q": "I ___ wait for the weekend!", "uk": "Я ледве дочекаюся вихідних!", "opts": ["can hardly", "can hard"], "a": 0, "why": "«Ледве, майже не» — hardly: I can hardly wait. Hard означає «важко, старанно» і тут не підходить." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Мій брат — хороший кухар і готує дуже добре.", "opts": ["My brother is a good cook and he cooks very well.", "My brother is a well cook and he cooks very good.", "My brother is a good cook and he cooks very good."], "a": 0, "why": "Іменник cook описує прикметник good, а дію cooks — прислівник well. Good → well — виняток без -ly." },
+    { "type": "input", "q": "Mick works ___ (hard), twelve hours a day.", "uk": "Мік важко працює: дванадцять годин на день.", "a": ["hard"], "why": "Hard — прикметник і прислівник в одній формі: works hard. Hardly означало б «майже не працює»." },
+    { "type": "input", "q": "The gym door locks ___ (automatic) at ten.", "uk": "Двері спортзалу автоматично замикаються о десятій.", "a": ["automatically"], "why": "Як замикаються — це про дію, тому прислівник. Прикметник на -ic отримує -ally: automatic → automatically." },
+    { "type": "input", "q": "The instructions were really ___ (confuse).", "uk": "Інструкції були справді заплутані.", "a": ["confusing"], "why": "Інструкції викликають плутанину, тому -ing: confusing. Confused — про людину, яка заплуталася." },
+    { "type": "input", "q": "I don't feel ___ (good). I think I've got a cold.", "uk": "Мені недобре. Здається, я застудився.", "a": ["well", "good"], "why": "Після feel — прикметник. Про здоров'я кажуть well («здоровий»): I don't feel well. У розмові чуєш і I don't feel good, тому обидва зараховано." },
+    { "type": "order", "uk": "Вона купила чудовий старий дерев'яний стіл.", "words": ["she", "bought", "a", "lovely", "old", "wooden", "table"], "a": ["She bought a lovely old wooden table."], "why": "Порядок прикметників: думка (lovely) → вік (old) → матеріал (wooden) → іменник." },
+    { "type": "order", "uk": "Він сердито подивився на годинник.", "words": ["he", "looked", "at", "his", "watch", "angrily"], "a": ["He looked at his watch angrily.", "He angrily looked at his watch."], "why": "Як подивився — це про дію, тому прислівник angrily. Він стоїть у кінці або перед дієсловом, але не між looked і at." }
   ]
 }

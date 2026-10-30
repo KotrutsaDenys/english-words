@@ -5,6 +5,13 @@
   "uk": "Пасивний стан: was made, is done",
   "summary": "важлива дія, а не виконавець: the wall was plastered",
   "minutes": 8,
+  "key": [
+    "**be + V3**: The wall was plastered. Час показує be (is, was, will be), а V3 не змінюється: built, made, paid.",
+    "Пасив — коли важливо, що сталося з предметом, а не хто це зробив. Виконавця, якщо треба, називаємо через **by**.",
+    "Питання й заперечення — через be (has, will, can), **без do / did**: **Was** it **delivered**? It **wasn't** paid.",
+    "**is being done** — роблять зараз, **has been done** — уже зроблено, **must / can be done**. «Нам заплатили» — **we were paid**.",
+    "Народився — **was born**. Happen, die, arrive пасиву не мають: it happened. У розмові — **get + V3**: get paid, got fired."
+  ],
   "blocks": [
     { "t": "p", "text": "**Пасивний стан** (passive) — коли важливо, **що сталося** з предметом, а не **хто** це зробив. Порівняй: Mick plastered the wall (Мік поштукатурив стіну — цікавить Мік) і The wall was plastered (стіну поштукатурили — цікавить стіна)." },
     { "t": "ex", "items": [
@@ -98,6 +105,18 @@
     { "type": "input", "q": "Andrii ___ (injure) at work last week.", "uk": "Андрій травмувався на роботі минулого тижня.", "a": ["was injured", "got injured", "injured himself"], "why": "Минулий час пасиву: was + V3. У розмові так само часто кажуть got injured. Injured himself («травмував себе») теж правильно." },
     { "type": "input", "q": "The bill hasn't ___ (pay) yet.", "uk": "Рахунок ще не оплатили.", "a": ["been paid"], "why": "Present Perfect у пасиві: has/have + been + V3. Pay неправильне: pay – paid – paid." },
     { "type": "order", "uk": "Де ти народився?", "words": ["born", "you", "where", "were"], "a": ["Where were you born?"], "why": "«Народився» — was/were born. У питанні were стоїть перед підметом you." },
-    { "type": "order", "uk": "Фургон полагодили вчора?", "words": ["fixed", "the", "yesterday", "was", "van"], "a": ["Was the van fixed yesterday?"], "why": "Питання в пасиві: was + підмет (the van) + V3. Do, does, did тут не потрібні." }
+    { "type": "order", "uk": "Фургон полагодили вчора?", "words": ["fixed", "the", "yesterday", "was", "van"], "a": ["Was the van fixed yesterday?"], "why": "Питання в пасиві: was + підмет (the van) + V3. Do, does, did тут не потрібні." },
+    { "type": "input", "q": "Both my children ___ (be) born in Wexford.", "uk": "Обоє моїх дітей народилися у Вексфорді.", "a": ["were"], "why": "«Народився» — пасив was / were born. Children — множина, і це минуле, тому were." },
+    { "type": "choice", "q": "The parcel ___ to the wrong address.", "uk": "Посилку відправили не на ту адресу.", "opts": ["was sent", "sent", "was send"], "a": 0, "why": "Посилка сама себе не відправляє — її відправили: was + V3. Send — неправильне дієслово: send, sent, sent." },
+    { "type": "choice", "q": "Breakfast ___ from seven to ten.", "uk": "Сніданок подають із сьомої до десятої.", "opts": ["is served", "serves", "are served"], "a": 0, "why": "Так буває щодня — Present Simple, пасив: is + V3. Breakfast — однина, тому is. Breakfast serves означало б, що сніданок сам когось обслуговує." },
+    { "type": "choice", "q": "What ___ to your car?", "uk": "Що сталося з твоєю машиною?", "opts": ["happened", "was happened", "is happened"], "a": 0, "why": "У happen (статися) не буває «кого/що», тому пасиву від нього немає: просто Past Simple — happened. Так само die й arrive." },
+    { "type": "input", "q": "The bins ___ (not / collect) last week.", "uk": "Минулого тижня сміття не вивезли.", "a": ["weren't collected", "were not collected"], "why": "Минуле в пасиві: was / were + V3. The bins — множина, тому were, а not стоїть одразу після were: weren't collected." },
+    { "type": "choice", "q": "Sarah ___ a pay rise last month.", "uk": "Сарі минулого місяця підвищили зарплату.", "opts": ["was given", "gave", "was give"], "a": 0, "why": "«Сарі дали» — підметом стає людина: Sarah was given. Gave означало б, що Сара сама комусь дала. Give: give, gave, given." },
+    { "type": "input", "q": "Don't worry, your phone can ___ (repair) in a day.", "uk": "Не хвилюйся, твій телефон можна полагодити за день.", "a": ["be repaired"], "why": "Після can, must, should пасив має форму be + V3: can be repaired." },
+    { "type": "choice", "q": "When ___ built?", "uk": "Коли збудували цей замок?", "opts": ["was this castle", "did this castle", "this castle was"], "a": 0, "why": "Питання в пасиві: was + підмет + V3. Did тут не потрібне, бо є be, а підмет стоїть після was." },
+    { "type": "input", "q": "How often do you ___ (get / pay)?", "uk": "Як часто тобі платять?", "a": ["get paid"], "why": "У розмові «тобі платять» — get paid. Get змінюється як звичайне дієслово, тому питання з do: do you get paid. Pay: pay, paid, paid." },
+    { "type": "order", "uk": "Ванну кімнату ще не доробили.", "words": ["the", "bathroom", "hasn't", "been", "finished", "yet"], "a": ["The bathroom hasn't been finished yet.", "The bathroom hasn't yet been finished."], "why": "Present Perfect у пасиві: has + been + V3, not — одразу після has. Yet (ще) зазвичай у кінці." },
+    { "type": "order", "uk": "Роботу закінчать до п'ятниці?", "words": ["will", "the", "work", "be", "finished", "by", "Friday"], "a": ["Will the work be finished by Friday?"], "why": "Майбутнє в пасиві: will be + V3, у питанні will стоїть перед підметом. By Friday тут — «до п'ятниці», а не виконавець." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Тобі вже заплатили за червень?", "opts": ["Have you been paid for June yet?", "Did you been paid for June yet?", "Have you paid for June yet?", "Have you been pay for June yet?"], "a": 0, "why": "Present Perfect у пасиві: have + підмет + been + V3. Did з been не поєднується, а Have you paid означало б «Ти вже заплатив?»." }
   ]
 }

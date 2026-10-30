@@ -5,6 +5,13 @@
   "uk": "Підрядні з who, which, that",
   "summary": "уточнити, про кого мова: the man who called",
   "minutes": 7,
+  "key": [
+    "**who** — люди, **which** — речі й тварини, **that** — і те, й те (у розмові найчастіше). Українське «що» тут ніколи не what: the car **that** I bought.",
+    "**whose** — чий, у якого: the man **whose** van was stolen. **where** — місце: the shop **where** I work; після where **in** уже не потрібне.",
+    "Якщо після who / that іде інший підмет (I, you, we), слово можна пропустити: the van **I bought**. Якщо одразу дієслово — не можна: the man **who called**.",
+    "Прийменник у розмові йде в кінець: the guy I work **with**, the job you applied **for**, the house I live **in**.",
+    "З комами — додаткова інформація про того, хто й так відомий: My boss, **who** is from Cork, … Там не буває that, а **which** може стосуватися всього речення."
+  ],
   "blocks": [
     { "t": "p", "text": "Слова **who, which, that** з'єднують два речення в одне й уточнюють, **про кого чи про що** мова. Українською це «який, яка, яке, які» або «що»: чоловік, **який** тобі дзвонив. Англійською вибір слова залежить від того, людина це чи річ." },
     { "t": "table", "head": ["Слово", "Для чого", "Приклад"], "rows": [
@@ -71,6 +78,18 @@
     { "type": "input", "q": "Who's the girl you were talking ___?", "uk": "Хто та дівчина, з якою ти розмовляв?", "a": ["to", "with"], "why": "Прийменник у розмові йде в кінець: the girl you were talking to — «з якою ти розмовляв»." },
     { "type": "order", "uk": "Це компанія, на яку я працюю.", "words": ["for", "is", "I", "company", "this", "the", "work"], "a": ["This is the company I work for."], "why": "Прийменник for іде в кінець: the company I work for. Who/that/which тут пропущено." },
     { "type": "choice", "q": "My sister, ___ lives in Dublin, is a nurse.", "uk": "Моя сестра, яка живе в Дубліні, медсестра.", "opts": ["who", "that", "what"], "a": 0, "why": "Частина з комами — додаткова інформація. У ній про людей лише who: that після коми не ставлять." },
-    { "type": "choice", "q": "Tom passed his driving test, ___ was great news.", "uk": "Том склав іспит з водіння, що було чудовою новиною.", "opts": ["which", "what", "who"], "a": 0, "why": "Which після коми може стосуватися всього речення: «що було чудовою новиною». What тут не вживають." }
+    { "type": "choice", "q": "Tom passed his driving test, ___ was great news.", "uk": "Том склав іспит з водіння, що було чудовою новиною.", "opts": ["which", "what", "who"], "a": 0, "why": "Which після коми може стосуватися всього речення: «що було чудовою новиною». What тут не вживають." },
+    { "type": "choice", "q": "Is there anyone here ___ can drive a van?", "uk": "Тут є хтось, хто вміє водити фургон?", "opts": ["who", "which", "whose"], "a": 0, "why": "Про людину (anyone — хтось) — who або that. Which — лише про речі, а whose означає «чий»." },
+    { "type": "choice", "q": "The jacket ___ you lent me is in the van.", "uk": "Куртка, яку ти мені позичив, у фургоні.", "opts": ["that", "who", "what"], "a": 0, "why": "Про річ — that або which. Who — лише про людей, а what «який» не означає. Тут that можна й пропустити: The jacket you lent me." },
+    { "type": "choice", "q": "The village ___ my parents live is very quiet.", "uk": "Село, де живуть мої батьки, дуже тихе.", "opts": ["where", "which", "that"], "a": 0, "why": "Місце — where («де, у якому»). З which чи that бракувало б in у кінці: the village which my parents live in." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Хлопець, який полагодив мою машину, з Горі.", "opts": ["The guy who fixed my car is from Gorey.", "The guy who he fixed my car is from Gorey.", "The guy which fixed my car is from Gorey."], "a": 0, "why": "Who вже стоїть замість he, тому he вдруге не потрібне. Which про людей не кажуть." },
+    { "type": "input", "q": "Is that the woman ___ husband owns the pub?", "uk": "Це та жінка, чоловік якої — власник пабу?", "a": ["whose"], "why": "«Чий, якої» — whose: the woman whose husband. Не who's: це скорочення who is." },
+    { "type": "input", "q": "This is the house I grew up ___.", "uk": "Це будинок, у якому я виріс.", "a": ["in"], "why": "Прийменник у розмові йде в кінець: the house I grew up in. Which чи that тут пропущено, бо далі інший підмет (I)." },
+    { "type": "input", "q": "What's the name of the shop ___ you bought your boots?", "uk": "Як називається магазин, де ти купив свої черевики?", "a": ["where", "in which"], "why": "Місце — where. Which без прийменника не підходить: шукаємо не «що купив», а «де купив». In which теж правильно, але звучить офіційно." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Це кімната, де ми зберігаємо інструменти.", "opts": ["This is the room where we keep the tools.", "This is the room where we keep the tools in.", "This is the room which we keep the tools."], "a": 0, "why": "Where вже означає «в якій», тому in зайве. А which без in у кінці не підходить: the room which we keep the tools in." },
+    { "type": "input", "q": "We stayed in Kilkenny, ___ is a lovely old town.", "uk": "Ми зупинилися в Кілкенні — це гарне старе місто.", "a": ["which"], "why": "Після коми — додаткова інформація про місто. Там лише which: that після коми не ставлять, а where не підходить, бо далі йде is (потрібен підмет)." },
+    { "type": "choice", "task": "У якому реченні who чи that пропустити не можна?", "q": "", "opts": ["The man who drives the bus is Irish.", "The man who I met yesterday is Irish.", "The tools that we bought are new."], "a": 0, "why": "Після who одразу дієслово (drives) — who тут підмет, його не викинеш. У двох інших після who / that іде інший підмет (I, we), і слово можна пропустити." },
+    { "type": "order", "uk": "Електрик, який приходив у понеділок, забув свою дриль.", "words": ["the", "electrician", "who", "came", "on", "Monday", "forgot", "his", "drill"], "a": ["The electrician who came on Monday forgot his drill."], "why": "The electrician + who came on Monday (уточнення, хто саме) + forgot his drill. Після who одразу дієслово, тому пропустити who не можна." },
+    { "type": "order", "uk": "Це той клієнт, про якого я тобі розповідав.", "words": ["this", "is", "the", "customer", "I", "told", "you", "about"], "a": ["This is the customer I told you about."], "why": "«Про якого» — прийменник about іде в кінець: the customer I told you about. Who / that пропущено, бо далі інший підмет (I)." }
   ]
 }

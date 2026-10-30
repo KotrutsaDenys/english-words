@@ -5,6 +5,13 @@
   "uk": "Якби тоді…: третій тип і wish",
   "summary": "жаль про минуле: If I had known… I wish I had…",
   "minutes": 8,
+  "key": [
+    "**If + had + V3, would have + V3** — про минуле, якого не змінити: If I had seen you, I would have stopped.",
+    "Після had — **V3**, не V2: had known, had gone. Would після if не ставимо. «Міг би» — **could have** + V3.",
+    "**wish / if only + Past Simple** — шкода про зараз: I wish I lived closer. **wish + had + V3** — про минуле: I wish I had known.",
+    "**wish + would** — хочеш, щоб інший змінив поведінку: I wish you would listen. Про себе — **could**: I wish I could stay.",
+    "«Шкода, що **немає**» англійською — ствердження: I wish I **had**. «Шкода, що зробив» — **hadn't** + V3: I wish I hadn't gone."
+  ],
   "blocks": [
     { "t": "p", "text": "**Third conditional** (третій тип умовних речень) — про **минуле**, якого вже не змінити. Ми уявляємо, як усе могло бути інакше: «якби я **тоді**…, то … **б**». Так часто висловлюють жаль або докір." },
     { "t": "ex", "items": [
@@ -101,6 +108,18 @@
     { "type": "input", "q": "If you had asked me, I ___ (help) you.", "uk": "Якби ти мене попросив, я б тобі допоміг.", "a": ["would have helped"], "why": "Результат про минуле — would have + V3: would have helped." },
     { "type": "input", "q": "I wish I ___ (not / say) that.", "uk": "Шкода, що я це сказав.", "a": ["hadn't said", "had not said"], "why": "Жаль про минуле: wish + had + V3. Українською «шкода, що сказав», англійською «хотів би, щоб не сказав»: hadn't said." },
     { "type": "order", "uk": "Що б ти зробив, якби тобі не заплатили?", "words": ["what", "would", "you", "have", "done", "if", "they", "hadn't", "paid", "you"], "a": ["What would you have done if they hadn't paid you?", "If they hadn't paid you, what would you have done?"], "why": "Питання: what + would + you + have + V3. Умова — hadn't paid. «Тобі не заплатили» англійською — «вони тобі не заплатили»: they." },
-    { "type": "order", "uk": "Якби ж я тебе послухав!", "words": ["if", "only", "I", "had", "listened", "to", "you"], "a": ["If only I had listened to you!"], "why": "Жаль про минуле: if only + had + V3, як після wish." }
+    { "type": "order", "uk": "Якби ж я тебе послухав!", "words": ["if", "only", "I", "had", "listened", "to", "you"], "a": ["If only I had listened to you!"], "why": "Жаль про минуле: if only + had + V3, як після wish." },
+    { "type": "choice", "q": "If Kate had ___ a doctor sooner, she would have got better more quickly.", "uk": "Якби Кейт раніше пішла до лікаря, вона б швидше одужала.", "opts": ["seen", "saw", "see"], "a": 0, "why": "Після had — третя форма (V3). See — неправильне дієслово: see, saw, seen." },
+    { "type": "choice", "q": "I wish I ___ drive. I hate taking the bus.", "uk": "Шкода, що я не вмію водити. Ненавиджу їздити автобусом.", "opts": ["could", "can", "would"], "a": 0, "why": "Wish про зараз: can відступає в минуле — could. «I wish I would» про себе не кажуть." },
+    { "type": "input", "q": "If you had ___ (be) more careful, you wouldn't have cut your hand.", "uk": "Якби ти був обережнішим, ти б не порізав руку.", "a": ["been"], "why": "Після had — V3. Be — неправильне дієслово: be, was / were, been." },
+    { "type": "choice", "q": "Yesterday's match was great. If you ___, you would have loved it.", "uk": "Учорашній матч був чудовий. Якби ти прийшов, тобі б дуже сподобалося.", "opts": ["had come", "came", "would come"], "a": 0, "why": "Ідеться про вчора — третій тип: if + had + V3. У come третя форма така сама, як початкова: come, came, come." },
+    { "type": "input", "q": "If only I ___ (be) on holiday now!", "uk": "Якби ж я зараз був у відпустці!", "a": ["were", "was"], "why": "If only про зараз — як wish: дієслово відступає в минуле. Be стає were (у розмові й was)." },
+    { "type": "choice", "q": "I wish my neighbours ___ so much noise at night.", "uk": "Хоч би сусіди не шуміли так уночі.", "opts": ["wouldn't make", "don't make", "won't make"], "a": 0, "why": "Тебе дратує чужа поведінка — wish + would, тут із запереченням: wouldn't make. Present Simple і will після wish не вживають." },
+    { "type": "input", "q": "I wish I ___ (go) to that party.", "uk": "Шкода, що я не пішов на ту вечірку.", "a": ["had gone"], "why": "Жаль про минуле — wish + had + V3. Українською «не пішов», а англійською «хотів би, щоб пішов»: had gone, без not." },
+    { "type": "choice", "q": "If you had called me yesterday, I ___ you a lift.", "uk": "Якби ти мені вчора подзвонив, я міг би тебе підвезти.", "opts": ["could have given", "could give", "can give"], "a": 0, "why": "«Міг би» про минуле — could have + V3. Give — неправильне: give, gave, given. Could give — про зараз, а тут ідеться про вчора." },
+    { "type": "order", "uk": "Ми б виграли, якби Том не промахнувся з пенальті.", "words": ["we", "would", "have", "won", "if", "Tom", "hadn't", "missed", "the", "penalty"], "a": ["We would have won if Tom hadn't missed the penalty.", "If Tom hadn't missed the penalty, we would have won."], "why": "Умова про минуле — hadn't + V3 (hadn't missed), результат — would have + V3 (would have won). Починаєш з if — після умови кома." },
+    { "type": "input", "q": "If my alarm had gone off, I ___ (not / miss) the bus.", "uk": "Якби будильник задзвонив, я б не спізнився на автобус.", "a": ["wouldn't have missed", "would not have missed"], "why": "Результат про минуле — would have + V3, у запереченні wouldn't have + V3: wouldn't have missed." },
+    { "type": "order", "uk": "Ти тоді прийшов би, якби я тебе запросив?", "words": ["would", "you", "have", "come", "if", "I", "had", "invited", "you"], "a": ["Would you have come if I had invited you?", "If I had invited you, would you have come?"], "why": "Питання третього типу: would + you + have + V3 (come). Умова — had + V3: had invited." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Шкода, що я не взяв парасольку.", "opts": ["I wish I had taken an umbrella.", "I wish I took an umbrella.", "I wish I hadn't taken an umbrella.", "I wish I had took an umbrella."], "a": 0, "why": "Жаль про минуле: wish + had + V3 (taken, а не took). «Шкода, що не взяв» англійською — «хотів би, щоб узяв», тому без not." }
   ]
 }

@@ -5,6 +5,13 @@
   "uk": "Ступені порівняння",
   "summary": "порівняння: cheaper, more expensive, the best, as big as",
   "minutes": 7,
+  "key": [
+    "Короткі прикметники (cheap, big, easy): **-er / the -est** — cheaper than, the cheapest. Правопис: big → bigger, easy → easier, nice → nicer.",
+    "Довгі (expensive, careful) і прислівники на -ly: **more / the most** — more expensive than, the most expensive. More + -er разом (more cheaper) — помилка.",
+    "Неправильні: **good → better → the best**, **bad → worse → the worst**, far → further, much / many → more, little → less.",
+    "«Ніж, за» — **than** (не then): taller than me. «Такий самий, як» — **as … as**, «не такий, як» — **not as … as**.",
+    "«Набагато» — **much / a lot / far** + вищий ступінь, «трохи» — **a bit**; very тут не підходить. «Чим …, тим …» — **the …, the …**."
+  ],
   "blocks": [
     { "t": "p", "text": "Коли порівнюємо **дві** речі, беремо **вищий ступінь**: cheaper — дешевший. Коли виділяємо **одну з багатьох** — **найвищий**: the cheapest — найдешевший. Як і в українській (дешевий — дешевший — найдешевший), слово змінюється: додаємо **-er / -est** або ставимо перед ним **more / the most**." },
     { "t": "ex", "items": [
@@ -97,6 +104,18 @@
     { "type": "choice", "q": "Petrol is ___ more expensive this year.", "uk": "Цього року бензин набагато дорожчий.", "opts": ["very", "much", "most"], "a": 1, "why": "«Набагато» перед вищим ступенем — much (або a lot, far). Very з вищим ступенем не вживаємо." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Він вищий за мене.", "opts": ["He's taller then me.", "He's more tall than me.", "He's taller than me."], "a": 2, "why": "Tall короткий, тому taller. «Ніж» — than; then означає «потім»." },
     { "type": "order", "uk": "Новий фургон не такий великий, як старий.", "words": ["the", "new", "van", "isn't", "as", "big", "as", "the", "old", "one"], "a": ["The new van isn't as big as the old one."], "why": "Not as + прикметник + as: isn't as big as. One замінює слово van, щоб не повторювати його." },
-    { "type": "order", "uk": "Чим раніше почнемо, тим швидше закінчимо.", "words": ["the", "earlier", "we", "start", "the", "sooner", "we", "finish"], "a": ["The earlier we start, the sooner we finish.", "The sooner we start, the earlier we finish."], "why": "«Чим …, тим …» — the + вищий ступінь на початку кожної частини: the earlier …, the sooner …" }
+    { "type": "order", "uk": "Чим раніше почнемо, тим швидше закінчимо.", "words": ["the", "earlier", "we", "start", "the", "sooner", "we", "finish"], "a": ["The earlier we start, the sooner we finish.", "The sooner we start, the earlier we finish."], "why": "«Чим …, тим …» — the + вищий ступінь на початку кожної частини: the earlier …, the sooner …" },
+    { "type": "choice", "q": "Is the gym ___ in the evening or in the morning?", "uk": "У спортзалі людніше ввечері чи вранці?", "opts": ["busier", "more busy", "busiest"], "a": 0, "why": "Порівнюємо два часи — вищий ступінь. Busy — короткий прикметник на -y: y → i + -er: busier. More тут не потрібне." },
+    { "type": "choice", "q": "This is ___ phone I've ever had.", "uk": "Це найкращий телефон, який у мене був.", "opts": ["the best", "the most good", "the better"], "a": 0, "why": "Good — неправильний: good, better, the best. Один з усіх — найвищий ступінь, тому the best, а не the better." },
+    { "type": "choice", "q": "Who's ___, you or your sister?", "uk": "Хто старший: ти чи твоя сестра?", "opts": ["older", "the oldest", "more old"], "a": 0, "why": "Порівнюємо двох — вищий ступінь older. The oldest кажуть про одного з багатьох, а old короткий, тому не more old." },
+    { "type": "choice", "q": "My dad is ___ than me.", "uk": "Мій тато трохи нижчий за мене.", "opts": ["a bit shorter", "very shorter", "a bit more short"], "a": 0, "why": "«Трохи» перед вищим ступенем — a bit: a bit shorter. Very з вищим ступенем не вживаємо, а short короткий, тому -er, не more." },
+    { "type": "choice", "q": "Please drive ___. The road is icy.", "uk": "Будь ласка, їдь обережніше. Дорога вкрита льодом.", "opts": ["more carefully", "carefullier", "more careful"], "a": 0, "why": "Як їхати — прислівник carefully, а прислівники на -ly порівнюємо через more: more carefully. Careful — прикметник, тут не підходить." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Лікарня далі, ніж аптека.", "opts": ["The hospital is further than the chemist's.", "The hospital is farer than the chemist's.", "The hospital is more far than the chemist's."], "a": 0, "why": "Far — неправильний: far, further, the furthest (у британській). Farer і more far не існують." },
+    { "type": "input", "q": "The new café is ___ (nice) than the old one.", "uk": "Нове кафе гарніше за старе.", "a": ["nicer"], "why": "Nice закінчується на -e, тому додаємо лише -r: nicer. Порівнюємо два кафе — вищий ступінь із than." },
+    { "type": "input", "q": "It's the ___ (easy) exercise in the book.", "uk": "Це найлегша вправа в книжці.", "a": ["easiest"], "why": "Прикметник на -y: y → i + -est: easiest. Одна з усіх вправ — найвищий ступінь із the." },
+    { "type": "input", "q": "I eat ___ (little) sugar than I used to.", "uk": "Я їм менше цукру, ніж раніше.", "a": ["less"], "why": "Little — неправильний: little, less, the least. Littler не кажуть." },
+    { "type": "input", "q": "That was the ___ (bad) film I've ever seen.", "uk": "Це був найгірший фільм, який я бачив.", "a": ["worst"], "why": "Bad — неправильний: bad, worse, the worst. Найгірший з усіх — найвищий ступінь." },
+    { "type": "order", "uk": "Його машина така ж стара, як моя.", "words": ["his", "car", "is", "as", "old", "as", "mine"], "a": ["His car is as old as mine."], "why": "«Такий самий, як» — as + прикметник + as: as old as. Than тут не потрібне, бо прикметник без -er." },
+    { "type": "order", "uk": "Чим більше тренуєшся, тим сильнішим стаєш.", "words": ["the", "more", "you", "train", "the", "stronger", "you", "get"], "a": ["The more you train, the stronger you get."], "why": "«Чим …, тим …» — the + вищий ступінь на початку кожної частини: The more you train, the stronger you get." }
   ]
 }

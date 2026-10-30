@@ -5,6 +5,13 @@
   "uk": "Як ставити питання",
   "summary": "порядок слів: Do you…? Where do you…? Who called? Who did you call?",
   "minutes": 9,
+  "key": [
+    "Питання «так чи ні»: **am / is / are, can, will, have** просто ставимо перед підметом: Are you ready? Can he drive? Will it rain?",
+    "Зі звичайним дієсловом додаємо **do / does / did**, а дієслово — у початковій формі: Does she **live** here? Did they **leave**?",
+    "Питальне слово — на початок, далі той самий порядок: **Where do you** live? **What time will** you be here? Коротка відповідь — тим самим словом: Yes, I do.",
+    "Who / what про **підмет** — без do: **Who called** you? (хто?) Але **Who did you call**? (кого?) Так само: Which bus **goes** to Wexford?",
+    "Прийменник — у кінець: Where are you **from**? Who is it **for**? **How much** — не лічимо (money), **how many** — лічимо (days)."
+  ],
   "blocks": [
     { "t": "p", "text": "В українській питання часто відрізняється від ствердження лише інтонацією: «Ти тут працюєш?» В англійській так зазвичай не роблять: треба змінити **порядок слів**. Допоміжне дієслово (do, does, did, be, can, will, have) стає **перед підметом** — тим, хто або що виконує дію (you, he, my boss, the van)." },
     { "t": "h", "text": "Питання «так чи ні»" },
@@ -101,6 +108,18 @@
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Кому ти дзвонив?", "opts": ["Who did you call?", "Who called you?", "Who you called?"], "a": 0, "why": "Дзвонив ти, а питаємо, кому. Це питання не про підмет, тому потрібне did. Who called you? означає «Хто тобі дзвонив?»" },
     { "type": "choice", "q": "What ___?", "uk": "Що означає це слово?", "opts": ["does this word mean", "means this word", "does mean this word", "does this word means"], "a": 0, "why": "Підмет тут this word (воно щось означає), тому does + this word + mean. Після does дієслово без -s." },
     { "type": "order", "uk": "Чому ти мені не подзвонив?", "words": ["call", "didn't", "me", "you", "why"], "a": ["Why didn't you call me?"], "why": "Didn't, як і did, стоїть перед підметом: Why + didn't + you + call." },
-    { "type": "order", "uk": "Що ти шукаєш?", "words": ["for", "you", "what", "looking", "are"], "a": ["What are you looking for?"], "why": "«Шукати» — look for. Прийменник for іде в самий кінець питання." }
+    { "type": "order", "uk": "Що ти шукаєш?", "words": ["for", "you", "what", "looking", "are"], "a": ["What are you looking for?"], "why": "«Шукати» — look for. Прийменник for іде в самий кінець питання." },
+    { "type": "choice", "q": "___ you like working here?", "uk": "Тобі подобається тут працювати?", "opts": ["Do", "Are", "Does"], "a": 0, "why": "Like — звичайне дієслово, підмет you → do. Are з like не поєднується, а does — лише для he / she / it." },
+    { "type": "choice", "q": "___ Olena speak English?", "uk": "Олена розмовляє англійською?", "opts": ["Does", "Do", "Is"], "a": 0, "why": "Olena — це she, звичайне дієслово speak → does, а speak без -s. Is зі звичайним дієсловом не поєднується." },
+    { "type": "choice", "q": "___ you lift this on your own?", "uk": "Ти можеш підняти це сам?", "opts": ["Can", "Do", "Are"], "a": 0, "why": "«Можеш» — can. Can саме стає перед підметом, do не додаємо: Can you lift…?" },
+    { "type": "input", "q": "Is Kate at the gym? — Yes, she ___.", "uk": "Кейт у спортзалі? — Так.", "a": ["is"], "why": "Коротка відповідь повторює дієслово з питання: Is Kate…? — Yes, she is. У «так» не скорочуємо: Yes, she's не кажуть." },
+    { "type": "input", "q": "How ___ does it cost to get to Dublin by bus?", "uk": "Скільки коштує доїхати до Дубліна автобусом?", "a": ["much"], "why": "Гроші поштучно не рахуємо → how much. How many — для того, що лічимо: How many tickets?" },
+    { "type": "choice", "q": "How ___ do you go to the gym? — Three times a week.", "uk": "Як часто ти ходиш у спортзал? — Тричі на тиждень.", "opts": ["often", "long", "many"], "a": 0, "why": "«Як часто» — how often. How long — як довго (скільки часу), how many — скільки (штук)." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Куди ти йдеш?", "opts": ["Where are you going?", "Where you are going?", "Where do you going?"], "a": 0, "why": "У реченні є are → саме його ставимо перед підметом, do не додаємо: Where are you going?" },
+    { "type": "input", "q": "Which bus ___ (go) to the hospital?", "uk": "Який автобус їде до лікарні?", "a": ["goes", "is going"], "why": "Which bus — підмет питання (сам автобус їде), тому does не потрібне, а дієслово як після it: goes." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Хто тобі це сказав?", "opts": ["Who told you that?", "Who did tell you that?", "Who did you tell that?"], "a": 0, "why": "«Хто сказав» — питання про підмет, did не треба: Who told you? Who did you tell? — уже «кому ти сказав?»." },
+    { "type": "input", "q": "Who ___ (you / live) with?", "uk": "З ким ти живеш?", "a": ["do you live"], "why": "Живеш ти, тому це не питання про підмет: потрібне do + you + live. Прийменник with — у самий кінець." },
+    { "type": "order", "uk": "Для кого ці ключі?", "words": ["keys", "are", "who", "for", "these"], "a": ["Who are these keys for?"], "why": "Who + are + підмет (these keys), а прийменник for — у кінець. Український порядок «для кого» на початку не копіюємо." },
+    { "type": "order", "uk": "Скільки часу ти вчора працював?", "words": ["how", "long", "did", "you", "work", "yesterday"], "a": ["How long did you work yesterday?"], "why": "How long (як довго) + did + you + work у початковій формі. Yesterday — у кінці." }
   ]
 }

@@ -5,6 +5,13 @@
   "uk": "Too, enough, so, such: занадто, досить, такий",
   "summary": "занадто, досить, такий: too heavy, big enough, such a cold day",
   "minutes": 7,
+  "key": [
+    "**too** + прикметник — надто, і це заважає: too heavy, too late. Просто «дуже» — **very**: very heavy, але донесемо.",
+    "З іменником — **too much** (незлічуване: too much money) і **too many** (множина: too many cars). Перед прикметником much не ставимо: too cold.",
+    "**enough** стоїть **після** прикметника, але **перед** іменником: big enough, enough time. «Недостатньо» — not enough.",
+    "Для чого — **to + дієслово**: too tired to drive, strong enough to lift. Для кого — **for me**: too heavy for me to lift (без it у кінці).",
+    "**so** + прикметник: so cold. **such a** + прикметник + іменник: such a cold day; з множиною й незлічуваним без a: such bad weather. Так …, що — **so / such … that**."
+  ],
   "blocks": [
     { "t": "p", "text": "Чотири короткі слова, без яких не обходиться жодна розмова: **too** — занадто (і це проблема), **enough** — достатньо, **so** і **such** — так, такий (підсилюють). Значення прості, а помилки бувають через **місце** в реченні: що стоїть перед цим словом, а що після." },
     { "t": "h", "text": "Too — занадто" },
@@ -84,6 +91,18 @@
     { "type": "choice", "q": "We've had ___ bad weather this week.", "uk": "Цього тижня в нас така погана погода.", "opts": ["such a", "such", "so"], "a": 1, "why": "Weather — незлічуване, тому such без a. So не ставимо перед прикметником з іменником." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Він говорив так швидко, що я не зрозумів.", "opts": ["He spoke so fast that I didn't understand.", "He spoke such fast that I didn't understand.", "He spoke too fast that I didn't understand."], "a": 0, "why": "Перед прислівником без іменника — so, а «так …, що» — so … that. Too з that не поєднуємо." },
     { "type": "order", "uk": "Він так утомився, що заснув.", "words": ["he", "was", "so", "tired", "that", "he", "fell", "asleep"], "a": ["He was so tired that he fell asleep."], "why": "So + прикметник + that + наслідок: so tired that he fell asleep." },
-    { "type": "order", "uk": "Ти так добре впорався.", "words": ["you", "did", "such", "a", "good", "job"], "a": ["You did such a good job."], "why": "Перед a + прикметник + іменник — such: such a good job." }
+    { "type": "order", "uk": "Ти так добре впорався.", "words": ["you", "did", "such", "a", "good", "job"], "a": ["You did such a good job."], "why": "Перед a + прикметник + іменник — such: such a good job." },
+    { "type": "choice", "q": "These bags are ___ heavy, but I can carry them.", "uk": "Ці пакети дуже важкі, але я можу їх донести.", "opts": ["very", "too", "enough"], "a": 0, "why": "Важкі, але донести можна — це просто «дуже», тому very. Too означало б, що це заважає: too heavy to carry — не донесеш. Enough стоїть після прикметника." },
+    { "type": "choice", "q": "You spend ___ money on your phone.", "uk": "Ти витрачаєш забагато грошей на телефон.", "opts": ["too many", "too much", "too"], "a": 1, "why": "Money незлічуване, хоч українською «гроші» — множина, тому too much. Too many — з тим, що рахуємо (too many apps), а просто too — перед прикметником." },
+    { "type": "choice", "q": "These boots are too small ___ me.", "uk": "Ці черевики мені замалі.", "opts": ["for", "to", "that"], "a": 0, "why": "Для кого — for + me, him, her: too small for me. To ставимо перед дієсловом (too small to wear), а that з too не поєднуємо." },
+    { "type": "choice", "q": "The doctor says I don't drink ___.", "uk": "Лікар каже, що я п'ю недостатньо води.", "opts": ["enough water", "water enough", "too much water"], "a": 0, "why": "З іменником enough стоїть спереду: enough water, enough time. Too much water означало б «забагато води»." },
+    { "type": "input", "q": "I'm not ___ (strong / enough) to lift 100 kilos yet.", "uk": "Я ще недостатньо сильний, щоб підняти 100 кілограмів.", "a": ["strong enough"], "why": "З прикметником enough стоїть після нього: strong enough, а «щоб» — to + дієслово: to lift." },
+    { "type": "order", "uk": "Достатньо тепло, щоб піти поплавати?", "words": ["warm", "go", "is", "enough", "swimming", "it", "to"], "a": ["Is it warm enough to go swimming?"], "why": "Enough — після прикметника: warm enough, а «щоб» — to + дієслово. Питання з be: is it на початку." },
+    { "type": "choice", "q": "Liam and Kate are ___ friendly neighbours!", "uk": "Ліам і Кейт — такі привітні сусіди!", "opts": ["so", "such", "such a"], "a": 1, "why": "Далі прикметник + іменник у множині (neighbours), тому such без a. So — лише без іменника: They're so friendly." },
+    { "type": "input", "q": "It was ___ a nice day that we had lunch outside.", "uk": "Був такий гарний день, що ми обідали надворі.", "a": ["such"], "why": "Далі a + прикметник + іменник (a nice day), тому such. So з a не поєднуємо: so nice, але such a nice day." },
+    { "type": "choice", "q": "We've got ___ work this week that I can't take a day off.", "uk": "Цього тижня в нас стільки роботи, що я не можу взяти вихідний.", "opts": ["so much", "so many", "such"], "a": 0, "why": "Work — незлічуване, тому so much. So many — з множиною (so many jobs), а «стільки …, що» — so much … that." },
+    { "type": "input", "q": "It rained ___ heavily that the match was cancelled.", "uk": "Дощ ішов так сильно, що матч скасували.", "a": ["so"], "why": "Перед прислівником без іменника (heavily) — so, а «так …, що» — so … that. Too з that не поєднуємо." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Лист із банку надто складний, щоб я його зрозумів.", "opts": ["The letter from the bank is too difficult for me to understand.", "The letter from the bank is too difficult for me to understand it.", "The letter from the bank is too difficult that I can't understand it."], "a": 0, "why": "Too + прикметник + for me + to + дієслово. It у кінці не додаємо: лист уже стоїть на початку речення. Too з that не поєднуємо." },
+    { "type": "order", "uk": "Там було так багато людей, що ми пішли.", "words": ["people", "so", "we", "there", "that", "were", "left", "many"], "a": ["There were so many people that we left."], "why": "People — множина, тому so many, а «так багато …, що» — so many … that." }
   ]
 }

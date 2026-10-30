@@ -5,6 +5,13 @@
   "uk": "-ing чи to + дієслово",
   "summary": "коли -ing, а коли to: I enjoy working, I want to work",
   "minutes": 9,
+  "key": [
+    "**-ing** після enjoy, finish, mind, keep, avoid, suggest: I enjoy **working**. **to** після want, need, decide, hope, promise, manage, afford: I want **to work**.",
+    "Після **прийменника** (in, for, about, before, without, look forward to) — завжди **-ing**: thanks for **coming**, interested in **learning**.",
+    "«Щоб» (мета) — просто **to**: I came here **to work**. Не for to, не for + дієслово. Дія як підмет — з -ing: **Smoking** is bad for you.",
+    "**stop smoking** — кинути, **stop to smoke** — зупинитися, щоб покурити. **remember / forget to do** — не забути зробити, **remember doing** — пам'ятати, що робив.",
+    "**like, love, hate, start** — можна і -ing, і to, але **would like to**. «Хочу, щоб ти…» — I want **you to help**. Заперечення — **not to**: decided not to go."
+  ],
   "blocks": [
     { "t": "p", "text": "Коли одне дієслово йде за іншим (люблю **працювати**, хочу **піти**), друге стоїть або у **формі з -ing** (working), або з **to** (to work). Українською в обох випадках «працювати», тому вибір доводиться **запам'ятовувати**: він залежить від **першого** дієслова." },
     { "t": "ex", "items": [
@@ -144,6 +151,18 @@
     { "type": "input", "q": "Mick keeps ___ (forget) his keys.", "uk": "Мік постійно забуває ключі.", "a": ["forgetting"], "why": "Після keep — форма з -ing. У forget наголос на останньому складі -get, тому t подвоюємо: forgetting." },
     { "type": "input", "q": "Sarah can't afford ___ (go) on holiday this year.", "uk": "Сара не може дозволити собі поїхати у відпустку цього року.", "a": ["to go"], "why": "Після afford (дозволити собі) — to + дієслово: to go." },
     { "type": "order", "uk": "Він вирішив кинути курити.", "words": ["he", "decided", "to", "give", "up", "smoking"], "a": ["He decided to give up smoking.", "He decided to give smoking up."], "why": "Після decide — to + дієслово (to give up), а після give up — форма з -ing (smoking)." },
-    { "type": "order", "uk": "Тобі було б цікаво працювати по суботах?", "words": ["would", "you", "be", "interested", "in", "working", "on", "Saturdays"], "a": ["Would you be interested in working on Saturdays?"], "why": "Після interested стоїть прийменник in, тому далі -ing: working. Питання починається з would." }
+    { "type": "order", "uk": "Тобі було б цікаво працювати по суботах?", "words": ["would", "you", "be", "interested", "in", "working", "on", "Saturdays"], "a": ["Would you be interested in working on Saturdays?"], "why": "Після interested стоїть прийменник in, тому далі -ing: working. Питання починається з would." },
+    { "type": "choice", "q": "I'd like ___ an appointment with the doctor.", "uk": "Я хотів би записатися до лікаря.", "opts": ["to make", "making", "make"], "a": 0, "why": "Would like (хотів би) — завжди з to: I'd like to make an appointment. Це не like, після якого можна й -ing." },
+    { "type": "input", "q": "Mick loves ___ (play) football at the weekend.", "uk": "Мік любить грати у футбол на вихідних.", "a": ["playing", "to play"], "why": "Після love, like, hate, start можна і -ing, і to — значення те саме: loves playing = loves to play." },
+    { "type": "choice", "q": "The boss wants ___ early tomorrow.", "uk": "Бос хоче, щоб ми почали завтра рано.", "opts": ["us to start", "that we start", "us starting"], "a": 0, "why": "«Хоче, щоб ми…» — want + хтось + to + дієслово: wants us to start. Без that і без -ing." },
+    { "type": "input", "q": "Olena promised ___ (not / be) late again.", "uk": "Олена пообіцяла більше не запізнюватися.", "a": ["not to be"], "why": "Після promise — to + дієслово, а заперечення ставимо просто перед to: not to be. Не don't і не to not be." },
+    { "type": "choice", "q": "We're looking forward ___ into the new flat.", "uk": "Ми з нетерпінням чекаємо переїзду в нову квартиру.", "opts": ["to moving", "to move", "moving"], "a": 0, "why": "У виразі look forward to це to — прийменник, тому далі -ing: looking forward to moving. Без to вираз неповний." },
+    { "type": "input", "q": "Kate suggested ___ (get) a taxi home.", "uk": "Кейт запропонувала поїхати додому на таксі.", "a": ["getting"], "why": "Після suggest — форма з -ing. Get закінчується на одну голосну + одну приголосну, тому t подвоюємо: getting." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Цей пензлик — для фарбування кутів.", "opts": ["This brush is for painting corners.", "This brush is for paint corners.", "This brush is for to paint corners."], "a": 0, "why": "Про призначення речі кажуть for + -ing: for painting. For — прийменник, а після прийменника дієслово лише з -ing. For to не буває." },
+    { "type": "input", "q": "I remember ___ (turn) off the heater, so why is it on?", "uk": "Я пам'ятаю, що вимикав обігрівач, то чому він увімкнений?", "a": ["turning"], "why": "«Пам'ятаю, що робив» — remember + -ing: remember turning off. Remember to turn off означало б «не забути вимкнути»." },
+    { "type": "input", "q": "The lads stopped ___ (have) a cup of tea at eleven.", "uk": "Об одинадцятій хлопці зупинилися, щоб випити чаю.", "a": ["to have"], "why": "«Зупинитися, щоб…» — stop + to: stopped to have a cup of tea. Stopped having означало б, що вони перестали пити чай узагалі." },
+    { "type": "input", "q": "If the door sticks, try ___ (put) some oil on the hinges.", "uk": "Якщо двері заїдають, спробуй змастити завіси олією.", "a": ["putting"], "why": "«Спробуй як варіант, може допоможе» — try + -ing: try putting some oil. Try to put означало б «намагайся, старайся», а намагатися тут нічого." },
+    { "type": "order", "uk": "Я не проти працювати в суботу.", "words": ["I", "don't", "mind", "working", "on", "Saturday"], "a": ["I don't mind working on Saturday."], "why": "Після mind — форма з -ing: don't mind working. I don't mind — «я не проти»." },
+    { "type": "order", "uk": "Я намагався подзвонити тобі, але твій телефон був вимкнений.", "words": ["I", "tried", "to", "call", "you", "but", "your", "phone", "was", "off"], "a": ["I tried to call you, but your phone was off."], "why": "«Намагався, старався» — try + to: tried to call. Try + -ing (tried calling) означало б «спробував подзвонити як варіант»." }
   ]
 }

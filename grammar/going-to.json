@@ -5,6 +5,13 @@
   "uk": "Going to і плани на майбутнє",
   "summary": "намір, прогноз за ознаками, домовленості: I'm going to buy",
   "minutes": 7,
+  "key": [
+    "**am / is / are + going to + початкова форма**: I'm going to buy, she's going to start. Усі три частини обов'язкові, після to — без -s і без -ing.",
+    "Going to — план, **вирішений заздалегідь**, і прогноз **за ознаками**: black clouds — it's going to rain. Рішення просто зараз — will.",
+    "Заперечення й питання через be: I'm not going to…, he isn't going to…, **Are** you going to…? — Yes, I am. / No, I'm not.",
+    "Домовленість із часом і людиною — **Present Continuous**: I'm meeting Tom at six. Розклад (автобус, кіно, магазин) — **Present Simple**: the bus leaves at 7:10.",
+    "I'm going **to Dublin** — просто їду, рух кудись. I'm going **to buy** a van — план."
+  ],
   "blocks": [
     { "t": "p", "text": "**Be going to** + початкова форма дієслова (як у словнику: work, buy) — коли про майбутнє ти **вже вирішив заздалегідь**: намір, план. Українською «я збираюся», «я буду», «я куплю». Going to складається з трьох частин: **am / is / are** + **going to** + дієслово, і жодну з них пропустити не можна." },
     { "t": "ex", "items": [
@@ -84,6 +91,18 @@
     { "type": "input", "q": "___ you going to work on Saturday?", "uk": "Ти збираєшся працювати в суботу?", "a": ["Are"], "why": "У питанні am / is / are стає перед підметом (тим, хто діє). Для you — Are you going to…?" },
     { "type": "input", "q": "Are you going to sell your car? — No, ___.", "uk": "Ти збираєшся продавати свою машину? — Ні, не збираюся.", "a": ["I'm not", "I'm not going to", "I'm not going to sell it"], "why": "Коротка відповідь повторює допоміжне дієслово з питання: Are you…? — No, I'm not. Можна й довше: No, I'm not going to." },
     { "type": "order", "uk": "Що ти збираєшся робити після роботи?", "words": ["you", "what", "to", "going", "are", "do", "work", "after"], "a": ["What are you going to do after work?"], "why": "Питання: What + are + you + going to + do. Are стоїть перед you, після to — початкова форма do." },
-    { "type": "order", "uk": "Завтра о десятій я зустрічаюся з босом.", "words": ["meeting", "I'm", "boss", "the", "at", "tomorrow", "ten"], "a": ["I'm meeting the boss at ten tomorrow.", "I'm meeting the boss tomorrow at ten.", "Tomorrow I'm meeting the boss at ten.", "Tomorrow at ten I'm meeting the boss.", "At ten tomorrow I'm meeting the boss."], "why": "Домовленість з конкретним часом — Present Continuous: I'm meeting. Час (at ten tomorrow) зазвичай у кінці, але можна й на початку." }
+    { "type": "order", "uk": "Завтра о десятій я зустрічаюся з босом.", "words": ["meeting", "I'm", "boss", "the", "at", "tomorrow", "ten"], "a": ["I'm meeting the boss at ten tomorrow.", "I'm meeting the boss tomorrow at ten.", "Tomorrow I'm meeting the boss at ten.", "Tomorrow at ten I'm meeting the boss.", "At ten tomorrow I'm meeting the boss."], "why": "Домовленість з конкретним часом — Present Continuous: I'm meeting. Час (at ten tomorrow) зазвичай у кінці, але можна й на початку." },
+    { "type": "choice", "q": "Sarah and Tom ___ going to move to Cork.", "uk": "Сара й Том збираються переїхати до Корка.", "opts": ["are", "is", "am"], "a": 0, "why": "Сара й Том — це they, тому are: they're going to move. Is — лише для he, she, it, am — для I." },
+    { "type": "choice", "q": "My brother is going to ___ a new van.", "uk": "Мій брат збирається купити новий фургон.", "opts": ["buy", "buys", "buying"], "a": 0, "why": "Після going to — лише початкова форма дієслова: buy. Без -s, навіть для he, і без -ing." },
+    { "type": "input", "q": "Olena ___ going to visit her parents in June.", "uk": "Олена в червні збирається відвідати батьків.", "a": ["is"], "why": "Olena — це she, тому is: Olena is going to (скорочено Olena's going to)." },
+    { "type": "input", "q": "___ Tom going to help us tomorrow?", "uk": "Том завтра збирається нам допомагати?", "a": ["Is"], "why": "У питанні am / is / are стає перед підметом. Tom — це he, тому Is Tom going to…?" },
+    { "type": "input", "q": "Where ___ you going to put the ladder?", "uk": "Куди ти збираєшся поставити драбину?", "a": ["are"], "why": "Питання з питальним словом: Where + are + you + going to + дієслово. Для you завжди are." },
+    { "type": "choice", "q": "Look at Mick! He's carrying too many boards. He ___!", "uk": "Глянь на Міка! Він несе забагато дощок. Зараз упаде!", "opts": ["is going to fall", "is going fall", "going to fall"], "a": 0, "why": "Бачимо ознаки — прогноз з going to, і всі три частини обов'язкові: is + going to + fall. Без is чи без to речення неправильне." },
+    { "type": "input", "q": "Is it going to rain? — Yes, I think it ___.", "uk": "Буде дощ? — Так, думаю, буде.", "a": ["is"], "why": "Коротка відповідь повторює допоміжне дієслово з питання: Is it…? — Yes, it is. Going to повторювати не треба." },
+    { "type": "choice", "task": "У якому реченні going to — це план, а не рух кудись?", "q": "", "opts": ["I'm going to the shop.", "I'm going to call the plumber.", "We're going to Gorey tonight."], "a": 1, "why": "Going to + дієслово (call) — план, намір. Going to + місце (the shop, Gorey) — просто «іду, їду кудись», це Present Continuous від go." },
+    { "type": "choice", "q": "What time ___ the film start tonight?", "uk": "О котрій сьогодні починається фільм?", "opts": ["does", "is", "do"], "a": 0, "why": "Кіно йде за розкладом — Present Simple, навіть про сьогоднішній вечір. The film — це it, тому does. Is з початковою формою start не поєднується." },
+    { "type": "choice", "q": "Why are you getting your tools out? — ___ the shelf in the bathroom.", "uk": "Чому ти дістаєш інструменти? — Збираюся повісити полицю у ванній.", "opts": ["I'm going to put up", "I'll put up", "I put up"], "a": 0, "why": "Рішення ухвалено до розмови, тому ти й дістаєш інструменти, — план, going to. I'll put up звучало б як рішення щойно, а I put up — як звичка." },
+    { "type": "order", "uk": "Сьогодні ввечері я не збираюся нікуди йти.", "words": ["I'm", "not", "going", "to", "go", "out", "tonight"], "a": ["I'm not going to go out tonight.", "Tonight I'm not going to go out."], "why": "Заперечення: I'm not + going to + початкова форма (go out). Tonight зазвичай у кінці, але можна й на початку." },
+    { "type": "order", "uk": "Вона збирається шукати нову роботу?", "words": ["is", "she", "going", "to", "look", "for", "a", "new", "job"], "a": ["Is she going to look for a new job?"], "why": "Питання: Is + she + going to + look for. Is стоїть перед she, а після to — початкова форма look." }
   ]
 }

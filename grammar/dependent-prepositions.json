@@ -1,0 +1,176 @@
+{
+  "id": "dependent-prepositions",
+  "level": "B1",
+  "title": "Prepositions after verbs and adjectives",
+  "uk": "Прийменники після дієслів і прикметників",
+  "summary": "слово + свій прийменник: wait for, depend on, good at, afraid of",
+  "minutes": 10,
+  "key": [
+    "Дієслова й прикметники мають **свій прийменник** — вчи їх парою: **wait for**, **listen to**, **depend on**, **good at**, **afraid of**, **married to**.",
+    "Після прийменника дієслово — у **формі з -ing**: good at **fixing**, tired of **waiting**, think about **moving**.",
+    "У питанні прийменник іде **в кінець**: What are you **waiting for**? Who were you **talking to**?",
+    "Пастка — калька з української: не depend from, а **depend on**; не listen music, а **listen to music**; не wait him, а **wait for him**.",
+    "**Explain** щось **to** когось (не explain me); **discuss** без прийменника (не discuss about)."
+  ],
+  "blocks": [
+    { "t": "p", "text": "Багато англійських дієслів і прикметників «тримаються» за **свій прийменник** (коротке слово на кшталт for, to, on, at). Біда в тому, що він рідко збігається з українським: у нас буває інший прийменник або жодного, лише закінчення слова («чекати автобус**а**»). Тому перекладати слово в слово не вийде." },
+    { "t": "table", "head": ["Українською", "Англійською"], "rows": [
+      ["чекати **когось**", "wait **for** someone"],
+      ["слухати **музику**", "listen **to** music"],
+      ["залежати **від**", "depend **on**"],
+      ["одружений **з**", "married **to**"],
+      ["добре вміти щось", "good **at** something"],
+      ["пишатися **кимось**", "proud **of** someone"]
+    ] },
+    { "t": "tip", "text": "Вчи слово одразу з прийменником, як одне ціле: не «wait — чекати», а «**wait for** — чекати на когось». Так само й записуй у словник." },
+    { "t": "h", "text": "Дієслово + прийменник" },
+    { "t": "table", "head": ["Дієслово", "Значення", "Приклад"], "rows": [
+      ["wait **for**", "чекати на", "wait for the bus"],
+      ["listen **to**", "слухати", "listen to the radio"],
+      ["look **at**", "дивитися на", "look at the photo"],
+      ["look **for**", "шукати", "look for the keys"],
+      ["look **after**", "доглядати", "look after the kids"],
+      ["pay **for**", "платити за", "pay for the tiles"],
+      ["ask **for**", "просити (дати)", "ask for help"],
+      ["belong **to**", "належати комусь", "belong to Mick"]
+    ] },
+    { "t": "ex", "items": [
+      ["**Look at** this crack in the wall.", "Подивись на цю тріщину в стіні."],
+      ["I'm **looking for** a bigger flat.", "Я шукаю більшу квартиру."],
+      ["Who **looks after** your kids when you're at work?", "Хто доглядає твоїх дітей, коли ти на роботі?"],
+      ["How much did you **pay for** the tiles?", "Скільки ти заплатив за плитку?"],
+      ["Tom **asked for** a day off.", "Том попросив вихідний."],
+      ["This ladder **belongs to** Mick.", "Ця драбина належить Міку."]
+    ] },
+    { "t": "tip", "text": "**Pay for** — коли платиш **за** товар чи послугу: pay for the tiles. Якщо одразу називаєш суму, людину чи рахунок, for не потрібне: pay **€50**, pay **the driver**, pay **the bill**. Так само **ask for** — попросити щось, а **ask** someone — запитати когось: Ask Tom. Ask him **for** the keys." },
+    { "t": "table", "head": ["Дієслово", "Значення", "Приклад"], "rows": [
+      ["depend **on**", "залежати від", "depend on the price"],
+      ["rely **on**", "покладатися на", "rely on Tom"],
+      ["agree **with**", "погоджуватися з", "agree with you"],
+      ["worry **about**", "хвилюватися через", "worry about money"],
+      ["apply **for**", "подавати заявку на", "apply for a job"],
+      ["deal **with**", "мати справу, розібратися", "deal with a problem"],
+      ["laugh **at**", "сміятися з", "laugh at a joke"]
+    ] },
+    { "t": "ex", "items": [
+      ["It **depends on** the price.", "Це залежить від ціни."],
+      ["You can **rely on** Kate. She never lets you down.", "На Кейт можна покластися. Вона ніколи не підведе."],
+      ["I don't **agree with** the boss.", "Я не згоден з босом."],
+      ["Don't **worry about** the money.", "Не хвилюйся через гроші."],
+      ["Andrii **applied for** a job at Lidl.", "Андрій подав заявку на роботу в Lidl."],
+      ["Who's going to **deal with** the customer?", "Хто розбиратиметься з клієнтом?"],
+      ["Everyone **laughed at** his joke.", "Усі сміялися з його жарту."]
+    ] },
+    { "t": "h", "text": "Think, talk, explain: з нюансами" },
+    { "t": "list", "items": [
+      "**think about** — думати про щось, обмірковувати: I'm **thinking about** the offer.",
+      "**think of** — спасти на думку, мати думку: I can't **think of** his name. What do you **think of** the new van? (Тут можна й about.)",
+      "**talk to** someone — говорити з кимось, **talk about** something — говорити про щось: I'll **talk to** Mick **about** it.",
+      "**explain** something **to** someone — пояснити щось комусь: **Explain** the rules **to** him. Explain him — помилка."
+    ] },
+    { "t": "ex", "items": [
+      ["Let me **think about** it.", "Дай мені подумати."],
+      ["I can't **think of** a better idea.", "Мені не спадає на думку краща ідея."],
+      ["I'll **talk to** the boss tomorrow.", "Я завтра поговорю з босом."],
+      ["What were they **talking about**?", "Про що вони говорили?"],
+      ["Can you **explain** this **to** Olena?", "Можеш пояснити це Олені?"]
+    ] },
+    { "t": "tip", "text": "І навпаки: деякі дієслова йдуть **без прийменника**, хоча так і хочеться його додати: **discuss** the plan (не discuss about), **enter** the room (увійти **в** кімнату), **answer** the question (відповісти **на** питання), **marry** Sarah (одружитися **з** Сарою), **reach** Dublin (дістатися **до** Дубліна)." },
+    { "t": "h", "text": "Прикметник + прийменник" },
+    { "t": "table", "head": ["Прикметник", "Значення", "Приклад"], "rows": [
+      ["good **at**", "добре вміє", "good at maths"],
+      ["bad **at**", "погано вміє", "bad at football"],
+      ["interested **in**", "цікавиться", "interested in cars"],
+      ["afraid **of**", "боїться", "afraid of dogs"],
+      ["proud **of**", "пишається", "proud of his kids"],
+      ["tired **of**", "набридло", "tired of the noise"],
+      ["fed up **with**", "набридло (розмовне)", "fed up with the rain"],
+      ["responsible **for**", "відповідає за", "responsible for tools"],
+      ["keen **on**", "захоплюється", "keen on fishing"]
+    ] },
+    { "t": "ex", "items": [
+      ["Tom is **bad at** football, but he loves it.", "Том погано грає у футбол, але дуже його любить."],
+      ["My son is **interested in** cars.", "Мій син цікавиться автомобілями."],
+      ["Are you **afraid of** heights?", "Ти боїшся висоти?"],
+      ["Mick is very **proud of** his kids.", "Мік дуже пишається своїми дітьми."],
+      ["I'm **fed up with** this rain.", "Мені набрид цей дощ."],
+      ["Who's **responsible for** the keys?", "Хто відповідає за ключі?"],
+      ["Kate isn't very **keen on** football.", "Кейт не дуже любить футбол."]
+    ] },
+    { "t": "table", "head": ["Прикметник", "Значення", "Приклад"], "rows": [
+      ["married **to**", "одружений з", "married to Sarah"],
+      ["different **from**", "відрізняється від", "different from mine"],
+      ["similar **to**", "схожий на", "similar to yours"],
+      ["angry **with** someone", "сердиться на когось", "angry with Tom"],
+      ["angry **about** something", "сердиться через щось", "angry about the delay"],
+      ["famous **for**", "славиться чимось", "famous for its beach"],
+      ["sure **about**", "впевнений щодо", "sure about the price"],
+      ["aware **of**", "знає про, усвідомлює", "aware of the risk"]
+    ] },
+    { "t": "ex", "items": [
+      ["Her accent is **different from** mine.", "Її акцент відрізняється від мого."],
+      ["Your van is **similar to** ours.", "Твій фургон схожий на наш."],
+      ["Mick was **angry with** us **about** the mess.", "Мік сердився на нас через безлад."],
+      ["Kilkenny is **famous for** its castle.", "Кілкенні славиться своїм замком."],
+      ["Are you **sure about** that?", "Ти в цьому впевнений?"],
+      ["Is the boss **aware of** the problem?", "Бос знає про цю проблему?"]
+    ] },
+    { "t": "tip", "text": "У розмові в Ірландії й Британії почуєш також **different to**, **fed up of** і **angry at** — так теж кажуть. Але **different from**, **fed up with** і **angry with** правильні завжди, тож вчи саме їх. І не плутай: **tired of** — «набридло», а просто «втомлений» — tired: I'm tired after work." },
+    { "t": "h", "text": "Після прийменника — форма з -ing" },
+    { "t": "p", "text": "Якщо після прийменника йде дієслово, воно завжди у **формі з -ing**: fixing, waiting, moving. Українською тут буває початкова форма («набридло **чекати**») або «те, що…» («пишається **тим, що** збудував»). Англійською після прийменника не ставимо ні початкову форму, ні to." },
+    { "t": "rule", "title": "Прийменник + форма з -ing", "lines": ["good **at** fix**ing** things", "tired **of** wait**ing**", "proud **of** build**ing** it", "thanks **for** help**ing** me"] },
+    { "t": "ex", "items": [
+      ["Andrii is **good at fixing** things.", "Андрій уміє добре лагодити речі."],
+      ["We're **fed up with working** in the rain.", "Нам набридло працювати під дощем."],
+      ["Are you **interested in learning** Irish?", "Тобі цікаво вивчати ірландську?"],
+      ["He's **afraid of losing** his job.", "Він боїться втратити роботу."],
+      ["Thanks **for helping** me.", "Дякую, що допоміг."]
+    ] },
+    { "t": "mistake", "wrong": "He's good at fix cars.", "right": "He's good at fixing cars.", "why": "Після прийменника (at, of, in, about…) дієслово стоїть у формі з -ing." },
+    { "t": "h", "text": "Прийменник у питанні — у кінці" },
+    { "t": "p", "text": "Українською прийменник стоїть на початку питання: «**На що** ти чекаєш?», «**З ким** ти говорив?». Англійською на початку питальне слово, а прийменник **лишається біля свого дієслова — у кінці речення**. Так само в реченнях на кшталт the job I applied **for** (робота, на яку я подався)." },
+    { "t": "ex", "items": [
+      ["What are you **waiting for**?", "На що ти чекаєш?"],
+      ["Who does this phone **belong to**?", "Чий це телефон?"],
+      ["What are they **laughing at**?", "З чого вони сміються?"],
+      ["What does it **depend on**?", "Від чого це залежить?"],
+      ["Who are you **angry with**?", "На кого ти сердишся?"],
+      ["That's the job I **applied for**.", "Це та робота, на яку я подавався."]
+    ] },
+    { "t": "tip", "text": "Не починай розмовне питання з прийменника, як в українській: не «About what are you talking?», а **What are you talking about?**" },
+    { "t": "h", "text": "Типові помилки" },
+    { "t": "mistake", "wrong": "It depends from the weather.", "right": "It depends on the weather.", "why": "«Залежати від» — **depend on**, ніколи не from." },
+    { "t": "mistake", "wrong": "I often listen music in the van.", "right": "I often listen to music in the van.", "why": "Якщо кажемо, **що саме** слухаємо, потрібне to. Без to — лише саме Listen! (Слухай!)" },
+    { "t": "mistake", "wrong": "I'm waiting Tom.", "right": "I'm waiting for Tom.", "why": "Чекати когось — wait **for** someone, хоч українською прийменника немає." },
+    { "t": "mistake", "wrong": "Olena is married with an Irishman.", "right": "Olena is married to an Irishman.", "why": "Одружений з кимось — married **to**. А «одружитися з» — просто marry: She married an Irishman." },
+    { "t": "mistake", "wrong": "I'm not very good in English.", "right": "I'm not very good at English.", "why": "Уміти щось добре чи погано — good / bad **at**." },
+    { "t": "mistake", "wrong": "Can you explain me the rules?", "right": "Can you explain the rules to me?", "why": "Explain щось **to** когось. Explain me — дослівна калька з «поясни мені»." },
+    { "t": "mistake", "wrong": "We discussed about the price.", "right": "We discussed the price.", "why": "Discuss (обговорювати) — без прийменника. З about — talk about: We talked about the price." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I'm waiting ___ the bus.", "uk": "Я чекаю на автобус.", "opts": ["for", "to", "at"], "a": 0, "why": "Чекати на когось чи щось — wait for: wait for the bus, wait for Tom." },
+    { "type": "choice", "q": "We always listen ___ the radio in the van.", "uk": "Ми завжди слухаємо радіо у фургоні.", "opts": ["to", "for", "at"], "a": 0, "why": "Слухати щось — listen to: listen to the radio, listen to music." },
+    { "type": "choice", "q": "The price depends ___ the size of the room.", "uk": "Ціна залежить від розміру кімнати.", "opts": ["from", "on", "of"], "a": 1, "why": "«Залежати від» — depend on. Українське «від» тут не перекладається як from." },
+    { "type": "choice", "q": "Olena is really good ___ languages.", "uk": "Олені дуже добре даються мови.", "opts": ["in", "at", "on"], "a": 1, "why": "Уміти щось добре — good at: good at languages, good at maths." },
+    { "type": "choice", "q": "Are you interested ___ football?", "uk": "Ти цікавишся футболом?", "opts": ["in", "for", "about"], "a": 0, "why": "Цікавитися чимось — interested in." },
+    { "type": "input", "q": "Sarah is afraid ___ spiders.", "uk": "Сара боїться павуків.", "a": ["of"], "why": "Боятися чогось — afraid of: afraid of spiders, afraid of heights." },
+    { "type": "input", "q": "Who's going to pay ___ the drinks?", "uk": "Хто платитиме за напої?", "a": ["for"], "why": "Платити за товар чи послугу — pay for: pay for the drinks." },
+    { "type": "choice", "q": "Can you look ___ the kids while I'm at work?", "uk": "Можеш доглянути дітей, поки я на роботі?", "opts": ["at", "for", "after"], "a": 2, "why": "Look after — доглядати. Look at — дивитися на, look for — шукати." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Кейт заміжня за будівельником.", "opts": ["Kate is married with a builder.", "Kate is married to a builder.", "Kate is married a builder."], "a": 1, "why": "Одружений чи заміжня за кимось — married to, а не married with." },
+    { "type": "input", "q": "I'm tired of ___ (wait) for him.", "uk": "Мені набридло на нього чекати.", "a": ["waiting"], "why": "Після прийменника (of) дієслово у формі з -ing: tired of waiting." },
+    { "type": "order", "uk": "Що ти шукаєш?", "words": ["for", "are", "looking", "what", "you"], "a": ["What are you looking for?"], "why": "Шукати — look for. У питанні прийменник лишається в кінці: What are you looking for?" },
+    { "type": "order", "uk": "Можеш пояснити мені план?", "words": ["explain", "me", "can", "the", "to", "you", "plan"], "a": ["Can you explain the plan to me?"], "why": "Explain щось to когось: explain the plan to me. Explain me — помилка." },
+    { "type": "choice", "q": "Don't laugh ___ him. He's doing his best.", "uk": "Не смійся з нього. Він старається як може.", "opts": ["at", "on", "from"], "a": 0, "why": "Сміятися з когось чи чогось — laugh at." },
+    { "type": "choice", "q": "Who's responsible ___ safety on the site?", "uk": "Хто відповідає за безпеку на будівництві?", "opts": ["for", "of", "about"], "a": 0, "why": "Відповідати за щось — responsible for." },
+    { "type": "input", "q": "You can always rely ___ Mick.", "uk": "На Міка завжди можна покластися.", "a": ["on", "upon"], "why": "Покладатися на когось — rely on (книжне rely upon)." },
+    { "type": "choice", "q": "Wexford is famous ___ its strawberries.", "uk": "Вексфорд славиться своєю полуницею.", "opts": ["for", "of", "with"], "a": 0, "why": "Славитися чимось — famous for." },
+    { "type": "input", "q": "Tom has applied ___ a job in Dublin.", "uk": "Том подав заявку на роботу в Дубліні.", "a": ["for"], "why": "Подавати заявку на роботу — apply for a job." },
+    { "type": "choice", "q": "Don't worry, Mick will deal ___ the problem.", "uk": "Не хвилюйся, Мік розбереться з проблемою.", "opts": ["with", "about", "for"], "a": 0, "why": "Розібратися з чимось, мати справу — deal with." },
+    { "type": "input", "q": "My boss was angry ___ me because I was late.", "uk": "Бос сердився на мене, бо я запізнився.", "a": ["with", "at"], "why": "Сердитися на когось — angry with someone (у розмові ще angry at). А через щось — angry about." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Обговорімо план завтра.", "opts": ["Let's discuss about the plan tomorrow.", "Let's discuss the plan tomorrow.", "Let's discuss on the plan tomorrow."], "a": 1, "why": "Discuss — без прийменника: discuss the plan. About буває після talk: talk about the plan." },
+    { "type": "input", "q": "I'm thinking about ___ (move) to Cork.", "uk": "Я думаю про переїзд до Корка.", "a": ["moving"], "why": "Після прийменника (about) дієслово у формі з -ing: thinking about moving." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Зачекай на мене, я вже йду!", "opts": ["Wait me, I'm coming!", "Wait for me, I'm coming!", "Wait to me, I'm coming!"], "a": 1, "why": "Чекати когось — wait for someone. «Wait me» — калька з «зачекай мене»." },
+    { "type": "order", "uk": "З ким ти розмовляв?", "words": ["talking", "who", "to", "you", "were"], "a": ["Who were you talking to?"], "why": "Говорити з кимось — talk to. Питальне слово на початку, прийменник to — у кінці." },
+    { "type": "order", "uk": "Через що ти так хвилюєшся?", "words": ["so", "about", "you", "what", "worried", "are"], "a": ["What are you so worried about?"], "why": "Worried about — хвилюватися через щось. У питанні about іде в кінець, а so стоїть перед прикметником worried." }
+  ]
+}

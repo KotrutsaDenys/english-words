@@ -5,6 +5,13 @@
   "uk": "Ввічливі прохання й пропозиції",
   "summary": "Could you…? Shall I…? Let's…: просимо й пропонуємо ввічливо",
   "minutes": 7,
+  "key": [
+    "Прохання — питанням: **Can you** / **Could you** + дієслово без to? Could — ввічливіше. Please — у кінці або одразу після you.",
+    "Дуже ввічливо — **Would you mind + -ing**: Would you mind waiting? Відповідь «так, звісно» — **Not at all**, бо mind — «заперечувати».",
+    "Дозвіл — **Can I…? Could I…?** або **Do you mind if I** + дієслово (open). Відповідь-дозвіл: No, go ahead.",
+    "Допомогу пропонуємо **Shall I…?** або **I'll** + дієслово. Пригощаємо — **Would you like** + іменник / to + дієслово; відповідь Yes, please / No, thanks.",
+    "Разом: **Let's / Shall we / Why don't we** + дієслово без to, але **How about + -ing**. Ввічлива відмова — I'm afraid I can't."
+  ],
   "blocks": [
     { "t": "p", "text": "Українською «Дай дриль» між колегами звучить нормально. Англійською Give me the drill звучить **різко**, як наказ. Англомовні люди майже завжди «загортають» прохання в питання або хоча б додають please. На роботі з англомовним босом і колегами це важливо: від цього залежить, як тебе сприймають." },
     { "t": "table", "head": ["Як звучить", "Як сказати"], "rows": [
@@ -96,6 +103,18 @@
     { "type": "input", "q": "Let's ___ (not / tell) him yet.", "uk": "Давай поки не будемо йому казати.", "a": ["not tell"], "why": "Заперечення з let's — let's not + початкова форма. Ні to, ні don't тут не потрібні." },
     { "type": "input", "q": "The phone's ringing. ___ (I / get) it.", "uk": "Телефон дзвонить. Я візьму.", "a": ["I'll get", "I will get"], "why": "Пропонуємо зробити щось просто зараз, рішення щойно прийняте — I'll + дієслово: I'll get it." },
     { "type": "order", "uk": "Можете, будь ласка, говорити повільніше?", "words": ["you", "could", "more", "speak", "slowly", "please"], "a": ["Could you speak more slowly, please?", "Could you please speak more slowly?", "Please could you speak more slowly?"], "why": "Ввічливе прохання: Could you + дієслово. Please — у кінці, одразу після you або на самому початку." },
-    { "type": "order", "uk": "Ти не проти, якщо я відчиню вікно?", "words": ["mind", "you", "do", "if", "I", "open", "the", "window"], "a": ["Do you mind if I open the window?"], "why": "Дозвіл: Do you mind + if I + дієслово в Present Simple (open, без -ing)." }
+    { "type": "order", "uk": "Ти не проти, якщо я відчиню вікно?", "words": ["mind", "you", "do", "if", "I", "open", "the", "window"], "a": ["Do you mind if I open the window?"], "why": "Дозвіл: Do you mind + if I + дієслово в Present Simple (open, без -ing)." },
+    { "type": "choice", "q": "___ I borrow your pen for a second?", "uk": "Можна на секунду взяти твою ручку?", "opts": ["Can", "Do", "Shall"], "a": 0, "why": "Дозвіл просимо через Can I…? або Could I…? Shall I…? — це пропозиція щось зробити для іншого, а Do I borrow…? так не питають." },
+    { "type": "choice", "q": "Would you like a biscuit? — ___", "uk": "Хочете печиво? — Так, будь ласка.", "opts": ["Yes, please.", "Yes, I like.", "Not at all."], "a": 0, "why": "На Would you like…? відповідаємо Yes, please або No, thanks. Not at all — відповідь на Would you mind…?, а Yes, I like без доповнення не кажуть." },
+    { "type": "choice", "q": "___ you like to come to the barbecue on Saturday?", "uk": "Хочеш прийти в суботу на барбекю?", "opts": ["Would", "Do", "Shall"], "a": 0, "why": "Запрошуємо — Would you like to + дієслово. Do you like означає «тобі подобається взагалі», а Shall you… не кажуть." },
+    { "type": "choice", "q": "Shall we ___ a taxi? It's raining.", "uk": "Візьмемо таксі? Іде дощ.", "opts": ["get", "getting", "to get"], "a": 0, "why": "Після Shall we — початкова форма дієслова без to: get. Форма з -ing потрібна лише після How about." },
+    { "type": "choice", "q": "Do you mind if I turn the radio down? — ___", "uk": "Ти не проти, якщо я зроблю радіо тихіше? — Ні, будь ласка.", "opts": ["No, go ahead.", "Yes, please."], "a": 0, "why": "Do you mind if I…? — «ти не проти?», тому дозвіл — No (не проти), go ahead. Yes, please — відповідь на пропозицію щось дати (Would you like…?)." },
+    { "type": "choice", "q": "Can you help me move house on Saturday? — ___", "uk": "Можеш у суботу допомогти мені з переїздом? — На жаль, не можу.", "opts": ["I'm afraid I can't.", "I'm afraid of it.", "I don't can."], "a": 0, "why": "Ввічлива відмова — I'm afraid I can't: тут I'm afraid означає «на жаль». I don't can — помилка: can не поєднується з don't." },
+    { "type": "input", "q": "Let's ___ (meet) outside the cinema at seven.", "uk": "Зустріньмося біля кінотеатру о сьомій.", "a": ["meet"], "why": "Після let's — початкова форма дієслова без to: let's meet." },
+    { "type": "input", "q": "___ (could / I) have the bill, please?", "uk": "Можна мені рахунок, будь ласка?", "a": ["Could I"], "why": "Ввічливо попросити щось для себе — Could I have…? Could стає перед підметом, do не потрібне." },
+    { "type": "input", "q": "Would you like ___ (sit) down?", "uk": "Хочете сісти?", "a": ["to sit"], "why": "Після Would you like — іменник або to + дієслово: Would you like to sit down? Без to не можна." },
+    { "type": "input", "q": "Would you mind ___ (turn) the music down a bit?", "uk": "Ви не могли б зробити музику трохи тихіше?", "a": ["turning"], "why": "Після Would you mind — завжди форма з -ing: turning, і ніколи to turn." },
+    { "type": "order", "uk": "Як щодо того, щоб завтра зустрітися в спортзалі?", "words": ["how", "about", "meeting", "at", "the", "gym", "tomorrow"], "a": ["How about meeting at the gym tomorrow?"], "why": "How about + форма з -ing: How about meeting…? Tomorrow — у кінці." },
+    { "type": "order", "uk": "Можете, будь ласка, надіслати мені фото?", "words": ["could", "you", "please", "send", "me", "the", "photos"], "a": ["Could you please send me the photos?", "Could you send me the photos, please?", "Please could you send me the photos?"], "why": "Could you + дієслово + що + кому. Please — одразу після you, у кінці або на самому початку." }
   ]
 }

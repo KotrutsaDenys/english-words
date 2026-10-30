@@ -5,6 +5,13 @@
   "uk": "Заперечення",
   "summary": "not, don't, no, never, nothing: одне заперечення в реченні",
   "minutes": 8,
+  "key": [
+    "**Not** саме не стоїть. Після **am / is / are, can, will, have** — isn't, can't, won't, haven't. Зі звичайним дієсловом — **don't / doesn't / didn't**.",
+    "Після didn't / doesn't дієслово в початковій формі: I didn't **go** (не went), she doesn't **know** (не knows).",
+    "**No** — перед іменником, **not** — з дієсловом: There's **no** milk = There **isn't any** milk. Після no немає a / the.",
+    "**Одне заперечення**: I don't know **anything** або I know **nothing**. Nobody, nothing, never уже заперечні: Nobody came. She never drinks coffee.",
+    "«Теж» у запереченні — **either** у кінці, не too: I don't like it either. — Me neither. «Думаю, ні» — **I don't think** so."
+  ],
   "blocks": [
     { "t": "p", "text": "В українській «не» просто ставимо перед дієсловом: «я не працюю». В англійській так не можна: **not** потребує опори — допоміжного дієслова (be, can, will, have або do). І друга важлива відмінність: у реченні має бути лише **одне** заперечення (про це нижче)." },
     { "t": "ex", "items": [
@@ -100,6 +107,18 @@
     { "type": "choice", "q": "I ___ on Sundays.", "uk": "Я ніколи не працюю в неділю.", "opts": ["never work", "don't never work", "never don't work"], "a": 0, "why": "Never уже заперечення, тому don't не потрібне. Never стоїть перед дієсловом: I never work." },
     { "type": "input", "q": "Kate can't swim, and I can't ___.", "uk": "Кейт не вміє плавати, і я теж не вмію.", "a": ["either", "swim either"], "why": "«Теж» у запереченні — either у кінці речення. Too — лише для ствердження: Kate can swim, and I can too." },
     { "type": "order", "uk": "Сьогодні ми нікуди не їдемо.", "words": ["anywhere", "aren't", "today", "going", "we"], "a": ["We aren't going anywhere today.", "Today we aren't going anywhere."], "why": "Одне заперечення: aren't + anywhere. Today можна поставити в кінець або на початок." },
-    { "type": "order", "uk": "Не думаю, що він прийде.", "words": ["coming", "don't", "he's", "think", "I"], "a": ["I don't think he's coming."], "why": "Англійці заперечують think: I don't think + ствердження he's coming. Так природніше, ніж I think he isn't coming." }
+    { "type": "order", "uk": "Не думаю, що він прийде.", "words": ["coming", "don't", "he's", "think", "I"], "a": ["I don't think he's coming."], "why": "Англійці заперечують think: I don't think + ствердження he's coming. Так природніше, ніж I think he isn't coming." },
+    { "type": "choice", "q": "Tom ___ at work today.", "uk": "Тома сьогодні немає на роботі.", "opts": ["isn't", "doesn't", "not"], "a": 0, "why": "Звичайного дієслова тут немає, є is (бути на роботі) → isn't. Doesn't — лише зі звичайним дієсловом, а not саме не стоїть." },
+    { "type": "input", "q": "Mick ___ (not / know) the way to the site.", "uk": "Мік не знає дороги до об'єкта.", "a": ["doesn't know"], "why": "He / she / it → doesn't, і дієслово без -s: doesn't know, а не doesn't knows." },
+    { "type": "choice", "q": "Sorry, I ___ hear you, the drill is on.", "uk": "Вибач, я тебе не чую, дриль працює.", "opts": ["can't", "don't can", "not can"], "a": 0, "why": "Can заперечуємо самим can't (повністю cannot, разом). Don't з can не ставимо, not перед ним — теж." },
+    { "type": "input", "q": "I have ___ money on me.", "uk": "У мене з собою немає грошей.", "a": ["no"], "why": "Перед іменником, коли іншого заперечення в реченні немає, — no: I have no money. Те саме: I don't have any money." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "У нас немає часу.", "opts": ["We don't have any time.", "We don't have no time.", "We not have time."], "a": 0, "why": "Після don't — any. Don't + no — два заперечення, а not перед have без do не ставлять." },
+    { "type": "choice", "q": "There's ___ in the fridge.", "uk": "У холодильнику нічого немає.", "opts": ["nothing", "anything", "not nothing"], "a": 0, "why": "There's ствердне, тому «нічого» — nothing: одне заперечення. Anything — лише з not: There isn't anything in the fridge." },
+    { "type": "input", "q": "He ___ (never / be) late.", "uk": "Він ніколи не запізнюється.", "a": ["is never"], "why": "Never — уже заперечення, doesn't не потрібне. Після is воно стоїть за ним: He is never late (he's never late)." },
+    { "type": "choice", "q": "— I don't like Mondays. — ___", "uk": "— Я не люблю понеділки. — Я теж.", "opts": ["Me neither.", "Me too.", "Me either."], "a": 0, "why": "Погоджуємося із запереченням — Me neither. Me too — лише після ствердження: I like it. — Me too." },
+    { "type": "input", "q": "We couldn't find a parking space ___.", "uk": "Ми ніде не могли знайти місце для паркування.", "a": ["anywhere"], "why": "Заперечення вже є (couldn't), тому далі anywhere. Nowhere дало б два заперечення." },
+    { "type": "input", "q": "I ___ (not / think) it's a good idea.", "uk": "Не думаю, що це гарна ідея.", "a": ["don't think"], "why": "Англійці заперечують саме think: I don't think + ствердження. Think — звичайне дієслово, тому don't." },
+    { "type": "order", "uk": "Ніхто мені нічого не сказав.", "words": ["nobody", "me", "told", "anything"], "a": ["Nobody told me anything."], "why": "В українській три заперечення, в англійській одне: nobody. Далі дієслово ствердне (told) і anything, а не nothing." },
+    { "type": "order", "uk": "Вона ніколи не їсть у фургоні.", "words": ["never", "she", "in", "eats", "the", "van"], "a": ["She never eats in the van."], "why": "Never стоїть перед звичайним дієсловом: she never eats. Doesn't не додаємо, бо never уже заперечення." }
   ]
 }

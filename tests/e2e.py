@@ -516,48 +516,115 @@ try:
         pri = page.evaluate('window.EW.meta.priority')
         assert len(pri) >= 5 and all(page.evaluate('([id]) => window.WORDS.find(w => w.id === id).cat', [x]) == 'weather' for x in pri[-5:]), pri[-5:]
         assert visible(page, '.act:has-text("Не першими")')
-        # Граматика: кожна тема відкривається, а відповіді з ключа дають рівно 12 з 12
+        # Граматика: кожна тема відкривається, а відповіді з ключа дають рівно 12 з 12 у кожній дюжині банку
         page.evaluate('window.EW.settings.autoplay = false')
         page.click('.tab[data-tab="grammar"]')
         page.wait_for_timeout(200)
         assert visible(page, '.gnext') and page.locator('.gitem').count() == page.evaluate('Object.keys(window.GRAMMAR.topics).length')
+        assert page.locator('.gsec-test').count() == page.evaluate('window.GRAMMAR.sections.length'), 'кнопка тесту в кожному розділі'
         gids = page.evaluate('window.GRAMMAR.sections.flatMap(s => s.topics)')
-        for gi, tid in enumerate(gids):
-            page.evaluate('([id]) => window.EW.openTopic(id)', [tid])
+
+        def run_test(tid, wrong_at=(), indices=None):
+            if indices is None:
+                page.click('.gtest .btn-primary')
+            else:
+                page.evaluate('([id, ix]) => window.EW.startGramTest(id, false, ix)', [tid, indices])
             page.wait_for_timeout(80)
-            assert page.inner_text('.gtitle') == page.evaluate('([id]) => window.GRAMMAR.topics[id].title', [tid])
-            assert page.locator('.gsheet > *').count() == page.evaluate('([id]) => window.GRAMMAR.topics[id].blocks.length', [tid]), tid
-            page.click('.gtest .btn-primary')
-            page.wait_for_timeout(80)
+            seen = []
             for i in range(12):
-                wrong = gi == 0 and i in (2, 7)
+                wrong = i in wrong_at
                 t = grammar_answer(page, wrong)
+                seen.append(t)
                 ok = page.locator('#foot.sheet.right').count() > 0
                 assert ok != wrong, '%s, завдання %d: ключ не приймається: %s' % (tid, i, json.dumps(t, ensure_ascii=False)[:300])
                 page.locator('#foot .btn-primary').click()
                 page.wait_for_timeout(60)
             assert page.evaluate('window.EW.mode') == 'gresult'
+            return seen
+
+        for gi, tid in enumerate(gids):
+            page.evaluate('([id]) => window.EW.openTopic(id)', [tid])
+            page.wait_for_timeout(80)
+            assert page.inner_text('.gtitle') == page.evaluate('([id]) => window.GRAMMAR.topics[id].title', [tid])
+            assert page.locator('.gsheet > *').count() == page.evaluate('([id]) => window.GRAMMAR.topics[id].blocks.length', [tid]), tid
+            assert page.locator('.gkey-list li').count() == page.evaluate('([id]) => (window.GRAMMAR.topics[id].key || []).length', [tid]), tid + ': «Головне»'
+            n = page.evaluate('([id]) => window.GRAMMAR.topics[id].tasks.length', [tid])
+            # Банк 24: обидві дюжини явно за індексами (кнопка бере з невиданих випадково, її перевіряємо нижче)
+            first = run_test(tid, (2, 7) if gi == 0 else (), list(range(12)) if n == 24 else None)
             assert page.evaluate('([id]) => window.EW.gres[id].best', [tid]) == (10 if gi == 0 else 12), tid
             if gi == 0:
                 assert page.locator('.gres-item').count() == 2 and 'добре' not in page.inner_text('.gres-grade')
+                assert 'повторити' in page.inner_text('.gres') or 'Перечитай' in page.inner_text('.gres')
             page.click('#exitBtn')
             page.wait_for_timeout(80)
             assert page.evaluate('window.EW.mode') is None and visible(page, '.gtitle'), 'з результату назад до теми'
+            if n == 24:
+                second = run_test(tid, (), list(range(12, 24)))
+                keys1 = {json.dumps(t, sort_keys=True) for t in first}
+                assert all(json.dumps(t, sort_keys=True) not in keys1 for t in second), tid + ': друга дюжина має бути з інших завдань'
+                page.click('#exitBtn')
+                page.wait_for_timeout(80)
+        # Помилки повертаються: у першій темі дві помилки → наступний тест починається з них
+        t0 = gids[0]
+        page.evaluate('([id]) => window.EW.openTopic(id)', [t0])
+        page.wait_for_timeout(80)
+        missed = page.evaluate('([id]) => Object.keys(window.EW.gres[id].seen).filter(k => window.EW.gres[id].seen[k] === 1)', [t0])
+        assert len(missed) == 2, missed
+        page.click('.gtest .btn-primary')
+        page.wait_for_timeout(80)
+        picked = page.evaluate('() => window.EW.gt.tasks.map(t => EWCore.taskKey(t))')
+        assert set(missed) <= set(picked), 'помилки мають повернутися в наступний тест'
+        # «Правило» під час тесту: аркуш із «Головним», закривається
+        page.click('#ruleBtn')
+        page.wait_for_timeout(100)
+        assert visible(page, '#ruleSheet .gkey'), 'аркуш правила'
+        page.click('#ruleSheet .icon-btn')
+        page.wait_for_timeout(100)
+        assert page.locator('#ruleSheet').count() == 0
+        page.click('#exitBtn')
+        page.wait_for_timeout(80)
         # Список: бали біля тем, «назад» з теми повертає до списку
         page.go_back()
         page.wait_for_timeout(200)
         assert visible(page, '#gramList') and not visible(page, '#gramTopic')
         assert page.locator('.gmark.g-top').count() == len(gids), 'бали біля тем'
+        # Тест розділу: 12 завдань з різних тем, результат по темах, бал у звіті
+        sid = page.evaluate('window.GRAMMAR.sections[0].id')
+        page.locator('.gsec-test').first.click()
+        page.wait_for_timeout(100)
+        tids = page.evaluate('() => window.EW.gt.tasks.map(t => t.tid)')
+        assert len(tids) == 12 and len(set(tids)) >= 4, tids
+        for i in range(12):
+            wrong = i == 0
+            grammar_answer(page, wrong)
+            page.locator('#foot .btn-primary').click()
+            page.wait_for_timeout(60)
+        assert page.evaluate('window.EW.mode') == 'gresult'
+        assert page.locator('.gsec-row').count() == len(set(tids)) and page.locator('.gsec-row.bad').count() == 1
+        assert page.evaluate('([s]) => window.EW.gres["sec:" + s].best', [sid]) == 11
+        page.locator('.gsec-row.bad').click()
+        page.wait_for_timeout(100)
+        assert visible(page, '.gtitle'), 'з результату розділу відкривається слабка тема'
+        # Повторення через дні: пройдена тема стає «час повторити» на головній і в списку
+        page.evaluate('([id]) => { const g = window.EW.gres[id]; g.due = EWCore.dayNum() - 1; localStorage.setItem("ew.grammar", JSON.stringify(window.EW.gres)); }', [gids[1]])
+        page.reload()
+        page.wait_for_timeout(500)
+        page.evaluate('window.EW.settings.autoplay = false')
+        assert gids[1] in page.evaluate('window.EW.gramDue()')
+        page.click('.tab[data-tab="grammar"]')
+        page.wait_for_timeout(200)
+        assert 'повторити' in page.inner_text('.gnext') and page.locator('.gdue').count() == 1
         # Перерваний тест не зберігає бал
+        before = page.evaluate('([id]) => [window.EW.gres[id].last, window.EW.gres[id].n]', [gids[0]])
         page.evaluate('([id]) => window.EW.startGramTest(id)', [gids[0]])
         page.wait_for_timeout(100)
         grammar_answer(page, True)
         page.click('#exitBtn')
         page.wait_for_timeout(100)
-        assert page.evaluate('([id]) => window.EW.gres[id].last', [gids[0]]) == 10
+        assert page.evaluate('([id]) => [window.EW.gres[id].last, window.EW.gres[id].n]', [gids[0]]) == before
         page.evaluate('window.EW.showTab("report")')
         page.wait_for_timeout(150)
-        assert 'Граматика' in page.inner_text('#docket'), 'бал теми у звіті за день'
+        assert 'Граматика' in page.inner_text('#docket') and 'розділ' in page.inner_text('#docket'), 'бали теми й розділу у звіті за день'
         # Записи для офлайну: за замовчуванням не всі 660 МБ
         page.evaluate('window.EW.showTab("settings")')
         page.wait_for_timeout(200)

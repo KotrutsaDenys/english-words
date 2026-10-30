@@ -5,6 +5,13 @@
   "uk": "Порядок слів у реченні",
   "summary": "хто → що робить → що: Tom paints the walls; It's cold",
   "minutes": 7,
+  "key": [
+    "Порядок жорсткий: **хто + що робить + кого / що**. Sarah called Tom ≠ Tom called Sarah. У питанні допоміжне дієслово перед підметом: Where **do you** live?",
+    "Підмет є завжди. Погода, час, відстань, оцінка — через **it**: It's cold. It's late. А «є, існує» — **there is / there are**.",
+    "Дієслово й додаток не розриваємо: I speak **English well**. Потім **де**, потім **коли**: I go to the gym on Mondays. Час можна й на початок.",
+    "Прикметник **перед** іменником: a **big white** van. Always, usually, never — **перед** дієсловом, але **після** am / is / are: He's **never** late.",
+    "**Give me the trowel** або **give the trowel to me**; з it / them — **give it to me**. Explain і say — лише з to: explain it **to me**."
+  ],
   "blocks": [
     { "t": "p", "text": "В українській порядок слів вільний: «Я люблю каву», «Каву я люблю», «Люблю я каву» — усе правильно, бо закінчення показують, хто що робить. В англійській закінчень майже немає, тому роль слова показує **його місце**. Порядок жорсткий: **підмет** (хто або що виконує дію) → **дієслово** (що робить) → **додаток** (кого або що)." },
     { "t": "rule", "title": "Основна схема", "lines": ["**хто** + **що робить** + **кого / що** + **де** + **коли**", "Tom + painted + the walls + in the hall + yesterday."] },
@@ -92,6 +99,18 @@
     { "type": "input", "q": "Can you pass ___ the hammer?", "uk": "Можеш передати мені молоток?", "a": ["me"], "why": "Кому + що: pass me the hammer. To не потрібне, бо «кому» стоїть одразу після дієслова." },
     { "type": "input", "q": "Give the trowel ___ me, please.", "uk": "Дай мені кельму, будь ласка.", "a": ["to"], "why": "Коли «кому» йде після речі, перед ним ставимо to: give the trowel to me." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Поясни мені це, будь ласка.", "opts": ["Explain me it, please.", "Explain it to me, please.", "Explain to me it, please."], "a": 1, "why": "Після explain «кому» завжди з to, а it ставимо перед to me: explain it to me. Explain me — помилка." },
-    { "type": "order", "uk": "Можеш мені це дати?", "words": ["me", "can", "it", "you", "to", "give"], "a": ["Can you give it to me?"], "why": "Питання: can стоїть перед підметом you. Коли річ — it, кажемо give it to me." }
+    { "type": "order", "uk": "Можеш мені це дати?", "words": ["me", "can", "it", "you", "to", "give"], "a": ["Can you give it to me?"], "why": "Питання: can стоїть перед підметом you. Коли річ — it, кажемо give it to me." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Тома вкусив собака.", "opts": ["Tom bit a dog.", "A dog bit Tom.", "Tom a dog bit."], "a": 1, "why": "Спочатку хто діє (a dog), потім дія (bit), потім кого (Tom). Tom bit a dog означало б, що це Том вкусив собаку: місце слова змінює зміст." },
+    { "type": "input", "q": "How far is the gym? — ___ about two kilometres.", "uk": "Далеко до спортзалу? — Десь два кілометри.", "a": ["It's", "It is"], "why": "Відстань — через підмет it: It's about two kilometres. В українській підмета тут немає, а в англійській без нього речення неповне." },
+    { "type": "choice", "q": "___ a Lidl near the station.", "uk": "Біля вокзалу є Лідл.", "opts": ["It's", "There's", "Is"], "a": 1, "why": "«Є, існує» — there is (there's). It's — для погоди, часу, відстані й оцінки, а Is без підмета взагалі не буває." },
+    { "type": "choice", "q": "I ___.", "uk": "Я щодня читаю новини.", "opts": ["read every day the news", "read the news every day", "every day read the news"], "a": 1, "why": "Read the news — дієслово й додаток, їх не розриваємо. Every day — у кінці (або на самому початку: Every day I read the news), але не між ними." },
+    { "type": "input", "q": "Kate ___ (always / is) tired after the gym.", "uk": "Після спортзалу Кейт завжди втомлена.", "a": ["is always"], "why": "Always ставимо після am, is, are: Kate is always tired. Перед звичайним дієсловом — навпаки, always першим: Kate always goes." },
+    { "type": "order", "uk": "У суботу Том їздив у Вексфорд.", "words": ["Tom", "went", "to", "Wexford", "on", "Saturday"], "a": ["Tom went to Wexford on Saturday.", "On Saturday Tom went to Wexford."], "why": "Хто + що зробив + куди + коли. Куди (to Wexford) іде одразу після went, а час — у кінці або на початку речення." },
+    { "type": "order", "uk": "Де працює твій брат?", "words": ["where", "does", "your", "brother", "work"], "a": ["Where does your brother work?"], "why": "Питальне слово + does + підмет (your brother) + дієслово без -s. Український порядок «працює брат» тут не підходить: дієслово йде після підмета." },
+    { "type": "choice", "q": "What did the doctor ___?", "uk": "Що тобі сказав лікар?", "opts": ["say you", "say to you", "tell to you"], "a": 1, "why": "Після say «кому» буває тільки з to: say to you. У tell навпаки, без to: tell you. Тому say you і tell to you — помилки." },
+    { "type": "input", "q": "___ easy to park in Dublin?", "uk": "У Дубліні легко припаркуватися?", "a": ["Is it"], "why": "Оцінка («легко», «важко») — з підметом it. У питанні is стає перед підметом: Is it easy…? Без it речення неповне." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Учора я купив у Лідлі дешеві черевики.", "opts": ["I bought cheap boots in Lidl yesterday.", "I bought yesterday cheap boots in Lidl.", "Yesterday I bought boots cheap in Lidl."], "a": 0, "why": "Хто + що зробив + що (cheap boots: прикметник перед іменником) + де + коли. Yesterday не ставимо між bought і додатком, а cheap — лише перед boots." },
+    { "type": "input", "q": "Your keys are on the table. I'll bring them ___.", "uk": "Твої ключі на столі. Я тобі їх принесу.", "a": ["to you"], "why": "Коли річ — it або them, вона стоїть одразу після дієслова, а «кому» — після неї з to: bring them to you." },
+    { "type": "order", "uk": "Учора Мік показав нам свій новий фургон.", "words": ["Mick", "showed", "us", "his", "new", "van", "yesterday"], "a": ["Mick showed us his new van yesterday.", "Yesterday Mick showed us his new van."], "why": "Show + кому + що: showed us his new van, без to. Прикметник new — перед van, а yesterday — у кінці або на початку." }
   ]
 }

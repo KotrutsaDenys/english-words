@@ -5,6 +5,13 @@
   "uk": "Present Simple чи Continuous",
   "summary": "I work чи I'm working; know, want, like зазвичай без -ing",
   "minutes": 6,
+  "key": [
+    "**Present Simple** — звички, факти, постійне: I **work** in Dublin. Маркери: usually, often, every day.",
+    "**am / is / are + -ing** — зараз або тимчасово: I**'m working** from home today. Маркери: now, Look!, at the moment, this week.",
+    "**What do you do?** — ким ти працюєш. **What are you doing?** — що ти зараз робиш.",
+    "Дієслова стану без -ing навіть «зараз»: **know, want, need, like, understand, mean, belong, cost**. I **need** help, а не I'm needing.",
+    "**think** і **have** бувають і станом, і дією: I **think** = вважаю, I**'m thinking** = обмірковую; I **have** a van, але I**'m having** lunch."
+  ],
   "blocks": [
     { "t": "p", "text": "Головне питання: це **взагалі** чи **зараз**? **Present Simple** (I work) — звички, факти, те, що постійно. **Present Continuous** (I'm working) — те, що відбувається зараз або тимчасово. В українській обидва — «я працюю», тому щоразу треба вирішувати." },
     { "t": "table", "head": ["Present Simple", "Present Continuous"], "rows": [
@@ -79,6 +86,18 @@
     { "type": "choice", "q": "I ___ about moving to Dublin.", "uk": "Я подумую про переїзд до Дубліна.", "opts": ["am thinking", "think", "thinks"], "a": 0, "why": "Think about у значенні «обмірковувати» — процес, тому з -ing: I'm thinking. I think = «я вважаю»." },
     { "type": "input", "q": "Can you call back later? We ___ (have) dinner.", "uk": "Можеш передзвонити пізніше? Ми вечеряємо.", "a": ["are having"], "why": "Have dinner — дія (вечеряти), а не «мати», тому з -ing можна. Вечеряємо саме зараз — are having." },
     { "type": "order", "uk": "Що ти думаєш про цей план?", "words": ["plan", "you", "of", "think", "what", "this", "do"], "a": ["What do you think of this plan?"], "why": "Тут think — думка (вважати), тобто стан, тому Present Simple: What do you think of…?" },
-    { "type": "order", "uk": "Про що ти думаєш?", "words": ["about", "you", "thinking", "are", "what"], "a": ["What are you thinking about?"], "why": "Тут think — процес, що йде зараз, тому are + thinking. Прийменник about — у кінці питання." }
+    { "type": "order", "uk": "Про що ти думаєш?", "words": ["about", "you", "thinking", "are", "what"], "a": ["What are you thinking about?"], "why": "Тут think — процес, що йде зараз, тому are + thinking. Прийменник about — у кінці питання." },
+    { "type": "choice", "q": "Look! It ___ again.", "uk": "Дивись! Знову падає сніг.", "opts": ["is snowing", "snows", "snowing"], "a": 0, "why": "Look! — бачимо це зараз, тому Present Continuous: is snowing. It snows — про те, як буває взагалі: It snows in winter. А без is форма з -ing не працює." },
+    { "type": "input", "q": "Dave ___ (not / eat) meat. He's a vegetarian.", "uk": "Дейв не їсть м'яса. Він вегетаріанець.", "a": ["doesn't eat"], "why": "Він вегетаріанець, тобто це постійне, а не лише зараз, тому Present Simple. Для he — doesn't, а eat без -s." },
+    { "type": "choice", "q": "Hi Liam! What ___? — I'm waiting for the bus.", "uk": "Привіт, Ліаме! Що ти робиш? — Чекаю на автобус.", "opts": ["are you doing", "do you do", "you are doing"], "a": 0, "why": "Питаємо, що він робить саме зараз, тому What are you doing? What do you do? — це «Ким ти працюєш?». А в питанні are стоїть перед you." },
+    { "type": "choice", "q": "This bag ___ to Olena.", "uk": "Ця сумка належить Олені.", "opts": ["belongs", "is belonging", "belong"], "a": 0, "why": "Belong (належати) — стан, а не дія, тому без -ing. This bag — це it, тому belongs." },
+    { "type": "input", "q": "I ___ (not / know) his phone number.", "uk": "Я не знаю його номера телефону.", "a": ["don't know"], "why": "Know — стан, тому без -ing, навіть коли йдеться про «зараз». Заперечення для I: don't + know." },
+    { "type": "choice", "q": "Sean usually works in Dublin, but this week he ___ in Wexford.", "uk": "Шон зазвичай працює в Дубліні, але цього тижня — у Вексфорді.", "opts": ["is working", "works", "work"], "a": 0, "why": "Usually works — його постійна робота. This week — тимчасово, лише цього тижня, тому Present Continuous: is working." },
+    { "type": "input", "q": "My car is at the garage, so I ___ (take) the bus this week.", "uk": "Моя машина в ремонті, тому цього тижня я їжджу автобусом.", "a": ["am taking"], "why": "Це тимчасово: лише цього тижня, поки машина в ремонті. Тому Present Continuous: am taking (I'm taking)." },
+    { "type": "choice", "q": "Try this soup. It ___ great.", "uk": "Скуштуй цей суп. Він дуже смачний.", "opts": ["tastes", "is tasting", "taste"], "a": 0, "why": "Taste тут — «мати смак», тобто стан, тому без -ing. Is tasting — це дія «куштувати»: He's tasting the soup. Soup — це it, тому tastes." },
+    { "type": "choice", "q": "Andrii can't come to the gym. He ___ a bad cold at the moment.", "uk": "Андрій не може прийти в спортзал. У нього зараз сильна застуда.", "opts": ["has", "is having", "have"], "a": 0, "why": "Have тут — «мати» (у нього застуда), тобто стан, тому без -ing навіть з at the moment. З -ing have буває лише про дію: having lunch, having a shower." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Що означає це слово?", "opts": ["What does this word mean?", "What is this word meaning?", "What means this word?"], "a": 0, "why": "Mean (означати) — стан, тому без -ing. Питання в Present Simple будуємо з does, а дієслово після нього — без -s: What does it mean?" },
+    { "type": "order", "uk": "Ким працює твій брат?", "words": ["do", "your", "what", "brother", "does"], "a": ["What does your brother do?"], "why": "Про роботу питаємо в Present Simple: What + does + he/she + do? Does тут допоміжне, а do в кінці — саме дієслово «робити»." },
+    { "type": "order", "uk": "Цього тижня Олена живе в сестри.", "words": ["staying", "is", "her", "this", "Olena", "with", "week", "sister"], "a": ["Olena is staying with her sister this week.", "This week Olena is staying with her sister."], "why": "Це тимчасово, лише цього тижня, тому Present Continuous: is + staying. Stay with — жити в когось недовго, гостювати." }
   ]
 }

@@ -5,6 +5,13 @@
   "uk": "Will: майбутнє й рішення",
   "summary": "рішення зараз, прогнози, обіцянки: I'll help, it will rain",
   "minutes": 7,
+  "key": [
+    "**will + початкова форма** для всіх: I'll help, she'll come — без to, без -s. Заперечення **won't** (will not), питання **Will** you…? — Yes, I will.",
+    "Рішення **просто зараз**, у розмові — I'll: The phone's ringing. — I'll get it. Теперішній час тут не підходить, а going to — для вирішеного раніше.",
+    "Прогноз-думка (I think, probably, I'm sure), обіцянка, пропозиція допомоги — will: I think it'll rain. I'll call you.",
+    "«Думаю, що не…» кажуть **I don't think** + will: I don't think he'll come. Пропозиція з I / we — **Shall I…? Shall we…?**",
+    "**Will can** не буває: «зможу» — **will be able to**. «Через 10 хвилин» — **in** ten minutes. Не плутай **won't** (не буду) і **want** (хочу)."
+  ],
   "blocks": [
     { "t": "p", "text": "**Will** — найпростіший спосіб сказати про майбутнє. Це **допоміжне дієслово**: службове слово, яке саме не перекладається, а будує час (як do чи does). Після will завжди йде **початкова форма дієслова** — та, що в словнику: work, go, be. Без to, без -s, без -ing. Will вживаємо насамперед для чотирьох речей: **рішення просто зараз**, **прогноз-думка**, **обіцянка**, **пропозиція чи прохання**. Для планів, вирішених заздалегідь, є going to (наступна тема)." },
     { "t": "ex", "items": [
@@ -90,6 +97,18 @@
     { "type": "input", "q": "We've run out of screws. — Have we? OK, I ___ (get) some.", "uk": "У нас закінчилися шурупи. — Справді? Тоді я куплю.", "a": ["will get"], "why": "Have we? (Справді?) — новина для тебе, і рішення купити з'являється просто зараз, у розмові. Тому will: I'll get some, а не going to." },
     { "type": "input", "q": "Sorry, I won't ___ come on Saturday.", "uk": "Вибач, я не зможу прийти в суботу.", "a": ["be able to"], "why": "Will can не буває, тому «зможу» в майбутньому — will be able to, «не зможу» — won't be able to." },
     { "type": "order", "uk": "Коли ти повернешся?", "words": ["back", "you", "will", "when", "be"], "a": ["When will you be back?"], "why": "Питання: When + will + you + be back. Will стоїть перед you, як do чи does у Present Simple." },
-    { "type": "order", "uk": "Не думаю, що сьогодні буде дощ.", "words": ["think", "rain", "I", "it'll", "today", "don't"], "a": ["I don't think it'll rain today."], "why": "Заперечуємо think (I don't think), а далі звичайне ствердження з will: it'll rain." }
+    { "type": "order", "uk": "Не думаю, що сьогодні буде дощ.", "words": ["think", "rain", "I", "it'll", "today", "don't"], "a": ["I don't think it'll rain today."], "why": "Заперечуємо think (I don't think), а далі звичайне ствердження з will: it'll rain." },
+    { "type": "choice", "q": "I'll be back ___ five minutes.", "uk": "Я повернуся через п'ять хвилин.", "opts": ["in", "after", "for"], "a": 0, "why": "«Через» про майбутнє — in: in five minutes. After так кажуть здебільшого в розповіді про минуле, а for — «протягом»." },
+    { "type": "choice", "q": "Will you be at the gym tonight? — Yes, I ___.", "uk": "Ти будеш у спортзалі сьогодні ввечері? — Так.", "opts": ["will", "am", "do"], "a": 0, "why": "Коротка відповідь повторює допоміжне дієслово з питання: Will you…? — Yes, I will. / No, I won't." },
+    { "type": "choice", "q": "I ___ to go to the gym tonight.", "uk": "Я хочу піти сьогодні в спортзал.", "opts": ["want", "won't", "will"], "a": 0, "why": "«Хочу» — want, і після нього дієслово з to. Won't (= will not) звучить схоже, але означає «не буду», а після will to не ставимо." },
+    { "type": "input", "q": "Somebody's at the door. — I ___ (go) and see.", "uk": "Хтось стукає у двері. — Я піду подивлюся.", "a": ["will go"], "why": "Рішення з'явилося просто зараз, у момент розмови, — will: I'll go and see. Теперішній час I go тут не підходить." },
+    { "type": "choice", "q": "The van ___ start this morning.", "uk": "Фургон сьогодні вранці ніяк не заводиться.", "opts": ["won't", "want", "will not to"], "a": 0, "why": "Won't ще означає «ніяк не хоче, не піддається»: the van won't start. Want — «хочу», а після will not дієслово без to." },
+    { "type": "input", "q": "I'm sure you ___ (find) a good job here.", "uk": "Я впевнений, що ти знайдеш тут хорошу роботу.", "a": ["will find", "are going to find"], "why": "Думка про майбутнє (I'm sure) — will + початкова форма: you'll find. Going to find теж правильно." },
+    { "type": "input", "q": "Don't worry, I ___ (not / be) long.", "uk": "Не хвилюйся, я ненадовго.", "a": ["won't be", "will not be"], "why": "Обіцянка — will, заперечення won't (= will not) + початкова форма be. I won't be long — «я швидко, ненадовго»." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Бос, мабуть, сьогодні не прийде.", "opts": ["The boss probably won't come today.", "The boss won't probably come today.", "The boss will probably not comes today."], "a": 0, "why": "Probably стоїть перед won't: probably won't come. Після will дієслово в початковій формі, тому comes — помилка." },
+    { "type": "choice", "q": "Shall ___ take a break? It's one o'clock.", "uk": "Може, зробимо перерву? Уже перша.", "opts": ["we", "I", "they"], "a": 0, "why": "Shall буває лише з I і we. «Зробимо» — це ми, тому Shall we…? Shall I…? означало б «Мені зробити…?»." },
+    { "type": "input", "q": "I don't think it ___ (take) long.", "uk": "Не думаю, що це займе багато часу.", "a": ["will take", "is going to take"], "why": "Заперечуємо think (I don't think), а далі звичайне ствердження з will: it'll take long. Is going to take теж правильно." },
+    { "type": "order", "uk": "Мені подзвонити босові?", "words": ["shall", "I", "call", "the", "boss"], "a": ["Shall I call the boss?"], "why": "Пропонуючи щось зробити, кажемо Shall I + початкова форма: Shall I call…? Shall стоїть перед I, як у будь-якому питанні." },
+    { "type": "order", "uk": "Коли ти зможеш почати?", "words": ["when", "will", "you", "be", "able", "to", "start"], "a": ["When will you be able to start?"], "why": "Will can не буває, тому «зможеш» — will be able to. Питання: When + will + you + be able to + start." }
   ]
 }

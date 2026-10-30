@@ -319,6 +319,7 @@ const ICON = {
   prev: SVG('<path d="M6 5.5v13"/><path d="M18.5 6.5 9.5 12l9 5.5z"/>'),
   next: SVG('<path d="M18 5.5v13"/><path d="M5.5 6.5l9 5.5-9 5.5z"/>'),
   pause: SVG('<path d="M8.5 5.5v13M15.5 5.5v13"/>', 3),
+  book: SVG('<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15.5H5.5A1.5 1.5 0 0 0 4 21z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15.5h5.5A1.5 1.5 0 0 1 20 21z"/>'),
   timer: SVG('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M10 2.5h4M18.5 6l1.5-1.5"/>')
 };
 const EX_ICON = {
@@ -401,6 +402,7 @@ function updateSessionBar() {
   $('undoBtn').hidden = mode !== 'session';
   $('undoBtn').disabled = !undoable;
   $('quietBtn').hidden = mode !== 'session';
+  $('ruleBtn').hidden = mode !== 'gtest';
   $('quietBtn').setAttribute('aria-pressed', String(!!settings.quiet));
   $('quietBtn').innerHTML = settings.quiet ? ICON.mute : ICON.speaker;
   $('quietBtn').setAttribute('aria-label', settings.quiet ? 'Тихий режим увімкнено' : 'Тихий режим');
@@ -571,6 +573,8 @@ function renderLearn() {
     main = dock(l.r ? 'Продовжити' : 'Почати', '≈ ' + mins(estimateMinutes(units)), () => startSession());
     if (units > 14) tiles.push(quick('bolt', 'Хоч 2 хвилини', cnt.reviews ? 'найслабші повторення' : 'коротке заняття', startShort));
     if (cnt.reviews && cnt.fresh) tiles.push(quick('repeat', 'Тільки повторення', 'без нових слів', () => startSession(null, true)));
+    const gdue = gramDue();
+    if (gdue.length) tiles.push(quick('pen', 'Граматика: повторити', GR.topics[gdue[0]].title + (gdue.length > 1 ? ' і ще ' + (gdue.length - 1) : ''), () => openTopic(gdue[0])));
     if (plan.newPaused && left) tiles.push(quick('plus', 'Взяти й нові слова', 'сьогодні, попри борг', () => { todayLog().nw = 1; persist(); startSession(); }));
     plan.reviews.slice(0, 3).concat(plan.newIds.slice(0, 2)).forEach(id => preloadWord(byId(id)));
   } else {
@@ -598,8 +602,9 @@ function renderLearn() {
     if (l.r && fresh.length && !evening) tiles.push(quick('moonplus', 'Закріпити нові', words(fresh.length) + ', краще ввечері', consolidate));
     if (misses.length && !(main && main.btn.textContent.startsWith('Потренувати'))) tiles.push(quick('target', 'Потренувати помилки', words(misses.length), practice));
     if (left) tiles.push(quick('plus', 'Ще 5 нових слів', 'понад денний ліміт', () => { todayLog().x = (todayLog().x || 0) + 5; persist(); startSession(); }));
-    const gn = gramNext();
-    if (gn && GR.topics[gn]) tiles.push(quick('pen', 'Граматика', 'наступна тема: ' + GR.topics[gn].title, () => openTopic(gn)));
+    const gd = gramDue(), gn = gramNext();
+    if (gd.length) tiles.push(quick('pen', 'Граматика: повторити', GR.topics[gd[0]].title + (gd.length > 1 ? ' і ще ' + (gd.length - 1) : ''), () => openTopic(gd[0])));
+    else if (gn && GR.topics[gn]) tiles.push(quick('pen', 'Граматика', 'наступна тема: ' + GR.topics[gn].title, () => openTopic(gn)));
   }
   const ls = canListen() ? listenIds().length : 0;
   if (ls >= 3) tiles.push(quick('listen', 'Слухати', 'у дорогу: ' + words(ls) + ' голосом, без рук', () => startListen()));
@@ -2446,6 +2451,7 @@ let gramOpen = null;                      // відкрита тема
 let gramPushed = false;                   // запис в історії для жесту «назад»
 let gramListY = 0;                        // де був список, щоб повернутися туди ж
 let gt = null;                            // тест, що йде
+let gramObs = null;                       // стежить, чи видно блок тесту (кнопка «До завдань»)
 const GRADE = b => (b >= 10 ? 'відмінно' : b >= 7 ? 'добре' : b >= 4 ? 'задовільно' : 'варто повторити');
 const gradeCls = b => (b >= 10 ? 'g-top' : b >= 7 ? 'g-ok' : 'g-low');
 function gramOrder() { return GR.sections.reduce((a, s) => a.concat(s.topics), []); }
@@ -2486,6 +2492,13 @@ function gramNext() {
   const ids = gramOrder();
   return ids.find(id => !gres[id] || gres[id].best == null || gres[id].best < 7) || null;
 }
+/* Теми, які час повторити: пройдені (7+), а день повторення настав. Найдавніше прострочені першими */
+function gramDue() {
+  const t = today();
+  return gramOrder().filter(id => { const r = gres[id]; return r && r.best >= 7 && r.due != null && r.due <= t; })
+    .sort((a, b) => gres[a].due - gres[b].due);
+}
+function isDue(id) { const r = gres[id]; return !!(r && r.best >= 7 && r.due != null && r.due <= today()); }
 function renderGrammar() {
   if (gramOpen && GR.topics[gramOpen]) renderGramTopic(gramOpen);
   else { gramOpen = null; renderGramList(); }
@@ -2500,20 +2513,27 @@ function renderGramList() {
   if (!ids.length) { box.appendChild(el('p', 'tip', 'Теми з\'являться після оновлення.')); return; }
   const done = ids.filter(id => gres[id] && gres[id].best != null);
   const avg = done.length ? Math.round(done.reduce((a, id) => a + gres[id].best, 0) / done.length) : 0;
-  box.appendChild(el('p', 'gintro', ids.length + ' ' + C.plural(ids.length, 'тема', 'теми', 'тем') + ': правило простими словами, приклади, типові помилки й 12 завдань. Кожна правильна відповідь — 1 бал з 12.'));
+  box.appendChild(el('p', 'gintro', ids.length + ' ' + C.plural(ids.length, 'тема', 'теми', 'тем') + ': «Головне» на 20 секунд, правило простими словами, приклади, типові помилки й тест на 12 завдань. Кожна правильна відповідь — 1 бал з 12.'));
   if (done.length) box.appendChild(el('p', 'gintro strong', 'Пройдено ' + done.length + ' з ' + ids.length + ', середній бал ' + avg + '.'));
-  const next = gramNext();
-  if (next) {
-    const t = GR.topics[next];
+  const card = (id, small) => {
+    const t = GR.topics[id];
     const b = el('button', 'gnext');
     b.type = 'button';
     const txt = el('span', 'gnext-text');
-    txt.append(el('small', null, done.length ? 'Далі за планом' : 'Почни звідси'), el('b', null, t.title), el('span', null, t.uk));
+    const en = el('b', null, t.title); en.lang = 'en';
+    txt.append(el('small', null, small), en, el('span', null, t.uk));
     const chev = el('span', 'chev'); chev.innerHTML = ICON.chevron;
     b.append(txt, chev);
-    b.addEventListener('click', () => openTopic(next));
-    box.appendChild(b);
+    b.addEventListener('click', () => openTopic(id));
+    return b;
+  };
+  // Спершу повторення пройденого, яке вже настав час освіжити, потім наступна нова тема
+  const due = gramDue();
+  if (due.length) {
+    box.appendChild(card(due[0], due.length > 1 ? 'Час повторити, ще ' + (due.length - 1) + ' ' + C.plural(due.length - 1, 'тема', 'теми', 'тем') + ' чекає' : 'Час повторити: нові завдання'));
   }
+  const next = gramNext();
+  if (next) box.appendChild(card(next, done.length ? 'Далі за планом' : 'Почни звідси'));
   GR.sections.forEach(sec => {
     const n = sec.topics.filter(id => gres[id] && gres[id].best != null).length;
     const h = el('h3', 'section-title gsec', sec.title);
@@ -2528,14 +2548,25 @@ function renderGramList() {
       const txt = el('span', 'item-text');
       const en = el('span', 'item-en', t.title); en.lang = 'en';
       txt.append(en, el('span', 'item-uk', t.uk));
+      if (isDue(id)) txt.appendChild(el('span', 'gdue', 'час повторити'));
       head.append(gramBadge(id), txt, el('span', 'glevel', t.level));
       head.addEventListener('click', () => openTopic(id));
       li.appendChild(head);
       ul.appendChild(li);
     });
     box.appendChild(ul);
+    // Тест розділу: завдання з усіх його тем, показує, яка тема просіла
+    const sr = gres['sec:' + sec.id];
+    const st = el('button', 'gsec-test');
+    st.type = 'button';
+    const sic = el('span', 'qa-ic'); sic.innerHTML = ICON.target;
+    const stx = el('span', 'qa-text');
+    stx.append(el('b', null, 'Тест розділу'), el('small', null, sr && sr.best != null ? 'найкраще ' + sr.best + ' з 12, ' + GRADE(sr.best) : '12 завдань з усіх тем розділу'));
+    st.append(sic, stx);
+    st.addEventListener('click', () => startSectionTest(sec.id));
+    box.appendChild(st);
   });
-  box.appendChild(el('p', 'tip gfoot', 'Бали: 10–12 відмінно, 7–9 добре, 4–6 задовільно. Тему можна пройти скільки завгодно разів, зберігається найкращий результат.'));
+  box.appendChild(el('p', 'tip gfoot', 'Бали: 10–12 відмінно, 7–9 добре, 4–6 задовільно. Щоразу тест бере нові завдання з банку теми, а ті, де помилився, повертає. Пройдені теми нагадаю повторити через кілька днів, далі все рідше.'));
 }
 function openTopic(id) {
   if (!GR.topics[id]) return;
@@ -2627,6 +2658,8 @@ function renderGramTopic(id) {
   box.appendChild(top);
   const title = el('h2', 'gtitle', t.title); title.lang = 'en';
   box.append(title, el('p', 'gsub', t.uk));
+  const key = gramKey(t);
+  if (key) box.appendChild(key);
   const sheet = el('div', 'gsheet');
   t.blocks.forEach(b => sheet.appendChild(gramBlock(b)));
   box.appendChild(sheet);
@@ -2634,14 +2667,30 @@ function renderGramTopic(id) {
   const r = gres[id];
   const test = el('section', 'gtest');
   test.appendChild(el('h3', 'gh', 'Перевір себе'));
+  const bank = t.tasks.length;
+  const seenN = r && r.seen ? t.tasks.filter(x => r.seen[C.taskKey(x)]).length : 0;
   test.appendChild(el('p', 'gp', '12 завдань: вибрати, вписати, скласти речення. Кожна правильна відповідь — 1 бал. Після кожної відповіді покажу, чому саме так.'));
   if (r && r.best != null) {
     const res = el('p', 'gbest');
     res.append(el('b', 'gscore ' + gradeCls(r.best), r.best + ' з 12'), document.createTextNode(' — твій найкращий результат, ' + GRADE(r.best) + (r.date != null ? ', ' + C.fmtDate(r.date) : '') + '.'));
     test.appendChild(res);
+    if (bank > 12) test.appendChild(el('p', 'gbest muted2', 'Бачив ' + seenN + ' з ' + bank + ' завдань теми. Наступний тест візьме ' + (seenN < bank ? 'нові' : 'ті, де помилявся, і решту вперемішку') + '.'));
+    if (isDue(id)) test.appendChild(el('p', 'gbest due', 'Час повторити: з останнього тесту минуло кілька днів, саме тепер повторення найкорисніше.'));
+    else if (r.due != null) test.appendChild(el('p', 'gbest muted2', 'Наступне повторення ' + C.fmtDate(r.due) + '.'));
   }
-  test.appendChild(button(r && r.best != null ? 'Пройти ще раз' : 'Почати завдання', 'btn-primary btn-big', () => startGramTest(id, !!(r && r.best != null))));
+  test.appendChild(button(isDue(id) ? 'Повторити тему' : r && r.best != null ? 'Пройти ще раз' : 'Почати завдання', 'btn-primary btn-big', () => startGramTest(id)));
   box.appendChild(test);
+  // Довга тема: кнопка «До завдань», поки сам тест ще не на екрані
+  const jump = el('button', 'gjump');
+  jump.type = 'button';
+  jump.textContent = 'До завдань';
+  jump.addEventListener('click', () => test.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  box.appendChild(jump);
+  if (gramObs) gramObs.disconnect();
+  if ('IntersectionObserver' in window) {
+    gramObs = new IntersectionObserver(es => { es.forEach(e => jump.classList.toggle('show', !e.isIntersecting && e.boundingClientRect.top > 0)); });
+    gramObs.observe(test);
+  }
   // Сусідні теми
   const ids = gramOrder(), k = ids.indexOf(id);
   const nav = el('div', 'gnav');
@@ -2658,19 +2707,77 @@ function renderGramTopic(id) {
 }
 
 /* Тест теми: на екрані заняття (весь екран, нижня панель з висновком) */
-function startGramTest(id, shuffle) {
-  const t = GR.topics[id];
-  if (!t) return;
+function beginGt(g) {
   stopAudio(); cancelAuto(); closePeek();
   if (listen) endListen();
   session = null; current = null; triage = null;
-  let tasks = t.tasks.map((x, k) => Object.assign({ k }, x));
-  if (shuffle) tasks = C.shuffle(tasks);
-  gt = { id, tasks, i: 0, ok: 0, wrong: [], t0: performance.now(), answered: false };
+  gt = Object.assign({ i: 0, ok: 0, wrong: [], res: [], t0: performance.now(), answered: false }, g);
   mode = 'gtest';
   showTab('learn');
   gtShow();
 }
+/* indices — лише для тестів: які саме завдання банку взяти */
+function startGramTest(id, _again, indices) {
+  const t = GR.topics[id];
+  if (!t) return;
+  const sel = indices ? indices.map(i => t.tasks[i]).filter(Boolean) : C.pickTasks(t.tasks, (gres[id] || {}).seen, 12, Math.random);
+  beginGt({ kind: 'topic', id, title: t.title, tasks: sel.map(x => Object.assign({ tid: id }, x)) });
+}
+function startSectionTest(sid) {
+  const sec = GR.sections.find(s => s.id === sid);
+  if (!sec) return;
+  const topics = sec.topics.map(id => ({ id, tasks: GR.topics[id].tasks, best: gres[id] && gres[id].best, seen: gres[id] && gres[id].seen }));
+  const picked = C.pickSectionTasks(topics, 12, Math.random);
+  beginGt({ kind: 'section', id: 'sec:' + sid, sid, title: sec.title, tasks: picked.map(p => Object.assign({ tid: p.tid }, p.task)) });
+}
+/* «Головне»: шпаргалка теми */
+function gramKey(t) {
+  if (!t.key || !t.key.length) return null;
+  const k = el('section', 'gkey');
+  k.appendChild(el('h3', 'gkey-t', 'Головне'));
+  const ul = el('ul', 'gkey-list');
+  t.key.forEach(x => { const li = el('li'); li.appendChild(richUk(x)); ul.appendChild(li); });
+  k.appendChild(ul);
+  return k;
+}
+/* Під час тесту: правило теми поточного завдання, не виходячи з тесту */
+function openRuleSheet() {
+  if (!gt) return;
+  const task = gt.tasks[gt.i];
+  const t = GR.topics[task.tid];
+  if (!t) return;
+  closeRuleSheet();
+  const wrap = el('div', 'gsheet-wrap');
+  wrap.id = 'ruleSheet';
+  const panel = el('div', 'gsheet-panel');
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', 'Правило: ' + t.title);
+  const head = el('div', 'gsheet-head');
+  const ttl = el('b', null, t.title); ttl.lang = 'en';
+  const close = el('button', 'icon-btn');
+  close.type = 'button';
+  close.innerHTML = ICON.close;
+  close.setAttribute('aria-label', 'Закрити');
+  close.addEventListener('click', closeRuleSheet);
+  head.append(ttl, close);
+  panel.appendChild(head);
+  const body = el('div', 'gsheet-body');
+  const key = gramKey(t);
+  if (key) body.appendChild(key);
+  // Формули, таблиці й примітки — те, що допомагає саме зараз; приклади й історія правила лишаються на сторінці теми
+  t.blocks.filter(b => b.t === 'rule' || b.t === 'table' || b.t === 'tip').forEach(b => body.appendChild(gramBlock(b)));
+  panel.appendChild(body);
+  wrap.appendChild(panel);
+  wrap.addEventListener('click', e => { if (e.target === wrap) closeRuleSheet(); });
+  document.body.appendChild(wrap);
+  document.body.classList.add('sheet-open');
+}
+function closeRuleSheet() {
+  const s = $('ruleSheet');
+  if (s) s.remove();
+  document.body.classList.remove('sheet-open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('ruleSheet')) { e.stopPropagation(); closeRuleSheet(); } }, true);
 function gtFull(task) {
   if (task.type === 'order') return [].concat(task.a)[0];
   const ans = task.type === 'choice' ? task.opts[task.a] : task.a[0];
@@ -2678,8 +2785,9 @@ function gtFull(task) {
 }
 function gtShow() {
   closePeek();
+  closeRuleSheet();
   const task = gt.tasks[gt.i];
-  const t = GR.topics[gt.id];
+  const t = GR.topics[task.tid];
   gt.answered = false;
   ui = { t0: performance.now(), answered: false };
   $('stage').hidden = false;
@@ -2712,6 +2820,12 @@ function gtShow() {
     gt.answered = true;
     ui.answered = true;
     if (ok) gt.ok++; else gt.wrong.push({ task, given });
+    gt.res.push({ tid: task.tid, ok });
+    // Що бачив і де помилився: наступний тест поверне помилки й візьме нове
+    const g = gres[task.tid] = Object.assign({}, gres[task.tid]);
+    g.seen = Object.assign({}, g.seen);
+    g.seen[C.taskKey(task)] = ok ? 2 : 1;
+    saveGres();
     const l = todayLog(); l.gt = (l.gt || 0) + 1;
     l.ms = (l.ms || 0) + Math.min(60000, Math.max(0, performance.now() - ui.t0));
     save(KEYS.log, log);
@@ -2856,11 +2970,12 @@ function gtTape() {
   $('tapeLeft').textContent = (gt.mode === 'result' ? 'бал ' : 'правильно ') + gt.ok;
 }
 function gtResult() {
-  const t = GR.topics[gt.id];
   const n = gt.tasks.length;
   const bal = Math.round(gt.ok / n * 12);
   const prev = gres[gt.id] || {};
-  gres[gt.id] = Object.assign({}, prev, { best: Math.max(bal, prev.best == null ? -1 : prev.best), last: bal, date: today(), n: (prev.n || 0) + 1 });
+  const upd = { best: Math.max(bal, prev.best == null ? -1 : prev.best), last: bal, date: today(), n: (prev.n || 0) + 1 };
+  if (gt.kind === 'topic') Object.assign(upd, C.grammarSchedule(prev, bal, today()));
+  gres[gt.id] = Object.assign({}, prev, upd);
   saveGres();
   const l = todayLog();
   l.gtr = (l.gtr || []).filter(x => x.id !== gt.id).concat([{ id: gt.id, b: bal }]);
@@ -2868,54 +2983,90 @@ function gtResult() {
   gt.mode = 'result';
   mode = 'gresult';
   stopAudio();
+  closeRuleSheet();
   const card = $('card');
   card.innerHTML = '';
   card.onclick = null;
   const head = el('div', 'ex-head');
   const label = el('span', 'ex-label');
   const ic = el('span', 'ex-ic done'); ic.innerHTML = ICON.check;
-  label.append(ic, document.createTextNode('Тест завершено'));
+  label.append(ic, document.createTextNode(gt.kind === 'section' ? 'Тест розділу завершено' : 'Тест завершено'));
   head.appendChild(label);
   card.appendChild(head);
   const body = el('div', 'prompt summary gres');
   const score = el('p', 'gres-score ' + gradeCls(bal));
   score.append(el('b', null, String(bal)), el('span', null, 'з 12'));
   body.append(score, el('p', 'gres-grade ' + gradeCls(bal), GRADE(bal)));
-  let line = t.title + ': правильно ' + gt.ok + ' з ' + n + '.';
+  let line = gt.title + ': правильно ' + gt.ok + ' з ' + n + '.';
   if (prev.best != null) line += bal > prev.best ? ' Новий найкращий результат, раніше було ' + prev.best + '.' : ' Найкращий результат: ' + Math.max(bal, prev.best) + '.';
   body.appendChild(el('p', 'prompt-sub', line));
-  if (bal < 7) body.appendChild(el('p', 'prompt-sub', 'Перечитай правило й типові помилки, потім спробуй ще раз: завдання будуть у іншому порядку.'));
+  if (gt.kind === 'topic') {
+    const r = gres[gt.id];
+    body.appendChild(el('p', 'prompt-sub', bal >= 7
+      ? 'Нагадаю повторити ' + C.fmtDate(r.due) + (r.iv > 4 ? ': знаєш добре, тому рідше.' : '.')
+      : 'Перечитай «Головне» й типові помилки, потім спробуй ще раз: тест поверне ці завдання й додасть нові.'));
+  }
   card.appendChild(body);
+  // Тест розділу: по темах, щоб було видно, яку підтягнути
+  let weak = [];
+  if (gt.kind === 'section') {
+    const per = {};
+    gt.res.forEach(x => { const p = per[x.tid] = per[x.tid] || { ok: 0, n: 0 }; p.n++; if (x.ok) p.ok++; });
+    const sec = GR.sections.find(s2 => s2.id === gt.sid);
+    const d = el('div', 'details gsec-res');
+    d.appendChild(el('p', 'tip', 'По темах'));
+    sec.topics.filter(tid => per[tid]).forEach(tid => {
+      const p = per[tid];
+      const row = el('button', 'gsec-row' + (p.ok < p.n ? ' bad' : ''));
+      row.type = 'button';
+      const en = el('span', 'gsec-t', GR.topics[tid].title); en.lang = 'en';
+      row.append(en, el('b', null, p.ok + ' з ' + p.n));
+      row.addEventListener('click', () => { gt = null; mode = null; openTopic(tid); });
+      d.appendChild(row);
+      if (p.ok < p.n) weak.push(tid);
+    });
+    if (weak.length) d.appendChild(el('p', 'tip', 'Варто підтягнути: ' + weak.map(tid => GR.topics[tid].title).join(', ') + '. Торкнись теми, щоб відкрити правило.'));
+    card.appendChild(d);
+  }
   if (gt.wrong.length) {
     const d = el('div', 'details gres-list');
     d.appendChild(el('p', 'tip', 'Помилки: правильна відповідь виділена'));
     gt.wrong.forEach(({ task, given }) => {
       const it = el('div', 'gres-item');
-      const s = el('p', 'gres-sent'); s.lang = 'en';
+      if (gt.kind === 'section') { const tn = el('p', 'gres-topic', GR.topics[task.tid].title); tn.lang = 'en'; it.appendChild(tn); }
+      const s2 = el('p', 'gres-sent'); s2.lang = 'en';
       const full = gtFull(task);
       if (task.type !== 'order' && task.q && task.q.includes('___')) {
         const ans = task.type === 'choice' ? task.opts[task.a] : task.a[0];
         const parts = task.q.replace(/\s*\([^)]*\)/, '').split('___');
-        s.append(document.createTextNode(parts[0]), el('mark', 'gm', ans), document.createTextNode(parts[1] || ''));
-      } else s.appendChild(el('mark', 'gm', full));
-      it.appendChild(s);
-      if (given) { const y = el('p', 'yours'); const g = el('s', null, given); y.append(document.createTextNode('Твоя відповідь: '), g); it.appendChild(y); }
+        s2.append(document.createTextNode(parts[0]), el('mark', 'gm', ans), document.createTextNode(parts[1] || ''));
+      } else s2.appendChild(el('mark', 'gm', full));
+      it.appendChild(s2);
+      if (given) { const y = el('p', 'yours'); const g2 = el('s', null, given); y.append(document.createTextNode('Твоя відповідь: '), g2); it.appendChild(y); }
       it.appendChild(el('p', 'gres-why', task.why));
       d.appendChild(it);
     });
     card.appendChild(d);
   }
-  const ids = gramOrder();
-  const nextId = ids[ids.indexOf(gt.id) + 1];
-  const id = gt.id;
-  const toTopic = () => { gt = null; mode = null; gramOpen = id; showTab('grammar'); window.scrollTo(0, 0); };
   const btns = [];
-  if (bal >= 10 && nextId) {
-    btns.push(button('Ще раз', 'btn-quiet', () => startGramTest(id, true)));
-    btns.push(button('Наступна тема', 'btn-primary', () => { gt = null; mode = null; gramOpen = nextId; showTab('grammar'); window.scrollTo(0, 0); }));
+  if (gt.kind === 'section') {
+    const sid = gt.sid;
+    btns.push(button('До списку', 'btn-quiet', () => { gt = null; mode = null; gramOpen = null; showTab('grammar'); }));
+    btns.push(weak.length
+      ? button('Відкрити ' + GR.topics[weak[0]].title, 'btn-primary', () => { gt = null; mode = null; openTopic(weak[0]); })
+      : button('Ще раз', 'btn-primary', () => startSectionTest(sid)));
   } else {
-    btns.push(button('До правила', 'btn-quiet', toTopic));
-    btns.push(button('Пройти ще раз', 'btn-primary', () => startGramTest(id, true)));
+    const ids = gramOrder();
+    const id = gt.id;
+    const nextId = ids[ids.indexOf(id) + 1];
+    const toTopic = () => { gt = null; mode = null; gramOpen = id; showTab('grammar'); window.scrollTo(0, 0); };
+    if (bal >= 10 && nextId) {
+      btns.push(button('Ще раз', 'btn-quiet', () => startGramTest(id)));
+      btns.push(button('Наступна тема', 'btn-primary', () => { gt = null; mode = null; gramOpen = nextId; showTab('grammar'); window.scrollTo(0, 0); }));
+    } else {
+      btns.push(button('До правила', 'btn-quiet', toTopic));
+      btns.push(button('Пройти ще раз', 'btn-primary', () => startGramTest(id)));
+    }
   }
   setFoot(btns, 2);
   keys = { enter: () => btns[1].click() };
@@ -2925,12 +3076,13 @@ function gtResult() {
 /* Вийти з тесту (хрестик, жест «назад») або з результату */
 function endGramTest() {
   const wasTest = mode === 'gtest' && gt && gt.i + (gt.answered ? 1 : 0) > 0;
-  const id = gt ? gt.id : gramOpen;
+  const topicId = gt ? (gt.kind === 'topic' ? gt.id : null) : gramOpen;
   gt = null;
   mode = null;
   stopAudio();
+  closeRuleSheet();
   document.body.classList.remove('typing');
-  if (id) gramOpen = id;
+  gramOpen = topicId && GR.topics[topicId] ? topicId : null;
   showTab('grammar');
   if (wasTest) toast('Тест перервано, бал не збережено');
 }
@@ -3240,7 +3392,17 @@ function reportRows() {
     ['Знаю', words(tt.known)]
   ].concat(l.sp ? [['Спринт', l.sp + ' за хвилину']] : [])
     .concat(l.ls ? [['Слухав', words(l.ls) + ', ' + mins(Math.max(1, Math.round((l.lms || 0) / 60000)))]] : [])
-    .concat((l.gtr || []).filter(x => GR.topics[x.id]).length ? [['Граматика', (l.gtr || []).filter(x => GR.topics[x.id]).map(x => GR.topics[x.id].title + ' ' + x.b + ' з 12').join(', ')]] : []);
+    .concat(gramReport(l));
+}
+/* Теми й розділи, пройдені сьогодні */
+function gramReport(l) {
+  const name = id => {
+    if (GR.topics[id]) return GR.topics[id].title;
+    const sec = id.indexOf('sec:') === 0 && GR.sections.find(s => s.id === id.slice(4));
+    return sec ? 'розділ «' + sec.title + '»' : null;
+  };
+  const items = (l.gtr || []).filter(x => name(x.id)).map(x => name(x.id) + ' ' + x.b + ' з 12');
+  return items.length ? [['Граматика', items.join(', ')]] : [];
 }
 function reportText() {
   return ['Англійська, ' + C.fmtDate(today())].concat(reportRows().map(([a, b]) => a + ': ' + b)).join('\n');
@@ -3629,6 +3791,8 @@ $('exitBtn').addEventListener('click', () => {
   triage = null; mode = null; renderLearn();
 });
 $('undoBtn').addEventListener('click', doUndo);
+$('ruleBtn').innerHTML = ICON.book;
+$('ruleBtn').addEventListener('click', openRuleSheet);
 $('quietBtn').addEventListener('click', toggleQuiet);
 
 /* ---------- Клавіатура iPhone і висота нижньої панелі ----------
@@ -3697,7 +3861,7 @@ if (/[?&]test=1/.test(location.search)) {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
     get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, listenIds, startListen,
-    get gt() { return gt; }, get gres() { return gres; }, openTopic, startGramTest,
+    get gt() { return gt; }, get gres() { return gres; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet,
     debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());

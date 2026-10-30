@@ -14,6 +14,9 @@ SRC = os.path.join(ROOT, 'grammar')
 OUT = os.path.join(ROOT, 'public', 'grammar.js')
 
 LEVELS = {'A1', 'A2', 'B1', 'B2'}
+# Банк завдань теми: тест щоразу бере з нього 12. Перехідний період: 12 або 24, потім лише 24
+TASK_COUNTS = (24,) if os.environ.get('GRAMMAR_FINAL') else (12, 24)
+STRICT_KEY = bool(os.environ.get('GRAMMAR_FINAL'))
 BLOCKS = {'p', 'h', 'rule', 'table', 'ex', 'tip', 'mistake', 'list'}
 CYR = re.compile(r'[А-Яа-яІіЇїЄєҐґ]')
 RU_LETTERS = re.compile(r'[ЫыЭэЪъЁё]')
@@ -158,9 +161,21 @@ def check_topic(path, expected_id=None):
     if n_mistake < 1:
         err('потрібен хоча б один блок mistake з типовою помилкою')
 
+    # «Головне»: 3–5 найважливіших правил теми, шпаргалка зверху сторінки й у тесті
+    key = t.get('key')
+    if key is None and STRICT_KEY:
+        err('key: потрібно 3–5 головних правил (шпаргалка)')
+    elif key is not None:
+        if not isinstance(key, list) or not 3 <= len(key) <= 5:
+            err('key: від 3 до 5 пунктів')
+        else:
+            for k, it in enumerate(key):
+                uk_text('key[%d]' % k, it)
+                if isinstance(it, str) and len(strip_bold(it)) > 170:
+                    err('key[%d]: довше 170 символів — це шпаргалка, коротше' % k)
     tasks = t.get('tasks')
-    if not isinstance(tasks, list) or len(tasks) != 12:
-        err('tasks: рівно 12 завдань (1 завдання = 1 бал з 12)'); tasks = tasks if isinstance(tasks, list) else []
+    if not isinstance(tasks, list) or len(tasks) not in TASK_COUNTS:
+        err('tasks: має бути %s завдань (банк, з якого тест бере 12)' % ' або '.join(map(str, TASK_COUNTS))); tasks = tasks if isinstance(tasks, list) else []
     kinds = {'choice': 0, 'input': 0, 'order': 0}
     seen_q = set()
     for i, x in enumerate(tasks):
@@ -226,8 +241,9 @@ def check_topic(path, expected_id=None):
                 en_text(w + '.a', s)
                 if sorted(en_tokens(s)) != ws:
                     err('%s: відповідь «%s» складається не з тих самих слів, що words' % (w, s))
-    if tasks and (kinds['choice'] < 4 or kinds['input'] < 3 or not 1 <= kinds['order'] <= 3):
-        err('суміш завдань: choice ≥ 4, input ≥ 3, order 1–3 (зараз %s)' % kinds)
+    scale = len(tasks) // 12 or 1
+    if tasks and (kinds['choice'] < 4 * scale or kinds['input'] < 3 * scale or not scale <= kinds['order'] <= 3 * scale):
+        err('суміш завдань: choice ≥ %d, input ≥ %d, order %d–%d (зараз %s)' % (4 * scale, 3 * scale, scale, 3 * scale, kinds))
     return t, errs
 
 

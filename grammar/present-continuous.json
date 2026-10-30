@@ -5,6 +5,13 @@
   "uk": "Теперішній тривалий час",
   "summary": "що відбувається зараз: I'm working, she's sleeping",
   "minutes": 6,
+  "key": [
+    "**am / is / are + дієслово-ing**: I'm working, she's sleeping, they're waiting. Без am / is / are речення неправильне.",
+    "Правопис -ing: make → mak**ing** (німе e зникає), sit → si**tt**ing, shop → sho**pp**ing, lie → l**y**ing.",
+    "Заперечення й питання без do: She **isn't** working. **Are** you coming? — Yes, I **am**. What **is** she doing?",
+    "Для того, що відбувається **зараз** або **тимчасово** (now, at the moment, today, this week), і для змін: prices are going up.",
+    "Дієслова стану без -ing навіть зараз: I **know**, I **want**, I **need**, I **like** (а не I'm wanting)."
+  ],
   "blocks": [
     { "t": "p", "text": "**Present Continuous** — час для того, що відбувається **зараз**, у цю хвилину, або **тимчасово**, у цей період. В українській «я працюю» може означати і «взагалі», і «саме зараз». В англійській це два різні часи: I **work** (взагалі) і I'**m working** (зараз)." },
     { "t": "ex", "items": [
@@ -77,6 +84,18 @@
     { "type": "choice", "q": "Look, it ___ dark. Let's go home.", "uk": "Дивись, уже темніє. Ходімо додому.", "opts": ["is getting", "gets", "getting"], "a": 0, "why": "Зміна, що відбувається зараз (стає темно), — Present Continuous: is getting. It gets dark — про те, що буває взагалі." },
     { "type": "order", "uk": "Що ти зараз робиш?", "words": ["doing", "now", "what", "you", "are"], "a": ["What are you doing now?"], "why": "Питальне слово, потім are перед підметом you, далі форма з -ing. Now — у кінці." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Цього тижня Андрій живе в нас.", "opts": ["Andrii is staying with us this week.", "Andrii stays with us this week.", "Andrii staying with us this week."], "a": 0, "why": "Тимчасово (this week) — Present Continuous: is + форма з -ing. Stays — для постійного, а без is речення неповне." },
-    { "type": "order", "uk": "Вона зараз не слухає.", "words": ["listening", "the", "isn't", "she", "at", "moment"], "a": ["She isn't listening at the moment.", "At the moment she isn't listening."], "why": "Підмет she, далі isn't і форма з -ing. At the moment можна поставити в кінець або на початок." }
+    { "type": "order", "uk": "Вона зараз не слухає.", "words": ["listening", "the", "isn't", "she", "at", "moment"], "a": ["She isn't listening at the moment.", "At the moment she isn't listening."], "why": "Підмет she, далі isn't і форма з -ing. At the moment можна поставити в кінець або на початок." },
+    { "type": "choice", "q": "Hurry up! The bus ___.", "uk": "Швидше! Автобус уже відходить.", "opts": ["is leaving", "leaves", "leave"], "a": 0, "why": "Відходить саме зараз, у цю хвилину — Present Continuous: is + форма з -ing. Leaves — про розклад узагалі (the bus leaves at 6:40)." },
+    { "type": "choice", "q": "___ Sarah working today? — No, she's off.", "uk": "Сара сьогодні працює? — Ні, у неї вихідний.", "opts": ["Is", "Does", "Are"], "a": 0, "why": "Питання з формою з -ing починаємо з am / is / are. Sarah — це she, тому Is. Does з working не поєднується." },
+    { "type": "choice", "q": "I ___ for Dave. He's late again.", "uk": "Я чекаю на Дейва. Він знову запізнюється.", "opts": ["am waiting", "waiting", "wait"], "a": 0, "why": "Чекаю зараз — am + форма з -ing. Без am речення неповне, а wait означало б «чекаю взагалі, зазвичай»." },
+    { "type": "input", "q": "Kate ___ (write) an email to the landlord right now.", "uk": "Кейт саме зараз пише листа орендодавцю.", "a": ["is writing"], "why": "Right now — зараз: is + форма з -ing. Німе e в кінці відкидаємо: write → writing." },
+    { "type": "input", "q": "Slow down! You ___ (drive) too fast.", "uk": "Повільніше! Ти їдеш надто швидко.", "a": ["are driving"], "why": "Дія відбувається зараз: are + форма з -ing. Німе e зникає: drive → driving." },
+    { "type": "input", "q": "Tom and Mick ___ (not / work) today. It's a bank holiday.", "uk": "Том і Мік сьогодні не працюють: святковий день.", "a": ["aren't working", "are not working"], "why": "Today — мова про цей день, не про роботу взагалі. Tom and Mick — це they, тому заперечення aren't + форма з -ing." },
+    { "type": "input", "q": "Olena isn't here. She ___ (shop) in Gorey.", "uk": "Олени тут немає. Вона закуповується в Горі.", "a": ["is shopping"], "why": "Вона там саме зараз: is + форма з -ing. Shop — коротке слово на голосну + приголосну, тому p подвоюємо: shopping." },
+    { "type": "choice", "q": "What ___ at the moment?", "uk": "Що вона зараз робить?", "opts": ["is she doing", "does she do", "she is doing"], "a": 0, "why": "At the moment — зараз, тому is + форма з -ing, а в питанні is стоїть перед she. What does she do? означає «ким вона працює»." },
+    { "type": "choice", "q": "I ___ a coffee. Can you get me one?", "uk": "Я хочу кави. Візьмеш мені?", "opts": ["want", "am wanting", "wanting"], "a": 0, "why": "Want — дієслово стану, з -ing його не вживають, навіть коли мова про зараз: I want. Так само know, need, like." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ціни на пальне зараз ростуть.", "opts": ["Fuel prices are going up now.", "Fuel prices going up now.", "Fuel prices is going up now."], "a": 0, "why": "Зміна, що відбувається зараз, — Present Continuous. Prices — це they, тому are + форма з -ing. Без are речення неповне, а is — для he, she, it." },
+    { "type": "order", "uk": "Чому ти так голосно говориш?", "words": ["so", "talking", "why", "you", "loudly", "are"], "a": ["Why are you talking so loudly?"], "why": "Питальне слово why, потім are перед підметом you, далі форма з -ing, а so loudly — у кінці." },
+    { "type": "order", "uk": "Мій телефон сьогодні не працює.", "words": ["today", "phone", "isn't", "my", "working"], "a": ["My phone isn't working today.", "Today my phone isn't working."], "why": "Тимчасово, саме сьогодні, — Present Continuous. My phone — це it, тому isn't + форма з -ing. Today можна поставити в кінець або на початок." }
   ]
 }

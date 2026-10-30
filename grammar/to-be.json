@@ -5,6 +5,13 @@
   "uk": "Дієслово to be",
   "summary": "бути: I'm tired, she's at work, we were late",
   "minutes": 7,
+  "key": [
+    "Там, де українською «є» пропускаємо, англійською ставимо **am / is / are**: I'm tired, she's at work. Якщо іншого дієслова в реченні немає, без них не можна.",
+    "**I am**, **he / she / it is**, **you / we / they are**. Минуле: **was** (I, he, she, it, одна річ), **were** (you, we, they, кілька). З you — завжди are / were.",
+    "Заперечення — просто **not**: I'm not, isn't, aren't, wasn't, weren't. Питання — am / is / are **перед** підметом: Are you cold? Ніякого do.",
+    "Коротка відповідь: Yes, I **am** (не I'm). No, he **isn't**. Вік, стан, відчуття — через to be: I'm 24. I'm cold. I'm late.",
+    "Перед звичайним дієсловом am / is / are не ставимо: I work here. I agree. Перед професією в однині — **a / an**: I'm **a** plasterer."
+  ],
   "blocks": [
     { "t": "p", "text": "**To be** означає «бути». В українській у теперішньому часі ми це слово пропускаємо: «Я втомлений», «Він на роботі». В англійській без нього не можна: **I am** tired, **he is** at work. Якщо в реченні немає іншого дієслова, потрібне **am**, **is** або **are**." },
     { "t": "ex", "items": [
@@ -92,6 +99,18 @@
     { "type": "choice", "q": "___ you at work yesterday?", "uk": "Ти був учора на роботі?", "opts": ["Was", "Were", "Did"], "a": 1, "why": "Минуле to be для you — were (навіть про одну людину). Did не підходить, бо іншого дієслова в реченні немає." },
     { "type": "input", "q": "They ___ (not) ready yet.", "uk": "Вони ще не готові.", "a": ["aren't", "are not"], "why": "Заперечення для they: are not, скорочено aren't." },
     { "type": "input", "q": "Tom ___ (not) at work yesterday. He was ill.", "uk": "Учора Тома не було на роботі. Він хворів.", "a": ["wasn't", "was not"], "why": "Минулий час, Tom — він, тому was not, скорочено wasn't." },
-    { "type": "order", "uk": "Чому ти вчора запізнився?", "words": ["late", "you", "why", "yesterday", "were"], "a": ["Why were you late yesterday?"], "why": "«Запізнитися» — be late. Питання: why + were + you, а час у кінці." }
+    { "type": "order", "uk": "Чому ти вчора запізнився?", "words": ["late", "you", "why", "yesterday", "were"], "a": ["Why were you late yesterday?"], "why": "«Запізнитися» — be late. Питання: why + were + you, а час у кінці." },
+    { "type": "choice", "q": "You ___ late again, Mick!", "uk": "Ти знову запізнився, Міку!", "opts": ["is", "are", "am"], "a": 1, "why": "З you завжди are, навіть коли це одна людина: You are late. Is — лише для he, she, it." },
+    { "type": "choice", "q": "Where ___ my keys? — On the table.", "uk": "Де мої ключі? — На столі.", "opts": ["is", "are", "am"], "a": 1, "why": "Keys — кілька речей (they), тому are: Where are my keys? Where's (where is) кажуть лише про одну річ: Where's the van?" },
+    { "type": "input", "q": "It ___ half past six. Time to go home.", "uk": "Пів на сьому. Час іти додому.", "a": ["is"], "why": "Час кажемо через it + is: It is (it's) half past six. В українській тут немає ні підмета, ні дієслова, а в англійській потрібні обидва." },
+    { "type": "choice", "q": "How old ___ your sister?", "uk": "Скільки років твоїй сестрі?", "opts": ["is", "has", "are"], "a": 0, "why": "Вік — через to be: How old is your sister? She's 20. Your sister — одна людина (she), тому is, а has про вік не кажуть." },
+    { "type": "input", "q": "I ___ (not) from Dublin. I'm from Wexford.", "uk": "Я не з Дубліна. Я з Вексфорда.", "a": ["am not"], "why": "Заперечення для I — am not, скорочено I'm not. Форми amn't у стандартній англійській немає." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Олена — медсестра.", "opts": ["Olena is nurse.", "Olena is a nurse.", "Olena is an nurse."], "a": 1, "why": "Перед професією в однині потрібне a або an. Nurse починається з приголосного звука, тому a nurse (а an — перед голосним: an electrician)." },
+    { "type": "choice", "q": "They ___ in Dublin.", "uk": "Вони живуть у Дубліні.", "opts": ["are live", "live", "is live"], "a": 1, "why": "Live — звичайне дієслово «жити», перед ним am, is, are не ставимо: They live in Dublin. Are потрібне лише тоді, коли іншого дієслова немає: They are in Dublin." },
+    { "type": "order", "uk": "Том сьогодні на роботі?", "words": ["Tom", "is", "at", "work", "today"], "a": ["Is Tom at work today?"], "why": "У питанні is стає перед підметом Tom: Is Tom at work today? Інших дієслів немає, тому do не потрібне." },
+    { "type": "input", "q": "Was the shop open? — Yes, it ___.", "uk": "Магазин був відчинений? — Так.", "a": ["was"], "why": "Питання з was — і коротка відповідь з was: Yes, it was. У короткій відповіді «так» повторюємо те саме дієслово, скорочення не вживаємо." },
+    { "type": "input", "q": "Mick and Tom ___ (not) at the site on Friday.", "uk": "У п'ятницю Міка й Тома не було на об'єкті.", "a": ["weren't", "were not"], "why": "Mick and Tom — двоє (they), минулий час, тому were not, скорочено weren't. Was — лише для одного." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Учора було дуже холодно.", "opts": ["Was very cold yesterday.", "It was very cold yesterday.", "It were very cold yesterday."], "a": 1, "why": "Про погоду потрібен підмет it, а для it у минулому — was: It was very cold. Без підмета речення неповне, а were — для you, we, they." },
+    { "type": "order", "uk": "Ми не були вдома в суботу.", "words": ["we", "at", "home", "on", "Saturday", "weren't"], "a": ["We weren't at home on Saturday.", "On Saturday we weren't at home."], "why": "Підмет we + weren't + де (at home) + коли (on Saturday). Час можна й на початок речення, але не між weren't і at home." }
   ]
 }

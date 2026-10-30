@@ -5,6 +5,13 @@
   "uk": "Should: поради",
   "summary": "поради: You should rest. You'd better hurry. I should have…",
   "minutes": 6,
+  "key": [
+    "**should** + дієслово без to, однакове для всіх осіб: You should rest, he should go. Заперечення **shouldn't**, питання **Should I…?** — без do.",
+    "«Думаю, не варто» — **I don't think you should**…: заперечення переходить до think.",
+    "**ought to** — те саме, що should, але з **to**: You ought to call him.",
+    "**'d better** (had better) — порада з попередженням про зараз, без to: You'd better hurry. Заперечення **'d better not** + дієслово.",
+    "«Треба було, а не зробив» — **should have + V3**: I should have called. «Не треба було» — shouldn't have + V3."
+  ],
   "blocks": [
     { "t": "p", "text": "**Should** — головне слово для **порад**: «варто», «слід», «треба б». Ним кажуть, що, на твою думку, правильно або розумно зробити. Це м'якше, ніж must чи have to: не наказ і не правило, а порада." },
     { "t": "ex", "items": [
@@ -82,6 +89,18 @@
     { "type": "input", "q": "I ___ (should / call) you yesterday. Sorry.", "uk": "Треба було тобі вчора подзвонити. Вибач.", "a": ["should have called", "should've called"], "why": "«Треба було» (а ти не зробив) — should have + V3: should have called." },
     { "type": "order", "uk": "Куди мені поставити ці коробки?", "words": ["should", "where", "I", "put", "these", "boxes"], "a": ["Where should I put these boxes?"], "why": "Питальне слово + should + підмет + дієслово: Where should I put…?" },
     { "type": "order", "uk": "Нам уже слід іти.", "words": ["leave", "ought", "we", "to", "now"], "a": ["We ought to leave now."], "why": "Ought завжди з to: ought to + дієслово." },
-    { "type": "order", "uk": "Думаю, тобі варто поговорити з босом.", "words": ["think", "you", "I", "talk", "should", "to", "the", "boss"], "a": ["I think you should talk to the boss.", "You should talk to the boss, I think."], "why": "I think + you should + дієслово. Should стоїть між підметом (you) і дієсловом (talk)." }
+    { "type": "order", "uk": "Думаю, тобі варто поговорити з босом.", "words": ["think", "you", "I", "talk", "should", "to", "the", "boss"], "a": ["I think you should talk to the boss.", "You should talk to the boss, I think."], "why": "I think + you should + дієслово. Should стоїть між підметом (you) і дієсловом (talk)." },
+    { "type": "choice", "q": "Should I take an umbrella? — Yes, you ___. It's going to rain.", "uk": "Взяти парасольку? — Так, варто. Скоро піде дощ.", "opts": ["should", "do", "are"], "a": 0, "why": "Коротка відповідь повторює модальне дієслово з питання: Should I…? — Yes, you should. Do і are тут ні до чого." },
+    { "type": "choice", "q": "What time ___ the kids go to bed?", "uk": "О котрій дітям варто лягати спати?", "opts": ["should", "do should", "should to"], "a": 0, "why": "Питальне слово + should + підмет + дієслово без to: What time should the kids go…? Do з should не поєднується." },
+    { "type": "choice", "q": "The parcel ___ arrive by Friday.", "uk": "Посилка має надійти до п'ятниці.", "opts": ["should", "should to", "ought"], "a": 0, "why": "Тут should — не порада, а очікування: «має надійти». Після should дієслово без to; ought без to не буває (ought to arrive)." },
+    { "type": "choice", "q": "It's icy. You'd ___ drive slowly.", "uk": "Ожеледь. Краще їдь повільно.", "opts": ["better", "rather", "better to"], "a": 0, "why": "Порада з попередженням — 'd better + дієслово без to. I'd rather означає «я б краще (волів би)», це про бажання, а не порада." },
+    { "type": "choice", "q": "You ___ so much coffee. Now you can't sleep.", "uk": "Не треба було пити стільки кави. Тепер не можеш заснути.", "opts": ["shouldn't have drunk", "shouldn't drink", "shouldn't drank"], "a": 0, "why": "«Не треба було» (а ти зробив) — shouldn't have + V3: drunk. Shouldn't drink — порада на майбутнє, а після have потрібна V3, не V2 (drank)." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Не думаю, що їй варто їхати самій.", "opts": ["I don't think she should go on her own.", "I think she doesn't should go on her own.", "I don't think she should to go on her own."], "a": 0, "why": "«Не» переходить до think: I don't think she should… Doesn't з should не поєднується, а після should дієслово без to." },
+    { "type": "input", "q": "___ (should / we) book a table for Saturday?", "uk": "Нам забронювати столик на суботу?", "a": ["Should we"], "why": "Питання should утворює сам: should стає перед підметом — Should we book…? Do не потрібне." },
+    { "type": "input", "q": "Olena ___ (ought / check) the bus times before she leaves.", "uk": "Олені варто перевірити розклад автобусів, перш ніж виходити.", "a": ["ought to check"], "why": "Ought завжди з to: ought to + дієслово. Це єдине з трьох слів теми, після якого стоїть to." },
+    { "type": "input", "q": "The gym closes in ten minutes. We ___ (had better / finish) now.", "uk": "Спортзал закривається за десять хвилин. Нам краще закінчувати.", "a": ["had better finish"], "why": "Had better ('d better) + дієслово без to: had better finish. Had тут не про минуле, а про зараз." },
+    { "type": "input", "q": "I feel sick. I ___ (not / should / eat) that kebab.", "uk": "Мені погано. Не треба було їсти той кебаб.", "a": ["shouldn't have eaten"], "why": "«Не треба було» (а я зробив) — shouldn't have + V3: eaten. Без have речення означало б пораду на майбутнє." },
+    { "type": "order", "uk": "Краще йому не запізнюватися на співбесіду.", "words": ["he'd", "better", "not", "be", "late", "for", "the", "interview"], "a": ["He'd better not be late for the interview."], "why": "Заперечення — 'd better not + дієслово: He'd better not be late. Not стоїть одразу після better, без don't і без to." },
+    { "type": "order", "uk": "Треба було сказати мені раніше.", "words": ["you", "should", "have", "told", "me", "earlier"], "a": ["You should have told me earlier."], "why": "«Треба було» — should have + V3: should have told. Порядок: підмет + should have + V3 + решта." }
   ]
 }

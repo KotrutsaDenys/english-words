@@ -5,6 +5,13 @@
   "uk": "Дієслова make, do, get, have",
   "summary": "make чи do, значення get, have lunch і have something done",
   "minutes": 8,
+  "key": [
+    "**Make** — створюємо щось: make a mistake, make tea, make money, make sure. **Do** — дія, справи: do the shopping, do homework, do your best, do nothing.",
+    "**Get** = отримати, купити, стати, дістатися: get a message, get wet, get married, get **to** work, але get **home**. I **get** it — я розумію.",
+    "«Мати» в розмові — **have got** (I've got a van, Have you got…?), лише в теперішньому; їжа, душ, перерва — лише **have**: have lunch, have a shower, have a break.",
+    "Зробили за тебе — **have / get + річ + V3**: I had my car **serviced**, get your hair **cut**.",
+    "**make / let + хтось + дієслово без to**: He made me work late. Let me help."
+  ],
   "blocks": [
     { "t": "p", "text": "Українською ми «робимо» і помилку, і покупки, і чай. Англійською це різні дієслова: **make** і **do**. А **get** і **have** мають стільки значень, що їх найпростіше вчити готовими словосполученнями. Тут зібрано ті, які кажуть щодня, зокрема на роботі." },
     { "t": "h", "text": "Make — створюємо щось нове" },
@@ -122,6 +129,18 @@
     { "type": "choice", "q": "We had the windows ___ yesterday.", "uk": "Нам учора замінили вікна.", "opts": ["replace", "replaced", "replacing"], "a": 1, "why": "Роботу зробили за нас: have + річ + V3. Третя форма від replace — replaced." },
     { "type": "input", "q": "The boss made us ___ (work) on Saturday.", "uk": "Бос змусив нас працювати в суботу.", "a": ["work"], "why": "Після make + хтось дієслово без to: made us work, а не made us to work." },
     { "type": "choice", "q": "Kate's dad didn't ___ her drive his car.", "uk": "Тато Кейт не дозволяв їй водити його машину.", "opts": ["let", "make", "allow"], "a": 0, "why": "«Дозволяти» — let + хтось + дієслово без to. Allow теж означає «дозволяти», але після нього потрібне to: allow her to drive." },
-    { "type": "order", "uk": "Учора мені підстригли волосся.", "words": ["hair", "had", "yesterday", "my", "I", "cut"], "a": ["I had my hair cut yesterday.", "Yesterday I had my hair cut."], "why": "Стриг перукар, тому have + річ + V3: had my hair cut. Yesterday — у кінці або на початку речення." }
+    { "type": "order", "uk": "Учора мені підстригли волосся.", "words": ["hair", "had", "yesterday", "my", "I", "cut"], "a": ["I had my hair cut yesterday.", "Yesterday I had my hair cut."], "why": "Стриг перукар, тому have + річ + V3: had my hair cut. Yesterday — у кінці або на початку речення." },
+    {"type": "choice", "q": "Please don't ___ so much noise, the kids are sleeping.", "uk": "Будь ласка, не шуми так, діти сплять.", "opts": ["make", "do", "get"], "a": 0, "why": "Шуміти — make noise. Do noise не кажуть, хоч українською шум теж «робимо»."},
+    {"type": "choice", "q": "I ___ the ironing on Sunday evenings.", "uk": "Я прасую по неділях увечері.", "opts": ["do", "make", "have"], "a": 0, "why": "Домашні справи на -ing — do: do the ironing, do the cleaning, do the washing up."},
+    {"type": "choice", "q": "We have to ___ a decision about the car by Friday.", "uk": "Нам треба до п'ятниці ухвалити рішення щодо машини.", "opts": ["make", "do", "have"], "a": 0, "why": "Ухвалити рішення — make a decision: з'являється щось нове. Do a decision не кажуть."},
+    {"type": "input", "q": "I'm starving. Let's ___ a break and get something to eat.", "uk": "Я страшенно голодний. Давай зробимо перерву й щось перекусимо.", "a": ["have", "take"], "why": "Перерва — have a break або take a break. Make a break чи do a break не кажуть."},
+    {"type": "choice", "q": "Have you ___ a spare charger?", "uk": "У тебе є запасний зарядний пристрій?", "opts": ["got", "get", "have"], "a": 0, "why": "«У тебе є…?» в розмові — Have you got…? Got тут частина виразу have got («мати»), а не минулий час."},
+    {"type": "input", "q": "Did you ___ my text about the keys?", "uk": "Ти отримав моє повідомлення про ключі?", "a": ["get", "receive"], "why": "Отримати в розмові — get: get a text, get a message, get paid. Receive звучить офіційніше."},
+    {"type": "input", "q": "What time do you usually get ___ work?", "uk": "О котрій ти зазвичай приїжджаєш на роботу?", "a": ["to", "into"], "why": "Дістатися кудись — get to + місце: get to work, get to Dublin. Без to лише get home і get there."},
+    {"type": "choice", "q": "Olena ___ a van last year, but she sold it.", "uk": "Торік в Олени був фургон, але вона його продала.", "opts": ["had", "has got", "had got"], "a": 0, "why": "Have got — лише теперішній час. Про минуле кажемо had: Olena had a van. Had got так не вживають."},
+    {"type": "input", "q": "Make ___ you switch off the compressor before you leave.", "uk": "Переконайся, що вимкнув компресор, перш ніж піти.", "a": ["sure", "certain"], "why": "Переконатися, перевірити — make sure (that)… Make — бо це сталий вираз, його треба запам'ятати цілим."},
+    {"type": "choice", "q": "I need to ___ my brakes checked before the trip.", "uk": "Мені треба перевірити гальма перед поїздкою (у майстерні).", "opts": ["get", "do", "make"], "a": 0, "why": "Перевіряє механік, а не ти, тому get (або have) + річ + V3: get my brakes checked. Do і make у цій конструкції не вживають."},
+    {"type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Мій бос дозволив мені піти раніше.", "opts": ["My boss let me leave early.", "My boss let me to leave early.", "My boss let me leaving early."], "a": 0, "why": "Після let + хтось дієслово в початковій формі без to: let me leave. Так само з make: made me leave."},
+    {"type": "order", "uk": "Наступного тижня нам полагодять дах.", "words": ["roof", "fixed", "we're", "the", "next", "getting", "week"], "a": ["We're getting the roof fixed next week.", "Next week we're getting the roof fixed."], "why": "Лагодить майстер, тому get (розмовне замість have) + річ + V3: getting the roof fixed. Next week — на початку або в кінці."}
   ]
 }

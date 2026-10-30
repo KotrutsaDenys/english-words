@@ -435,6 +435,47 @@ test('Граматика: точна перевірка вписаної від�
   assert.ok(!C.grammarMatch('', ['x']));
 });
 
+test('Граматика: тест бере з банку спершу помилки, потім нове, з сумішшю типів', () => {
+  const bank = [];
+  for (let i = 0; i < 24; i++) bank.push({ type: i % 12 < 6 ? 'choice' : i % 12 < 10 ? 'input' : 'order', q: 'Q' + i + ' ___', opts: ['a', 'b'], a: 0 });
+  const first = C.pickTasks(bank, {}, 12, seeded(1));
+  assert.strictEqual(first.length, 12);
+  const cnt = ts => ts.reduce((m, t) => (m[t.type] = (m[t.type] || 0) + 1, m), {});
+  assert.ok(cnt(first).choice >= 4 && cnt(first).input >= 3 && cnt(first).order >= 1, JSON.stringify(cnt(first)));
+  // Друга спроба: усе бачене правильно, тож беремо ті 12, що ще не бачив
+  const seen = {}; first.forEach(t => { seen[C.taskKey(t)] = 2; });
+  const second = C.pickTasks(bank, seen, 12, seeded(2));
+  assert.ok(second.every(t => !(C.taskKey(t) in seen)), 'друга спроба повторює бачене');
+  // Помилки повертаються першими
+  const miss = first[3]; seen[C.taskKey(miss)] = 1;
+  assert.ok(C.pickTasks(bank, seen, 12, seeded(3)).includes(miss));
+  // Порядок від простішого: за місцем у дюжині
+  const pos = second.map(t => bank.indexOf(t) % 12);
+  assert.deepStrictEqual(pos.slice().sort((a, b) => a - b).join(), pos.join());
+  assert.notStrictEqual(C.taskKey(bank[0]), C.taskKey(bank[1]));
+});
+
+test('Граматика: повторення теми — інтервал росте, слабкий бал повертає скоро', () => {
+  let st = C.grammarSchedule(null, 11, 100);
+  assert.deepStrictEqual(st, { iv: 4, due: 104 });
+  st = C.grammarSchedule({ iv: 4, best: 11 }, 12, 104);
+  assert.strictEqual(st.iv, 10);
+  assert.strictEqual(C.grammarSchedule({ iv: 10, best: 11 }, 8, 114).iv, 2);
+  assert.strictEqual(C.grammarSchedule({ iv: 10, best: 11 }, 5, 114).due, 115);
+  assert.strictEqual(C.grammarSchedule({ iv: 100, best: 12 }, 12, 0).iv, 120);
+});
+
+test('Граматика: тест розділу бере з кожної теми, слабкі першими', () => {
+  const mk = (id, best) => ({ id, best, seen: {}, tasks: Array.from({ length: 24 }, (_, i) => ({ type: 'choice', q: id + i + ' ___', opts: ['a', 'b'], a: 0 })) });
+  const topics = [mk('a', 12), mk('b', 5), mk('c', null), mk('d', 10), mk('e', 9)];
+  const out = C.pickSectionTasks(topics, 12, seeded(4));
+  assert.strictEqual(out.length, 12);
+  const per = out.reduce((m, x) => (m[x.tid] = (m[x.tid] || 0) + 1, m), {});
+  assert.ok(Object.keys(per).length === 5 && Object.values(per).every(v => v >= 2));
+  assert.ok(per.c >= per.a && per.b >= per.a);
+  assert.deepStrictEqual(out.map(x => x.tid).join(), out.map(x => x.tid).sort((x, y) => 'abcde'.indexOf(x) - 'abcde'.indexOf(y)).join());
+});
+
 test('Граматика: public/grammar.js зібрано з grammar/*.json (python3 tools/build_grammar.py)', () => {
   const gctx = { window: {} };
   vm.createContext(gctx);
@@ -447,7 +488,7 @@ test('Граматика: public/grammar.js зібрано з grammar/*.json (py
     const src = JSON.parse(fs.readFileSync(path.join(__dirname, '../grammar', id + '.json'), 'utf8'));
     const t = Object.assign({}, G.topics[id]); delete t.section;
     assert.strictEqual(JSON.stringify(t), JSON.stringify(src), id + ': запусти python3 tools/build_grammar.py');
-    assert.strictEqual(G.topics[id].tasks.length, 12, id);
+    assert.ok(G.topics[id].tasks.length === 24 || G.topics[id].tasks.length === 12, id + ': банк з 24 (або поки 12) завдань');
   }
   // Кожна тема з файла є в зібраному посібнику
   const files = fs.readdirSync(path.join(__dirname, '../grammar')).filter(f => f.endsWith('.json') && !f.startsWith('_')).map(f => f.slice(0, -5));

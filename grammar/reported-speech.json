@@ -5,6 +5,13 @@
   "uk": "Непряма мова: he said that…",
   "summary": "переказати чужі слова: he said he was tired",
   "minutes": 9,
+  "key": [
+    "Після **said / told** час робить крок у минуле: am → **was**, work → **worked**, will → **would**, can → **could**, have done → **had done**.",
+    "**say** + що, **tell** + кому + що: He **said** he was late. He **told me** he was late. «Said me» і «told that» без «кому» — помилки.",
+    "Переказане питання — звичайний порядок слів, без do / did: asked where I **lived**. Питання «так / ні» — через **if / whether**: asked if I had a car.",
+    "Наказ і прохання: told / asked + кого + **to** + дієслово, заборона — **not to**: She asked me to help. He told us not to park there.",
+    "Після **says** (каже зараз) час не зсувається. Якщо переказуєш пізніше, міняються й слова часу: tomorrow → **the next day**, yesterday → the day before."
+  ],
   "blocks": [
     { "t": "p", "text": "**Непряма мова** (reported speech) — це коли ти **переказуєш** чужі слова: «Бос сказав, що завтра роботи не буде». Українською ми просто міняємо займенники. Англійською ще й **час дієслова зазвичай зсувається на крок у минуле**, бо ти розповідаєш про те, що сказали раніше." },
     { "t": "ex", "items": [
@@ -96,6 +103,18 @@
     { "type": "input", "q": "My boss asked ___ I was free on Saturday.", "uk": "Мій бос спитав, чи я вільний у суботу.", "a": ["if", "whether", "me if", "me whether"], "why": "Питання «так/ні» переказуємо через if або whether — «чи»." },
     { "type": "input", "q": "Kate asked me ___ (close) the window.", "uk": "Кейт попросила мене зачинити вікно.", "a": ["to close", "if I could close", "whether I could close", "if I would close", "whether I would close"], "why": "Прохання переказуємо так: asked + кого + to + дієслово. Можна й через питання: asked me if I could close." },
     { "type": "order", "uk": "Вона спитала мене, де я живу.", "words": ["lived", "asked", "where", "she", "me", "I"], "a": ["She asked me where I lived."], "why": "Переказане питання: where + підмет (I) + дієслово, без do. Live після asked зсувається в lived." },
-    { "type": "order", "uk": "Мама сказала мені не хвилюватися.", "words": ["worry", "told", "to", "mum", "not", "me", "my"], "a": ["My mum told me not to worry."], "why": "Заборону переказуємо так: told + кого + not to + дієслово." }
+    { "type": "order", "uk": "Мама сказала мені не хвилюватися.", "words": ["worry", "told", "to", "mum", "not", "me", "my"], "a": ["My mum told me not to worry."], "why": "Заборону переказуємо так: told + кого + not to + дієслово." },
+    { "type": "choice", "q": "Don't ___ lies to me.", "uk": "Не бреши мені.", "opts": ["tell", "say", "speak"], "a": 0, "why": "Сталі вирази: tell a lie, tell the truth, tell a joke — завжди з tell. Say lies не кажуть, speak — «говорити (мовою)»." },
+    { "type": "choice", "q": "Mick ___ sorry and left.", "uk": "Мік перепросив і пішов.", "opts": ["said", "told", "spoke"], "a": 0, "why": "Say sorry (перепросити), say hello, say goodbye — з say. Tell вимагає «кому», а «tell sorry» не кажуть." },
+    { "type": "choice", "q": "The boss ___ that we could go home early.", "uk": "Бос сказав, що ми можемо піти додому раніше.", "opts": ["said", "told", "told to us"], "a": 0, "why": "«Кому» не названо — said. Told that без «кому» — помилка, а told to us не кажуть: після tell «кому» іде без to (told us)." },
+    { "type": "choice", "q": "Olena said she ___ for a new flat, but she's found one now.", "uk": "Олена сказала, що шукає нову квартиру, але тепер уже знайшла.", "opts": ["was looking", "is looking", "looks"], "a": 0, "why": "Після said Present Continuous (is looking) зсувається в was looking. Залишити is looking не можна: вона вже не шукає." },
+    { "type": "input", "q": "When I met Tom last year, he told me he ___ (live) in Wexford. Now he lives in Dublin.", "uk": "Коли я зустрів Тома торік, він сказав мені, що живе у Вексфорді. Тепер він живе в Дубліні.", "a": ["lived"], "why": "Том сказав «I live in Wexford». Після told час зсувається: live → lived. Залишити live не можна, бо він там уже не живе." },
+    { "type": "input", "q": "Tom: \"I like your van.\" Tom said he liked ___ van.", "uk": "Том (мені): «Мені подобається твій фургон». Том сказав, що йому подобається мій фургон.", "a": ["my"], "why": "Займенники міняються за змістом: Том говорив зі мною, тому його «your» (твій) стає my (мій). Так само I → he, like → liked." },
+    { "type": "input", "q": "Sarah said she ___ (lose) her phone, but it was in her bag all the time.", "uk": "Сара сказала, що загубила телефон, а він весь час лежав у її сумці.", "a": ["had lost", "lost"], "why": "«I've lost my phone» після said стає had lost. Якщо Сара сказала «I lost my phone», Past Simple у розмові можна й залишити: lost." },
+    { "type": "input", "q": "Last week Mick said he would finish the job ___, but it's still not done.", "uk": "Минулого тижня Мік сказав, що закінчить роботу наступного дня, але вона досі не зроблена.", "a": ["the next day", "the following day", "the day after"], "why": "Мік сказав «tomorrow», але минув тиждень, і те «завтра» давно позаду. Переказуючи пізніше, tomorrow міняємо на the next day (the following day)." },
+    { "type": "choice", "q": "The boss asked me ___ a driving licence.", "uk": "Бос спитав мене, чи є в мене водійське посвідчення.", "opts": ["if I had", "did I have", "that I had"], "a": 0, "why": "Питання «так / ні» переказуємо через if (чи), без did і зі звичайним порядком слів: if I had. That тут не підходить: це було питання." },
+    { "type": "choice", "q": "The customer asked ___.", "uk": "Клієнтка спитала, о котрій ми закінчимо.", "opts": ["what time we would finish", "what time would we finish", "what time will we finish"], "a": 0, "why": "У переказаному питанні підмет (we) стоїть перед дієсловом, а will після asked зсувається у would." },
+    { "type": "order", "uk": "Він попросив мене передзвонити йому пізніше.", "words": ["he", "asked", "me", "to", "call", "him", "back", "later"], "a": ["He asked me to call him back later."], "why": "Прохання переказуємо так: asked + кого (me) + to + дієслово. Call back — «передзвонити», між ними him." },
+    { "type": "order", "uk": "Кейт спитала, чи ми закінчили стіну.", "words": ["Kate", "asked", "if", "we", "had", "finished", "the", "wall"], "a": ["Kate asked if we had finished the wall."], "why": "Питання «так / ні» — через if, далі звичайний порядок: підмет (we) + дієслово. «Have you finished?» після asked стає had finished." }
   ]
 }

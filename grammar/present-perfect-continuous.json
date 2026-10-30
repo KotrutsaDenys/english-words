@@ -5,6 +5,13 @@
   "uk": "Теперішній доконано-тривалий: have been doing",
   "summary": "скільки вже триває дія: I've been working here for two years",
   "minutes": 7,
+  "key": [
+    "**have / has been + -ing** — почалося раніше й **триває досі**: I**'ve been waiting** for an hour (а не I wait чи I'm waiting).",
+    "**for** + скільки часу (for two hours, for a year), **since** + з якого моменту (since Monday, since 2024, since I came).",
+    "Недавня тривала дія, наслідок якої видно зараз: I'm tired — I**'ve been working** all day.",
+    "**have been doing** — процес, як довго; **have done** — результат, скільки зроблено: I**'ve painted** two rooms.",
+    "Дієслова стану (know, like, want, own, have = мати) без -ing: I**'ve known** him for years."
+  ],
   "blocks": [
     { "t": "p", "text": "**Present Perfect Continuous** (have/has been + форма з -ing) — для дії, що **почалася в минулому й триває досі**, коли ми кажемо, **як довго** вона триває. Українською тут теперішній час: «я працюю тут два роки». Англійською ні: I work — це «взагалі», I'm working — «зараз», а для «вже два роки» кажуть I've been working." },
     { "t": "ex", "items": [
@@ -80,6 +87,18 @@
     { "type": "choice", "q": "Kate ___ three walls today.", "uk": "Кейт сьогодні заштукатурила три стіни.", "opts": ["has plastered", "has been plastering", "have plastered"], "a": 0, "why": "Скільки зроблено (три стіни) — результат, тому has + V3. Has been plastering — про процес і тривалість. Have не підходить, бо Kate — це she." },
     { "type": "choice", "q": "I'm tired because I ___ plasterboard all morning.", "uk": "Я втомився, бо цілий ранок носив гіпсокартон.", "opts": ["have been carrying", "am carrying", "have been carried"], "a": 0, "why": "Дія тривала весь ранок, і зараз видно наслідок (втому) — have been + -ing. Am carrying — лише «зараз», а have been carried означало б «мене носили»." },
     { "type": "order", "uk": "Скільки ти вже чекаєш?", "words": ["long", "you", "been", "how", "have", "waiting"], "a": ["How long have you been waiting?"], "why": "Питання: How long + have + you + been + форма з -ing." },
-    { "type": "order", "uk": "Ми живемо тут з березня.", "words": ["living", "since", "we've", "here", "March", "been"], "a": ["We've been living here since March.", "Since March we've been living here."], "why": "We've been + -ing, далі місце (here), а since March — зазвичай у кінці речення." }
+    { "type": "order", "uk": "Ми живемо тут з березня.", "words": ["living", "since", "we've", "here", "March", "been"], "a": ["We've been living here since March.", "Since March we've been living here."], "why": "We've been + -ing, далі місце (here), а since March — зазвичай у кінці речення." },
+    { "type": "choice", "q": "The kids ___ been playing outside for two hours.", "uk": "Діти граються надворі вже дві години.", "opts": ["have", "has", "are"], "a": 0, "why": "The kids — це they, тому have been + -ing. Has — лише для he, she, it, а are been — такої форми немає." },
+    { "type": "input", "q": "I've been ___ (sit) in traffic for an hour.", "uk": "Я вже годину стою в заторі.", "a": ["sitting"], "why": "Після have been — форма з -ing. Sit — коротке слово на голосну + приголосну, тому t подвоюємо: sitting." },
+    { "type": "choice", "q": "Dave has been working here ___ he left school.", "uk": "Дейв працює тут відтоді, як закінчив школу.", "opts": ["since", "for", "from"], "a": 0, "why": "Після since може стояти й ціла подія: since he left school (відтоді, як…). For — лише перед відрізком часу: for ten years." },
+    { "type": "input", "q": "Ciara's eyes are red. She ___ (cry).", "uk": "У Кіари червоні очі. Вона плакала.", "a": ["has been crying"], "why": "Дія тривала до недавнього часу, а наслідок (червоні очі) видно зараз, тому has been + -ing." },
+    { "type": "choice", "q": "How many cups of tea ___ today?", "uk": "Скільки чашок чаю ти сьогодні випив?", "opts": ["have you had", "have you been having", "do you have"], "a": 0, "why": "How many…? — питаємо про результат (кількість), тому have + V3: have you had. Have been having — про процес, з кількістю не вживаємо." },
+    { "type": "input", "q": "My phone ___ (not / work) properly since I dropped it.", "uk": "Мій телефон погано працює, відколи я його впустив.", "a": ["hasn't been working", "hasn't worked"], "why": "Почалося, коли телефон упав, і триває досі, тому hasn't been working. Hasn't worked теж правильно: з work можна обидва варіанти." },
+    { "type": "choice", "q": "I ___ this book for weeks, but I haven't finished it yet.", "uk": "Я читаю цю книжку вже кілька тижнів, але ще не дочитав.", "opts": ["have been reading", "have read", "am reading"], "a": 0, "why": "Процес триває кілька тижнів і ще не закінчився, тому have been reading. Have read — книжку вже прочитано, а am reading — лише «зараз», без тривалості." },
+    { "type": "choice", "q": "We ___ this house since 2021.", "uk": "Цей будинок належить нам з 2021 року.", "opts": ["have owned", "have been owning", "own"], "a": 0, "why": "Own (володіти) — дієслово стану, тому без -ing: have owned. Present Simple own із since не вживаємо." },
+    { "type": "input", "q": "The neighbours ___ (make) noise since seven o'clock.", "uk": "Сусіди шумлять з сьомої години.", "a": ["have been making"], "why": "Почали о сьомій і шумлять досі, тому have been + -ing. The neighbours — це they, тому have. Make перед -ing губить e: making." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Він ходить у спортзал уже пів року.", "opts": ["He's been going to the gym for six months.", "He's going to the gym for six months.", "He's been going to the gym since six months."], "a": 0, "why": "Триває досі, і кажемо, скільки, — has been + -ing. Six months — відрізок часу, тому for. Since — лише перед моментом: since May." },
+    { "type": "order", "uk": "Скільки часу Олена вже вчиться водити?", "words": ["learning", "has", "long", "drive", "Olena", "how", "to", "been"], "a": ["How long has Olena been learning to drive?"], "why": "Питання: How long + has + підмет + been + форма з -ing. Olena — це she, тому has." },
+    { "type": "order", "uk": "Чому ти весь час не береш слухавку?", "words": ["answering", "you", "phone", "haven't", "why", "your", "been"], "a": ["Why haven't you been answering your phone?"], "why": "Ти не відповідав раз за разом аж до цієї миті, тому have been + -ing. У питанні з запереченням haven't стоїть перед you." }
   ]
 }

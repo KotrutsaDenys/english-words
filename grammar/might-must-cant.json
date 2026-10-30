@@ -5,6 +5,13 @@
   "uk": "Наскільки ти впевнений: might, must, can't",
   "summary": "здогадки: he might be late, you must be tired, it can't be Tom",
   "minutes": 8,
+  "key": [
+    "**might / may / could + дієслово** — можливо, 50 на 50: He might be late. «Можливо, ні» — лише **might not / may not**.",
+    "**must** — мабуть, майже точно так: You must be tired. **can't** — не може бути: That can't be Tom. **Mustn't** — заборона, не здогадка.",
+    "Після модального дієслова — **початкова форма без to і без -s**: he must be, she might know.",
+    "Що відбувається зараз: **must / might be + -ing** (He must be driving). Про минуле: **must / might / can't have + V3** (He must have left).",
+    "**Can be** — «буває взагалі»: Wexford can be windy. Для здогадки про конкретний момент — **might**: It might be Tom."
+  ],
   "blocks": [
     { "t": "p", "text": "Коли ти не знаєш чогось напевно, а лише **здогадуєшся**, в англійській для кожного рівня впевненості є своє слово: **might** (можливо), **must** (напевно, майже точно), **can't** (не може бути). Це **модальні дієслова** — короткі слова, які стоять перед іншим дієсловом і додають до нього відтінок: можливість, обов'язок, упевненість." },
     { "t": "h", "text": "Шкала впевненості" },
@@ -92,6 +99,18 @@
     { "type": "input", "q": "The door's locked. Everyone ___ (must / go) home.", "uk": "Двері замкнені. Мабуть, усі пішли додому.", "a": ["must have gone"], "why": "Висновок про минуле: must have + V3. Go — неправильне дієслово: go, went, gone." },
     { "type": "input", "q": "I can't find my keys. I ___ (might / put) them in my other jacket.", "uk": "Не можу знайти ключі. Може, я поклав їх в іншу куртку.", "a": ["might have put"], "why": "«Можливо, так було» — might have + V3. Put має однакові форми: put, put, put." },
     { "type": "input", "q": "Tom ___ (can't / see) my message. His phone's been off all day.", "uk": "Не може бути, щоб Том бачив моє повідомлення: його телефон увесь день вимкнений.", "a": ["can't have seen", "couldn't have seen"], "why": "Впевнений, що ні, про минуле: can't have + V3. See — неправильне дієслово: see, saw, seen." },
-    { "type": "order", "uk": "Може, це неправильна адреса?", "words": ["be", "address", "could", "the", "it", "wrong"], "a": ["Could it be the wrong address?"], "why": "У питанні-здогадці could стоїть на початку, далі it і початкова форма be." }
+    { "type": "order", "uk": "Може, це неправильна адреса?", "words": ["be", "address", "could", "the", "it", "wrong"], "a": ["Could it be the wrong address?"], "why": "У питанні-здогадці could стоїть на початку, далі it і початкова форма be." },
+    { "type": "choice", "q": "Dave might ___ the answer. Ask him.", "uk": "Може, Дейв знає відповідь. Спитай його.", "opts": ["know", "knows", "to know"], "a": 0, "why": "Після might (як і після must, may, can't) — початкова форма дієслова: без -s навіть з he і без to. Might know." },
+    { "type": "choice", "q": "Drive carefully tomorrow. It ___ snow in the morning.", "uk": "Їдь завтра обережно: зранку, можливо, піде сніг.", "opts": ["can", "may", "must"], "a": 1, "why": "Здогадка про конкретний ранок, 50 на 50 — may (або might). Can означає «буває взагалі», а must — що ти майже впевнений." },
+    { "type": "choice", "q": "Sean's phone goes straight to voicemail. His battery ___ be dead.", "uk": "Телефон Шона одразу перемикається на голосову пошту. Мабуть, у нього сіла батарея.", "opts": ["must", "mustn't", "can"], "a": 0, "why": "Ти робиш висновок з того, що чуєш, і майже впевнений — must be. Mustn't — це заборона, а can be — «буває взагалі»." },
+    { "type": "choice", "q": "The gym ___ be really busy after six, so I usually go in the morning.", "uk": "У спортзалі після шостої буває дуже людно, тож я зазвичай ходжу зранку.", "opts": ["can", "must", "can't"], "a": 0, "why": "«Буває» загалом, а не здогадка про один конкретний день — can be. Must — «мабуть, точно», can't — «не може бути»." },
+    { "type": "input", "q": "Emma has worked at the hospital for twenty years. She ___ (must / know) everyone there.", "uk": "Емма працює в лікарні двадцять років. Вона, мабуть, знає там усіх.", "a": ["must know"], "why": "Висновок з фактів — must + початкова форма дієслова: must know. Без -s, хоч підмет she." },
+    { "type": "choice", "q": "The bus ___ stop here on Sundays. Check the timetable.", "uk": "Автобус по неділях, можливо, тут не зупиняється. Перевір розклад.", "opts": ["may not", "couldn't", "mustn't"], "a": 0, "why": "«Можливо, ні» — лише may not або might not. Couldn't у здогадках означає «не може бути», а mustn't — заборону." },
+    { "type": "input", "q": "Liam's van is outside the gym. He ___ (must / train) right now.", "uk": "Фургон Ліама стоїть біля спортзалу. Мабуть, він зараз тренується.", "a": ["must be training"], "why": "Здогадка про те, що відбувається саме зараз: must + be + форма з -ing — must be training." },
+    { "type": "order", "uk": "Він, мабуть, запізнився на автобус.", "words": ["missed", "must", "the", "he", "have", "bus"], "a": ["He must have missed the bus."], "why": "Висновок про минуле: must have + V3 (missed). Have стоїть одразу після must, навіть з he." },
+    { "type": "input", "q": "Where's my wallet? — You ___ (may / leave) it in the shop.", "uk": "Де мій гаманець? — Може, ти залишив його в магазині.", "a": ["may have left"], "why": "«Можливо, так було» — may have + V3. Leave — неправильне дієслово: leave, left, left." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ти, мабуть, учора дуже втомився.", "opts": ["You must be very tired yesterday.", "You must have been very tired yesterday.", "You must were very tired yesterday."], "a": 1, "why": "Здогадка про минуле (yesterday) — must have + V3. Третя форма від be — been: must have been." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Не може бути, щоб він отримав посилку: її надіслали лише сьогодні.", "opts": ["He mustn't have got the parcel.", "He can't have got the parcel.", "He can't got the parcel."], "a": 1, "why": "«Не може бути, щоб було» — can't have + V3 (got). Mustn't — заборона, а без have (can't got) речення неправильне." },
+    { "type": "order", "uk": "Вона, можливо, не почула телефон.", "words": ["heard", "might", "she", "the", "not", "have", "phone"], "a": ["She might not have heard the phone."], "why": "«Можливо, ні» про минуле: might not have + V3. Not — одразу після might, далі have і heard (hear, heard, heard)." }
   ]
 }

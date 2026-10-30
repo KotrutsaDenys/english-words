@@ -5,6 +5,13 @@
   "uk": "Must і have to: треба й не можна",
   "summary": "треба, не можна, не обов'язково: must, have to, mustn't, had to",
   "minutes": 7,
+  "key": [
+    "«Треба»: **must** — сам так вирішив або щиро раджу (I must call mum), **have to** — вимагає правило, бос, обставини (We have to wear helmets). Сумніваєшся — кажи have to.",
+    "**Mustn't** — заборонено, не можна. **Don't have to** — не обов'язково, можна не робити. Підстав «заборонено»: пасує — mustn't, ні — don't have to.",
+    "Must для всіх однакове й без to: he must go. **Have to** змінюється як have: she **has to**, **Do** you **have to**…?, she **doesn't have to**.",
+    "Минуле й майбутнє лише через have to: **had to** (довелося), **Did** you **have to**…?, **didn't have to**, **will have to**. Must там не буває.",
+    "Розмовне **have got to** (I've got to go, she's got to finish) = have to, лише в теперішньому часі."
+  ],
   "blocks": [
     { "t": "p", "text": "**Must** і **have to** обидва означають «треба», «мушу», «маю». У ствердженні різниця невелика, і часто підходять обидва. А от у запереченні вони розходяться повністю: **mustn't** — «не можна, заборонено», а **don't have to** — «не треба, можна не робити». Це найважливіше в темі." },
     { "t": "ex", "items": [
@@ -94,6 +101,18 @@
     { "type": "input", "q": "You ___ (not / must) touch that cable! It's live.", "uk": "Цей кабель чіпати не можна! Він під напругою.", "a": ["mustn't", "must not"], "why": "Тут заборона, бо небезпечно, тому mustn't (must not) + дієслово без to." },
     { "type": "input", "q": "We ___ (not / have to) wait long. The bus came quickly.", "uk": "Нам не довелося довго чекати. Автобус приїхав швидко.", "a": ["didn't have to", "did not have to"], "why": "Минуле, «не довелося» — didn't have to. У must немає минулої форми." },
     { "type": "order", "uk": "Мені треба вдягати каску?", "words": ["I", "wear", "have", "a", "do", "helmet", "to"], "a": ["Do I have to wear a helmet?"], "why": "Питання з have to — через do: Do + I + have to + дієслово." },
-    { "type": "order", "uk": "Нам доведеться почекати до завтра.", "words": ["will", "we", "wait", "have", "to", "until", "tomorrow"], "a": ["We will have to wait until tomorrow."], "why": "У must немає форми майбутнього часу (will must не буває). «Доведеться» — will have to + дієслово." }
+    { "type": "order", "uk": "Нам доведеться почекати до завтра.", "words": ["will", "we", "wait", "have", "to", "until", "tomorrow"], "a": ["We will have to wait until tomorrow."], "why": "У must немає форми майбутнього часу (will must не буває). «Доведеться» — will have to + дієслово." },
+    { "type": "choice", "q": "Olena ___ work on Sundays. The shop is closed.", "uk": "Олені не треба працювати по неділях. Магазин зачинений.", "opts": ["doesn't have to", "mustn't", "doesn't must"], "a": 0, "why": "Немає потреби — don't have to, а для Olena (вона) — doesn't have to. Mustn't означало б заборону, а must з does не поєднується." },
+    { "type": "choice", "q": "___ Mick have to wear a tie at work?", "uk": "Міку треба носити краватку на роботі?", "opts": ["Does", "Must", "Is"], "a": 0, "why": "Питання з have to — через do / does, як у Present Simple: Does Mick have to…? Must і is перед have to не ставлять." },
+    { "type": "choice", "q": "You ___ drink that water. It isn't clean.", "uk": "Цю воду не можна пити. Вона брудна.", "opts": ["mustn't", "don't have to", "haven't to"], "a": 0, "why": "Заборона, бо небезпечно, — mustn't. Don't have to означало б «можеш не пити, як хочеш», а haven't to так не кажуть." },
+    { "type": "choice", "q": "I ___ remember to buy milk on the way home.", "uk": "Мені треба не забути купити молока дорогою додому (сам собі нагадую).", "opts": ["must", "had to", "have"], "a": 0, "why": "Обов'язок «від себе», який ти сам собі ставиш, — must. Had to — минуле («довелося»), а have без to перед дієсловом не ставлять." },
+    { "type": "choice", "q": "Next month we ___ pay more for the bus. The prices are going up.", "uk": "Наступного місяця нам доведеться платити за автобус більше. Ціни зростають.", "opts": ["will have to", "will must", "must have"], "a": 0, "why": "«Доведеться» в майбутньому — will have to. Will must поруч не ставлять, а must have pay — неправильна форма." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Учора мені не довелося готувати: ми замовили піцу.", "opts": ["I didn't have to cook yesterday.", "I mustn't cook yesterday.", "I didn't must cook yesterday."], "a": 0, "why": "«Не довелося» в минулому — didn't have to. У must немає минулого часу, і з did воно не поєднується." },
+    { "type": "input", "q": "Tom ___ (not / have to) finish it today. Tomorrow is fine.", "uk": "Тому не обов'язково закінчувати це сьогодні. Можна й завтра.", "a": ["doesn't have to", "does not have to", "hasn't got to"], "why": "Немає потреби — don't have to, а Tom — це he, тому doesn't have to. Mustn't тут означало б заборону закінчувати." },
+    { "type": "input", "q": "What time ___ (you / have to) start on Mondays?", "uk": "О котрій тобі треба починати по понеділках?", "a": ["do you have to", "have you got to"], "why": "Питання з have to будуємо через do: What time do you have to start? Must у питаннях майже не вживають, а розмовне have you got to теж правильно." },
+    { "type": "input", "q": "Last week I ___ (have to) go to the doctor twice.", "uk": "Минулого тижня мені довелося двічі ходити до лікаря.", "a": ["had to"], "why": "«Довелося» в минулому — had to. Last week — минуле, а в must минулої форми немає." },
+    { "type": "input", "q": "If it snows, we ___ (not / have to) go to work.", "uk": "Якщо піде сніг, нам не доведеться йти на роботу.", "a": ["won't have to", "will not have to"], "why": "«Не доведеться» в майбутньому — won't have to. Після if — теперішній час (snows), а will — у головній частині." },
+    { "type": "order", "uk": "Їй треба закінчити це сьогодні.", "words": ["she's", "got", "to", "finish", "it", "today"], "a": ["She's got to finish it today."], "why": "Розмовне have got to: для she — has got to, скорочено she's got to. Після to — дієслово в початковій формі: finish." },
+    { "type": "order", "uk": "Тобі довелося працювати минулої суботи?", "words": ["did", "you", "have", "to", "work", "last", "Saturday"], "a": ["Did you have to work last Saturday?"], "why": "Питання про минуле — Did + підмет + have to + дієслово. Після did — have, не had, а must з did не поєднується." }
   ]
 }

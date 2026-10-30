@@ -1,0 +1,172 @@
+{
+  "id": "numbers-dates-time",
+  "level": "A2",
+  "title": "Numbers, dates and time",
+  "uk": "Числа, дати, час і гроші",
+  "summary": "як сказати 350, 5 May, 6:30, €3.50, 2.4 m, 20%, −5",
+  "minutes": 10,
+  "key": [
+    "Hundred, thousand, million після числа **без -s**: two hundred, five thousand. Але **hundreds of** people. У британських числах **and**: three hundred **and** fifty.",
+    "Дата: **the fifth of May** або **May the fifth**, пишуть 5 May чи 05/05/2026 — день перед місяцем. Роки парами: 1999 — nineteen ninety-nine, 2026 — twenty twenty-six.",
+    "Час: **past** до половини, **to** після: ten past six (6:10), quarter to nine (8:45). В Ірландії **half six** = 6:30 (half past six), а не 5:30!",
+    "Гроші: €3.50 — **three euro fifty** (в Ірландії euro часто без -s), 50c — fifty cent. Дроби й десяткові: two **point** four metres, **a metre and a half**.",
+    "Телефон читають по цифрах: 0 — **oh** або zero, 66 — **double six**. Температура: **minus five** (degrees). Відсотки: 20% — twenty **per cent**."
+  ],
+  "blocks": [
+    { "t": "p", "text": "Числа потрібні щодня: ціна в магазині, час зустрічі, дата на документі, розмір дошки на будові, номер телефону. Правил тут небагато, але є кілька місць, де українці постійно спотикаються: **-s** після hundred, **and** всередині числа, **past / to** у часі й ірландське **half six**." },
+    { "t": "h", "text": "Кількісні числа: one, two, three" },
+    { "t": "table", "head": ["Число", "Англійською", "Увага"], "rows": [
+      ["13 / 30", "thirteen / thirty", "наголос: thirTEEN, THIRty"],
+      ["14 / 40", "fourteen / forty", "forty без u!"],
+      ["15 / 50", "fifteen / fifty", "не fiveteen"],
+      ["100", "a hundred", "або one hundred"],
+      ["1,000", "a thousand", "кома між тисячами"],
+      ["1,000,000", "a million", ""]
+    ] },
+    { "t": "tip", "text": "В англійській **кома** розділяє тисячі, а **крапка** — десяткові: 1,500 — це тисяча п'ятсот, а 1.5 — півтора. В Україні навпаки, тож на кресленнях і в цінах будь уважний." },
+    { "t": "rule", "title": "Hundred і thousand після числа — без -s", "lines": ["two **hundred** euro", "five **thousand** people", "three hundred **and** fifty", "але: **hundreds of** people, **thousands of** euro"] },
+    { "t": "p", "text": "Коли перед hundred, thousand чи million стоїть число, вони **не змінюються**: two hundred, six thousand. Закінчення -s з'являється лише в значенні «сотні, тисячі чогось» без точного числа: hundreds of people. У британському й ірландському варіанті між сотнями й десятками стоїть **and**: 350 — three hundred and fifty, 205 — two hundred and five." },
+    { "t": "ex", "items": [
+      ["The drill costs two **hundred** euro.", "Дриль коштує двісті євро."],
+      ["There are three hundred **and** fifty tiles in the van.", "У фургоні триста п'ятдесят плиток."],
+      ["**Hundreds of** people were on the beach.", "На пляжі були сотні людей."],
+      ["The house cost four hundred **thousand**.", "Будинок коштував чотириста тисяч."],
+      ["About fifty workers are from Ukraine.", "Близько п'ятдесяти робітників з України."],
+      ["I'm twenty-four.", "Мені двадцять чотири."]
+    ] },
+    { "t": "mistake", "wrong": "I paid two hundreds euro.", "right": "I paid two hundred euro.", "why": "Після числа hundred без -s. Hundreds лише в «сотні чогось»: hundreds of euro." },
+    { "t": "mistake", "wrong": "I have twenty-four years.", "right": "I'm twenty-four (years old).", "why": "Вік англійською — через to be: I'm 24, він has не вживається." },
+    { "t": "h", "text": "Порядкові: first, second, third" },
+    { "t": "p", "text": "Порядкові числа (перший, другий…) потрібні для дат, поверхів і черги. Перші три особливі: **first, second, third**. Далі додаємо **-th**: fourth, sixth, tenth. У складених числах змінюється лише останнє слово: twenty-**first**, thirty-**second**." },
+    { "t": "table", "head": ["Цифрою", "Словом", "Увага"], "rows": [
+      ["1st", "first", ""],
+      ["2nd", "second", ""],
+      ["3rd", "third", ""],
+      ["5th", "fifth", "не fiveth"],
+      ["8th", "eighth", "лише одне t"],
+      ["9th", "ninth", "без e"],
+      ["12th", "twelfth", "f замість v"],
+      ["20th", "twentieth", "-ty → -tieth"],
+      ["21st", "twenty-first", "лише останнє слово"]
+    ] },
+    { "t": "ex", "items": [
+      ["It's my **first** day on this site.", "Це мій перший день на цьому об'єкті."],
+      ["We live on the **third** floor.", "Ми живемо на третьому поверсі."],
+      ["Take the **second** exit at the roundabout.", "На кільці — другий виїзд."],
+      ["This is his **twenty-first** birthday.", "Це його двадцять перший день народження."]
+    ] },
+    { "t": "h", "text": "Дати: день перед місяцем" },
+    { "t": "p", "text": "В Ірландії й Британії дату пишуть **день, потім місяць**: 5 May 2026 або 05/05/2026. В Америці навпаки — 05/05 там травень п'ятого, тож на американських сайтах дивись уважно. Читається дата з порядковим числом і артиклем: **the fifth of May** або **May the fifth**. Пишуть коротко — 5 May, 5th May, а слова the і of лише вимовляють." },
+    { "t": "rule", "title": "Як читати дату", "lines": ["5 May → **the fifth of May**", "5 May → **May the fifth**", "25/12 → the twenty-fifth of December"] },
+    { "t": "ex", "items": [
+      ["My birthday is on **the first of June**.", "Мій день народження першого червня."],
+      ["The job starts on **the third of March**.", "Робота починається третього березня."],
+      ["Today is **October the thirtieth**.", "Сьогодні тридцяте жовтня."],
+      ["What's the date today? — **The twelfth**.", "Яке сьогодні число? — Дванадцяте."]
+    ] },
+    { "t": "h", "text": "Роки: парами по дві цифри" },
+    { "t": "list", "items": [
+      "Роки читають **двома парами**: 1999 — nineteen ninety-nine, 1985 — nineteen eighty-five, 2026 — twenty twenty-six.",
+      "Роки 2000–2009 читають як число: 2000 — two thousand, 2005 — two thousand **and** five.",
+      "Від 2010 знову парами: 2010 — twenty ten, 2022 — twenty twenty-two (можна й two thousand and twenty-two).",
+      "Про рік кажуть **in**: in 2026, in nineteen ninety-nine."
+    ] },
+    { "t": "ex", "items": [
+      ["I was born in **nineteen ninety-nine**.", "Я народився в 1999 році."],
+      ["We moved to Ireland in **twenty twenty-five**.", "Ми переїхали до Ірландії у 2025 році."],
+      ["The house was built in **two thousand and five**.", "Будинок збудували у 2005 році."]
+    ] },
+    { "t": "h", "text": "Час: past і to" },
+    { "t": "p", "text": "До половини години кажемо **past** (після): ten past six — 6:10. Після половини — **to** (до): ten to seven — 6:50. Половина — **half past**, чверть — **quarter**. Можна й просто цифрами: six ten, six thirty, six forty-five. У розкладах пишуть 18:30, але в розмові кажуть half past six або six thirty, додаючи **in the evening** чи **p.m.**, якщо незрозуміло." },
+    { "t": "table", "head": ["Годинник", "Як кажуть"], "rows": [
+      ["6:00", "six o'clock"],
+      ["6:05", "five past six"],
+      ["6:15", "quarter past six"],
+      ["6:30", "half past six / half six"],
+      ["6:45", "quarter to seven"],
+      ["6:50", "ten to seven"],
+      ["18:30", "six thirty p.m. / half six"],
+      ["12:00", "midday / noon; midnight (ночі)"]
+    ] },
+    { "t": "tip", "text": "В Ірландії та Британії дуже часто кажуть **half six** — це скорочене half **past** six, тобто **6:30**. Українцям і німцям так і хочеться почути «пів шостої» (5:30) — і прийти на годину раніше. Запам'ятай: half six = 6:30." },
+    { "t": "ex", "items": [
+      ["We start at **half seven**.", "Ми починаємо о пів восьмої (7:30)."],
+      ["The bus leaves at **quarter to nine**.", "Автобус відходить без чверті дев'ята (8:45)."],
+      ["It's **twenty past four**. Nearly home time.", "Двадцять по четвертій (4:20). Скоро додому."],
+      ["I get up at **six a.m.** and finish at **five p.m.**", "Я встаю о шостій ранку й закінчую о п'ятій вечора."],
+      ["What time is it? — **Ten to one**.", "Котра година? — Без десяти перша (12:50)."]
+    ] },
+    { "t": "mistake", "wrong": "It's six and a half.", "right": "It's half past six.", "why": "Half past six (або half six). «Шість з половиною» — калька, так про час не кажуть." },
+    { "t": "h", "text": "Гроші в Ірландії" },
+    { "t": "p", "text": "Ціну читають так: €3.50 — **three euro fifty** або three fifty, €0.50 — fifty **cent**. За правилом множина euros і cents, але в Ірландії дуже часто кажуть **euro** і **cent** без -s, і це нормально: it's five euro. У розмові ще почуєш **a fiver** (€5), **a tenner** (€10), **a grand** (€1000) і **quid** (євро, як колись фунти)." },
+    { "t": "table", "head": ["Пишуть", "Кажуть"], "rows": [
+      ["€3.50", "three euro fifty"],
+      ["€0.80 / 80c", "eighty cent"],
+      ["€5", "five euro / a fiver"],
+      ["€10", "ten euro / a tenner"],
+      ["€1,000", "a thousand / a grand"],
+      ["€19.99", "nineteen ninety-nine"]
+    ] },
+    { "t": "ex", "items": [
+      ["A coffee is **three euro fifty** here.", "Кава тут три п'ятдесят."],
+      ["Can you lend me **a fiver**?", "Позичиш п'ять євро?"],
+      ["The boots cost **ninety-nine ninety-nine**.", "Черевики коштують 99,99."],
+      ["He gets **twenty euro an hour**.", "Він отримує двадцять євро на годину."]
+    ] },
+    { "t": "h", "text": "Телефон: цифра за цифрою" },
+    { "t": "p", "text": "Номер телефону читають **по одній цифрі**, групами з паузами: 086 466 0012 — oh eight six, four double six, double oh one two. Нуль — **oh** або **zero**, дві однакові цифри поруч — **double**: 66 — double six, 00 — double oh. Так само читають номери будинків і автобусів з трьох цифр." },
+    { "t": "ex", "items": [
+      ["My number is **oh eight seven**, **double five**, two one.", "Мій номер 087 55 21."],
+      ["Take the **thirty-two** bus to the city centre.", "Їдь автобусом 32 до центру."],
+      ["It's room **two oh four**.", "Це кімната 204."]
+    ] },
+    { "t": "h", "text": "Дроби, десяткові, відсотки, градуси" },
+    { "t": "table", "head": ["Пишуть", "Кажуть"], "rows": [
+      ["½", "a half, half a metre"],
+      ["1½ m", "a metre and a half"],
+      ["¼", "a quarter"],
+      ["2.4 m", "two point four metres"],
+      ["0.5", "point five / nought point five"],
+      ["20%", "twenty per cent"],
+      ["−5 °C", "minus five (degrees)"],
+      ["18 °C", "eighteen degrees"]
+    ] },
+    { "t": "p", "text": "Десяткові читають з **point**, а після крапки — цифра за цифрою: 2.45 — two point four five. **Half** стоїть перед словом: half a metre, half an hour. А «півтора» — **and a half**: a metre and a half, an hour and a half. Відсотки — **per cent** (в Ірландії пишуть двома словами), температура — **degrees**, мороз — **minus**." },
+    { "t": "ex", "items": [
+      ["Cut it at **two point four** metres.", "Відріж на 2,4 метра."],
+      ["I need **half a metre** of cable.", "Мені потрібно пів метра кабелю."],
+      ["The board is **a metre and a half** long.", "Дошка завдовжки півтора метра."],
+      ["It's **minus five** this morning.", "Сьогодні вранці мінус п'ять."],
+      ["Prices went up by **ten per cent**.", "Ціни зросли на десять відсотків."],
+      ["Wait **half an hour**.", "Зачекай пів години."]
+    ] },
+    { "t": "mistake", "wrong": "The wall is two comma four metres.", "right": "The wall is two point four metres.", "why": "Десяткові читають з point, а пишуть з крапкою: 2.4. Кома в англійській лише між тисячами." },
+    { "t": "mistake", "wrong": "I'll be back in a half hour.", "right": "I'll be back in half an hour.", "why": "Half стоїть перед артиклем: half an hour, half a metre. A half hour — американізм, в Ірландії звучить незвично." }
+  ],
+  "tasks": [
+    { "type": "choice", "q": "I paid two ___ euro for the drill.", "uk": "Я заплатив за дриль двісті євро.", "opts": ["hundred", "hundreds", "hundreds of"], "a": 0, "why": "Після числа hundred без -s: two hundred. Hundreds of — лише коли точного числа нема: hundreds of people." },
+    { "type": "choice", "q": "There were ___ of people on the beach.", "uk": "На пляжі були сотні людей.", "opts": ["hundred", "hundreds", "a hundred"], "a": 1, "why": "«Сотні чогось» без точного числа — hundreds of. Hundred без -s лише після числа: two hundred." },
+    { "type": "choice", "q": "It's my ___ day at work.", "uk": "Це мій перший день на роботі.", "opts": ["one", "first", "once"], "a": 1, "why": "Порядкове число «перший» — first. One — це кількість (один), once — «один раз»." },
+    { "type": "choice", "q": "Today is the ___ of March.", "uk": "Сьогодні третє березня.", "opts": ["three", "third", "thirth"], "a": 1, "why": "У даті порядкове число: the third of March. Третій — third, не thirth і не three." },
+    { "type": "choice", "q": "It's half ___ seven.", "uk": "Пів восьмої (7:30).", "opts": ["past", "to", "after"], "a": 0, "why": "Половина — half past seven (7:30). В Ірландії часто просто half seven." },
+    { "type": "choice", "q": "It's quarter ___ nine.", "uk": "Без чверті дев'ята (8:45).", "opts": ["to", "past", "before"], "a": 0, "why": "Після половини кажемо to (до наступної години): quarter to nine — 8:45. Quarter past nine було б 9:15." },
+    { "type": "input", "q": "My brother is ___ (20) years old.", "uk": "Моєму братові двадцять років.", "a": ["twenty"], "why": "20 — twenty. Не плутай з twelve (12): -ty — десятки, -teen — від 13 до 19." },
+    { "type": "input", "q": "I live on the ___ (5th) floor.", "uk": "Я живу на п'ятому поверсі.", "a": ["fifth"], "why": "5th — fifth: five змінює v на f, як і twelve → twelfth." },
+    { "type": "choice", "task": "Колега каже: «Lend me a fiver». Скільки він просить?", "q": "", "uk": "Позич мені п'ять євро.", "opts": ["€5", "€50", "€15"], "a": 0, "why": "A fiver — п'ять євро (від five), a tenner — десять." },
+    { "type": "choice", "task": "Як сказати €3.50?", "q": "", "uk": "Три євро п'ятдесят.", "opts": ["three euro fifty", "three fifty euro", "three point fifty euro"], "a": 0, "why": "Ціну читають: три євро п'ятдесят — three euro fifty (або three fifty). Point — для десяткових вимірів, не для грошей." },
+    { "type": "order", "uk": "Ми починаємо роботу о пів восьмої (7:30).", "words": ["we", "start", "work", "at", "half", "past", "seven"], "a": ["We start work at half past seven."], "why": "7:30 — half past seven. Про час кажемо at: at half past seven." },
+    { "type": "order", "uk": "Мій день народження першого червня.", "words": ["my", "birthday", "is", "on", "the", "first", "of", "June"], "a": ["My birthday is on the first of June."], "why": "Дату читають з порядковим числом: the first of June. Про дату кажемо on." },
+    { "type": "choice", "task": "Як прочитати рік 2005?", "q": "", "uk": "Дві тисячі п'ятий рік.", "opts": ["two thousand and five", "two thousand and fifty", "twenty five"], "a": 0, "why": "Роки 2000–2009 читають як число: two thousand and five. Twenty five — це 25." },
+    { "type": "choice", "task": "Як прочитати рік 1999?", "q": "", "uk": "Тисяча дев'ятсот дев'яносто дев'ятий рік.", "opts": ["nineteen ninety-nine", "one nine nine nine", "nineteen and ninety-nine"], "a": 0, "why": "Роки читають двома парами: 19 і 99 — nineteen ninety-nine, без and." },
+    { "type": "choice", "q": "The wall is two ___ four metres long.", "uk": "Стіна завдовжки 2,4 метра.", "opts": ["point", "comma", "and"], "a": 0, "why": "Десяткові читають з point: 2.4 — two point four. Кома в англійській лише розділяє тисячі." },
+    { "type": "choice", "task": "Ірландець каже: «See you at half six». Коли зустріч?", "q": "", "uk": "Побачимось о пів сьомої.", "opts": ["о 6:30", "о 5:30", "о 6:00"], "a": 0, "why": "Half six — скорочене half past six, тобто 6:30. Не «пів шостої»!" },
+    { "type": "input", "q": "There are three hundred ___ fifty tiles (350).", "uk": "Тут триста п'ятдесят плиток.", "a": ["and"], "why": "У британських та ірландських числах між сотнями й десятками стоїть and: three hundred and fifty." },
+    { "type": "input", "q": "Christmas is on the ___ (25th) of December.", "uk": "Різдво двадцять п'ятого грудня.", "a": ["twenty-fifth", "twenty fifth"], "why": "У складеному порядковому числі змінюється лише останнє слово: twenty-fifth." },
+    { "type": "input", "q": "It's ___ (12:45) to one.", "uk": "Без чверті перша (12:45).", "a": ["quarter", "a quarter"], "why": "12:45 — п'ятнадцять хвилин до першої: quarter to one (можна a quarter to one)." },
+    { "type": "input", "q": "It's ___ five degrees today (-5°C).", "uk": "Сьогодні мінус п'ять градусів.", "a": ["minus"], "why": "Мороз — minus: minus five (degrees). Below zero теж можна: five below zero." },
+    { "type": "input", "q": "Twenty ___ cent of the workers are Ukrainian (20%).", "uk": "Двадцять відсотків робітників — українці.", "a": ["per"], "why": "Відсотки — per cent: twenty per cent. В Ірландії та Британії пишуть двома словами." },
+    { "type": "choice", "q": "Call me on oh eight six, ___ six, two one.", "uk": "Телефонуй мені на 086 66 21.", "opts": ["double", "two", "twice"], "a": 0, "why": "Дві однакові цифри поруч у номері — double: 66 — double six, 00 — double oh." },
+    { "type": "order", "uk": "Пів метра — це п'ятдесят сантиметрів.", "words": ["half", "a", "metre", "is", "fifty", "centimetres"], "a": ["Half a metre is fifty centimetres."], "why": "Half стоїть перед артиклем: half a metre, half an hour." },
+    { "type": "order", "uk": "Труба завдовжки півтора метра.", "words": ["the", "pipe", "is", "a", "metre", "and", "a", "half", "long"], "a": ["The pipe is a metre and a half long."], "why": "«Півтора» — a metre and a half (ціле, потім and a half). Довжина — long у кінці." }
+  ]
+}

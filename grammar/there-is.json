@@ -5,6 +5,13 @@
   "uk": "Конструкція there is / there are",
   "summary": "що є і де: There's a problem. Are there any shops near here?",
   "minutes": 6,
+  "key": [
+    "«Є, існує» — **there is** (одна річ або незлічуване: cement, water) і **there are** (кілька). Місце — в кінець: There's a key on the table.",
+    "Заперечення: **there isn't a / any**, **there aren't any** або **there's no / there are no**. З no не ставимо not: There's no time.",
+    "Питання: **Is there a…? Are there any…?** Коротко: Yes, there is. / No, there aren't. **How many … are there? How much … is there?**",
+    "Минуле — **there was / there were**, майбутнє — **there will be**: There'll be a meeting (не Will be a meeting).",
+    "**There is** вводить нове, **it is** описує вже відоме, а також погоду, час, відстань: There's a van outside. It's white. It's cold."
+  ],
   "blocks": [
     { "t": "p", "text": "Коли хочеш сказати, що щось **є, існує** десь (у кімнаті, у місті, на об'єкті), англійською кажуть **there is / there are**. Українською ми просто говоримо «Є…», «У селі два магазини», «На столі лежить ключ». Англійцям потрібне **there** на початку, хоча «там» воно тут не означає." },
     { "t": "ex", "items": [
@@ -105,6 +112,18 @@
     { "type": "input", "q": "There ___ (be) an accident on the N11 yesterday.", "uk": "Учора на N11 була аварія.", "a": ["was"], "why": "Минуле: there was для однієї речі, there were для кількох. Аварія одна, тому was." },
     { "type": "choice", "q": "___ a meeting on Monday.", "uk": "У понеділок буде нарада.", "opts": ["There will be", "There will", "Will be"], "a": 0, "why": "Майбутнє — there will be (there'll be). Без there або без be речення неповне." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "opts": ["Have a problem with the van.", "There's a problem with the van.", "Is a problem with the van."], "a": 1, "why": "«Є проблема» — there's a problem. Без there таке речення не будують, а have потребує підмета: I have a problem." },
-    { "type": "order", "uk": "Тут поблизу є банкомат?", "words": ["machine", "there", "near", "a", "is", "cash", "here"], "a": ["Is there a cash machine near here?"], "why": "Питання: Is there + що + де. Місце (near here) ставимо в кінець." }
+    { "type": "order", "uk": "Тут поблизу є банкомат?", "words": ["machine", "there", "near", "a", "is", "cash", "here"], "a": ["Is there a cash machine near here?"], "why": "Питання: Is there + що + де. Місце (near here) ставимо в кінець." },
+    { "type": "choice", "q": "There ___ a lot of water on the floor.", "uk": "На підлозі багато води.", "opts": ["is", "are", "have"], "a": 0, "why": "Water незлічуване (поштучно не рахуємо), тому is, навіть коли води багато. Have не підходить: «є» — це there is." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "На столі лежить ключ.", "opts": ["On the table is a key.", "There's a key on the table.", "There a key is on the table."], "a": 1, "why": "Починаємо з there's, далі що (a key), а місце — в кінець. Український порядок «на столі лежить» англійською не копіюємо." },
+    { "type": "choice", "q": "___ a long way from Courtown to Dublin.", "uk": "Від Кортауна до Дубліна далеко.", "opts": ["It's", "There's", "There are"], "a": 0, "why": "Відстань, погода, час — через it: It's a long way. There's вводить річ, яка десь є, а не відстань." },
+    { "type": "choice", "q": "Is there a chemist near here? — Yes, ___.", "uk": "Тут поблизу є аптека? — Так, є.", "opts": ["there is", "there's", "it is"], "a": 0, "why": "Коротка відповідь повторює is there → there is, і «так» не скорочуємо: Yes, there is. It is — про щось уже відоме." },
+    { "type": "input", "q": "There ___ (not / be) a lift in this building.", "uk": "У цьому будинку немає ліфта.", "a": ["isn't"], "why": "Lift один, тому заперечення there isn't a lift. Aren't — лише для множини: there aren't any lifts." },
+    { "type": "choice", "q": "There are ___ people on the bus in the morning.", "uk": "Уранці в автобусі багато людей.", "opts": ["a lot of", "much", "a lot"], "a": 0, "why": "People рахуємо, тому a lot of або many. Much — лише з незлічуваним (much time), а a lot без of перед іменником не ставлять." },
+    { "type": "choice", "q": "How ___ milk is there in the fridge?", "uk": "Скільки молока в холодильнику?", "opts": ["much", "many", "a lot of"], "a": 0, "why": "Milk незлічуване → how much + is there. How many — для того, що лічимо: How many bottles are there?" },
+    { "type": "input", "q": "There ___ (be) a lot of cars in the car park yesterday.", "uk": "Учора на стоянці було багато машин.", "a": ["were"], "why": "Минуле (yesterday), а cars — множина, тому there were. Was — лише для однієї речі або незлічуваного." },
+    { "type": "choice", "q": "___ any hot water this morning?", "uk": "Сьогодні вранці була гаряча вода?", "opts": ["Was there", "Were there", "Is there"], "a": 0, "why": "Минуле («була») і незлічуване hot water → Was there. Were — для множини, is — теперішній час." },
+    { "type": "input", "q": "I think ___ (will / be) a lot of traffic tomorrow.", "uk": "Думаю, завтра на дорогах буде багато машин.", "a": ["there will be", "there'll be"], "why": "«Буде багато машин» — there will be (there'll be): потрібні і there, і be. Will be a lot of traffic без there — помилка." },
+    { "type": "order", "uk": "На цій вулиці немає магазинів.", "words": ["shops", "aren't", "this", "any", "there", "street", "on"], "a": ["There aren't any shops on this street."], "why": "Заперечення з множиною: There aren't any + shops. Місце (on this street) — у кінець." },
+    { "type": "order", "uk": "Учора було багато снігу.", "words": ["was", "snow", "there", "of", "a", "lot", "yesterday"], "a": ["There was a lot of snow yesterday.", "Yesterday there was a lot of snow."], "why": "Snow незлічуване, тому в минулому there was, хоч снігу й багато. Yesterday — у кінці або на початку." }
   ]
 }

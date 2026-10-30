@@ -5,6 +5,13 @@
   "uk": "Займенники і присвійні форми",
   "summary": "I – me – my – mine, it для речей, Tom's van, myself",
   "minutes": 8,
+  "key": [
+    "**I, he, she, we, they** — хто діє, перед дієсловом. **Me, him, her, us, them** — після дієслова чи прийменника: call me, with us. «Ми з Томом» — Tom and I.",
+    "**My, your, his, her, its, our, their** — перед іменником: my van. **Mine, yours, his, hers, ours, theirs** — без іменника: This van is mine.",
+    "«Свій» обираємо за власником: Sarah forgot **her** phone, he took **his** tools. І кажемо my / your там, де ми пропускаємо: wash **your** hands.",
+    "Про річ — **it**, про кілька — **they**, навіть якщо українською «він» чи «вона». **its** = чий (без апострофа), **it's** = it is або it has.",
+    "Чий: власник + **'s** + річ: Tom's van, the boss's office, my parents' house. Для речей — **of**: the top of the wall. «Себе», «сам» — **myself, yourself…**"
+  ],
   "blocks": [
     { "t": "p", "text": "Займенник — слово замість імені: я, він, вона, вони. В англійській у кожного займенника кілька форм, і вибір залежить від ролі в реченні: **I** — хто діє, **me** — кого / кому, **my** — чий (перед іменником), **mine** — чий (замість іменника). В українській ідея схожа (я, мене, мій), тож головне — запам'ятати таблицю." },
     { "t": "table", "head": ["Хто", "Кого / кому", "Чий + річ", "Чий (сам)"], "rows": [
@@ -95,6 +102,18 @@
     { "type": "choice", "q": "Our van is old. ___ doors don't close properly.", "uk": "Наш фургон старий. Його двері погано зачиняються.", "opts": ["It's", "Its", "His"], "a": 1, "why": "«Його» для речі — its, без апострофа. It's = it is, а his — лише про людину." },
     { "type": "input", "q": "Be careful! Don't cut ___.", "uk": "Обережно! Не поріжся.", "a": ["yourself"], "why": "Дія повертається на того, хто її робить (-ся): you → yourself." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ми з Томом ходили в Лідл.", "opts": ["Me and Tom went to Lidl.", "Tom and I went to Lidl.", "Tom and me went to Lidl."], "a": 1, "why": "«Ми з Томом» — підмет, тому I, а не me. Себе називаємо останнім: Tom and I." },
-    { "type": "order", "uk": "Почни з верху стіни.", "words": ["start", "the", "top", "of", "at", "the", "wall"], "a": ["Start at the top of the wall."], "why": "Для речей «чого» передаємо через of: the top of the wall — верх стіни." }
+    { "type": "order", "uk": "Почни з верху стіни.", "words": ["start", "the", "top", "of", "at", "the", "wall"], "a": ["Start at the top of the wall."], "why": "Для речей «чого» передаємо через of: the top of the wall — верх стіни." },
+    { "type": "choice", "q": "Where's Mick? I need to talk to ___.", "uk": "Де Мік? Мені треба з ним поговорити.", "opts": ["he", "him", "his"], "a": 1, "why": "Після прийменника (to, with, for) потрібна форма «кого / кому»: talk to him. He — лише перед дієсловом, а his — «його» перед річчю: his van." },
+    { "type": "input", "q": "The bricks are heavy. Don't lift ___ alone.", "uk": "Цеглини важкі. Не піднімай їх сам.", "a": ["them"], "why": "Bricks — кілька речей (they), а після дієслова lift потрібна форма «кого / що»: them." },
+    { "type": "choice", "q": "I hurt ___ back at work yesterday.", "uk": "Учора на роботі я пошкодив спину.", "opts": ["the", "my", "me"], "a": 1, "why": "Українською «спину» без «свою», а англійською «чий» кажуть завжди: I hurt my back. Me — це «мене», перед іменником не стоїть." },
+    { "type": "choice", "q": "Whose gloves are these? — They're ___.", "uk": "Чиї це рукавиці? — Його.", "opts": ["him", "his", "he's"], "a": 1, "why": "«Його» без іменника — his (у he ця форма та сама, що й перед іменником). Him — «його» після дієслова: I saw him. He's = he is." },
+    { "type": "input", "q": "Is this Kate's drill? — Yes, it's ___.", "uk": "Це дриль Кейт? — Так, її.", "a": ["hers"], "why": "Без іменника «її» — це hers. Her — тільки перед іменником: her drill. Апострофа в hers немає." },
+    { "type": "input", "q": "Look, ___ (it) snowing!", "uk": "Дивись, сніг іде!", "a": ["It's", "It is"], "why": "Тут it is (it's) snowing — з апострофом, бо це скорочення it is. Its без апострофа означає «його, її»: the van and its doors." },
+    { "type": "choice", "q": "This is my ___ house. They live in Wexford.", "uk": "Це будинок моїх батьків. Вони живуть у Вексфорді.", "opts": ["parent's", "parents'", "parents"], "a": 1, "why": "Власників двоє — parents, множина на -s, тому додаємо лише апостроф: my parents' house. Parent's — це одного з батьків, parents без апострофа — просто «батьки»." },
+    { "type": "input", "q": "Our van is new, but ___ is very old.", "uk": "Наш фургон новий, а їхній дуже старий.", "a": ["theirs"], "why": "«Їхній» без іменника — theirs. Their — лише перед іменником: their van. Апострофа в theirs немає." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Бос подзвонив Томові й мені.", "opts": ["The boss called Tom and I.", "The boss called Tom and me.", "The boss called Tom and my."], "a": 1, "why": "Після дієслова called потрібна форма «кому»: me. Перевірка: прибери Tom — залишиться called me, а не called I. Tom and I — лише коли ми виконуємо дію." },
+    { "type": "order", "uk": "Куртка Сари у фургоні.", "words": ["Sarah's", "jacket", "is", "in", "the", "van"], "a": ["Sarah's jacket is in the van."], "why": "Власник + 's + річ: Sarah's jacket. Порядок навпаки, ніж українською: спочатку чия, потім що." },
+    { "type": "choice", "q": "Tom built the shed ___.", "uk": "Том сам збудував сарай.", "opts": ["himself", "hisself", "him"], "a": 0, "why": "«Сам, без допомоги» — himself. Форми hisself не існує, а him — це «його» після дієслова." },
+    { "type": "order", "uk": "Ми з Оленою порізалися об скло.", "words": ["Olena", "and", "I", "cut", "ourselves", "on", "the", "glass"], "a": ["Olena and I cut ourselves on the glass."], "why": "«Ми з Оленою» — підмет, тому Olena and I (себе називаємо останнім). «Порізалися» — дія повертається на нас: ourselves." }
   ]
 }

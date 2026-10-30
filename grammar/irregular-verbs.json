@@ -5,6 +5,13 @@
   "uk": "Неправильні дієслова",
   "summary": "go – went – gone: понад 60 найчастіших дієслів групами",
   "minutes": 10,
+  "key": [
+    "Три форми: **V1 – V2 – V3**: go – went – gone. V2 сама означає минулий час; V3 буває лише після have / has / had або be (пасив).",
+    "Після **did / didn't — V1**: Did you go? I didn't see. Після **have / has — V3**: I've gone, she's seen. V2 там не стоїть ніколи.",
+    "Групи: усі однакові (**cut – cut – cut**, put, cost, read); V2 = V3 (**buy – bought – bought**, send – sent, say – said); усі різні (**see – saw – seen**).",
+    "До неправильних -ed не додаємо: buyed, costed, comed — так не кажуть. Лише learnt / learned, burnt / burned мають обидва варіанти.",
+    "У **come – came – come** і **run – ran – run** V3 така сама, як V1. **be – was / were – been**: was для I, he, she, it; were для you, we, they."
+  ],
   "blocks": [
     { "t": "p", "text": "Більшість англійських дієслів **правильні**: минула форма з -ed (work → worked). Але найчастіші дієслова — go, have, make, take — **неправильні**: у них свої форми, які треба запам'ятати. Їх не так багато, і понад 60 дієслів з цієї теми покривають більшість щоденних розмов на роботі й удома." },
     { "t": "h", "text": "Три форми: V1, V2, V3" },
@@ -156,6 +163,18 @@
     { "type": "input", "q": "Tom ___ (break) his arm at work last year.", "uk": "Том зламав руку на роботі минулого року.", "a": ["broke"], "why": "Last year — Past Simple, тому V2: break – broke – broken. Broken — V3, їй потрібне have або be." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я бачив цей фільм двічі.", "opts": ["I've saw this film twice.", "I've seen this film twice.", "I seen this film twice."], "a": 1, "why": "Після have ('ve) — V3: see – saw – seen. Без have форма seen як минулий час не вживається." },
     { "type": "order", "uk": "Де ти купив ці черевики?", "words": ["buy", "you", "these", "where", "did", "boots"], "a": ["Where did you buy these boots?"], "why": "Питання в Past Simple: Where + did + you + V1 (buy). Bought після did не ставимо." },
-    { "type": "order", "uk": "Ми ще не заплатили за матеріали.", "words": ["paid", "the", "we", "yet", "for", "haven't", "materials"], "a": ["We haven't paid for the materials yet.", "We haven't yet paid for the materials."], "why": "Після haven't — V3: pay – paid – paid. Yet («ще») зазвичай ставимо в кінці." }
+    { "type": "order", "uk": "Ми ще не заплатили за матеріали.", "words": ["paid", "the", "we", "yet", "for", "haven't", "materials"], "a": ["We haven't paid for the materials yet.", "We haven't yet paid for the materials."], "why": "Після haven't — V3: pay – paid – paid. Yet («ще») зазвичай ставимо в кінці." },
+    { "type": "choice", "q": "The tickets ___ forty euros.", "uk": "Квитки коштували сорок євро.", "opts": ["cost", "costed", "costs"], "a": 0, "why": "Cost однакове у всіх трьох формах: cost – cost – cost, -ed до нього не додаємо. Costs — теперішній час для he, she, it, а тут минулий." },
+    { "type": "input", "q": "I ___ (read) your message last night. Sorry I didn't reply.", "uk": "Я прочитав твоє повідомлення вчора ввечері. Вибач, що не відповів.", "a": ["read"], "why": "Read пишеться однаково в усіх формах, лише V2 і V3 звучать «ред». Readed не буває. Last night — минуле, тому V2." },
+    { "type": "input", "q": "Mick ___ (teach) me how to mix plaster on my first day.", "uk": "Мік навчив мене замішувати штукатурку в мій перший день.", "a": ["taught"], "why": "Teach – taught – taught, як catch – caught. On my first day — минуле, тому V2: taught, а не teached." },
+    { "type": "choice", "q": "Sorry, I didn't ___ what you said.", "uk": "Вибач, я не почув, що ти сказав.", "opts": ["hear", "heard", "hearing"], "a": 0, "why": "Після didn't — завжди V1: didn't hear. Минулий час уже показує didn't. Heard (V2) тут не ставимо." },
+    { "type": "input", "q": "Sarah ___ (write) to the landlord two days ago.", "uk": "Сара написала орендодавцю два дні тому.", "a": ["wrote"], "why": "Two days ago — Past Simple, тому V2: write – wrote – written. Written — V3, їй потрібне have або be." },
+    { "type": "input", "q": "I've ___ (forget) my keys again.", "uk": "Я знову забув ключі.", "a": ["forgotten"], "why": "Після have ('ve) — V3: forget – forgot – forgotten. Forgot — це V2, після have вона не стоїть." },
+    { "type": "choice", "q": "Have you ___ to the boss about the holidays yet?", "uk": "Ти вже говорив з босом про відпустку?", "opts": ["spoke", "spoken", "speak"], "a": 1, "why": "Після have — V3: speak – spoke – spoken. Spoke — V2, вона лише для Past Simple без have: I spoke to him yesterday." },
+    { "type": "choice", "q": "Olena ___ to Ireland in 2023.", "uk": "Олена приїхала в Ірландію в 2023 році.", "opts": ["came", "come", "comed"], "a": 0, "why": "Come – came – come. In 2023 — минуле, тому V2: came. Come — це V1 і V3, а comed не буває." },
+    { "type": "input", "q": "Where ___ (be) you yesterday? You didn't answer your phone.", "uk": "Де ти був учора? Ти не відповідав на телефон.", "a": ["were"], "why": "Be має дві V2: was (I, he, she, it) і were (you, we, they). Для you — were, навіть коли «ти» один." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Хто випив моє молоко?", "opts": ["Who drank my milk?", "Who drunk my milk?", "Who drinked my milk?"], "a": 0, "why": "Drink – drank – drunk. Минулий час — V2: drank. Drunk — V3, без have сама не вживається, а drinked не буває." },
+    { "type": "order", "uk": "Я нічого не сказав босу.", "words": ["boss", "nothing", "I", "to", "the", "said"], "a": ["I said nothing to the boss."], "why": "Say – said – said: минулий час — said (звучить «сед»). Порядок: підмет + дієслово + що (nothing) + кому (to the boss)." },
+    { "type": "order", "uk": "Коли почалася нарада?", "words": ["the", "begin", "when", "meeting", "did"], "a": ["When did the meeting begin?"], "why": "Питання в Past Simple: When + did + the meeting + V1 (begin). Began після did не ставимо: минулий час уже в did." }
   ]
 }

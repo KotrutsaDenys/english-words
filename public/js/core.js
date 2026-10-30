@@ -131,6 +131,65 @@
     return [].concat(targets).some(tg => { for (const v of gVariants(tg)) if (mine.has(v)) return true; return false; });
   }
 
+  /* ---------- Граматика: банк завдань, вибір на тест, повторення тем ---------- */
+  /* Стабільний ключ завдання: не залежить від його місця в банку */
+  function taskKey(t) {
+    const s = JSON.stringify([t.type, t.task || '', t.q || '', t.uk || '', t.opts || t.words || '']);
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h.toString(36);
+  }
+  /* Скільки завдань кожного типу щонайменше в тесті з n */
+  function taskMix(n) { return { choice: Math.round(4 * n / 12), input: Math.round(3 * n / 12), order: n >= 8 ? 1 : 0 }; }
+  /* Вибрати n завдань: спершу ті, де помилявся (seen = 1), потім ще не бачені, потім решта;
+     щонайменше по кілька кожного типу. Порядок — від простішого: за місцем у своїй дюжині банку. */
+  function pickTasks(bank, seen, n, rng) {
+    rng = rng || Math.random;
+    seen = seen || {};
+    n = Math.min(n, bank.length);
+    const items = bank.map((t, i) => {
+      const s = seen[taskKey(t)];
+      return { t, i, p: s === 1 ? 0 : s == null ? 1 : 2, r: rng() };
+    });
+    const byPri = (a, b) => a.p - b.p || a.r - b.r;
+    const chosen = new Set();
+    const need = taskMix(n);
+    for (const type of ['choice', 'input', 'order']) {
+      items.filter(x => x.t.type === type).sort(byPri).slice(0, need[type]).forEach(x => chosen.add(x));
+    }
+    items.slice().sort(byPri).forEach(x => { if (chosen.size < n) chosen.add(x); });
+    return Array.from(chosen).sort((a, b) => (a.i % 12) - (b.i % 12) || a.i - b.i).map(x => x.t);
+  }
+  /* Коли повторити тему після тесту: добре знаєш — інтервал росте, слабко — завтра-післязавтра */
+  function grammarSchedule(prev, bal, today) {
+    let iv;
+    if (bal >= 10) iv = prev && prev.iv >= 2 && prev.best >= 10 ? Math.min(120, Math.round(prev.iv * 2.5)) : 4;
+    else if (bal >= 7) iv = 2;
+    else iv = 1;
+    return { iv, due: today + iv };
+  }
+  /* Тест розділу: по завданню з кожної теми по колу, слабкіші теми першими; порядок — як теми в розділі */
+  function pickSectionTasks(topics, n, rng) {
+    rng = rng || Math.random;
+    const order = topics.map((tp, i) => ({ tp, i, w: tp.best == null ? -1 : tp.best, r: rng() }))
+      .sort((a, b) => a.w - b.w || a.r - b.r);
+    const queues = new Map(order.map(o => [o.tp.id, pickTasks(o.tp.tasks, o.tp.seen, o.tp.tasks.length, rng)
+      .map(t => ({ t, s: (o.tp.seen || {})[taskKey(t)] }))
+      .sort((a, b) => (a.s === 1 ? 0 : a.s == null ? 1 : 2) - (b.s === 1 ? 0 : b.s == null ? 1 : 2) || rng() - 0.5)]));
+    const out = [];
+    let guard = 0;
+    while (out.length < n && guard++ < 1000) {
+      let took = false;
+      for (const o of order) {
+        if (out.length >= n) break;
+        const q = queues.get(o.tp.id);
+        if (q && q.length) { out.push({ tid: o.tp.id, pos: o.i, task: q.shift().t }); took = true; }
+      }
+      if (!took) break;
+    }
+    return out.sort((a, b) => a.pos - b.pos);
+  }
+
   /* ---------- Речення з пропуском ---------- */
   const IRREGULAR = {
     get: ['got', 'gotten'], keep: ['kept'], bring: ['brought'], take: ['took', 'taken'], mean: ['meant'],
@@ -783,7 +842,7 @@
     wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
     EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
-    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch
+    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, pickTasks, grammarSchedule, pickSectionTasks
   };
   root.EWCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

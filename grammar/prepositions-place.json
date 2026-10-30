@@ -5,6 +5,13 @@
   "uk": "Прийменники місця й руху",
   "summary": "де і куди: in the van, on the wall, at work, into, across, go home",
   "minutes": 7,
+  "key": [
+    "**in** — всередині: in the van, in Dublin, in the photo. **on** — на поверхні: on the wall, on the floor; а ще on the first floor, on the left.",
+    "**at** — точка чи заклад: at the bus stop, at the door, **at work**, **at home**, at the doctor's.",
+    "Транспорт: **on** the bus / train / plane, але **in** the car / van / taxi. Сісти й вийти: get **into / out of** the car, get **on / off** the bus.",
+    "Рух: **to** — куди, **into** — всередину, **through** — крізь, **across** — на інший бік, **past** — повз. Але **go home** — без to.",
+    "**arrive in** — місто, країна; **arrive at** — будівля чи місце. Arrive to не буває, а от get **to** work — з to."
+  ],
   "blocks": [
     { "t": "p", "text": "Прийменники місця відповідають на питання **«де?»**, а прийменники руху — **«куди?»** і **«звідки?»**. Головні три — **in**, **on**, **at**. Вони не збігаються з українськими «в» і «на»: «на роботі» — **at** work, «в автобусі» — **on** the bus, «на фото» — **in** the photo. Тому дивись не на українське слово, а на те, **як розташовано** людину чи предмет." },
     { "t": "h", "text": "In — всередині" },
@@ -107,6 +114,18 @@
     { "type": "choice", "q": "Get ___ the car, quick!", "uk": "Сідай у машину, швидше!", "opts": ["into", "onto", "at"], "a": 0, "why": "Рух усередину — into. Onto — на поверхню (onto the roof), а at не показує руху." },
     { "type": "input", "q": "Get ___ the bus at the next stop.", "uk": "Вийди з автобуса на наступній зупинці.", "a": ["off"], "why": "З автобуса, поїзда, літака — get off. З машини — get out of the car." },
     { "type": "order", "uk": "Фургон стоїть перед будинком.", "words": ["house", "front", "is", "the", "of", "van", "in", "the"], "a": ["The van is in front of the house."], "why": "«Перед» — три слова in front of, далі the house." },
-    { "type": "order", "uk": "О котрій ти приїхав на об'єкт?", "words": ["site", "arrive", "what", "the", "you", "did", "at", "time"], "a": ["What time did you arrive at the site?"], "why": "Об'єкт — конкретне місце, тому arrive at. Питання в минулому: what time + did + you + arrive." }
+    { "type": "order", "uk": "О котрій ти приїхав на об'єкт?", "words": ["site", "arrive", "what", "the", "you", "did", "at", "time"], "a": ["What time did you arrive at the site?"], "why": "Об'єкт — конкретне місце, тому arrive at. Питання в минулому: what time + did + you + arrive." },
+    { "type": "choice", "q": "My keys are ___ my jacket pocket.", "uk": "Мої ключі в кишені куртки.", "opts": ["in", "on", "at"], "a": 0, "why": "Ключі всередині кишені, тому in: in my pocket, in the box." },
+    { "type": "choice", "q": "The changing rooms are ___ the ground floor.", "uk": "Роздягальні на першому поверсі.", "opts": ["in", "on", "at"], "a": 1, "why": "Поверхи — з on: on the ground floor. Ground floor — поверх на рівні землі, тобто наш перший, а first floor — уже наш другий." },
+    { "type": "input", "q": "Sorry, I can't talk now, I'm ___ the dentist's.", "uk": "Вибач, не можу зараз говорити: я в стоматолога.", "a": ["at"], "why": "Заклад, куди приходять з певною метою, — at: at the dentist's, at the doctor's, at work." },
+    { "type": "choice", "q": "I left my phone ___ the taxi.", "uk": "Я залишив телефон у таксі.", "opts": ["in", "on", "at"], "a": 0, "why": "Машина, фургон, таксі — in. On — для великого транспорту, де можна ходити: on the bus, on the train." },
+    { "type": "input", "q": "Get ___ of the van and open the gate.", "uk": "Вийди з фургона й відчини ворота.", "a": ["out"], "why": "З машини чи фургона — get out of. Get off — з автобуса чи поїзда: get off the bus." },
+    { "type": "order", "uk": "Магазин у кінці вулиці.", "words": ["street", "the", "shop", "end", "is", "of", "the", "at", "the"], "a": ["The shop is at the end of the street."], "why": "Кінець вулиці — точка, тому at, як at the bus stop чи at the traffic lights." },
+    { "type": "choice", "q": "There's a pharmacy ___ the hospital.", "uk": "Навпроти лікарні є аптека.", "opts": ["opposite", "between", "next"], "a": 0, "why": "«Навпроти» — opposite, і після нього нічого не додаємо. Between — між двома, а next без to не вживаємо: next to the hospital." },
+    { "type": "input", "q": "How do you get ___ work? — By bus.", "uk": "Як ти добираєшся на роботу? — Автобусом.", "a": ["to"], "why": "Get у значенні «добиратися» — з to: get to work, get to Dublin. Без to лише home: get home." },
+    { "type": "choice", "q": "We walked ___ the beach to Courtown.", "uk": "Ми йшли вздовж пляжу до Кортауна.", "opts": ["along", "across", "through"], "a": 0, "why": "«Вздовж» — along. Across — з одного боку на інший (across the road), а through — крізь щось об'ємне (through the forest)." },
+    { "type": "choice", "q": "The train goes ___ a long tunnel.", "uk": "Поїзд проїжджає через довгий тунель.", "opts": ["through", "across", "past"], "a": 0, "why": "Українське «через» тут означає «крізь», тому through. Across — по поверхні на інший бік (across the bridge), а past — повз." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Ми живемо недалеко від пляжу.", "opts": ["We live near the beach.", "We live near of the beach.", "We live next the beach."], "a": 0, "why": "Near — без of: near the beach. А next завжди з to: next to the beach (поруч)." },
+    { "type": "order", "uk": "Сьогодні вранці ми проїхали повз твій будинок.", "words": ["house", "past", "drove", "this", "your", "we", "morning"], "a": ["We drove past your house this morning.", "This morning we drove past your house."], "why": "«Повз» — past: drive past, walk past. Час (this morning) — у кінці або на початку речення." }
   ]
 }

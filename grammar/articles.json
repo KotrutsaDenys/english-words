@@ -5,6 +5,13 @@
   "uk": "Артиклі a, an, the",
   "summary": "коли a/an, коли the, а коли без артикля: a job, the boss, at work",
   "minutes": 12,
+  "key": [
+    "**a** — перед приголосним звуком, **an** — перед голосним. Важить звук, а не буква: a uniform, an hour, an X-ray, an old van.",
+    "**a / an** — одна якась річ, яку можна порахувати: згадуємо вперше, професія, «на»: I need a ladder. I'm a plasterer. Twice a week.",
+    "**the** — обидва знаємо, яке саме: згадали вдруге, єдине (the sun), the best, the first, the same, звичні місця (the bank), the UK, the M11.",
+    "**Без артикля** — загалом (Life is hard, I like dogs), міста й більшість країн, сталі вирази: at work, at home, go home, by bus.",
+    "Пастка: з **незлічуваним** (work, advice, money) a/an не буває: a job, some advice. А одну злічувану річ не лишай голою: не «I need ladder»."
+  ],
   "blocks": [
     { "t": "p", "text": "**Артикль** — коротке слово перед іменником (іменник — назва людини, предмета чи місця: boss, van, job). В українській артиклів немає, тому здається, що це дрібниця. Але англієць одразу чує, коли їх бракує, як ми чуємо «я хотіти кава». Добра новина: варіантів лише три — **a/an**, **the** або **нічого**." },
     { "t": "table", "head": ["Що ставимо", "Коли", "Приклад"], "rows": [
@@ -61,7 +68,7 @@
       "**Згадуємо вдруге**: I bought **a** drill. **The** drill was cheap.",
       "**Зрозуміло з обставин**: Close **the** door. Where's **the** boss? (наш бос, на нашому об'єкті)",
       "**Єдине у світі чи тут**: **the** sun, **the** sky, **the** sea, **the** government",
-      "**Найвищий ступінь, порядок і same**:**the** best, **the** biggest, **the** first, **the** last, **the** same",
+      "**Найвищий ступінь, порядок і same**: **the** best, **the** biggest, **the** first, **the** last, **the** same",
       "**Уточнюємо, яке саме**: **the** van outside, **the** man from Gorey"
     ] },
     { "t": "ex", "items": [
@@ -154,6 +161,18 @@
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "opts": ["I go to work by bus.", "I go to the work by bus.", "I go to work by the bus."], "a": 0, "why": "Go to work і by bus — сталі вирази без артикля, як at home, go home, have lunch." },
     { "type": "choice", "q": "Can you give me ___ advice?", "uk": "Можеш мені щось порадити?", "opts": ["a", "an", "some"], "a": 2, "why": "Advice незлічуване (поштучно не рахуємо), тому a/an з ним не буває. Кажемо some advice або a piece of advice." },
     { "type": "input", "q": "He's ___ (a / an / the) best plasterer I know.", "uk": "Він найкращий штукатур, якого я знаю.", "a": ["the"], "why": "Найвищий ступінь (the best, the biggest, the cheapest) завжди з the." },
-    { "type": "order", "uk": "Ходімо в суботу в кіно.", "words": ["go", "cinema", "let's", "on", "the", "Saturday", "to"], "a": ["Let's go to the cinema on Saturday.", "On Saturday, let's go to the cinema."], "why": "Звичні місця в місті — з the (the cinema), а дні тижня без артикля (on Saturday). Коли — зазвичай у кінці." }
+    { "type": "order", "uk": "Ходімо в суботу в кіно.", "words": ["go", "cinema", "let's", "on", "the", "Saturday", "to"], "a": ["Let's go to the cinema on Saturday.", "On Saturday, let's go to the cinema."], "why": "Звичні місця в місті — з the (the cinema), а дні тижня без артикля (on Saturday). Коли — зазвичай у кінці." },
+    { "type": "choice", "q": "We had ___ easy day today.", "uk": "Сьогодні в нас був легкий день.", "opts": ["a", "an", "the"], "a": 1, "why": "Дивимося на перше слово після артикля, навіть якщо це прикметник. Easy починається з голосного звуку, тому an. Без прикметника було б a day." },
+    { "type": "choice", "q": "Is there ___ chemist near here?", "uk": "Тут поблизу є аптека?", "opts": ["a", "an", "the"], "a": 0, "why": "Питаємо про якусь аптеку, одну з багатьох, і згадуємо її вперше — a. Chemist починається з приголосного звуку [к], тому не an." },
+    { "type": "choice", "q": "I left my phone ___.", "uk": "Я залишив телефон удома.", "opts": ["at home", "at the home", "in the home"], "a": 0, "why": "At home — сталий вираз без артикля, як at work, go home, by bus." },
+    { "type": "input", "q": "There's ___ (a / an / the) ambulance outside.", "uk": "Надворі стоїть якась швидка.", "a": ["an"], "why": "Згадуємо вперше якусь одну машину — a/an. Ambulance починається з голосного звуку [е], тому an." },
+    { "type": "choice", "q": "What ___ beautiful day!", "uk": "Який чудовий день!", "opts": ["a", "the", "— (без артикля)"], "a": 0, "why": "У вигуках What a…! з однією злічуваною річчю завжди a/an: What a day! What a mess! What an idea!" },
+    { "type": "choice", "q": "Liam is looking for ___.", "uk": "Ліам шукає роботу.", "opts": ["a work", "a job", "job"], "a": 1, "why": "Work незлічуване, тому a з ним не буває. Job злічуване, а одну злічувану річ не залишають голою: a job." },
+    { "type": "input", "q": "___ (a / an / the) first bus leaves at six.", "uk": "Перший автобус відходить о шостій.", "a": ["The"], "why": "Перший, останній, той самий — the first, the last, the same. Перший автобус лише один, тому the." },
+    { "type": "choice", "q": "Oksana doesn't drink ___.", "uk": "Оксана взагалі не п'є кави.", "opts": ["coffee", "the coffee", "a coffee"], "a": 0, "why": "Говоримо про каву загалом, тому без артикля. The було б про якусь конкретну каву, a — про одну чашку." },
+    { "type": "input", "q": "I don't like ___ (a / an / the) music they play in the gym.", "uk": "Мені не подобається музика, яку вмикають у спортзалі.", "a": ["the"], "why": "Не музика загалом, а саме та, що грає в спортзалі, — уточнюємо, яка саме, тому the. Про музику взагалі було б без артикля: I like music." },
+    { "type": "choice", "q": "The traffic on ___ was terrible this morning.", "uk": "Сьогодні вранці на трасі M11 були жахливі затори.", "opts": ["the M11", "M11", "an M11"], "a": 0, "why": "Траси, річки й моря — з the: the M11, the Slaney, the Atlantic. А міста й більшість країн без артикля: Gorey, Ireland." },
+    { "type": "input", "q": "The doctor says I need ___ (a / an / the) X-ray.", "uk": "Лікар каже, що мені треба зробити рентген.", "a": ["an"], "why": "Важить звук, а не буква: X читається [екс], тобто починається з голосного звуку. Тому an X-ray, як an hour." },
+    { "type": "order", "uk": "Я ходжу в спортзал тричі на тиждень.", "words": ["week", "go", "the", "three", "I", "a", "gym", "times", "to"], "a": ["I go to the gym three times a week.", "Three times a week I go to the gym."], "why": "Звичні місця — з the: the gym, the bank. «На тиждень» — a week, як €15 an hour." }
   ]
 }

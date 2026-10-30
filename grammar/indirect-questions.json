@@ -5,6 +5,13 @@
   "uk": "Ввічливі непрямі питання",
   "summary": "ввічливо спитати: Can you tell me where the station is?",
   "minutes": 6,
+  "key": [
+    "Ввічливий початок: **Can / Could you tell me…?**, **Do you know…?**, **Do you have any idea…?** — а далі саме питання.",
+    "Далі **звичайний порядок**: спершу підмет, потім дієслово: where **the station is**, when **he will** be back.",
+    "**Do / does / did зникають**, дієслово як у звичайному реченні: what time the bus **leaves**, where Tom **went**.",
+    "Питання «так чи ні» — через **if / whether** («чи»): Do you know **if** he's coming?",
+    "Після **I wonder**, **I don't know**, **I'd like to know** — крапка, бо це не питання: I wonder where he is."
+  ],
   "blocks": [
     { "t": "p", "text": "Пряме питання (Where is the station?) — нормальне, але в незнайомої людини, у магазині, по телефону чи в боса ввічливіше спитати **непрямо**: спершу м'який початок (Can you tell me…, Do you know…), а потім саме питання. Головне правило: у другій частині **звичайний порядок слів**, як у стверджувальному реченні." },
     { "t": "ex", "items": [
@@ -79,6 +86,18 @@
     { "type": "input", "q": "Do you know how much Sarah ___ (pay) for her car?", "uk": "Ти не знаєш, скільки Сара заплатила за машину?", "a": ["paid", "has paid"], "why": "Без did: дієслово у V2, як у звичайному реченні: Sarah paid. Pay неправильне: pay – paid – paid." },
     { "type": "choice", "task": "Яке речення правильне?", "q": "", "opts": ["I wonder why she is angry?", "I wonder why she is angry.", "I wonder why is she angry."], "a": 1, "why": "Після I wonder — звичайний порядок слів (she is). І це не питання, а думка («цікаво…»), тому в кінці крапка." },
     { "type": "order", "uk": "Ви не знаєте, де він працює?", "words": ["works", "know", "he", "do", "where", "you"], "a": ["Do you know where he works?"], "why": "Do стоїть лише на початку (Do you know). Далі звичайний порядок: where + he + works, без does." },
-    { "type": "order", "uk": "Цікаво, чи потрібні їм ще штукатури.", "words": ["need", "wonder", "they", "more", "I", "if", "plasterers"], "a": ["I wonder if they need more plasterers."], "why": "I wonder + if («чи») + підмет (they) + дієслово. Це не питання, тому в кінці крапка." }
+    { "type": "order", "uk": "Цікаво, чи потрібні їм ще штукатури.", "words": ["need", "wonder", "they", "more", "I", "if", "plasterers"], "a": ["I wonder if they need more plasterers."], "why": "I wonder + if («чи») + підмет (they) + дієслово. Це не питання, тому в кінці крапка." },
+    { "type": "choice", "q": "Do you know if ___?", "uk": "Ти не знаєш, чи Ліам сьогодні на роботі?", "opts": ["Liam is at work today", "is Liam at work today", "Liam at work today"], "a": 0, "why": "Після if — звичайний порядок: спершу підмет (Liam), потім is. Без is речення неповне: в англійському реченні дієслово потрібне завжди." },
+    { "type": "choice", "q": "Do you know where ___ yesterday?", "uk": "Ти не знаєш, де вчора була Емма?", "opts": ["Emma was", "was Emma", "Emma were"], "a": 0, "why": "Was, як і is, переходить за підмет: where Emma was. Emma — це вона, тому was, а не were." },
+    { "type": "input", "q": "Do you know what time Andrii ___ (finish) work on Fridays?", "uk": "Ти не знаєш, о котрій Андрій закінчує роботу по п'ятницях?", "a": ["finishes"], "why": "Does зникає, тому -s повертається до дієслова: Andrii finishes. Після -sh пишемо -es: finishes." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я хотів би знати, де моя посилка.", "opts": ["I'd like to know where my parcel is.", "I'd like to know where is my parcel.", "I'd like to know where my parcel is?"], "a": 0, "why": "Після I'd like to know — звичайний порядок (my parcel is). Це не питання, а прохання, тому в кінці крапка." },
+    { "type": "choice", "q": "Do you know ___ by card here?", "uk": "Ви не знаєте, чи можна тут розплатитися карткою?", "opts": ["if I can pay", "can I pay", "if can I pay"], "a": 0, "why": "Can I pay…? у непрямому питанні: if («чи») + підмет (I) + can. В Ірландії почуєш і «Do you know can I…», але стандартно — з if." },
+    { "type": "choice", "q": "Do you have any idea how much ___?", "uk": "Ви часом не знаєте, скільки коштує квиток до Дубліна?", "opts": ["a ticket to Dublin costs", "does a ticket to Dublin cost", "costs a ticket to Dublin"], "a": 0, "why": "Does у непрямому питанні зникає, а cost отримує -s. Порядок звичайний: спершу підмет (a ticket to Dublin), потім costs." },
+    { "type": "input", "q": "Do you know what the doctor ___ (tell) Dave yesterday?", "uk": "Ти не знаєш, що лікар учора сказав Дейвові?", "a": ["told"], "why": "Did зникає, дієслово у V2, як у звичайному реченні: the doctor told. Tell неправильне: tell — told — told." },
+    { "type": "choice", "q": "Could you tell me where ___ a SIM card?", "uk": "Підкажіть, будь ласка, де можна купити SIM-картку?", "opts": ["I can buy", "can I buy", "I can to buy"], "a": 0, "why": "Can, як і is, стоїть після підмета: where I can buy. Після can дієслово без to." },
+    { "type": "order", "uk": "Я не знаю, коли прийде сантехнік.", "words": ["come", "know", "plumber", "I", "when", "will", "don't", "the"], "a": ["I don't know when the plumber will come."], "why": "Після I don't know — звичайний порядок: when + the plumber + will come. Will переходить за підмет. Це не питання, тому крапка." },
+    { "type": "input", "q": "Do you know who ___ (leave) the gate open last night?", "uk": "Ти не знаєш, хто вчора ввечері залишив ворота відчиненими?", "a": ["left"], "why": "Who тут підмет (хто залишив), тому порядок і так звичайний, а did немає: who left. Leave неправильне: leave — left — left." },
+    { "type": "choice", "q": "Do you know ___?", "uk": "Ти не знаєш, кому дзвонила Олена?", "opts": ["who Olena called", "who did Olena call", "who called Olena"], "a": 0, "why": "Дзвонила Олена — вона підмет: who + Olena + called, без did. Who called Olena означало б «хто дзвонив Олені»." },
+    { "type": "order", "uk": "Ти не знаєш, де Пол купив свої черевики?", "words": ["boots", "know", "bought", "where", "you", "Paul", "his", "do"], "a": ["Do you know where Paul bought his boots?"], "why": "Do стоїть лише на початку (Do you know). Did у другій частині зникає, тому дієслово у V2: Paul bought." }
   ]
 }

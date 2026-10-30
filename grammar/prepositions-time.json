@@ -5,6 +5,13 @@
   "uk": "Прийменники часу: in, on, at",
   "summary": "коли: at 8, on Monday, in May; for, since, until, by, ago",
   "minutes": 8,
+  "key": [
+    "**at** — година й момент: at 7, at lunchtime, **at night**, **at the weekend**, at Christmas.",
+    "**on** — день і дата: on Monday, on Fridays, on 5 May, on Christmas Day. Названо день — перемагає on: **on Friday night**, але **in the morning**.",
+    "**in** — місяць, рік, пора року, частина дня: in May, in 2025, in winter, in the evening. **in** + проміжок = «через»: in ten minutes.",
+    "Без прийменника — перед **next, last, this, every** і з today, tomorrow, yesterday: next week, last night, every day.",
+    "**for** — скільки (for two hours), **since** — з якого моменту (since Monday), **ago** — тому (two days ago). **until** — аж до, **by** — не пізніше."
+  ],
   "blocks": [
     { "t": "p", "text": "**Прийменник** — коротке слово перед іменником, яке показує зв'язок: «**о** восьмій», «**у** понеділок», «**до** п'ятниці». Для часу в англійській три головні прийменники: **at**, **on**, **in**. Вони не збігаються з українськими «о, у, в», тому запам'ятай систему: **at** — точка часу, **on** — день, **in** — довший період." },
     { "t": "h", "text": "At — точний час і короткі моменти" },
@@ -106,6 +113,18 @@
     { "type": "choice", "q": "Can you hold the ladder ___ I go up?", "uk": "Можеш потримати драбину, поки я лізу нагору?", "opts": ["while", "during", "for"], "a": 0, "why": "Після пропуску ціле речення (I go up), тому while. During і for стоять лише перед іменником." },
     { "type": "choice", "q": "Please finish the bathroom ___ Friday.", "uk": "Будь ласка, закінч ванну до п'ятниці.", "opts": ["until", "by", "since"], "a": 1, "why": "Закінчити треба не пізніше п'ятниці — це by. Until — коли дія триває весь час до моменту (work until Friday)." },
     { "type": "order", "uk": "Що ти робиш на вихідних?", "words": ["weekend", "doing", "the", "what", "you", "at", "are"], "a": ["What are you doing at the weekend?"], "why": "У британській англійській — at the weekend. Питання: what + are + you + doing." },
-    { "type": "order", "uk": "Чекай тут, доки я не повернуся.", "words": ["back", "until", "here", "I", "wait", "come"], "a": ["Wait here until I come back."], "why": "«Доки не повернуся» — until I come back, без not. Після until про майбутнє вживаємо теперішній час (come)." }
+    { "type": "order", "uk": "Чекай тут, доки я не повернуся.", "words": ["back", "until", "here", "I", "wait", "come"], "a": ["Wait here until I come back."], "why": "«Доки не повернуся» — until I come back, без not. Після until про майбутнє вживаємо теперішній час (come)." },
+    { "type": "choice", "q": "My birthday is ___ 14 July.", "uk": "Мій день народження 14 липня.", "opts": ["in", "on", "at"], "a": 1, "why": "Дата — це конкретний день, тому on: on 14 July. In — лише для місяця без числа: in July." },
+    { "type": "choice", "q": "It gets very cold here ___ night.", "uk": "Уночі тут стає дуже холодно.", "opts": ["in", "on", "at"], "a": 2, "why": "«Уночі» — at night. А інші частини дня з in: in the morning, in the evening." },
+    { "type": "input", "q": "Olena was born ___ 1998.", "uk": "Олена народилася 1998 року.", "a": ["in"], "why": "Рік — довгий період, тому in: in 1998, in 2025." },
+    { "type": "input", "q": "Kate goes swimming ___ Sundays.", "uk": "Кейт ходить плавати щонеділі.", "a": ["on"], "why": "Дні тижня — з on. У множині (on Sundays) це означає «щонеділі, по неділях»." },
+    { "type": "choice", "q": "We're having a family dinner ___ Christmas Day.", "uk": "У день Різдва в нас сімейна вечеря.", "opts": ["in", "on", "at"], "a": 1, "why": "Christmas Day — конкретний день, тому on. А свято загалом, кілька днів, — at Christmas." },
+    { "type": "choice", "q": "The doctor can see you ___ the afternoon.", "uk": "Лікар може прийняти тебе після обіду.", "opts": ["in", "on", "at"], "a": 0, "why": "Частини дня — in: in the morning, in the afternoon. On — лише коли названо день: on Monday afternoon." },
+    { "type": "order", "uk": "Я щовечора дзвоню мамі.", "words": ["evening", "my", "call", "every", "I", "mum"], "a": ["I call my mum every evening.", "Every evening I call my mum."], "why": "Перед every прийменник не ставимо: every evening, а не in every evening. Every evening можна поставити в кінці або на початку." },
+    { "type": "choice", "q": "My phone rang ___ the film.", "uk": "Під час фільму в мене задзвонив телефон.", "opts": ["during", "while", "for"], "a": 0, "why": "Далі іменник (the film), тому during — «під час». While ставимо перед цілим реченням (while I was watching), а for — скільки тривало." },
+    { "type": "input", "q": "I've had this phone ___ Christmas.", "uk": "Цей телефон у мене з Різдва.", "a": ["since"], "why": "Різдво — момент, з якого почалося, тому since. For — з проміжком часу: for two months." },
+    { "type": "choice", "q": "The pharmacy is open ___ nine tonight.", "uk": "Аптека сьогодні працює до дев'ятої вечора.", "opts": ["until", "by", "since"], "a": 0, "why": "Аптека відчинена весь час аж до дев'ятої, тому until. By — «не пізніше»: be home by nine." },
+    { "type": "order", "uk": "Ми одружені десять років.", "words": ["for", "married", "years", "we've", "ten", "been"], "a": ["We've been married for ten years."], "why": "Скільки триває — for + проміжок, і Present Perfect (have been), бо досі одружені. Since — з моментом початку: since 2016." },
+    { "type": "input", "q": "Your car will be ready ___ five o'clock.", "uk": "Твоя машина буде готова до п'ятої.", "a": ["by", "before"], "why": "Машина буде готова не пізніше п'ятої, можливо й раніше, тому by (before теж можна). Until — «весь час аж до»: wait until five." }
   ]
 }

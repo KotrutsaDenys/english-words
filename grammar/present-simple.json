@@ -5,6 +5,13 @@
   "uk": "Теперішній простий час",
   "summary": "звички, факти, розклад: I work, she works",
   "minutes": 6,
+  "key": [
+    "**he / she / it + дієслово-s**: she works, he goes, it has. Для I, you, we, they дієслово без -s: they work.",
+    "Правопис -s: watch → watch**es**, go → go**es**, carry → carr**ies**, але play → play**s**; have → **has**.",
+    "Заперечення й питання з **don't / doesn't**, **do / does** — і тоді дієслово без -s: She doesn't work. Does he live here?",
+    "Коротка відповідь — тим самим do / does: Do you smoke? — No, I **don't**. Does she drive? — Yes, she **does**.",
+    "Для звичок, фактів і розкладу (every day, usually, on Mondays). Always, never, usually — **перед** дієсловом, але **після** am / is / are."
+  ],
   "blocks": [
     { "t": "p", "text": "**Present Simple** — час для того, що відбувається **регулярно** або є **завжди правдою**: звички, робота, факти, розклад. Не «зараз, у цю хвилину», а «взагалі, зазвичай»." },
     { "t": "ex", "items": [
@@ -61,6 +68,18 @@
     { "type": "input", "q": "___ he usually take the bus?", "uk": "Він зазвичай їздить автобусом?", "a": ["Does"], "why": "Питання про he починаємо з Does, а дієслово take залишається без -s." },
     { "type": "input", "q": "The baby often ___ (cry) at night.", "uk": "Дитина часто плаче вночі.", "a": ["cries"], "why": "Приголосна + y: y змінюємо на -ies (cry → cries)." },
     { "type": "order", "uk": "Де ти зазвичай обідаєш?", "words": ["usually", "you", "do", "where", "lunch", "have"], "a": ["Where do you usually have lunch?"], "why": "Питання: питальне слово + do + you, далі usually перед дієсловом have." },
-    { "type": "order", "uk": "Він ніколи не запізнюється на роботу.", "words": ["late", "is", "work", "never", "he", "for"], "a": ["He is never late for work."], "why": "Never стоїть після is, але перед звичайним дієсловом." }
+    { "type": "order", "uk": "Він ніколи не запізнюється на роботу.", "words": ["late", "is", "work", "never", "he", "for"], "a": ["He is never late for work."], "why": "Never стоїть після is, але перед звичайним дієсловом." },
+    { "type": "choice", "q": "The train ___ Gorey at 7:15.", "uk": "Поїзд відходить з Горі о 7:15.", "opts": ["leave", "leaves", "leaving"], "a": 1, "why": "Розклад — це Present Simple, а the train — це it, тому leaves. Leaving саме по собі, без is, присудком бути не може." },
+    { "type": "choice", "q": "Do you like your new job? — Yes, I ___.", "uk": "Тобі подобається нова робота? — Так.", "opts": ["do", "like", "am"], "a": 0, "why": "Коротка відповідь повторює допоміжне дієслово з питання: Do you…? — Yes, I do. Саме дієслово (like) у короткій відповіді не повторюють." },
+    { "type": "choice", "q": "Does Kate speak Polish? — No, she ___.", "uk": "Кейт розмовляє польською? — Ні.", "opts": ["doesn't", "don't", "isn't"], "a": 0, "why": "У питанні does, тому й у відповіді doesn't: No, she doesn't. Don't — для I, you, we, they, а isn't з питанням на does не поєднується." },
+    { "type": "input", "q": "My sister ___ (go) to the gym on Tuesdays.", "uk": "Моя сестра ходить у спортзал щовівторка.", "a": ["goes"], "why": "My sister — це she, а go отримує -es: goes. On Tuesdays (щовівторка) — звичка, тому Present Simple." },
+    { "type": "input", "q": "Olena ___ (wash) her car every Saturday.", "uk": "Олена миє машину щосуботи.", "a": ["washes"], "why": "Для she дієслово з -s, а після -sh додаємо -es: wash → washes." },
+    { "type": "input", "q": "Andrii ___ (play) football with his kids at the weekend.", "uk": "Андрій грає у футбол з дітьми на вихідних.", "a": ["plays"], "why": "Перед y стоїть голосна (a), тому просто -s: play → plays. Правило y → ies лише після приголосної: carry → carries." },
+    { "type": "choice", "q": "Where ___ your parents live?", "uk": "Де живуть твої батьки?", "opts": ["do", "does", "are"], "a": 0, "why": "Your parents — це they, тому питання з do. Does — лише для he, she, it, а are зі звичайним дієсловом live не ставимо." },
+    { "type": "choice", "task": "Яке речення правильне?", "q": "", "uk": "Я працюю в Дубліні.", "opts": ["I am work in Dublin.", "I work in Dublin.", "I works in Dublin."], "a": 1, "why": "Am не додаємо до звичайного дієслова: «я працюю» — просто I work. А -s буває лише після he, she, it, не після I." },
+    { "type": "input", "q": "___ this shop sell paint?", "uk": "У цьому магазині продають фарбу?", "a": ["Does"], "why": "This shop — це it, тому питання починаємо з Does, а sell залишається без -s: закінчення вже в does." },
+    { "type": "input", "q": "Tom ___ (not / eat) meat.", "uk": "Том не їсть м'яса.", "a": ["doesn't eat", "does not eat"], "why": "Tom — це he, тому doesn't, а після нього дієслово без -s: doesn't eat, а не doesn't eats." },
+    { "type": "order", "uk": "Вона завжди п'є каву вранці.", "words": ["coffee", "the", "always", "she", "in", "drinks", "morning"], "a": ["She always drinks coffee in the morning.", "In the morning she always drinks coffee."], "why": "Always стоїть перед звичайним дієсловом: she always drinks. Для she дієслово з -s. In the morning можна поставити в кінець або на початок." },
+    { "type": "order", "uk": "Як часто твій бос платить тобі?", "words": ["often", "your", "pay", "does", "how", "boss", "you"], "a": ["How often does your boss pay you?"], "why": "Питання: How often + does + підмет (your boss) + дієслово без -s (pay). Your boss — це he, тому does." }
   ]
 }
