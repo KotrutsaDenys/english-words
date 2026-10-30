@@ -125,6 +125,6 @@
     { "type": "input", "q": "I've had this phone ___ Christmas.", "uk": "Цей телефон у мене з Різдва.", "a": ["since"], "why": "Різдво — момент, з якого почалося, тому since. For — з проміжком часу: for two months." },
     { "type": "choice", "q": "The pharmacy is open ___ nine tonight.", "uk": "Аптека сьогодні працює до дев'ятої вечора.", "opts": ["until", "by", "since"], "a": 0, "why": "Аптека відчинена весь час аж до дев'ятої, тому until. By — «не пізніше»: be home by nine." },
     { "type": "order", "uk": "Ми одружені десять років.", "words": ["for", "married", "years", "we've", "ten", "been"], "a": ["We've been married for ten years."], "why": "Скільки триває — for + проміжок, і Present Perfect (have been), бо досі одружені. Since — з моментом початку: since 2016." },
-    { "type": "input", "q": "Your car will be ready ___ five o'clock.", "uk": "Твоя машина буде готова до п'ятої.", "a": ["by", "before"], "why": "Машина буде готова не пізніше п'ятої, можливо й раніше, тому by (before теж можна). Until — «весь час аж до»: wait until five." }
+    { "type": "input", "q": "Your car will be ready ___ five o'clock.", "uk": "Твоя машина буде готова до п'ятої.", "a": ["by", "before", "for"], "why": "Машина буде готова не пізніше п'ятої, можливо й раніше, тому by (before теж можна). Until — «весь час аж до»: wait until five." }
   ]
 }

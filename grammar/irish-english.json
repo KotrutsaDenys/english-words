@@ -41,7 +41,7 @@
       ["**Shall I** call the boss?", "Подзвонити босу? (стандартно)"]
     ] },
     { "t": "h", "text": "Ye — ви у множині" },
-    { "t": "p", "text": "У стандартній англійській **you** — і «ти», і «ви». Ірландцям цього мало, тому для кількох людей вони кажуть **ye** (вимовляється як «yee»): Are ye coming? У Дубліні ще почуєш **yous** або **youse**, а в Корку — ye теж. Відповідати треба стандартним you." },
+    { "t": "p", "text": "У стандартній англійській **you** — і «ти», і «ви». Ірландцям цього мало, тому для кількох людей вони кажуть **ye** (вимовляється як «yee»): Are ye coming? У Дубліні частіше почуєш **yous** або **youse**, а поза Дубліном, зокрема у Вексфорді, — ye. Сам кажи стандартне you." },
     { "t": "ex", "items": [
       ["Are **ye** all coming to the pub?", "Ви всі йдете в паб?"],
       ["**Ye** did a great job today, lads.", "Ви сьогодні добре попрацювали, хлопці."],
@@ -86,7 +86,7 @@
       ["deadly", "класно (не «смертельно»)"],
       ["the press", "шафа (а не преса)"],
       ["the messages", "покупки в магазині"],
-      ["a lift", "ліфт або підвезти машиною"],
+      ["a yoke", "штука, річ (будь-яка)"],
       ["the jacks", "туалет"]
     ] },
     { "t": "p", "text": "Найважливіше — **grand**. Це не «величний», а просто «добре, нормально, згоден»: How are you? — Grand. Is that ok? — Grand, grand. Воно ж означає «не хвилюйся»: You're grand (усе гаразд, нічого страшного). А **your man** — зовсім не твій чоловік: так кажуть про будь-якого чоловіка, про якого йде мова, навіть незнайомого." },
@@ -123,22 +123,22 @@
     { "type": "choice", "task": "«What's the story?» зазвичай означає…", "q": "", "uk": "Як справи? Що нового?", "opts": ["Як справи? Що нового?", "Розкажи мені історію", "Що це за книжка?"], "a": 0, "why": "What's the story? — звичайне ірландське привітання, як How are you? або What's new?" },
     { "type": "choice", "task": "«Your man said to wait outside». Хто такий your man?", "q": "", "uk": "Той чоловік сказав чекати на вулиці.", "opts": ["Той чоловік, про якого йдеться", "Твій чоловік", "Твій найкращий друг"], "a": 0, "why": "Your man — будь-який чоловік, про якого йде мова, навіть незнайомий. Your one — так само про жінку." },
     { "type": "input", "q": "I'm after losing my keys. → I've ___ lost my keys.", "uk": "Я щойно загубив ключі.", "a": ["just"], "why": "Ірландське after + -ing стандартно передає Present Perfect з just: I've just lost my keys." },
-    { "type": "input", "q": "Will I call the boss? → ___ I call the boss?", "uk": "Подзвонити босу?", "a": ["Shall"], "why": "Пропозиція «може, я…?» стандартно — Shall I…? Will I…? так розуміють лише в Ірландії." },
-    { "type": "choice", "task": "Як сказати стандартно: «Ye're all welcome»?", "q": "", "uk": "Ласкаво просимо вам усім.", "opts": ["You're all welcome.", "They're all welcome.", "We're all welcome."], "a": 0, "why": "Ye — це you у множині. У стандарті для «ти» і «ви» одне слово you." },
+    { "type": "input", "q": "Will I call the boss? → ___ I call the boss?", "uk": "Подзвонити босу?", "a": ["Shall", "Should"], "why": "Пропозиція «може, я…?» стандартно — Shall I…? (або Should I…?). Will I…? так розуміють лише в Ірландії." },
+    { "type": "choice", "task": "Як сказати стандартно: «Ye're all welcome»?", "q": "", "uk": "Вам усім тут раді.", "opts": ["You're all welcome.", "They're all welcome.", "We're all welcome."], "a": 0, "why": "Ye — це you у множині. У стандарті для «ти» і «ви» одне слово you." },
     { "type": "choice", "task": "«He's giving out to me again». Що робить він?", "q": "", "uk": "Він знову на мене свариться.", "opts": ["Свариться, бурчить на мене", "Роздає мені інструменти", "Виходить разом зі мною"], "a": 0, "why": "Give out (to someone) в Ірландії — сваритися, скаржитися, бурчати. Не «роздавати»." },
     { "type": "order", "uk": "Я щойно закінчив роботу. (стандартно)", "words": ["I've", "just", "finished", "the", "job"], "a": ["I've just finished the job."], "why": "Стандартний відповідник I'm after finishing the job: Present Perfect з just між have і дієсловом." },
     { "type": "order", "uk": "Відкрити вікно? (стандартно, пропозиція)", "words": ["shall", "I", "open", "the", "window"], "a": ["Shall I open the window?"], "why": "Пропозиція в стандарті — Shall I + дієслово. В Ірландії почуєш Will I open the window?" },
     { "type": "choice", "task": "«It's a cold day, so it is». Навіщо тут «so it is»?", "q": "", "uk": "Холодний сьогодні день, справді.", "opts": ["Підсилює сказане, нічого не додає", "Висловлює сумнів", "Перепитує, чи це правда"], "a": 0, "why": "Хвостик so it is / so I do лише підсилює речення, як українське «справді» чи «таки»." },
-    { "type": "choice", "task": "«He does be tired after work». Що це означає?", "q": "", "uk": "Він зазвичай втомлений після роботи.", "opts": ["Він зазвичай втомлений після роботи", "Він саме зараз втомлений", "Він буде втомлений завтра"], "a": 0, "why": "Does be / do be — звичка, те, що буває регулярно. Стандартно: He's usually tired after work." },
-    { "type": "choice", "task": "«I'm living in Gorey two years». Стандартно це…", "q": "", "uk": "Я живу в Горі два роки.", "opts": ["I've been living in Gorey for two years.", "I lived in Gorey two years ago.", "I'm going to live in Gorey for two years."], "a": 0, "why": "Ірландець пропускає Perfect і for. Стандартно про тривалість дотепер: I've been living … for two years." },
+    { "type": "choice", "task": "«He does be busy on Fridays». Що це означає?", "q": "", "uk": "Він зазвичай зайнятий по п'ятницях.", "opts": ["Він зазвичай зайнятий по п'ятницях", "Він саме зараз зайнятий", "Він буде зайнятий цієї п'ятниці"], "a": 0, "why": "Does be / do be — звичка, те, що буває регулярно. Стандартно: He's usually busy on Fridays." },
+    { "type": "choice", "task": "«I'm working here five years». Стандартно це…", "q": "", "uk": "Я працюю тут п'ять років.", "opts": ["I've been working here for five years.", "I worked here five years ago.", "I'm going to work here for five years."], "a": 0, "why": "Ірландець пропускає Perfect і for. Стандартно про тривалість дотепер: I've been working … for five years." },
     { "type": "choice", "task": "Просиш колегу допомогти, а він з усмішкою: «I will, yeah». Що це?", "q": "", "uk": "Аякже (= ні).", "opts": ["Іронія: він не допоможе", "Згода: зараз допоможе", "Питання: чи точно треба"], "a": 0, "why": "I will, yeah з іронічною інтонацією означає «ні, ні за що». Справжня згода — I will або No bother." },
     { "type": "input", "q": "I'm living here two years. → I've been living here ___ two years.", "uk": "Я живу тут два роки.", "a": ["for"], "why": "Тривалість у стандарті — Present Perfect Continuous + for: for two years." },
     { "type": "input", "q": "I'm a good worker, amn't I? → I'm a good worker, ___ I?", "uk": "Я ж добрий робітник, правда?", "a": ["aren't"], "why": "Ірландське amn't I? у стандарті — aren't I? (форми amn't там немає)." },
     { "type": "input", "q": "He does be late on Mondays. → He ___ usually late on Mondays.", "uk": "Він зазвичай запізнюється щопонеділка.", "a": ["is", "'s"], "why": "Does be — звичка. Стандартно Present Simple з usually: He is usually late." },
     { "type": "choice", "task": "Сусід відкриває двері: «Ah, is it yourself?» Що це означає?", "q": "", "uk": "О, це ти?", "opts": ["О, це ти? (дружнє привітання)", "Ти сам це зробив?", "Ти прийшов сам, без інших?"], "a": 0, "why": "Is it yourself? — дружнє «це ти?». Yourself тут просто ввічливіше you, без значення «сам»." },
     { "type": "input", "q": "Are ye ready, lads? → Are ___ ready, lads?", "uk": "Ви готові, хлопці?", "a": ["you"], "why": "Ye — ірландське «ви» до кількох людей. Стандартно — you." },
-    { "type": "choice", "task": "Ти кажеш: «Mick's getting married!» — колега: «Go way!» Що він має на увазі?", "q": "", "uk": "Та невже!", "opts": ["Та невже! Не може бути!", "Іди звідси!", "Ходімо разом!"], "a": 0, "why": "Go way! (від go away) у відповідь на новину — здивування «та невже!», а не «іди геть»." },
-    { "type": "order", "uk": "Я живу тут два роки. (стандартно)", "words": ["I've", "been", "living", "here", "for", "two", "years"], "a": ["I've been living here for two years."], "why": "Стандартний відповідник ірландського I'm living here two years: have been + -ing + for." },
+    { "type": "choice", "task": "Ти кажеш: «Sarah won the lotto!» — колега: «Go way!» Що він має на увазі?", "q": "", "uk": "Та невже!", "opts": ["Та невже! Не може бути!", "Іди звідси!", "Ходімо разом!"], "a": 0, "why": "Go way! (від go away) у відповідь на новину — здивування «та невже!», а не «іди геть»." },
+    { "type": "order", "uk": "Я працюю тут три роки. (стандартно)", "words": ["I've", "been", "working", "here", "for", "three", "years"], "a": ["I've been working here for three years."], "why": "Стандартний відповідник ірландського I'm working here three years: have been + -ing + for." },
     { "type": "order", "uk": "Я ж добрий робітник, правда? (стандартно)", "words": ["I'm", "a", "good", "worker", "aren't", "I"], "a": ["I'm a good worker, aren't I?"], "why": "Хвостик до I'm у стандарті — aren't I? Ірландське amn't I? у тесті не зарахують." }
   ]
 }

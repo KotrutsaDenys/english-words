@@ -113,6 +113,6 @@
     { "type": "input", "q": "Last week I ___ (have to) go to the doctor twice.", "uk": "Минулого тижня мені довелося двічі ходити до лікаря.", "a": ["had to"], "why": "«Довелося» в минулому — had to. Last week — минуле, а в must минулої форми немає." },
     { "type": "input", "q": "If it snows, we ___ (not / have to) go to work.", "uk": "Якщо піде сніг, нам не доведеться йти на роботу.", "a": ["won't have to", "will not have to"], "why": "«Не доведеться» в майбутньому — won't have to. Після if — теперішній час (snows), а will — у головній частині." },
     { "type": "order", "uk": "Їй треба закінчити це сьогодні.", "words": ["she's", "got", "to", "finish", "it", "today"], "a": ["She's got to finish it today."], "why": "Розмовне have got to: для she — has got to, скорочено she's got to. Після to — дієслово в початковій формі: finish." },
-    { "type": "order", "uk": "Тобі довелося працювати минулої суботи?", "words": ["did", "you", "have", "to", "work", "last", "Saturday"], "a": ["Did you have to work last Saturday?"], "why": "Питання про минуле — Did + підмет + have to + дієслово. Після did — have, не had, а must з did не поєднується." }
+    { "type": "order", "uk": "Тобі довелося сьогодні рано вставати?", "words": ["did", "you", "have", "to", "get", "up", "early", "today"], "a": ["Did you have to get up early today?"], "why": "Питання про минуле — Did + підмет + have to + дієслово. Після did — have, не had, а must з did не поєднується." }
   ]
 }

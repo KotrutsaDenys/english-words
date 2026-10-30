@@ -127,6 +127,6 @@
     { "type": "input", "q": "The instructions were really ___ (confuse).", "uk": "Інструкції були справді заплутані.", "a": ["confusing"], "why": "Інструкції викликають плутанину, тому -ing: confusing. Confused — про людину, яка заплуталася." },
     { "type": "input", "q": "I don't feel ___ (good). I think I've got a cold.", "uk": "Мені недобре. Здається, я застудився.", "a": ["well", "good"], "why": "Після feel — прикметник. Про здоров'я кажуть well («здоровий»): I don't feel well. У розмові чуєш і I don't feel good, тому обидва зараховано." },
     { "type": "order", "uk": "Вона купила чудовий старий дерев'яний стіл.", "words": ["she", "bought", "a", "lovely", "old", "wooden", "table"], "a": ["She bought a lovely old wooden table."], "why": "Порядок прикметників: думка (lovely) → вік (old) → матеріал (wooden) → іменник." },
-    { "type": "order", "uk": "Він сердито подивився на годинник.", "words": ["he", "looked", "at", "his", "watch", "angrily"], "a": ["He looked at his watch angrily.", "He angrily looked at his watch."], "why": "Як подивився — це про дію, тому прислівник angrily. Він стоїть у кінці або перед дієсловом, але не між looked і at." }
+    { "type": "order", "uk": "Він сердито подивився на годинник.", "words": ["he", "looked", "at", "his", "watch", "angrily"], "a": ["He looked at his watch angrily.", "He looked angrily at his watch.", "He angrily looked at his watch."], "why": "Як подивився — це про дію, тому прислівник angrily, а не прикметник angry. Він може стояти в кінці, після looked або перед дієсловом." }
   ]
 }
