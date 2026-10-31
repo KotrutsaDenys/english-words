@@ -4075,6 +4075,8 @@ if ('serviceWorker' in navigator) {
   }).observe(card, { childList: true });
 })();
 if (/[?&]test=1/.test(location.search)) {
+  // Автотести клацають швидше за анімації: без руху Playwright не чекає, поки аркуш доїде
+  if (!/[?&]motion=1/.test(location.search)) document.documentElement.classList.add('no-motion');
   window.EW = {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },

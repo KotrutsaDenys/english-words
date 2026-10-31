@@ -554,6 +554,7 @@ try:
             return seen
 
         for gi, tid in enumerate(gids):
+            print('grammar', gi + 1, '/', len(gids), tid, flush=True)
             page.evaluate('([id]) => window.EW.openTopic(id)', [tid])
             page.wait_for_timeout(80)
             assert page.inner_text('.gtitle') == page.evaluate('([id]) => window.GRAMMAR.topics[id].title', [tid])

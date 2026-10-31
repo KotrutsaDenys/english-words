@@ -868,6 +868,7 @@ body:has(#learnHome.has-dock:not([hidden])) .toast{bottom:calc(env(safe-area-ins
   .toast{background:var(--ink)}
 }
 
+html.no-motion *,html.no-motion *::before,html.no-motion *::after{animation-duration:0s !important;animation-delay:0s !important;transition-duration:0s !important;transition-delay:0s !important}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
 }
