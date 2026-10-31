@@ -534,7 +534,7 @@ test('Граматика: public/grammar.js зібрано з grammar/*.json (py
     const src = JSON.parse(fs.readFileSync(path.join(__dirname, '../grammar', id + '.json'), 'utf8'));
     const t = Object.assign({}, G.topics[id]); delete t.section;
     assert.strictEqual(JSON.stringify(t), JSON.stringify(src), id + ': запусти python3 tools/build_grammar.py');
-    assert.ok(G.topics[id].tasks.length === 24 || G.topics[id].tasks.length === 12, id + ': банк з 24 (або поки 12) завдань');
+    assert.ok(G.topics[id].tasks.length === 36 || G.topics[id].tasks.length === 24, id + ': банк з 36 (або поки 24) завдань');
   }
   // Кожна тема з файла є в зібраному посібнику
   const files = fs.readdirSync(path.join(__dirname, '../grammar')).filter(f => f.endsWith('.json') && !f.startsWith('_')).map(f => f.slice(0, -5));
