@@ -15,7 +15,7 @@ OUT = os.path.join(ROOT, 'public', 'grammar.js')
 
 LEVELS = {'A1', 'A2', 'B1', 'B2'}
 # Банк завдань теми: тест щоразу бере з нього 12. Перехідний період: 12 або 24, потім лише 24
-TASK_COUNTS = (24,) if os.environ.get('GRAMMAR_FINAL') else (12, 24)
+TASK_COUNTS = (36,) if os.environ.get('GRAMMAR_FINAL') else (24, 36)
 STRICT_KEY = bool(os.environ.get('GRAMMAR_FINAL'))
 BLOCKS = {'p', 'h', 'rule', 'table', 'ex', 'tip', 'mistake', 'list'}
 CYR = re.compile(r'[А-Яа-яІіЇїЄєҐґ]')
@@ -35,6 +35,14 @@ def strip_bold(s):
 def en_tokens(s):
     s = strip_bold(s).replace('’', "'")
     return [t.lower() for t in re.findall(r"[A-Za-z0-9][A-Za-z0-9'\-]*", s)]
+
+
+FIX_PUNCT = '.,!?;:"“”«»()—–'
+
+
+def fix_tokens(q):
+    """Слова речення для завдання fix так, як їх бачить учень (застосунок ріже так само, gFixTokens у app.js)"""
+    return [w.strip(FIX_PUNCT) for w in q.replace('’', "'").split() if w.strip(FIX_PUNCT)]
 
 
 def check_topic(path, expected_id=None):
@@ -176,14 +184,19 @@ def check_topic(path, expected_id=None):
     tasks = t.get('tasks')
     if not isinstance(tasks, list) or len(tasks) not in TASK_COUNTS:
         err('tasks: має бути %s завдань (банк, з якого тест бере 12)' % ' або '.join(map(str, TASK_COUNTS))); tasks = tasks if isinstance(tasks, list) else []
-    kinds = {'choice': 0, 'input': 0, 'order': 0}
+    kinds = {'choice': 0, 'input': 0, 'order': 0, 'fix': 0}
+    dozen3 = {'choice': 0, 'input': 0, 'order': 0, 'fix': 0}
     seen_q = set()
     for i, x in enumerate(tasks):
         w = 'tasks[%d]' % i
         ty = x.get('type') if isinstance(x, dict) else None
         if ty not in kinds:
-            err('%s: type має бути choice, input або order' % w); continue
+            err('%s: type має бути choice, input, order або fix' % w); continue
         kinds[ty] += 1
+        if i >= 24:
+            dozen3[ty] += 1
+        elif ty == 'fix':
+            err('%s: fix лише в третій дюжині (25–36)' % w)
         if x.get('task') is not None:
             uk_text(w + '.task', x['task'])
         if x.get('uk') is not None:
@@ -223,6 +236,24 @@ def check_topic(path, expected_id=None):
                 err('%s: a — список правильних відповідей англійською' % w)
             if not x.get('uk'):
                 err('%s: для input потрібен uk (переклад речення)' % w)
+        elif ty == 'fix':
+            en_text(w + '.q', q)
+            if '___' in q:
+                err('%s: у fix ціле речення без пропуску' % w)
+            toks = [t.lower() for t in fix_tokens(q)]
+            bad = x.get('bad')
+            if not isinstance(bad, str) or not bad.strip():
+                err('%s: bad — слово з помилкою, як у q' % w); continue
+            n = toks.count(bad.replace('’', "'").strip(FIX_PUNCT).lower())
+            if n != 1:
+                err('%s: bad «%s» має трапитися в q рівно один раз окремим словом (зараз %d)' % (w, bad, n))
+            a = x.get('a')
+            if not isinstance(a, list) or not a or any(not isinstance(v, str) or not v.strip() or CYR.search(v) for v in a):
+                err('%s: a — список правильних замін англійською' % w)
+            elif any(v.strip().lower() == bad.strip().lower() for v in a):
+                err('%s: заміна збігається з bad' % w)
+            if not x.get('uk'):
+                err('%s: для fix потрібен uk (переклад правильного речення)' % w)
         elif ty == 'order':
             words = x.get('words')
             a = x.get('a')
@@ -241,9 +272,11 @@ def check_topic(path, expected_id=None):
                 en_text(w + '.a', s)
                 if sorted(en_tokens(s)) != ws:
                     err('%s: відповідь «%s» складається не з тих самих слів, що words' % (w, s))
-    scale = len(tasks) // 12 or 1
-    if tasks and (kinds['choice'] < 4 * scale or kinds['input'] < 3 * scale or not scale <= kinds['order'] <= 3 * scale):
-        err('суміш завдань: choice ≥ %d, input ≥ %d, order %d–%d (зараз %s)' % (4 * scale, 3 * scale, scale, 3 * scale, kinds))
+    first = {k: kinds[k] - dozen3[k] for k in kinds}
+    if tasks and (first['choice'] < 8 or first['input'] < 6 or not 2 <= first['order'] <= 6):
+        err('суміш у перших 24: choice ≥ 8, input ≥ 6, order 2–6 (зараз %s)' % first)
+    if len(tasks) == 36 and (dozen3['fix'] < 4 or not 2 <= dozen3['order'] <= 3 or dozen3['choice'] < 2 or dozen3['input'] < 2):
+        err('суміш у третій дюжині (25–36): fix ≥ 4, order 2–3, choice ≥ 2, input ≥ 2 (зараз %s)' % dozen3)
     return t, errs
 
 

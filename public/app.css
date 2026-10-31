@@ -502,6 +502,23 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 .gmark.g-low{border:0;background:var(--orange-soft);color:var(--orange)}
 .glevel{flex:none;font-size:12px;font-weight:800;color:var(--muted);padding:3px 7px;border-radius:7px;border:1.5px solid var(--line-soft)}
 .gfoot{margin-top:18px}
+/* Закріплення: картка вгорі списку граматики */
+.gpractice{margin:8px 0 6px;padding:14px 16px 16px;border-radius:18px;background:var(--accent-soft);color:var(--ink)}
+.gpractice-t{margin:0;font-size:18px;font-weight:800}
+.gpractice-s{margin:4px 0 0;font-size:15px;line-height:1.45;color:var(--ink)}
+.gpractice-b{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.gpractice-b .btn{flex:1 1 auto;min-width:0}
+.gpractice .btn-quiet{background:var(--surface)}
+.gtest .gpr-btn{margin-top:10px}
+/* Знайди й виправ: слова речення як кнопки */
+.fixq{line-height:1.9}
+.fixw{display:inline;font:inherit;color:var(--ink);background:none;border:0;border-bottom:2px dashed var(--line);border-radius:6px 6px 0 0;padding:1px 3px;margin:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fixw:disabled{cursor:default;opacity:1}
+.fixw.sel{background:var(--mark);color:var(--on-mark);border-bottom-color:var(--mark-deep)}
+.fixw.wrong{background:var(--orange-soft);color:var(--orange);text-decoration:line-through;border-bottom-color:var(--orange)}
+.fixw.target{background:var(--ok-soft);color:var(--ok);border-bottom:2px solid var(--ok)}
+.fixw.target.was{background:var(--mark);color:var(--on-mark);border-bottom-color:var(--mark-deep)}
+.fix-uk:empty{display:none}
 .gdue{display:block;margin-top:2px;font-size:12.5px;font-weight:800;color:var(--accent-text)}
 .gsec-test{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:8px 0 0;padding:10px 12px;min-height:52px;border-radius:14px;border:1.5px dashed var(--line);background:none;color:var(--ink)}
 .gsec-test .qa-ic{background:var(--accent-soft);color:var(--accent-text)}

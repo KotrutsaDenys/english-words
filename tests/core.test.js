@@ -314,6 +314,37 @@ test('Серія: один вихідний на тиждень не обрив�
   assert.ok(!info.restReady);
 });
 
+test('Закріплення граматики: інтервали, що чекає, нові з пройдених тем, помилки', () => {
+  assert.deepStrictEqual(C.taskSrs(null, false, 100), [101, 0]);
+  assert.deepStrictEqual(C.taskSrs(null, true, 100), [103, 3]);
+  assert.deepStrictEqual(C.taskSrs([101, 0], true, 101), [103, 2]);
+  assert.deepStrictEqual(C.taskSrs([103, 3], true, 103), [111, 8]);
+  assert.deepStrictEqual(C.taskSrs([0, 150], true, 0), [180, 180]);
+  const mk = (id, n) => Array.from({ length: n }, (_, i) => ({ type: 'choice', q: id + ' task ' + i + ' ___', opts: ['a', 'b'], a: 0, why: 'x' }));
+  const A = { id: 'a', tasks: mk('a', 36), best: 10, p: {} };
+  const B = { id: 'b', tasks: mk('b', 36), best: 5, p: {} };
+  const Cc = { id: 'c', tasks: mk('c', 36), best: null, p: {} };
+  A.p[C.taskKey(A.tasks[5])] = [99, 3];      // чекає
+  A.p[C.taskKey(A.tasks[6])] = [100, 0];     // помилка, чекає сьогодні
+  A.p[C.taskKey(A.tasks[7])] = [104, 8];     // ще рано
+  Cc.p[C.taskKey(Cc.tasks[0])] = [100, 0];   // тема не пройдена, але помилка теж повертається
+  assert.strictEqual(C.practiceDue([A, B, Cc], 100), 3);
+  const pick = C.pickPractice([A, B, Cc], 100, 12, () => 0.5);
+  assert.strictEqual(pick.length, 12);
+  const keys = pick.map(x => C.taskKey(x.task));
+  [A.tasks[5], A.tasks[6], Cc.tasks[0]].forEach(t => assert.ok(keys.includes(C.taskKey(t))));
+  assert.ok(!keys.includes(C.taskKey(A.tasks[7])), 'ще не час');
+  assert.ok(pick.every(x => x.tid !== 'c' || C.taskKey(x.task) === C.taskKey(Cc.tasks[0])), 'нові лише з пройдених тем');
+  assert.ok(pick.filter(x => x.tid === 'b').length >= pick.filter(x => x.tid === 'a').length - 2, 'слабша тема не менше');
+  // Тільки прострочені, коли n мале
+  assert.strictEqual(C.pickPractice([A, B, Cc], 100, 2, () => 0.5).filter(x => x.tid === 'b').length, 0);
+  const mis = C.pickMistakes([A, B, Cc]);
+  assert.deepStrictEqual(mis.map(x => x.tid).sort(), ['a', 'c']);
+  const tp = C.pickTopicPractice(A, 100, 4, () => 0.5).map(x => A.tasks.indexOf(x.task));
+  assert.strictEqual(tp[0], 6, 'спершу помилка');
+  assert.ok(![5, 7].includes(tp[1]), 'далі не бачені');
+});
+
 test('Словник упереміш: стабільно протягом дня, інакше наступного дня, перші слова з різних тем', () => {
   const a = C.dayShuffle(WORDS, 1000).map(w => w.id);
   assert.deepStrictEqual(a, C.dayShuffle(WORDS.slice().reverse(), 1000).map(w => w.id));

@@ -202,6 +202,69 @@
     return out.sort((a, b) => a.pos - b.pos);
   }
 
+  /* ---------- Закріплення граматики: кожне завдання повертається з інтервалом ----------
+     p[taskKey] = [due, iv]; iv 0 — останній раз помилка (повернеться завтра) */
+  function taskSrs(prev, ok, today) {
+    if (!ok) return [today + 1, 0];
+    const iv = !prev ? 3 : prev[1] === 0 ? 2 : Math.min(180, Math.round(prev[1] * 2.5));
+    return [today + iv, iv];
+  }
+  function shuffleArr(a, rng) {
+    rng = rng || Math.random;
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  }
+  /* topics: [{id, tasks, p, best}]. Скільки завдань чекає на сьогодні */
+  function practiceDue(topics, today) {
+    let n = 0;
+    topics.forEach(t => { const p = t.p || {}; t.tasks.forEach(task => { const s = p[taskKey(task)]; if (s && s[0] <= today) n++; }); });
+    return n;
+  }
+  /* Щоденне закріплення: спершу ті, що чекають (давніші першими), далі ще не бачені з пройдених тем
+     (по колу між темами, слабші теми першими, у темі від простішого). Теми впереміш */
+  function pickPractice(topics, today, n, rng) {
+    rng = rng || Math.random;
+    const due = [], fresh = {};
+    topics.forEach(t => {
+      const p = t.p || {};
+      t.tasks.forEach((task, i) => {
+        const s = p[taskKey(task)];
+        if (s) { if (s[0] <= today) due.push({ tid: t.id, task, d: s[0], r: rng() }); }
+        else if (t.best != null) (fresh[t.id] = fresh[t.id] || { w: t.best, r: rng(), q: [] }).q.push({ tid: t.id, task, i });
+      });
+    });
+    due.sort((a, b) => a.d - b.d || a.r - b.r);
+    const out = due.slice(0, n).map(x => ({ tid: x.tid, task: x.task }));
+    const ids = Object.keys(fresh).sort((a, b) => fresh[a].w - fresh[b].w || fresh[a].r - fresh[b].r);
+    ids.forEach(id => fresh[id].q.sort((a, b) => (a.i % 12) - (b.i % 12) || a.i - b.i));
+    let took = true;
+    while (out.length < n && took) {
+      took = false;
+      for (const id of ids) {
+        if (out.length >= n) break;
+        const x = fresh[id].q.shift();
+        if (x) { out.push({ tid: x.tid, task: x.task }); took = true; }
+      }
+    }
+    return shuffleArr(out, rng);
+  }
+  /* Мої помилки: завдання, де остання відповідь хибна */
+  function pickMistakes(topics, n, rng) {
+    rng = rng || Math.random;
+    const out = [];
+    topics.forEach(t => { const p = t.p || {}; t.tasks.forEach(task => { const s = p[taskKey(task)]; if (s && s[1] === 0) out.push({ tid: t.id, task, d: s[0], r: rng() }); }); });
+    return out.sort((a, b) => a.d - b.d || a.r - b.r).slice(0, n == null ? out.length : n).map(x => ({ tid: x.tid, task: x.task }));
+  }
+  /* Практика однієї теми: помилки → не бачені → ті, що чекають → решта (найдавніше призначені першими) */
+  function pickTopicPractice(topic, today, n, rng) {
+    rng = rng || Math.random;
+    const p = topic.p || {};
+    const rank = task => { const s = p[taskKey(task)]; return !s ? [1, 0] : s[1] === 0 ? [0, s[0]] : s[0] <= today ? [2, s[0]] : [3, s[0]]; };
+    return topic.tasks.map((task, i) => ({ task, k: rank(task), i, r: rng() }))
+      .sort((a, b) => a.k[0] - b.k[0] || (a.k[0] === 1 ? (a.i % 12) - (b.i % 12) || a.r - b.r : a.k[1] - b.k[1] || a.r - b.r))
+      .slice(0, n).map(x => ({ tid: topic.id, task: x.task }));
+  }
+
   /* ---------- Речення з пропуском ---------- */
   const IRREGULAR = {
     get: ['got', 'gotten'], keep: ['kept'], bring: ['brought'], take: ['took', 'taken'], mean: ['meant'],
@@ -861,7 +924,7 @@
     wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
     EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
-    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, pickTasks, grammarSchedule, pickSectionTasks
+    migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, taskSrs, practiceDue, pickPractice, pickMistakes, pickTopicPractice, pickTasks, grammarSchedule, pickSectionTasks
   };
   root.EWCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
