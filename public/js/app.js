@@ -2978,6 +2978,8 @@ function gtShow() {
     const bi = toks.findIndex(x => fixNorm(x) === badN);
     const wb = [];
     toks.forEach((tok, i) => {
+      // Окреме тире чи лапки — просто текст, торкатися нема чого
+      if (!tok.match(FIX_PUNCT)[2]) { wb.push(null); fixBox.append(document.createTextNode(tok + ' ')); return; }
       const b = el('button', 'fixw', tok);
       b.type = 'button';
       b.addEventListener('click', () => tap(i));
@@ -2987,21 +2989,32 @@ function gtShow() {
     const ukp = el('p', 'ex-uk fix-uk', '');
     card.appendChild(ukp);
     let input = null;
+    // Пропущене слово (plasterer → a plasterer): можна торкнутися й сусіднього слова, тоді вписати його разом з пропущеним
+    const core = i => (toks[i] || '').match(FIX_PUNCT)[2];
+    const alt = {};
+    const bw = core(bi).toLowerCase();
+    task.a.forEach(a => {
+      const al = a.toLowerCase();
+      if (bi > 0 && core(bi - 1) && al.endsWith(' ' + bw)) (alt[bi - 1] = alt[bi - 1] || []).push(core(bi - 1) + ' ' + a.slice(0, a.length - bw.length).trim());
+      if (bi < toks.length - 1 && core(bi + 1) && al.startsWith(bw + ' ')) (alt[bi + 1] = alt[bi + 1] || []).push(a.slice(bw.length).trim() + ' ' + core(bi + 1));
+    });
+    let accept = task.a;
     const reveal = () => {
-      wb.forEach(b => { b.disabled = true; });
+      wb.forEach(b => { if (b) b.disabled = true; });
       if (wb[bi]) { const m = toks[bi].match(FIX_PUNCT); wb[bi].textContent = m[1] + task.a[0] + m[3]; wb[bi].classList.add('target'); }
       if (task.uk) ukp.textContent = task.uk;
     };
     const tap = i => {
       if (gt.answered || input) return;
-      if (i !== bi) {
+      if (i !== bi && alt[i]) accept = alt[i];
+      else if (i !== bi) {
         wb[i].classList.add('wrong');
         reveal();
         done(false, fixNorm(toks[i]) ? toks[i].match(FIX_PUNCT)[2] : toks[i], task.a[0]);
         return;
       }
       wb[i].classList.add('sel');
-      wb.forEach(b => { b.disabled = true; });
+      wb.forEach(b => { if (b) b.disabled = true; });
       instrEl.textContent = 'Так, помилка тут. Впиши правильно:';
       input = el('input', 'answer');
       Object.assign(input, { type: 'text', autocomplete: 'off', spellcheck: false });
@@ -3022,7 +3035,7 @@ function gtShow() {
       if (gt.answered) return;
       const value = input ? input.value.trim() : '';
       if (input && !value && !skip) { input.focus(); toast('Впиши слово або натисни «Не знаю»'); return; }
-      const targets = task.a.concat(task.a.map(a => fixSentence(task, a)));
+      const targets = accept.concat(task.a.map(a => fixSentence(task, a)));
       const ok = !skip && !!input && C.grammarMatch(value, targets);
       if (input) { input.disabled = true; input.blur(); input.classList.add(ok ? 'right' : 'wrong'); }
       reveal();
