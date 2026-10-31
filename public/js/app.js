@@ -3244,7 +3244,7 @@ function gpResult() {
   score.append(el('b', null, String(gt.ok)), el('span', null, 'з ' + n));
   body.appendChild(score);
   if (gt.kind === 'tpractice') { const tt = el('p', 'prompt-sub', gt.title); tt.lang = 'en'; body.appendChild(tt); }
-  body.appendChild(el('p', 'gres-grade ' + cls, 'правильно з першої спроби'));
+  body.appendChild(el('p', 'gres-note', 'правильно з першої спроби'));
   body.appendChild(el('p', 'prompt-sub', gt.wrong.length
     ? 'Помилки повернуться завтра, правильні — через кілька днів. Так правило закріплюється найкраще.'
     : 'Без жодної помилки. Ці завдання повернуться через кілька днів, далі все рідше.'));
@@ -3938,11 +3938,22 @@ $('resetAll').addEventListener('click', () => {
 });
 
 /* ---------- Вкладки ---------- */
+/* Скляна «крапля» під вибраною вкладкою: перетікає з пружиною й на мить розтягується, як в iOS */
+function moveLens(i) {
+  const inner = document.querySelector('.tabs-inner'), lens = document.querySelector('.tab-lens');
+  if (!inner || !lens) return;
+  const prev = inner.style.getPropertyValue('--ti');
+  inner.style.setProperty('--ti', i);
+  if (prev !== '' && +prev !== i) { lens.classList.remove('morph'); void lens.offsetWidth; lens.classList.add('morph'); }
+}
 function showTab(name) {
   currentTab = name;
   document.querySelectorAll('[data-screen]').forEach(s => { s.hidden = s.dataset.screen !== name; });
-  document.querySelectorAll('[data-tab]').forEach(t => {
-    if (t.dataset.tab === name) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current');
+  document.querySelectorAll('[data-tab]').forEach((t, i) => {
+    if (t.dataset.tab === name) {
+      t.setAttribute('aria-current', 'page');
+      moveLens(i);
+    } else t.removeAttribute('aria-current');
   });
   closePeek();
   if (name !== 'learn') {
@@ -4052,6 +4063,17 @@ renderAll();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
 }
+/* Нова вправа з'являється пружно, як картка в iOS (не під час автотестів, щоб не гальмувати їх) */
+(() => {
+  const card = $('card');
+  if (!card || !card.animate || /[?&]test=1/.test(location.search)) return;
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  new MutationObserver(recs => {
+    if (still.matches) return;
+    if (!recs.some(r => Array.prototype.some.call(r.removedNodes, n => n.classList && n.classList.contains('ex-head')))) return;
+    card.animate([{ opacity: 0, transform: 'translateY(16px) scale(.975)' }, { opacity: 1, transform: 'none' }], { duration: 480, easing: 'cubic-bezier(.22,1.2,.36,1)' });
+  }).observe(card, { childList: true });
+})();
 if (/[?&]test=1/.test(location.search)) {
   window.EW = {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },

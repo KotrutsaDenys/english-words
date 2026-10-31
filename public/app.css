@@ -26,6 +26,21 @@
   --amber:#7D5300;
   --amber-soft:#FBF1CF;
   --lift:0 1px 2px rgba(22,27,46,.05), 0 14px 30px -22px rgba(22,27,46,.45);
+  /* Рідке скло (як в iOS 26): напівпрозора панель, розмиття того, що під нею, світлий край і відблиск */
+  --glass:rgba(255,255,255,.68);
+  --glass-strong:rgba(255,255,255,.86);
+  --glass-edge:rgba(255,255,255,.95);
+  --glass-hl:rgba(255,255,255,.45);
+  --glass-sheen:rgba(255,255,255,.55);
+  --glass-rim:rgba(22,27,46,.09);
+  --glass-shade:0 12px 32px -12px rgba(22,27,46,.32),0 2px 8px -3px rgba(22,27,46,.1);
+  --lens:rgba(47,86,217,.13);
+  --amb-1:rgba(47,86,217,.10);
+  --amb-2:rgba(255,226,122,.22);
+  /* Рух: пружина з легким перельотом, як в iOS, і крива аркуша Apple */
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --spring-soft:cubic-bezier(.22,1.2,.36,1);
+  --ease-sheet:cubic-bezier(.32,.72,0,1);
   --display:'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --text:'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color-scheme:light dark;
@@ -52,10 +67,24 @@
     --amber:#F2C94C;
     --amber-soft:#332D17;
     --lift:0 1px 0 rgba(0,0,0,.3), 0 16px 32px -22px rgba(0,0,0,.95);
+    --glass:rgba(32,37,56,.66);
+    --glass-strong:rgba(32,37,56,.86);
+    --glass-edge:rgba(255,255,255,.2);
+    --glass-hl:rgba(255,255,255,.07);
+    --glass-sheen:rgba(255,255,255,.1);
+    --glass-rim:rgba(0,0,0,.5);
+    --glass-shade:0 14px 36px -12px rgba(0,0,0,.75);
+    --lens:rgba(147,168,255,.16);
+    --amb-1:rgba(78,108,240,.16);
+    --amb-2:rgba(235,203,79,.07);
   }
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--text);-webkit-text-size-adjust:100%}
+body{background:transparent}
+/* Тло з ледь помітним кольором: скло над ним «оживає», а текст лишається на спокійному фоні */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(70% 45% at 0% 0%,var(--amb-1),transparent 70%),radial-gradient(60% 40% at 100% 100%,var(--amb-2),transparent 70%),radial-gradient(50% 35% at 100% 30%,var(--amb-1),transparent 75%),var(--bg)}
 body{min-height:100vh;min-height:100dvh;line-height:1.45;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 button,a,input,label,select,textarea{touch-action:manipulation}
@@ -233,7 +262,7 @@ body.kb-open .card .prompt{padding-top:2px}
 #stage .foot{position:fixed;left:0;right:0;bottom:var(--kb,0px);z-index:6;margin:0;padding:12px 16px calc(env(safe-area-inset-bottom) + 12px);
   background:var(--bg);border-top:1px solid var(--line-soft)}
 @supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
-  #stage .foot:not(.sheet){background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3)}
+  #stage .foot:not(.sheet){-webkit-backdrop-filter:blur(30px) saturate(1.8);backdrop-filter:blur(30px) saturate(1.8)}
 }
 body.kb-open #stage .foot{padding-bottom:10px;padding-top:8px}
 .foot-in{max-width:488px;margin:0 auto}
@@ -616,6 +645,7 @@ mark.gm{background:var(--mark);color:var(--on-mark);border-radius:3px;padding:0 
 .gres-score.g-top b,.gres-grade.g-top{color:var(--ok)}
 .gres-score.g-low b,.gres-grade.g-low{color:var(--orange)}
 .gres-grade.g-ok{color:var(--amber)}
+.gres-note{margin:4px 0 0;font-size:16px;font-weight:800;color:var(--muted)}
 .gres-item{padding:10px 0;border-top:1px solid var(--line-soft)}
 .gres-item:first-of-type{border-top:0}
 .gres-sent{margin:0;font-size:17px;font-weight:600;line-height:1.45}
@@ -711,6 +741,132 @@ body.typing .tabs{display:none}
 /* Повідомлення над нижньою панеллю, щоб не закривати кнопки вгорі */
 body:has(#learnHome.has-dock:not([hidden])) .toast{bottom:calc(env(safe-area-inset-bottom) + 152px)}
 body.in-session .toast{bottom:max(calc(var(--foot-h,0px) + var(--kb,0px) + 12px),calc(env(safe-area-inset-bottom) + 16px))}
+
+/* =========================================================================
+   Рідке скло й рух як в iOS. Скло — лише для того, що плаває над змістом
+   (вкладки, нижня панель, кнопки заняття, підказки, аркуші); сам зміст
+   (картки, тексти) лишається непрозорим і легким для читання.
+   ========================================================================= */
+.tabs-inner,.toast,.peek,.gsheet-panel,#stage .foot,.sbar .icon-btn,.gjump,.dict-tools,.gtop{
+  -webkit-backdrop-filter:blur(30px) saturate(1.8);backdrop-filter:blur(30px) saturate(1.8)}
+/* Липкі заголовки (пошук у словнику, «Усі теми»): напівпрозорі, зміст м'яко пропливає під ними */
+.dict-tools,.gtop{background:color-mix(in srgb,var(--bg) 74%,transparent)}
+/* Вкладки: плаваюча капсула зі «скляною краплею», що перетікає до вибраної вкладки */
+.tabs{background:none !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;border:0;padding:0 8px calc(env(safe-area-inset-bottom) + 8px);pointer-events:none}
+.tabs-inner{position:relative;pointer-events:auto;max-width:500px;padding:5px;border-radius:34px;background:var(--glass);
+  box-shadow:inset 0 1px 0 var(--glass-edge),inset 0 0 0 1px var(--glass-hl),0 0 0 .5px var(--glass-rim),var(--glass-shade)}
+.tabs-inner::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(180deg,var(--glass-sheen),transparent 46%)}
+.tab{position:relative;z-index:1;min-height:56px;padding:5px 0 4px;gap:2px;font-size:10px;letter-spacing:-.02em;transition:color .3s}
+.tab .ic{width:auto;height:30px;background:none !important;transition:transform .45s var(--spring)}
+.tab:active .ic{transform:scale(.86);transition-duration:.12s}
+.tab-lens{position:absolute;z-index:0;top:5px;bottom:5px;left:5px;width:calc((100% - 10px) / 5);border-radius:28px;pointer-events:none;
+  background:var(--lens);box-shadow:inset 0 1px 0 var(--glass-edge),inset 0 0 0 1px var(--glass-hl),0 4px 12px -6px rgba(47,86,217,.35);
+  transform:translateX(calc(var(--ti,0) * 100%));transition:transform .6s var(--spring-soft)}
+.tab-lens.morph{animation:lens .6s var(--spring-soft)}
+@keyframes lens{0%{scale:1}30%{scale:1.22 .86}65%{scale:.97 1.04}100%{scale:1}}
+/* Кнопка дня над капсулою */
+.dock{bottom:calc(env(safe-area-inset-bottom) + 76px);padding:10px 16px 8px;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--bg) 82%,transparent) 30%)}
+.app{padding-bottom:calc(env(safe-area-inset-bottom) + 112px)}
+.toast{bottom:calc(env(safe-area-inset-bottom) + 92px)}
+body:has(#learnHome.has-dock:not([hidden])) .toast{bottom:calc(env(safe-area-inset-bottom) + 160px)}
+.gjump{bottom:calc(env(safe-area-inset-bottom) + 88px);background:color-mix(in srgb,var(--accent) 82%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 0 .5px var(--glass-rim),0 12px 26px -12px rgba(20,30,80,.6);transition:opacity .25s,transform .5s var(--spring)}
+
+/* Кнопки: пружинять під пальцем — швидко стискаються, повертаються з легким перельотом */
+.btn,.opt-btn,.say,.listen-big,.icon-btn,.gnext,.gsec-test,.gnav-btn,.qa-ic,.chip,.cat-cell{transition:transform .5s var(--spring),background-color .2s,border-color .2s,box-shadow .2s,opacity .2s}
+.btn:active,.gnext:active,.gsec-test:active,.gnav-btn:active{transform:scale(.965);transition-duration:.1s}
+.opt-btn:active{transform:scale(.98);transition-duration:.1s}
+.say:active,.listen-big:active,.icon-btn:active{transform:scale(.9);transition-duration:.1s}
+.btn-primary{background-image:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,0) 55%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -2px 0 var(--accent-deep),0 10px 22px -12px var(--accent)}
+.btn-primary:active{box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px -8px var(--accent)}
+.btn:not(.btn-primary):not(.btn-quiet):not(.btn-danger):not(.btn-again){box-shadow:inset 0 1px 0 var(--glass-edge),inset 0 -2px 0 var(--line-soft)}
+.listen-big{background-image:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,0) 55%);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -4px 0 var(--accent-deep),0 16px 30px -14px var(--accent)}
+
+/* Кнопки заняття (хрестик, назад, правило, тихо): скляні кружечки */
+.sbar .icon-btn{width:42px;height:42px;margin:-3px 0;border-radius:50%;background:var(--glass-strong);
+  box-shadow:inset 0 1px 0 var(--glass-edge),inset 0 0 0 1px var(--glass-hl),0 0 0 .5px var(--glass-rim),0 6px 16px -10px rgba(22,27,46,.4)}
+.sbar .icon-btn svg{width:21px;height:21px}
+#exitBtn{margin-left:0}
+#quietBtn{margin-right:0}
+.sbar{gap:8px}
+
+/* Нижня панель заняття: скляна; після відповіді — тонований скляний аркуш, що виїжджає кривою Apple */
+#stage .foot{border-top:0;background:var(--glass);box-shadow:inset 0 1px 0 var(--glass-edge),0 -.5px 0 var(--glass-rim)}
+#stage .foot:not(.sheet){background:var(--glass)}
+#stage .foot.sheet{border-radius:30px 30px 0 0;animation:sheet .5s var(--ease-sheet);
+  box-shadow:inset 0 1px 0 var(--glass-edge),inset 0 0 0 1px var(--glass-hl),0 -.5px 0 var(--glass-rim),0 -18px 40px -26px rgba(0,0,0,.5)}
+@keyframes sheet{from{transform:translateY(60%);opacity:.3}to{transform:none;opacity:1}}
+/* Аркуш з висновком читають, тож він щільніший за звичайне скло (з #stage, щоб перебити загальне скло панелі) */
+#stage .foot.sheet{background:color-mix(in srgb,var(--surface) 94%,transparent)}
+#stage .foot.sheet.right{background:color-mix(in srgb,var(--ok-soft) 94%,transparent)}
+#stage .foot.sheet.typo{background:color-mix(in srgb,var(--amber-soft) 94%,transparent)}
+#stage .foot.sheet.wrong{background:color-mix(in srgb,var(--orange-soft) 94%,transparent)}
+.verdict .vi{animation:pop .55s var(--spring)}
+.verdict.wrong .vi{animation:pop .55s var(--spring),shake .45s .1s ease-out}
+@keyframes pop{0%{scale:.3;opacity:0}100%{scale:1;opacity:1}}
+@keyframes shake{20%{translate:-5px 0}40%{translate:4px 0}60%{translate:-3px 0}80%{translate:2px 0}100%{translate:0 0}}
+.opt-btn.right{animation:bump .5s var(--spring)}
+.opt-btn.wrong{animation:shake .42s ease-out}
+@keyframes bump{40%{scale:1.025}100%{scale:1}}
+/* Плитки речення: «вскакують» на місце */
+.build-answer .tile{animation:pop .42s var(--spring)}
+.fixw{transition:background-color .25s,color .25s}
+.fixw.sel,.fixw.target{animation:bump .5s var(--spring)}
+
+/* Прогрес дня: скляна смуга з відблиском, заповнюється з пружиною */
+.tape-track{background:color-mix(in srgb,var(--sunk) 80%,transparent);box-shadow:inset 0 1px 2px rgba(22,27,46,.12),inset 0 0 0 1px var(--line-soft)}
+.tape-fill{background-image:linear-gradient(180deg,rgba(255,255,255,.38),rgba(255,255,255,0) 60%);transition:width .8s var(--spring-soft),background-color .3s}
+
+/* Картки й списки: непрозорі, але з тонким світлим краєм зверху */
+.card{border-radius:26px;box-shadow:inset 0 1px 0 var(--glass-edge),var(--lift)}
+.list,.qa-list,.docket,.panel,.news,.gnext,.gkey{border-color:transparent;box-shadow:inset 0 1px 0 var(--glass-edge),var(--lift)}
+.qa-list,.list{border-radius:22px}
+.qa{transition:background-color .2s}
+.qa:active .qa-ic{transform:scale(.88);transition-duration:.1s}
+.brand-mark{background-image:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0) 60%);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 4px 10px -5px var(--accent)}
+
+/* Перемикачі-сегменти: вибране — піднята «скляна» пігулка, як в iOS */
+.seg{background:color-mix(in srgb,var(--sunk) 85%,transparent);box-shadow:inset 0 1px 2px rgba(22,27,46,.08)}
+.seg button{transition:background-color .25s,color .25s,box-shadow .25s,transform .45s var(--spring)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:inset 0 1px 0 var(--glass-edge),0 0 0 .5px var(--glass-rim),0 4px 12px -6px rgba(22,27,46,.35)}
+.seg button:active{transform:scale(.95);transition-duration:.1s}
+
+/* Підказки й аркуші: скло, з'являються пружно */
+.toast{background:color-mix(in srgb,var(--ink) 74%,transparent);border-radius:999px;padding:12px 18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 0 .5px var(--glass-rim),0 14px 32px -14px rgba(0,0,0,.6);
+  transform:translate(-50%,18px) scale(.9);transition:opacity .25s,transform .55s var(--spring)}
+.toast.show{transform:translate(-50%,0) scale(1)}
+.peek{background:var(--glass-strong);border:0;border-radius:20px;
+  box-shadow:inset 0 1px 0 var(--glass-edge),inset 0 0 0 1px var(--glass-hl),0 0 0 .5px var(--glass-rim),0 24px 44px -18px rgba(0,0,0,.5);
+  animation:peekIn .38s var(--spring);transform-origin:50% 0}
+@keyframes peekIn{from{opacity:0;scale:.86}to{opacity:1;scale:1}}
+.gsheet-wrap{background:rgba(10,14,30,.32);animation:fade .3s ease-out}
+.gsheet-panel{background:var(--glass-strong);border-radius:30px 30px 0 0;animation:sheet .5s var(--ease-sheet);
+  box-shadow:inset 0 1px 0 var(--glass-edge),0 -.5px 0 var(--glass-rim),0 -20px 50px -24px rgba(0,0,0,.5)}
+.gsheet-head{border-bottom-color:transparent;position:relative}
+.gsheet-head::before{content:"";position:absolute;left:50%;top:6px;width:38px;height:5px;margin-left:-19px;border-radius:3px;background:var(--line)}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* Перехід між вкладками й екранами: зміст м'яко проявляється */
+[data-screen]:not([hidden]),#gramTopic:not([hidden]),#gramList:not([hidden]),#learnHome:not([hidden]){animation:screenIn .3s ease-out}
+/* Лише прозорість: зсув (transform) зробив би закріплені кнопки всередині екрана відносними до нього */
+@keyframes screenIn{from{opacity:0}to{opacity:1}}
+
+/* Без підтримки розмиття або коли людина просить менше прозорості — суцільні поверхні */
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  :root{--glass:var(--surface);--glass-strong:var(--surface)}
+}
+@media (prefers-reduced-transparency: reduce){
+  :root{--glass:var(--surface);--glass-strong:var(--surface)}
+  .tabs-inner,.toast,.peek,.gsheet-panel,#stage .foot,.sbar .icon-btn,.gjump{-webkit-backdrop-filter:none;backdrop-filter:none}
+  #stage .foot.sheet{background:var(--surface)}
+  #stage .foot.sheet.right{background:var(--ok-soft)}
+  #stage .foot.sheet.typo{background:var(--amber-soft)}
+  #stage .foot.sheet.wrong{background:var(--orange-soft)}
+  .toast{background:var(--ink)}
+}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
