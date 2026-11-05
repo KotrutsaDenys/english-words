@@ -204,7 +204,8 @@ try:
             page = ctx.new_page()
             page.on('pageerror', lambda e: errors.append('pageerror: ' + str(e)))
             page.on('console', lambda m: errors.append('console: ' + m.text) if m.type == 'error' and 'Failed to load resource' not in m.text else None)
-            page.on('requestfailed', lambda r: errors.append('failed: ' + r.url) if 'fonts.g' not in r.url else None)
+            # Перерваний запис (бот перейшов далі, поки грав попередній) — не помилка; файли перевіряє make_audio
+            page.on('requestfailed', lambda r: errors.append('failed: ' + r.url + ' ' + str(r.failure)) if 'fonts.g' not in r.url and not ('/audio/' in r.url and 'ABORTED' in str(r.failure)) else None)
             start = datetime(2026, 10, 24, 18, 0, 0)
             page.clock.set_fixed_time(start)
             page.goto(URL)
