@@ -868,6 +868,32 @@ body:has(#learnHome.has-dock:not([hidden])) .toast{bottom:calc(env(safe-area-ins
   .toast{background:var(--ink)}
 }
 
+/* ---------- Нові вправи: літери, пари, речення на слух ---------- */
+.spell-slots{display:flex;flex-wrap:nowrap;justify-content:center;gap:5px;margin:18px 0 6px}
+.spell-slots .slot{flex:0 1 36px;min-width:0;height:46px;display:flex;align-items:center;justify-content:center;border-radius:10px;
+  background:var(--sunk);box-shadow:inset 0 -2px 0 var(--line);font-family:var(--display);font-weight:800;font-size:24px;color:var(--ink)}
+.spell-slots .slot.on{background:var(--accent-soft);color:var(--accent-text);box-shadow:inset 0 -2px 0 var(--accent);animation:pop .35s var(--spring)}
+.spell-slots .slot.shown{background:var(--orange-soft);color:var(--orange);box-shadow:inset 0 -2px 0 var(--orange)}
+.spell-slots.long .slot{font-size:19px;height:40px;border-radius:8px}
+.spell-bank{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px 0 4px}
+.tile.letter{min-width:46px;height:50px;padding:0 10px;font-size:22px;font-weight:800;text-transform:none;transition:transform .45s var(--spring),opacity .25s}
+.tile.letter:active{transform:scale(.9);transition-duration:.08s}
+.tile.letter.used{opacity:0;transform:scale(.6);pointer-events:none}
+.tile.letter.bad,.pair-btn.bad{animation:shake .42s ease-out;background:var(--orange-soft);color:var(--orange);border-color:var(--orange)}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 4px}
+.pairs-col{display:flex;flex-direction:column;gap:10px}
+.pair-btn{min-height:58px;padding:10px 12px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
+  font:inherit;font-size:15.5px;font-weight:700;line-height:1.25;text-align:center;box-shadow:inset 0 1px 0 var(--glass-edge),inset 0 -2px 0 var(--line-soft);
+  transition:transform .45s var(--spring),background-color .2s,border-color .2s,opacity .3s;-webkit-tap-highlight-color:transparent}
+.pair-btn.en{font-size:17px;font-weight:800}
+.pair-btn:active{transform:scale(.95);transition-duration:.08s}
+.pair-btn.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-text);transform:scale(1.03)}
+.pair-btn.done{border-color:transparent;background:var(--ok-soft);color:var(--ok);animation:bump .45s var(--spring)}
+.pair-btn.dim{opacity:.4}
+.pair-btn:disabled{cursor:default}
+.pairs-sub{margin-top:2px}
+.opt-btn.long span:last-child{font-size:16px;line-height:1.35;font-weight:600}
+.ex.heard{margin:6px 0 10px;font-size:19px}
 html.no-motion *,html.no-motion *::before,html.no-motion *::after{animation-duration:0s !important;animation-delay:0s !important;transition-duration:0s !important;transition-delay:0s !important}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}

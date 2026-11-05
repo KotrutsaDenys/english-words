@@ -34,7 +34,8 @@ def click_text(page, text):
 def answer(page, wrong=False, scheme='light'):
     cur = page.evaluate('''() => { const c = window.EW.current; if (!c) return null;
         return { id: c.id, ex: c.exercise, w: c.word,
-          cloze: (EWCore.clozeTarget(c.word) || {}).text || null,
+          cloze: (EWCore.clozeTarget(c.word) || {}).text || null, fill: c.fill || null,
+          spell: EWCore.spellTarget(c.word), ctx: (EWCore.ctxTarget(c.word) || {}).text || null,
           tokPhrase: EWCore.tokens(c.word.en), tokSent: EWCore.tokens(c.word.ex) }; }''')
     if not cur:
         return False
@@ -86,6 +87,41 @@ def answer(page, wrong=False, scheme='light'):
     elif ex == 'speak':
         click_text(page, 'Показати відповідь')
         click_text(page, 'Не згадав' if wrong else 'Правильно')
+    elif ex == 'spell':
+        if wrong:
+            click_text(page, 'Не знаю')
+        else:
+            for ch in cur['spell']:
+                tiles = page.locator('.spell-bank .tile:not([disabled])')
+                for i in range(tiles.count()):
+                    if tiles.nth(i).inner_text().lower() == ch.lower():
+                        tiles.nth(i).click()
+                        break
+    elif ex == 'ctx_mcq':
+        btns = page.locator('.opt-btn')
+        for i in range(btns.count()):
+            if (btns.nth(i).locator('span').nth(1).inner_text().lower() == cur['ctx'].lower()) != wrong:
+                btns.nth(i).click()
+                break
+    elif ex == 'phrase_fill':
+        page.fill('.answer', 'qwerty' if wrong else cur['fill'])
+        click_text(page, 'Перевірити')
+    elif ex == 'listen_ex':
+        btns = page.locator('.opt-btn')
+        for i in range(btns.count()):
+            if (btns.nth(i).locator('span').nth(1).inner_text() == w['exUk']) != wrong:
+                btns.nth(i).click()
+                break
+    elif ex == 'match':
+        en = page.locator('.pair-btn.en')
+        ids = [en.nth(i).get_attribute('data-id') for i in range(en.count())]
+        if wrong:
+            page.locator('.pair-btn.en[data-id="%s"]' % w['id']).click()
+            other = next(i for i in ids if i != w['id'])
+            page.locator('.pair-btn:not(.en)[data-id="%s"]' % other).click()
+        for i in ids:
+            page.locator('.pair-btn.en[data-id="%s"]' % i).click()
+            page.locator('.pair-btn:not(.en)[data-id="%s"]' % i).click()
     elif ex == 'own_sentence':
         if wrong:
             click_text(page, 'Пропустити')
@@ -202,7 +238,8 @@ try:
                     states[c['st']] = states.get(c['st'], 0) + 1
                 print(scheme, 'day', d + 1, 'answers', n, 'cards', len(cards), states)
             # Вправи для міцних слів, до яких бот за 3 тижні не доходить
-            for ex_type, check in (('dictation', 'canDictate'), ('build_sentence', 'canBuildSentence'), ('flip', 'canType'), ('own_sentence', 'canDictate')):
+            for ex_type, check in (('dictation', 'canDictate'), ('build_sentence', 'canBuildSentence'), ('flip', 'canType'), ('own_sentence', 'canDictate'),
+                                   ('spell', 'spellTarget'), ('ctx_mcq', 'ctxTarget'), ('listen_ex', 'canBuildSentence'), ('match', 'canType'), ('phrase_fill', 'canType')):
                 wid = page.evaluate('''([check]) => Object.entries(window.EW.cards).filter(([id, c]) => c.st === 'review')
                     .map(([id]) => window.WORDS.find(x => x.id === id)).find(w => w && EWCore[check](w)).id''', [check])
                 page.evaluate('([id, t]) => window.EW.force(id, t)', [wid, ex_type])
@@ -527,6 +564,20 @@ try:
         pri = page.evaluate('window.EW.meta.priority')
         assert len(pri) >= 5 and all(page.evaluate('([id]) => window.WORDS.find(w => w.id === id).cat', [x]) == 'weather' for x in pri[-5:]), pri[-5:]
         assert visible(page, '.act:has-text("Не першими")')
+        # Нові вправи (літери, пропущене слово, фраза, речення на слух, пари): кожна відкривається й зараховується
+        page.evaluate('''() => { const ids = ['talk-borrow','core-cheap','sp-say','b1-rise','core-busy','sp-listen','core-remember','sp-wait','talk-wages','b2-guest'];
+          ids.forEach(id => { if (!window.EW.cards[id]) window.EW.cards[id] = EWCore.knownCard(EWCore.dayNum(), 0.9, Math.random); }); }''')
+        for ex_type, wid in (('spell', 'core-remember'), ('ctx_mcq', 'core-busy'), ('phrase_fill', 'talk-borrow'), ('listen_ex', 'sp-wait'), ('match', 'core-cheap')):
+            for wrong in (False, True):
+                page.evaluate('([id, t]) => window.EW.force(id, t)', [wid, ex_type])
+                page.wait_for_timeout(80)
+                assert page.evaluate('window.EW.current.exercise') == ex_type, ex_type
+                answer(page, wrong=wrong)
+                page.wait_for_timeout(80)
+        assert page.evaluate("[...document.querySelectorAll('.spell-slots .slot')].every(s => s.getBoundingClientRect().right <= innerWidth)"), 'літери влазять'
+        page.evaluate('window.EW.endSession && window.EW.endSession()')
+        page.evaluate('window.EW.showTab("learn")')
+        page.wait_for_timeout(150)
         # Граматика: кожна тема відкривається, а відповіді з ключа дають рівно 12 з 12 у кожній дюжині банку
         page.evaluate('window.EW.settings.autoplay = false')
         page.click('.tab[data-tab="grammar"]')
@@ -699,6 +750,9 @@ finally:
     srv.terminate()
 
 print('exercise types seen:', sorted(k for k in seen_types if not k.endswith('-done')))
+if not os.environ.get('E2E_UX_ONLY'):
+    for t in ('spell', 'ctx_mcq', 'phrase_fill', 'listen_ex', 'match'):
+        assert t + '-light' in seen_types, 'нова вправа не трапилась ботові: ' + t
 print('errors:', errors)
 assert not errors, errors
 print('E2E OK')

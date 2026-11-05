@@ -363,8 +363,10 @@
     }
     return -1;
   }
-  function clozeTarget(word) {
-    if (!word || !word.ex) return null;
+  function clozeTarget(word) { return word ? clozeIn(word, word.ex) : null; }
+  /* Де в реченні стоїть слово (у будь-якій формі): для пропусків у прикладі та фразах */
+  function clozeIn(word, sentence) {
+    if (!word || !sentence) return null;
     let base = String(word.en).trim().replace(/[.!?]+$/, '');
     if (/\.\.\.|…/.test(base)) return null;
     base = base.replace(/^to /i, '').replace(/^(the|a|an) /i, '');
@@ -376,12 +378,12 @@
       .forEach(f => cands.push(parts.slice(0, -1).join(' ') + ' ' + f));
     let best = null;
     for (const c of cands) {
-      const i = findPhrase(word.ex, c);
+      const i = findPhrase(sentence, c);
       if (i !== -1 && (!best || i < best.start || (i === best.start && c.length > best.len))) best = { start: i, len: c.length };
     }
     if (!best) return null;
-    const text = word.ex.slice(best.start, best.start + best.len);
-    const others = norm(word.ex.slice(0, best.start) + ' ' + word.ex.slice(best.start + best.len));
+    const text = sentence.slice(best.start, best.start + best.len);
+    const others = norm(sentence.slice(0, best.start) + ' ' + sentence.slice(best.start + best.len));
     if (!others) return null;
     return { start: best.start, end: best.start + best.len, text };
   }
@@ -441,6 +443,20 @@
     };
   }
 
+  /* Фрази зі словом, де його можна сховати: «Доповни фразу» (довкола слова щонайменше два інших) */
+  function phraseTargets(word, phrases) {
+    return (phrases || []).map(([en, uk], i) => {
+      const ct = clozeIn(word, en);
+      return ct && tokens(en).length >= tokens(ct.text).length + 2 ? Object.assign({ i, en, uk }, ct) : null;
+    }).filter(Boolean);
+  }
+  /* Початкова форма без «to» й артикля */
+  function baseForm(w) { return String(w.en || '').trim().replace(/[.!?]+$/, '').replace(/^to /i, '').replace(/^(the|a|an) /i, ''); }
+  /* «Склади слово з літер»: одне слово з 3–12 літер */
+  function spellTarget(w) { const b = baseForm(w); return /^[A-Za-z]{3,12}$/.test(b) ? b : null; }
+  /* «Яке слово пропущено?»: у прикладі слово стоїть у початковій формі, тож варіанти не підкажуть закінченням */
+  function ctxTarget(w) { const ct = clozeTarget(w); return ct && ct.text.toLowerCase() === baseForm(w).toLowerCase() ? ct : null; }
+
   /* ---------- Слова для «склади фразу» ---------- */
   function tokens(s) {
     return String(s || '').replace(/\.\.\.|…/g, ' ').split(/\s+/)
@@ -467,7 +483,12 @@
     build_phrase: 'Склади фразу',
     build_sentence: 'Склади речення',
     speak: 'Скажи англійською',
-    own_sentence: 'Своє речення'
+    own_sentence: 'Своє речення',
+    spell: 'Склади слово з літер',
+    ctx_mcq: 'Яке слово пропущено?',
+    phrase_fill: 'Доповни фразу',
+    listen_ex: 'Зрозумій на слух',
+    match: 'Знайди пари'
   };
   /* Який приклад показати: чергуємо два контексти за кількістю повторень */
   function exampleFor(w, card, kind) {
@@ -481,7 +502,7 @@
     return Object.assign({}, w, { ex: e.ex, exUk: e.exUk, sayEx: e.sayEx, exN: e.n });
   }
   /* Вправи, яким потрібен звук або голос: у тихому режимі їх немає */
-  const SOUND_EXERCISES = ['listen_mcq', 'dictation', 'speak'];
+  const SOUND_EXERCISES = ['listen_mcq', 'dictation', 'speak', 'listen_ex'];
   function eligible(type, w, ctx) {
     const st = ctx.settings || {};
     const typing = st.typing !== false, speaking = st.speaking !== false;
@@ -495,6 +516,10 @@
       case 'build_sentence': return !!w.ex && canBuildSentence(w);
       case 'speak': return speaking;
       case 'own_sentence': return typing && canType(w) && !/\.\.\.|…/.test(w.en) && tokens(w.en).length <= 2;
+      case 'spell': return !!spellTarget(w);
+      case 'ctx_mcq': return !!ctxTarget(w);
+      case 'phrase_fill': return typing && !!ctx.phrases && phraseTargets(w, ctx.phrases[w.id]).length > 0;
+      case 'listen_ex': return !!ctx.canListen && !!w.ex && !!w.exUk;
       default: return true;
     }
   }
@@ -510,7 +535,7 @@
     for (const [t, wt] of use) { x -= wt; if (x <= 0) return t; }
     return use[use.length - 1][0];
   }
-  const PRODUCTIVE = [['type_en', 4], ['build_phrase', 5], ['cloze', 2], ['speak', 2], ['flip_rev', 1]];
+  const PRODUCTIVE = [['type_en', 4], ['build_phrase', 5], ['spell', 3], ['cloze', 2], ['speak', 2], ['flip_rev', 1]];
   function pickExercise(word, card, ctx) {
     ctx = Object.assign({}, ctx, { word });
     const mode = (ctx.settings && ctx.settings.mode) || 'mix';
@@ -520,17 +545,17 @@
       return (ctx.rng || Math.random)() < 0.5 ? 'flip' : 'flip_rev';
     }
     if (card.st === 'learn') {
-      if (card.step <= 1) return choose([['mcq_en_uk', 3], ['listen_mcq', 2]], ctx);
-      if (card.step === 2) return 'mcq_uk_en';
+      if (card.step <= 1) return choose([['mcq_en_uk', 3], ['listen_mcq', 2], ['match', 2]], ctx);
+      if (card.step === 2) return choose([['mcq_uk_en', 3], ['ctx_mcq', 2]], ctx) || 'mcq_uk_en';
       return choose(PRODUCTIVE, ctx) || 'flip_rev';
     }
-    if (card.st === 'relearn') return choose([['type_en', 4], ['build_phrase', 4], ['mcq_uk_en', 1], ['flip_rev', 1]], ctx) || 'flip_rev';
+    if (card.st === 'relearn') return choose([['type_en', 4], ['build_phrase', 4], ['spell', 3], ['ctx_mcq', 1], ['mcq_uk_en', 1], ['flip_rev', 1]], ctx) || 'flip_rev';
     const s = card.s || 0;
     let list;
-    if (s < 4) list = [['mcq_uk_en', 3], ['listen_mcq', 2], ['flip_rev', 2], ['type_en', 2], ['build_phrase', 2]];
-    else if (s < 15) list = [['type_en', 4], ['cloze', 3], ['build_phrase', 3], ['speak', 2], ['flip_rev', 1], ['listen_mcq', 1]];
-    else if (s < 45) list = [['type_en', 3], ['cloze', 3], ['dictation', 2], ['build_sentence', 3], ['speak', 2], ['flip', 1], ['own_sentence', 1]];
-    else list = [['dictation', 3], ['build_sentence', 3], ['speak', 3], ['cloze', 2], ['flip', 1], ['own_sentence', 2]];
+    if (s < 4) list = [['mcq_uk_en', 3], ['listen_mcq', 2], ['ctx_mcq', 2], ['spell', 2], ['match', 1], ['flip_rev', 2], ['type_en', 2], ['build_phrase', 2]];
+    else if (s < 15) list = [['type_en', 4], ['cloze', 3], ['phrase_fill', 3], ['build_phrase', 3], ['listen_ex', 2], ['speak', 2], ['ctx_mcq', 1], ['flip_rev', 1], ['listen_mcq', 1]];
+    else if (s < 45) list = [['type_en', 3], ['cloze', 2], ['phrase_fill', 3], ['dictation', 2], ['build_sentence', 3], ['listen_ex', 2], ['speak', 2], ['flip', 1], ['own_sentence', 1]];
+    else list = [['dictation', 3], ['build_sentence', 3], ['phrase_fill', 2], ['listen_ex', 2], ['speak', 3], ['cloze', 2], ['flip', 1], ['own_sentence', 2]];
     return choose(list, ctx) || 'flip_rev';
   }
 
@@ -828,9 +853,9 @@
     let exercise;
     if (this.practice) {
       const pseudo = { st: 'review', s: 5 };
-      exercise = pickExercise(word, pseudo, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen });
+      exercise = pickExercise(word, pseudo, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen, phrases: this.env.phrases });
     } else {
-      exercise = pickExercise(word, source === 'new' ? null : card, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen });
+      exercise = pickExercise(word, source === 'new' ? null : card, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen, phrases: this.env.phrases });
     }
     return { id, word, card, exercise, source };
   };
@@ -921,7 +946,7 @@
 
   const api = {
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
-    wordForms, clozeTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
+    wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
     EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
     migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, taskSrs, practiceDue, pickPractice, pickMistakes, pickTopicPractice, pickTasks, grammarSchedule, pickSectionTasks

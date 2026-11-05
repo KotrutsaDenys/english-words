@@ -88,7 +88,7 @@ test('Вибір вправи поважає налаштування', () => {
     assert.ok(e === 'flip' || e === 'flip_rev', e);
   }
   assert.strictEqual(C.pickExercise(w, null, { settings: {} }), 'intro');
-  assert.strictEqual(C.pickExercise(w, { st: 'learn', step: 2 }, { settings: {} }), 'mcq_uk_en');
+  assert.ok(['mcq_uk_en', 'ctx_mcq'].includes(C.pickExercise(w, { st: 'learn', step: 2 }, { settings: {} })), 'крок 2: вибрати англійське слово');
 });
 
 test('Відволікаючі варіанти без повторів', () => {
@@ -343,6 +343,30 @@ test('Закріплення граматики: інтервали, що чек
   const tp = C.pickTopicPractice(A, 100, 4, () => 0.5).map(x => A.tasks.indexOf(x.task));
   assert.strictEqual(tp[0], 6, 'спершу помилка');
   assert.ok(![5, 7].includes(tp[1]), 'далі не бачені');
+});
+
+test('Нові вправи: літери, пропущене слово, фраза; бот розкладу їх обирає', () => {
+  const W = id => WORDS.find(w => w.id === id);
+  assert.strictEqual(C.spellTarget(W('core-remember')), 'remember');
+  assert.strictEqual(C.spellTarget({ en: 'pick up' }), null);
+  assert.strictEqual(C.spellTarget({ en: 'to borrow' }), 'borrow');
+  assert.strictEqual(C.ctxTarget({ en: 'busy', ex: 'The road is busy in the morning.' }).text, 'busy');
+  assert.strictEqual(C.ctxTarget({ en: 'to borrow', ex: 'I borrowed his drill.' }), null, 'форма з закінченням — ні');
+  const pt = C.phraseTargets({ en: 'to borrow' }, [['borrow', 'позичити'], ['borrow the van', 'позичити фургон'], ['I borrowed his drill', 'я позичив його дриль']]);
+  assert.deepStrictEqual(pt.map(x => x.text), ['borrow', 'borrowed']);
+  // За 400 виборів для слова в різних станах трапляються всі нові типи
+  const w = Object.assign({}, W('core-remember'));
+  const seen = new Set();
+  const ctx = { settings: {}, canListen: true, phrases: { [w.id]: [['remember my name', 'запам\'ятай моє ім\'я'], ['I remember it well', 'я добре це пам\'ятаю']] } };
+  for (let k = 0; k < 400; k++) {
+    const card = [{ st: 'learn', step: 1 }, { st: 'learn', step: 2 }, { st: 'learn', step: 3 }, { st: 'review', s: 2 }, { st: 'review', s: 10 }, { st: 'review', s: 30 }][k % 6];
+    seen.add(C.pickExercise(w, card, Object.assign({ rng: Math.random }, ctx)));
+  }
+  ['spell', 'ctx_mcq', 'phrase_fill', 'listen_ex', 'match'].forEach(t => assert.ok(seen.has(t), t));
+  // Тихий режим: без речення на слух
+  const q = new Set();
+  for (let k = 0; k < 200; k++) q.add(C.pickExercise(w, { st: 'review', s: 10 }, Object.assign({ rng: Math.random }, ctx, { settings: { quiet: true } })));
+  assert.ok(!q.has('listen_ex'));
 });
 
 test('Словник упереміш: стабільно протягом дня, інакше наступного дня, перші слова з різних тем', () => {

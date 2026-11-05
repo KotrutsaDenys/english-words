@@ -320,11 +320,14 @@ const ICON = {
   next: SVG('<path d="M18 5.5v13"/><path d="M5.5 6.5l9 5.5-9 5.5z"/>'),
   pause: SVG('<path d="M8.5 5.5v13M15.5 5.5v13"/>', 3),
   book: SVG('<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15.5H5.5A1.5 1.5 0 0 0 4 21z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15.5h5.5A1.5 1.5 0 0 1 20 21z"/>'),
-  timer: SVG('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M10 2.5h4M18.5 6l1.5-1.5"/>')
+  timer: SVG('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M10 2.5h4M18.5 6l1.5-1.5"/>'),
+  letters: SVG('<rect x="3" y="7" width="8" height="10" rx="2"/><rect x="13" y="7" width="8" height="10" rx="2"/><path d="M5.5 14l1.5-4.5L8.5 14M6 12.6h2M15.5 10h1.8a1.2 1.2 0 0 1 0 2.4h-1.8zm0 2.4h2a1.3 1.3 0 0 1 0 2.6h-2z"/>'),
+  pairs: SVG('<rect x="3" y="4" width="7" height="6" rx="1.8"/><rect x="14" y="14" width="7" height="6" rx="1.8"/><rect x="3" y="14" width="7" height="6" rx="1.8"/><rect x="14" y="4" width="7" height="6" rx="1.8"/><path d="M10 7h4M10 17h4"/>')
 };
 const EX_ICON = {
   intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
-  type_en: 'type', cloze: 'cloze', dictation: 'dictation', build_phrase: 'build', build_sentence: 'build', speak: 'speak', own_sentence: 'pen'
+  type_en: 'type', cloze: 'cloze', dictation: 'dictation', build_phrase: 'build', build_sentence: 'build', speak: 'speak', own_sentence: 'pen',
+  spell: 'letters', ctx_mcq: 'cloze', phrase_fill: 'cloze', listen_ex: 'listen', match: 'pairs'
 };
 function sayBtn(w, kind, small, label) {
   const b = el('button', 'say' + (small ? ' sm' : ''));
@@ -377,7 +380,7 @@ let sess = null;        // знімок дня на початку занятт�
 
 function envFor(practiceIds, reviewOnly, limit) {
   return {
-    words: allWords(), cards, settings, today: today(), log: todayLog(), rng: Math.random, canListen: canListen(),
+    words: allWords(), cards, settings, today: today(), log: todayLog(), rng: Math.random, canListen: canListen(), phrases: PHRASES,
     practiceIds, reviewOnly, limit, priority: meta.priority || [], withNew: !!todayLog().nw
   };
 }
@@ -1583,6 +1586,22 @@ function typing(item, kind) {
     targets = [ct.text];
     display = ct.text;
     ui.blank = blank;
+  } else if (kind === 'phrase') {
+    // Доповни фразу: те саме слово в інших сполученнях (фрази зі словника фраз), щоб знати, з чим воно ходить
+    const list = C.phraseTargets(w, PHRASES[w.id]);
+    if (!list.length) { item.exercise = 'cloze'; return typing(item, 'cloze'); }
+    const pt = list[Math.floor(Math.random() * list.length)];
+    const p = el('p', 'cloze');
+    p.lang = 'en';
+    const blank = el('span', 'blank', pt.text);
+    p.append(document.createTextNode(pt.en.slice(0, pt.start)), blank, document.createTextNode(pt.en.slice(pt.end)));
+    body.appendChild(p);
+    body.appendChild(el('p', 'ex-uk', pt.uk));
+    targets = [pt.text];
+    display = pt.text;
+    ui.blank = blank;
+    ui.phrase = pt;
+    item.fill = pt.text;
   } else if (kind === 'dictation') {
     listenPrompt(body, w);
     body.appendChild(el('p', 'prompt-sub', 'Напиши англійською, що почув'));
@@ -1637,7 +1656,8 @@ function typing(item, kind) {
     else { g = 1; input.classList.add('wrong'); }
     finish(g);
     if (ui.blank) { ui.blank.classList.add('filled'); }
-    autoSay(w, kind === 'cloze' ? 'x' : 'w');
+    if (kind === 'phrase') { if (!settings.quiet) sayPhrase(w, ui.phrase.i); }
+    else autoSay(w, kind === 'cloze' ? 'x' : 'w');
     // Що написав учень проти правильного: літери з помилкою підсвічені
     const right = String(check.target || display);
     let yours = null, close = false;
@@ -1700,6 +1720,265 @@ function typing(item, kind) {
 RENDER.type_en = item => typing(item, 'type');
 RENDER.cloze = item => typing(item, 'cloze');
 RENDER.dictation = item => typing(item, 'dictation');
+RENDER.phrase_fill = item => typing(item, 'phrase');
+
+/* Склади слово з літер: згадати написання без клавіатури. Літера не та — тремтить і не стає */
+RENDER.spell = item => {
+  const w = item.word;
+  const target = C.spellTarget(w);
+  if (!target) { item.exercise = 'mcq_uk_en'; return mcq(item, 'uk', 'en'); }
+  const body = frame(item);
+  body.appendChild(bigWord(w.uk, 'uk'));
+  body.appendChild(el('p', 'prompt-sub', 'Склади слово англійською з літер'));
+  const letters = target.split('');
+  const slots = el('div', 'spell-slots' + (letters.length > 9 ? ' long' : ''));
+  slots.lang = 'en';
+  slots.setAttribute('aria-label', 'Слово');
+  const slotEls = letters.map(() => slots.appendChild(el('span', 'slot')));
+  const bank = el('div', 'spell-bank');
+  bank.lang = 'en';
+  let order = C.shuffle(letters.map((ch, i) => ({ ch, i })));
+  if (letters.length > 2 && order.map(x => x.ch).join('') === target) order.push(order.shift());
+  let pos = 0, miss = 0;
+  const tiles = order.map(t => {
+    const b = el('button', 'tile letter', t.ch);
+    b.type = 'button';
+    b.addEventListener('click', () => tap(b));
+    bank.appendChild(b);
+    return b;
+  });
+  $('card').append(slots, bank);
+  const put = b => {
+    slotEls[pos].textContent = letters[pos];
+    slotEls[pos].classList.add('on');
+    b.classList.add('used');
+    b.disabled = true;
+    pos++;
+  };
+  const done = g => {
+    if (ui.answered) return;
+    tiles.forEach(b => { b.disabled = true; });
+    for (let k = pos; k < letters.length; k++) { slotEls[k].textContent = letters[k]; slotEls[k].classList.add('shown'); }
+    finish(g);
+    autoSay(w, 'w');
+    $('card').appendChild(details(w, { en: true, uk: false, wrong: g === 1 }));
+    const sub = ui.hints ? ' з підказкою' : miss ? ' з однією помилкою' : '';
+    nextButton(g > 1 ? verdict('right', 'Правильно', sub) : verdict('wrong', 'Правильно:', null, enSpan(target)), g === 3);
+  };
+  const tap = b => {
+    if (ui.answered || b.disabled) return;
+    if (b.textContent.toLowerCase() === letters[pos].toLowerCase()) {
+      put(b);
+      if (pos === letters.length) done(miss || ui.hints ? (miss > 1 ? 1 : 2) : 3);
+      return;
+    }
+    missed(b);
+  };
+  const missed = b => {
+    miss++;
+    haptic('wrong');
+    if (b) { b.classList.remove('bad'); void b.offsetWidth; b.classList.add('bad'); }
+    if (miss >= 3) done(1);
+  };
+  const hint = () => {
+    if (ui.answered) return;
+    if (pos >= letters.length - 1) { toast('Підказок більше немає'); return; }
+    const b = tiles.find(x => !x.disabled && x.textContent.toLowerCase() === letters[pos].toLowerCase());
+    if (!b) return;
+    ui.hints++;
+    put(b);
+  };
+  setFoot([button('Не знаю', 'btn-quiet', () => done(1)), button('Підказка', '', hint)], 2);
+  // З клавіатури (на комп'ютері): літера, якої немає серед вільних, — теж помилка
+  keys = { letter: ch => { if (ui.answered) return; const b = tiles.find(x => !x.disabled && x.textContent.toLowerCase() === ch); if (b) tap(b); else missed(null); } };
+};
+
+/* Яке слово пропущено: речення з пропуском і чотири англійські слова. Розуміння в контексті */
+RENDER.ctx_mcq = item => {
+  const w = item.word;
+  const ct = C.ctxTarget(w);
+  if (!ct) { item.exercise = 'mcq_uk_en'; return mcq(item, 'uk', 'en'); }
+  const body = frame(item);
+  const p = el('p', 'cloze');
+  p.lang = 'en';
+  const blank = el('span', 'blank', ct.text);
+  p.append(document.createTextNode(w.ex.slice(0, ct.start)), blank, document.createTextNode(w.ex.slice(ct.end)));
+  body.appendChild(p);
+  // Переклад речення знімає двозначність: без нього в пропуск часто пасують два слова (busy / quiet)
+  if (w.exUk) body.appendChild(el('p', 'ex-uk', w.exUk));
+  body.appendChild(el('p', 'prompt-sub', 'Яке слово тут пропущено?'));
+  const n = C.tokens(ct.text).length;
+  const cap = /^[A-Z]/.test(ct.text);
+  const fit = s => cap ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  const seen = new Set([ct.text.toLowerCase()]);
+  const others = [];
+  C.distractors(w, allWords(), 'en', 14, Math.random, !!(item.card && item.card.st !== 'learn')).forEach(o => {
+    const b = C.baseForm(o);
+    if (others.length >= 3 || !/^[A-Za-z' -]+$/.test(b) || C.tokens(b).length !== n || seen.has(b.toLowerCase())) return;
+    seen.add(b.toLowerCase());
+    others.push({ o, text: fit(b) });
+  });
+  const opts = C.shuffle([{ o: w, text: ct.text }].concat(others));
+  const box = el('div', 'options');
+  const btns = opts.map((x, i) => {
+    const b = el('button', 'opt-btn en');
+    b.type = 'button';
+    const t = el('span', null, x.text); t.lang = 'en';
+    b.append(el('span', 'k', String(i + 1)), t);
+    b.addEventListener('click', () => pick(x, b));
+    box.appendChild(b);
+    return b;
+  });
+  $('card').appendChild(box);
+  setFoot([button('Не знаю', 'btn-quiet', () => pick(null, null))]);
+  keys = { num: k => btns[k - 1] && btns[k - 1].click() };
+  function pick(x, b) {
+    if (ui.answered) return;
+    const ok = !!x && x.o.id === w.id;
+    finish(ok ? 3 : 1);
+    btns.forEach((y, i) => {
+      y.disabled = true;
+      if (opts[i].o.id === w.id) { y.classList.add('right'); y.firstChild.innerHTML = ICON.check; }
+      else if (y === b) { y.classList.add('wrong'); y.firstChild.innerHTML = ICON.cross; }
+      else y.classList.add('dim');
+    });
+    blank.classList.add('filled');
+    autoSay(w, 'x');
+    $('card').appendChild(details(w, { en: true, uk: true, wrong: !ok }));
+    let mine = null;
+    if (x && !ok) {
+      mine = el('span', 'yours');
+      const a = el('span', null, x.text); a.lang = 'en';
+      mine.append(a, document.createTextNode(' — це ' + x.o.uk));
+    }
+    nextButton(ok ? verdict('right', 'Правильно') : verdict('wrong', x ? 'Ні, правильно:' : 'Правильно:', null, pair(w), mine), ok);
+  }
+};
+
+/* Зрозумій на слух: звучить ціле речення-приклад без тексту, треба вибрати, що воно означає */
+RENDER.listen_ex = item => {
+  const w = item.word;
+  if (!w.ex || !w.exUk) { item.exercise = 'listen_mcq'; return mcq(item, 'audio', 'uk'); }
+  const body = frame(item);
+  const big = el('button', 'listen-big');
+  big.type = 'button';
+  big.innerHTML = ICON.speaker;
+  big.setAttribute('aria-label', 'Послухати речення ще раз');
+  big.addEventListener('click', () => sayWord(w, 'x'));
+  const slow = el('button', 'slow-btn', 'Повільніше');
+  slow.type = 'button';
+  slow.addEventListener('click', () => sayWord(w, 'x', 0.75));
+  body.append(big, slow, el('p', 'prompt-sub', 'Що означає це речення?'));
+  sayWord(w, 'x');
+  const len = w.exUk.length;
+  const pool = allWords().filter(o => o.id !== w.id && o.exUk && o.exUk !== w.exUk && Math.abs(o.exUk.length - len) < 22);
+  const same = C.shuffle(pool.filter(o => o.cat === w.cat));
+  const rest = C.shuffle(pool.filter(o => o.cat !== w.cat));
+  const others = same.slice(0, 1).concat(rest).slice(0, 2);
+  const opts = C.shuffle([{ id: w.id, uk: w.exUk }].concat(others.map(o => ({ id: o.id, uk: o.exUk }))));
+  const box = el('div', 'options');
+  const btns = opts.map((o, i) => {
+    const b = el('button', 'opt-btn long');
+    b.type = 'button';
+    b.append(el('span', 'k', String(i + 1)), el('span', null, o.uk));
+    b.addEventListener('click', () => pick(o, b));
+    box.appendChild(b);
+    return b;
+  });
+  $('card').appendChild(box);
+  setFoot([button('Не розчув', 'btn-quiet', () => pick(null, null))]);
+  keys = { num: k => btns[k - 1] && btns[k - 1].click() };
+  function pick(o, b) {
+    if (ui.answered) return;
+    const ok = !!o && o.id === w.id;
+    finish(ok ? 3 : 1);
+    btns.forEach((y, i) => {
+      y.disabled = true;
+      if (opts[i].id === w.id) { y.classList.add('right'); y.firstChild.innerHTML = ICON.check; }
+      else if (y === b) { y.classList.add('wrong'); y.firstChild.innerHTML = ICON.cross; }
+      else y.remove();
+    });
+    // Тепер текст: прочитати те, що щойно чув
+    const said = el('p', 'ex heard');
+    said.append(enText(w.ex), sayBtn(w, 'x', true));
+    box.before(said);
+    $('card').appendChild(details(w, { en: true, uk: true, wrong: !ok }));
+    nextButton(ok ? verdict('right', 'Правильно') : verdict('wrong', o ? 'Ні, це речення означає:' : 'Це речення означає:', null, document.createTextNode(w.exUk)), ok);
+  }
+};
+
+/* Знайди пари: нове чи повторюване слово серед трьох уже знайомих. Рахується лише своє слово */
+function matchPartners(w, n) {
+  const ids = Object.keys(cards).filter(id => id !== w.id && cards[id].st !== 'new');
+  const out = [], uks = new Set([w.uk.toLowerCase()]), ens = new Set([w.en.toLowerCase()]);
+  for (const id of C.shuffle(ids)) {
+    const o = byId(id);
+    if (!o || uks.has(o.uk.toLowerCase()) || ens.has(o.en.toLowerCase()) || o.uk.length > 34 || o.en.length > 26) continue;
+    uks.add(o.uk.toLowerCase()); ens.add(o.en.toLowerCase());
+    out.push(o);
+    if (out.length >= n) break;
+  }
+  return out;
+}
+RENDER.match = item => {
+  const w = item.word;
+  const others = matchPartners(w, 3);
+  if (others.length < 3) { item.exercise = 'mcq_en_uk'; return mcq(item, 'en', 'uk'); }
+  const body = frame(item);
+  body.appendChild(el('p', 'prompt-sub pairs-sub', 'Торкнись слова, потім його перекладу'));
+  const set = C.shuffle([w].concat(others));
+  const grid = el('div', 'pairs');
+  const colL = el('div', 'pairs-col'), colR = el('div', 'pairs-col');
+  grid.append(colL, colR);
+  let sel = null, left = set.length, missT = 0;
+  const all = [];
+  const mk = (o, side, col) => {
+    const b = el('button', 'pair-btn' + (side === 'en' ? ' en' : ''), o[side]);
+    b.type = 'button';
+    if (side === 'en') b.lang = 'en';
+    b.dataset.id = o.id;
+    b.dataset.side = side;
+    b.addEventListener('click', () => tap(b));
+    col.appendChild(b);
+    all.push(b);
+  };
+  set.forEach(o => mk(o, 'en', colL));
+  C.shuffle(set.slice()).forEach(o => mk(o, 'uk', colR));
+  $('card').appendChild(grid);
+  const end = g => {
+    finish(g);
+    autoSay(w, 'w');
+    $('card').appendChild(details(w, { en: true, uk: true, wrong: g === 1 }));
+    nextButton(g === 3 ? verdict('right', 'Усі пари знайдено') : verdict(g === 2 ? 'typo' : 'wrong', 'Запам\'ятай пару:', null, pair(w)), g === 3);
+  };
+  function tap(b) {
+    if (ui.answered || b.classList.contains('done')) return;
+    if (!sel || sel.dataset.side === b.dataset.side) {
+      if (sel) sel.classList.remove('sel');
+      sel = sel === b ? null : b;
+      if (sel) { sel.classList.add('sel'); if (sel.dataset.side === 'en' && settings.autoplay) autoSay(byId(sel.dataset.id), 'w'); }
+      return;
+    }
+    const a = sel;
+    sel = null;
+    a.classList.remove('sel');
+    if (a.dataset.id === b.dataset.id) {
+      [a, b].forEach(x => { x.classList.add('done'); x.disabled = true; });
+      haptic('ok');
+      if (--left === 0) end(missT === 0 ? 3 : missT === 1 ? 2 : 1);
+    } else {
+      if (a.dataset.id === w.id || b.dataset.id === w.id) missT++;
+      haptic('wrong');
+      [a, b].forEach(x => { x.classList.remove('bad'); void x.offsetWidth; x.classList.add('bad'); });
+    }
+  }
+  setFoot([button('Не знаю', 'btn-quiet', () => {
+    if (ui.answered) return;
+    all.forEach(x => { x.disabled = true; if (x.dataset.id === w.id) x.classList.add('done'); else x.classList.add('dim'); });
+    end(1);
+  })]);
+  keys = {};
+};
 
 /* Склади фразу або речення зі слів */
 function build(item, sentence) {
@@ -3285,6 +3564,7 @@ document.addEventListener('keydown', e => {
   if (auto && e.key !== 'Enter') cancelAuto();
   if (e.target.closest && e.target.closest('input,textarea,select')) return;
   if (e.key === 'Escape' && mode) { e.preventDefault(); $('exitBtn').click(); return; }
+  if (keys.letter && /^[a-zA-Z]$/.test(e.key) && !e.metaKey && !e.ctrlKey) { e.preventDefault(); keys.letter(e.key.toLowerCase()); return; }
   if ((e.key === 'z' || e.key === 'я') && !e.metaKey && !e.ctrlKey && mode === 'session') { e.preventDefault(); doUndo(); return; }
   if (/^[1-4]$/.test(e.key) && keys.num) { e.preventDefault(); keys.num(Number(e.key)); return; }
   if (e.key === 'Enter' && keys.enter) { if (e.target.closest && e.target.closest('button')) return; e.preventDefault(); keys.enter(); return; }
