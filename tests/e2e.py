@@ -87,6 +87,14 @@ def answer(page, wrong=False, scheme='light'):
     elif ex == 'speak':
         click_text(page, 'Показати відповідь')
         click_text(page, 'Не згадав' if wrong else 'Правильно')
+    elif ex == 'say_sentence':
+        if wrong and rnd.random() < 0.5:
+            click_text(page, 'Не знаю')
+            assert visible(page, '.ex.said mark'), 'say_sentence: слово в реченні не позначено'
+        else:
+            click_text(page, 'Показати відповідь')
+            assert visible(page, '.ex.said mark'), 'say_sentence: слово в реченні не позначено'
+            click_text(page, 'Не згадав' if wrong else 'Правильно')
     elif ex == 'spell':
         if wrong:
             click_text(page, 'Не знаю')
@@ -130,7 +138,7 @@ def answer(page, wrong=False, scheme='light'):
             click_text(page, 'Готово')
     else:
         raise RuntimeError('unknown exercise ' + ex)
-    if ex not in ('flip', 'flip_rev', 'speak') and key + '-done' not in seen_types:
+    if ex not in ('flip', 'flip_rev', 'speak', 'say_sentence') and key + '-done' not in seen_types:
         seen_types[key + '-done'] = 1
         page.wait_for_timeout(150)
         shot(page, f'{scheme}-{ex}-b')
@@ -240,7 +248,8 @@ try:
                 print(scheme, 'day', d + 1, 'answers', n, 'cards', len(cards), states)
             # Вправи для міцних слів, до яких бот за 3 тижні не доходить
             for ex_type, check in (('dictation', 'canDictate'), ('build_sentence', 'canBuildSentence'), ('flip', 'canType'), ('own_sentence', 'canDictate'),
-                                   ('spell', 'spellTarget'), ('ctx_mcq', 'ctxTarget'), ('listen_ex', 'canBuildSentence'), ('match', 'canType'), ('phrase_fill', 'canType')):
+                                   ('spell', 'spellTarget'), ('ctx_mcq', 'ctxTarget'), ('listen_ex', 'canBuildSentence'), ('match', 'canType'), ('phrase_fill', 'canType'),
+                                   ('say_sentence', 'canSaySentence')):
                 wid = page.evaluate('''([check]) => Object.entries(window.EW.cards).filter(([id, c]) => c.st === 'review')
                     .map(([id]) => window.WORDS.find(x => x.id === id)).find(w => w && EWCore[check](w)).id''', [check])
                 page.evaluate('([id, t]) => window.EW.force(id, t)', [wid, ex_type])
@@ -381,6 +390,15 @@ try:
         summary = page.inner_text('#card')
         print('summary:', summary.replace('\n', ' | '))
         assert 'Заняття завершено' in summary and 'точність' in summary
+        # Повторення сьогоднішніх нових слів: переклад відкривається дотиком
+        fresh_n = page.evaluate('() => { const t = EWCore.dayNum(); return Object.values(window.EW.cards).filter(c => c.first === t && !c.known).length; }')
+        recap = page.locator('.recap button')
+        assert recap.count() == min(fresh_n, 16), (recap.count(), fresh_n)
+        if fresh_n:
+            assert recap.first.locator('small').count() == 0
+            recap.first.click()
+            assert recap.first.locator('small').inner_text().strip(), 'переклад не з\'явився'
+            shot(page, 'light-summary-recap')
         click_text(page, 'На головну')
         page.wait_for_timeout(200)
         assert visible(page, '.tabs') and page.evaluate('window.EW.mode') is None
@@ -568,7 +586,7 @@ try:
         # Нові вправи (літери, пропущене слово, фраза, речення на слух, пари): кожна відкривається й зараховується
         page.evaluate('''() => { const ids = ['talk-borrow','core-cheap','sp-say','b1-rise','core-busy','sp-listen','core-remember','sp-wait','talk-wages','b2-guest'];
           ids.forEach(id => { if (!window.EW.cards[id]) window.EW.cards[id] = EWCore.knownCard(EWCore.dayNum(), 0.9, Math.random); }); }''')
-        for ex_type, wid in (('spell', 'core-remember'), ('ctx_mcq', 'core-busy'), ('phrase_fill', 'talk-borrow'), ('listen_ex', 'sp-wait'), ('match', 'core-cheap')):
+        for ex_type, wid in (('spell', 'core-remember'), ('ctx_mcq', 'core-busy'), ('phrase_fill', 'talk-borrow'), ('listen_ex', 'sp-wait'), ('match', 'core-cheap'), ('say_sentence', 'sp-say')):
             for wrong in (False, True):
                 page.evaluate('([id, t]) => window.EW.force(id, t)', [wid, ex_type])
                 page.wait_for_timeout(80)
@@ -576,6 +594,20 @@ try:
                 answer(page, wrong=wrong)
                 page.wait_for_timeout(80)
         assert page.evaluate("[...document.querySelectorAll('.spell-slots .slot')].every(s => s.getBoundingClientRect().right <= innerWidth)"), 'літери влазять'
+        # Варіанти в тестах тієї ж частини мови: до дієслова лише дієслова
+        page.evaluate('([id, t]) => window.EW.force(id, t)', ['sp-say', 'mcq_uk_en'])
+        page.wait_for_timeout(80)
+        opts = page.evaluate("[...document.querySelectorAll('.opt-btn span:nth-child(2)')].map(s => s.textContent)")
+        assert len(opts) == 4 and all(o.startswith('to ') for o in opts), opts
+        answer(page)
+        # Смуга прогресу не відкочується після помилки
+        page.evaluate('([id, t]) => window.EW.force(id, t)', ['core-busy', 'mcq_en_uk'])
+        page.wait_for_timeout(80)
+        before = page.evaluate("parseFloat(document.getElementById('tapeFill').style.width)")
+        answer(page, wrong=True)
+        page.wait_for_timeout(80)
+        after = page.evaluate("parseFloat(document.getElementById('tapeFill').style.width)")
+        assert after >= before, (before, after)
         page.evaluate('window.EW.endSession && window.EW.endSession()')
         page.evaluate('window.EW.showTab("learn")')
         page.wait_for_timeout(150)

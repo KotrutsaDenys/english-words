@@ -269,6 +269,51 @@ test('Слова-плутанки не потрапляють в один ден
   assert.ok(far.every(id => byId(id).cat !== 'talk'), 'far distractors from other categories');
 });
 
+test('Порада щодо темпу: за низької точності повторень менше нових, за високої без боргу більше', () => {
+  const t = 1500;
+  const mk = (rv, rok, days) => { const log = {}; for (let d = t - days + 1; d <= t; d++) log[C.dayKey(d)] = { rv, rok }; return log; };
+  assert.strictEqual(C.paceAdvice(mk(5, 3, 2), { newPerDay: 10 }, t, 0), null, 'too few reviews');
+  const slow = C.paceAdvice(mk(10, 6, 5), { newPerDay: 10 }, t, 0);
+  assert.ok(slow && slow.kind === 'slow' && slow.to === 6 && slow.from === 10, JSON.stringify(slow));
+  assert.strictEqual(C.paceAdvice(mk(10, 6, 5), { newPerDay: 3 }, t, 0), null, 'already minimal');
+  const fast = C.paceAdvice(mk(10, 10, 5), { newPerDay: 10 }, t, 0);
+  assert.ok(fast && fast.kind === 'fast' && fast.to === 13, JSON.stringify(fast));
+  assert.strictEqual(C.paceAdvice(mk(10, 10, 5), { newPerDay: 10 }, t, 40), null, 'no speeding up with backlog');
+  assert.strictEqual(C.paceAdvice(mk(10, 8, 5), { newPerDay: 10 }, t, 0), null, 'normal accuracy: no advice');
+  // лише останні 7 днів
+  const old = mk(10, 2, 5); for (let d = t - 6; d <= t; d++) delete old[C.dayKey(d)]; for (let d = t - 12; d <= t - 7; d++) old[C.dayKey(d)] = { rv: 10, rok: 2 };
+  assert.strictEqual(C.paceAdvice(old, { newPerDay: 10 }, t, 0), null, 'old days ignored');
+});
+
+test('Варіанти в тестах тієї ж частини мови й форми, що й слово', () => {
+  assert.strictEqual(C.posClass({ en: 'to know', uk: 'знати' }), 'verb');
+  assert.strictEqual(C.posClass({ en: 'cut corners', uk: 'халтурити, економити' }), 'verb');
+  assert.strictEqual(C.posClass({ en: 'tidy', uk: 'охайний; прибирати' }), 'adj');
+  assert.strictEqual(C.posClass({ en: 'quickly', uk: 'швидко' }), 'adv');
+  assert.strictEqual(C.posClass({ en: 'family', uk: 'сім\'я' }), 'other');
+  assert.strictEqual(C.posClass({ en: 'to expand', uk: 'розширювати(ся)' }), 'verb');
+  const rng = seeded(5);
+  let same = 0, total = 0, shape = 0;
+  for (let i = 0; i < 200; i++) {
+    const w = WORDS[Math.floor(rng() * WORDS.length)];
+    for (const close of [false, true]) {
+      const d = C.distractors(w, WORDS, 'uk', 3, rng, close);
+      assert.strictEqual(d.length, 3);
+      for (const o of d) {
+        total++;
+        if (C.posClass(o) === C.posClass(w)) same++;
+        if ((C.tokens(C.baseForm(o)).length >= 2) === (C.tokens(C.baseForm(w)).length >= 2)) shape++;
+      }
+    }
+  }
+  assert.ok(same / total > 0.97, 'same part of speech: ' + (same / total).toFixed(3));
+  assert.ok(shape / total > 0.97, 'same shape (word vs expression): ' + (shape / total).toFixed(3));
+  // «знати» не отримує серед варіантів іменників чи прикметників
+  const know = byId('sp-know');
+  const opts = C.distractors(know, WORDS, 'en', 3, seeded(9), false);
+  assert.ok(opts.every(o => C.posClass(o) === 'verb'), opts.map(o => o.en).join(', '));
+});
+
 test('Два контексти чергуються', () => {
   const w = byId('site-trowel');
   assert.ok(w.ex2 && w.ex2 !== w.ex);
@@ -362,11 +407,18 @@ test('Нові вправи: літери, пропущене слово, фра
     const card = [{ st: 'learn', step: 1 }, { st: 'learn', step: 2 }, { st: 'learn', step: 3 }, { st: 'review', s: 2 }, { st: 'review', s: 10 }, { st: 'review', s: 30 }][k % 6];
     seen.add(C.pickExercise(w, card, Object.assign({ rng: Math.random }, ctx)));
   }
-  ['spell', 'ctx_mcq', 'phrase_fill', 'listen_ex', 'match'].forEach(t => assert.ok(seen.has(t), t));
-  // Тихий режим: без речення на слух
+  ['spell', 'ctx_mcq', 'phrase_fill', 'listen_ex', 'match', 'say_sentence'].forEach(t => assert.ok(seen.has(t), t));
+  // Тихий режим: без речення на слух і без говоріння
   const q = new Set();
-  for (let k = 0; k < 200; k++) q.add(C.pickExercise(w, { st: 'review', s: 10 }, Object.assign({ rng: Math.random }, ctx, { settings: { quiet: true } })));
-  assert.ok(!q.has('listen_ex'));
+  for (let k = 0; k < 200; k++) q.add(C.pickExercise(w, { st: 'review', s: 30 }, Object.assign({ rng: Math.random }, ctx, { settings: { quiet: true } })));
+  assert.ok(!q.has('listen_ex') && !q.has('say_sentence'));
+  // «Скажи речення» лише для міцних слів з коротким прикладом, і не без говоріння
+  assert.ok(C.canSaySentence(w));
+  assert.ok(!C.canSaySentence({ ex: 'one two three four five six seven eight nine ten eleven', exUk: 'x' }));
+  assert.ok(!C.eligible('say_sentence', w, { settings: { speaking: false } }));
+  const early = new Set();
+  for (let k = 0; k < 200; k++) early.add(C.pickExercise(w, { st: 'review', s: 10 }, Object.assign({ rng: Math.random }, ctx)));
+  assert.ok(!early.has('say_sentence'));
 });
 
 test('Словник упереміш: стабільно протягом дня, інакше наступного дня, перші слова з різних тем', () => {

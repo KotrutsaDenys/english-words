@@ -894,6 +894,17 @@ body:has(#learnHome.has-dock:not([hidden])) .toast{bottom:calc(env(safe-area-ins
 .pairs-sub{margin-top:2px}
 .opt-btn.long span:last-child{font-size:16px;line-height:1.35;font-weight:600}
 .ex.heard{margin:6px 0 10px;font-size:19px}
+/* «Скажи речення»: українське речення великим, після відкриття англійське зі словом маркером */
+.say-uk{font-weight:800;font-size:26px;line-height:1.25;letter-spacing:-.015em;margin:0;overflow-wrap:break-word}
+.ex.said{margin:0 0 4px;font-size:20px;font-weight:700;line-height:1.4}
+.ex.said + .slow-btn{margin:2px 0 10px;padding:4px 0}
+/* Повторення сьогоднішніх нових слів у підсумку: переклад відкривається дотиком */
+.recap{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.recap button{font:inherit;font-weight:700;font-size:15px;min-height:40px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;transition:transform .45s var(--spring),background-color .2s}
+.recap button:active{transform:scale(.96);transition-duration:.08s}
+.recap button.open{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-text)}
+.recap button small{display:block;font-weight:600;font-size:13px;color:var(--muted);margin-top:1px}
+.recap button.open small{color:inherit}
 html.no-motion *,html.no-motion *::before,html.no-motion *::after{animation-duration:0s !important;animation-delay:0s !important;transition-duration:0s !important;transition-delay:0s !important}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}

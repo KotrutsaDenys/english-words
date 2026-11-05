@@ -488,8 +488,11 @@
     ctx_mcq: 'Яке слово пропущено?',
     phrase_fill: 'Доповни фразу',
     listen_ex: 'Зрозумій на слух',
-    match: 'Знайди пари'
+    match: 'Знайди пари',
+    say_sentence: 'Скажи речення'
   };
+  /* «Скажи речення»: приклад до 10 слів, який можна вимовити й порівняти із записом */
+  function canSaySentence(w) { const n = tokens(w.ex).length; return !!w.ex && !!w.exUk && n >= 3 && n <= 10; }
   /* Який приклад показати: чергуємо два контексти за кількістю повторень */
   function exampleFor(w, card, kind) {
     if (!w.ex2) return { ex: w.ex, exUk: w.exUk, sayEx: w.sayEx, n: 1 };
@@ -502,7 +505,7 @@
     return Object.assign({}, w, { ex: e.ex, exUk: e.exUk, sayEx: e.sayEx, exN: e.n });
   }
   /* Вправи, яким потрібен звук або голос: у тихому режимі їх немає */
-  const SOUND_EXERCISES = ['listen_mcq', 'dictation', 'speak', 'listen_ex'];
+  const SOUND_EXERCISES = ['listen_mcq', 'dictation', 'speak', 'listen_ex', 'say_sentence'];
   function eligible(type, w, ctx) {
     const st = ctx.settings || {};
     const typing = st.typing !== false, speaking = st.speaking !== false;
@@ -520,6 +523,7 @@
       case 'ctx_mcq': return !!ctxTarget(w);
       case 'phrase_fill': return typing && !!ctx.phrases && phraseTargets(w, ctx.phrases[w.id]).length > 0;
       case 'listen_ex': return !!ctx.canListen && !!w.ex && !!w.exUk;
+      case 'say_sentence': return speaking && canSaySentence(w);
       default: return true;
     }
   }
@@ -554,8 +558,8 @@
     let list;
     if (s < 4) list = [['mcq_uk_en', 3], ['listen_mcq', 2], ['ctx_mcq', 2], ['spell', 2], ['match', 1], ['flip_rev', 2], ['type_en', 2], ['build_phrase', 2]];
     else if (s < 15) list = [['type_en', 4], ['cloze', 3], ['phrase_fill', 3], ['build_phrase', 3], ['listen_ex', 2], ['speak', 2], ['ctx_mcq', 1], ['flip_rev', 1], ['listen_mcq', 1]];
-    else if (s < 45) list = [['type_en', 3], ['cloze', 2], ['phrase_fill', 3], ['dictation', 2], ['build_sentence', 3], ['listen_ex', 2], ['speak', 2], ['flip', 1], ['own_sentence', 1]];
-    else list = [['dictation', 3], ['build_sentence', 3], ['phrase_fill', 2], ['listen_ex', 2], ['speak', 3], ['cloze', 2], ['flip', 1], ['own_sentence', 2]];
+    else if (s < 45) list = [['type_en', 3], ['cloze', 2], ['phrase_fill', 3], ['dictation', 2], ['build_sentence', 3], ['listen_ex', 2], ['speak', 2], ['say_sentence', 2], ['flip', 1], ['own_sentence', 1]];
+    else list = [['dictation', 3], ['build_sentence', 3], ['phrase_fill', 2], ['listen_ex', 2], ['speak', 2], ['say_sentence', 3], ['cloze', 2], ['flip', 1], ['own_sentence', 2]];
     return choose(list, ctx) || 'flip_rev';
   }
 
@@ -588,16 +592,31 @@
   function confusables(id) { return CONF_MAP[id] || []; }
 
   /* ---------- Варіанти відповіді для тестів ---------- */
+  /* Груба частина мови за формою: дієслово («to …» або переклад на -ти), прикметник (переклад на -ий/-ій),
+     прислівник («-ly»), інше. Варіанти тієї ж частини мови не видають відповідь формою слова. */
+  const LY_NOT_ADV = /^(only|early|family|likely|friendly|lonely|lovely|ugly|silly|holy|daily|weekly|monthly|yearly|elderly|lively|deadly|costly|oily|chilly|jolly|smelly|bully|belly|jelly|rally|ally|supply|apply|reply|rely|fly|july|italy|butterfly|assembly|melancholy)$/i;
+  function posClass(w) {
+    const en = String(w.en || '').trim();
+    const uk = String(w.uk || '').split(/[,;(]/)[0].trim().replace(/\(ся\)$/, '');
+    // дієслова в словнику з «to …»; вирази без «to» (cut corners) видно за перекладом на -ти,
+    // а одне слово за ним не судимо: «мати», «фрукти», «проти» — не дієслова
+    if (/^to /i.test(en) || (/\s/.test(en) && /ти(ся)?$/.test(uk))) return 'verb';
+    if (/^[A-Za-z]+ly$/.test(en) && !LY_NOT_ADV.test(en)) return 'adv';
+    if (/(ий|ій)$/.test(uk)) return 'adj';
+    return 'other';
+  }
   /* close: true для вивчених слів (схожі варіанти вчать розрізняти), false для нових (далекі, щоб не плутати) */
   function distractors(word, words, field, n, rng, close) {
     rng = rng || Math.random;
     const target = norm(word[field]);
-    const phrase = isPhrase(word);
+    const multi = w => tokens(baseForm(w)).length >= 2;   // вираз чи одне слово
+    const phrase = multi(word);
+    const pos = posClass(word);
     const seen = new Set([target]);
     const conf = new Set(confusables(word.id));
     const score = w => {
       if (conf.has(w.id)) return close ? -2 : 50;
-      return (w.cat === word.cat ? (close ? 0 : 3) : (close ? 2 : 0)) + (isPhrase(w) === phrase ? 0 : 1) + rng() * 1.5;
+      return (w.cat === word.cat ? (close ? 0 : 3) : (close ? 2 : 0)) + (multi(w) === phrase ? 0 : 3.5) + (posClass(w) === pos ? 0 : 4) + rng() * 1.5;
     };
     const pool = words.filter(w => w.id !== word.id && w[field]).map(w => [score(w), w]).sort((a, b) => a[0] - b[0]);
     const out = [];
@@ -944,10 +963,30 @@
     return { days, rests, todayDone, restReady };
   }
 
+  /* ---------- Порада щодо темпу: скільки нових слів брати на день ----------
+     Дивимось на точність повторень за останні 7 днів (log.rv / log.rok). Коли вона падає нижче 75 %,
+     слова не встигають закріплюватися і черга повторень росте: краще менше нових, але міцніше.
+     Коли понад 93 % і боргу немає, можна брати більше. Поради немає, поки повторень замало. */
+  function paceAdvice(log, settings, today, overdue) {
+    let rv = 0, rok = 0, days = 0;
+    for (let d = today - 6; d <= today; d++) {
+      const l = log[dayKey(d)];
+      if (!l || !l.rv) continue;
+      rv += l.rv; rok += l.rok || 0; days++;
+    }
+    const per = (settings && settings.newPerDay) || 10;
+    if (rv < 30 || days < 3) return null;
+    const acc = rok / rv;
+    if (acc < 0.75 && per > 3) return { kind: 'slow', acc, rv, from: per, to: Math.max(3, Math.round(per * 0.6)) };
+    if (acc >= 0.93 && !overdue && rv >= 40 && per < 30) return { kind: 'fast', acc, rv, from: per, to: Math.min(30, per + Math.max(2, Math.round(per * 0.3))) };
+    return null;
+  }
+
   const api = {
+    paceAdvice,
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
-    wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canType, canDictate, isPhrase,
-    EXERCISES, pickExercise, eligible, distractors, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
+    wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canSaySentence, canType, canDictate, isPhrase,
+    EXERCISES, pickExercise, eligible, distractors, posClass, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
     migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, taskSrs, practiceDue, pickPractice, pickMistakes, pickTopicPractice, pickTasks, grammarSchedule, pickSectionTasks
   };

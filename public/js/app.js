@@ -327,7 +327,7 @@ const ICON = {
 const EX_ICON = {
   intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
   type_en: 'type', cloze: 'cloze', dictation: 'dictation', build_phrase: 'build', build_sentence: 'build', speak: 'speak', own_sentence: 'pen',
-  spell: 'letters', ctx_mcq: 'cloze', phrase_fill: 'cloze', listen_ex: 'listen', match: 'pairs'
+  spell: 'letters', ctx_mcq: 'cloze', phrase_fill: 'cloze', listen_ex: 'listen', match: 'pairs', say_sentence: 'speak'
 };
 function sayBtn(w, kind, small, label) {
   const b = el('button', 'say' + (small ? ' sm' : ''));
@@ -351,8 +351,8 @@ function renderStreak() {
   const s = streak();
   $('streak').innerHTML = s > 0 ? ICON.flame + '<span><b>' + days(s) + '</b> поспіль</span>' : '';
 }
-function renderTape(done, total, label, remUnits, hideLeft) {
-  const pct = total > 0 ? Math.min(100, done / total * 100) : 0;
+function renderTape(done, total, label, remUnits, hideLeft, floorPct) {
+  const pct = total > 0 ? Math.min(100, Math.max(floorPct || 0, done / total * 100)) : 0;
   $('tapeFill').style.width = pct + '%';
   // Мету дня досягнуто: смуга один раз спалахує й стає зеленою
   const tape = $('tape');
@@ -393,8 +393,12 @@ function updateTape() {
   const l = todayLog();
   const done = (l.r || 0) + (l.n || 0) + (l.k || 0);
   const rem = (session || new C.Session(envFor())).remainingUnits();
+  // Під час заняття помилка повертає слово в чергу і «з 72» стає «з 77»: числа чесні, але смуга
+  // не відкочується назад, а стоїть, доки наступні відповіді її не доженуть
+  let floor = 0;
+  if (mode === 'session' && sess) { sess.pct = Math.max(sess.pct || 0, done + rem > 0 ? done / (done + rem) * 100 : 0); floor = sess.pct; }
   // На головній час уже є на кнопці «Почати», тут лише скільки зроблено за день
-  renderTape(done, done + rem, mode ? null : 'Сьогодні', rem, !mode);
+  renderTape(done, done + rem, mode ? null : 'Сьогодні', rem, !mode, floor);
 }
 /* Верхній рядок під час заняття: вийти, повернути відповідь, тихий режим */
 function updateSessionBar() {
@@ -619,6 +623,8 @@ function renderLearn() {
     tiles.forEach(x => grid.appendChild(x));
     home.appendChild(grid);
   }
+  const pace = paceCard(plan);
+  if (pace) home.appendChild(pace);
   const news = newsCard();
   if (news) home.appendChild(news);
   const setup = setupSection();
@@ -650,6 +656,31 @@ function setupItems() {
     items.push({ id: 'triage', icon: 'sieve', title: 'Відсій знайомі слова', sub: 'щоб не витрачати час на те, що вже знаєш', action: startTriage });
   }
   return items;
+}
+/* Порада щодо темпу за точністю повторень за тиждень: одна кнопка змінює кількість нових слів на день.
+   Відхилена порада того ж виду не повертається тиждень. */
+function paceCard(plan) {
+  const t = today();
+  const adv = C.paceAdvice(log, settings, t, plan ? plan.overdue : 0);
+  if (!adv) return null;
+  const seen = meta.pace || {};
+  if (seen.kind === adv.kind && seen.day > t - 7) return null;
+  const box = el('section', 'news pace');
+  box.appendChild(el('h3', 'section-title', adv.kind === 'slow' ? 'Темп завеликий' : 'Можна швидше'));
+  const pct = Math.round(adv.acc * 100);
+  const n = adv.rv + ' ' + C.plural(adv.rv, 'повторення', 'повторення', 'повторень');
+  box.appendChild(el('p', null, adv.kind === 'slow'
+    ? 'За тиждень точність повторень ' + pct + '% (' + n + '). Слова не встигають закріпитися, і черга повторень росте. Краще менше нових, але міцніше.'
+    : 'За тиждень точність повторень ' + pct + '% (' + n + '), боргу немає. Можна брати більше нових слів.'));
+  const remember = () => { meta.pace = { kind: adv.kind, day: t }; save(KEYS.meta, meta); };
+  const row = el('div', 'btn-row');
+  const go = button((adv.kind === 'slow' ? 'Зменшити до ' : 'Збільшити до ') + adv.to + ' за день', 'btn-primary', () => {
+    settings.newPerDay = adv.to; saveSettings(); remember(); renderLearn(); toast('Нових слів на день: ' + adv.to);
+  });
+  const no = button('Залишити ' + adv.from, 'btn-quiet', () => { remember(); renderLearn(); });
+  row.append(no, go);
+  box.appendChild(row);
+  return box;
 }
 /* Разове повідомлення про новий базовий словник: одразу запропонувати відсіяти знайоме */
 function newsCard() {
@@ -861,6 +892,30 @@ function showSummary(manual, practice) {
   if (!practice && leftTotal) body.appendChild(el('p', 'prompt-sub', 'Ще залишилось: ' + lowerFirst(planSentence(cnt)) + ', ≈ ' + mins(estimateMinutes(plan.remainingUnits())) + '. Прогрес збережено.'));
   else if (!practice) { const tm = dueTomorrow(); body.appendChild(el('p', 'prompt-sub', tm ? 'Завтра: ' + tm + ' ' + C.plural(tm, 'повторення', 'повторення', 'повторень') + '.' : 'Завтра повторень майже немає.')); }
   card.appendChild(body);
+  // Сьогоднішні нові слова ще раз: згадати переклад і перевірити дотиком (ще одне пригадування, і спокійніше за «чи щось лишилось»)
+  const t = today();
+  const freshIds = Object.keys(cards).filter(id => byId(id) && cards[id].first === t && !cards[id].known).slice(0, 16);
+  if (!practice && freshIds.length) {
+    const d = el('div', 'details');
+    d.appendChild(el('p', 'tip', 'Сьогоднішні нові слова. Згадай переклад і торкнись, щоб перевірити:'));
+    const ul = el('ul', 'recap');
+    freshIds.forEach(id => {
+      const w = byId(id);
+      const li = el('li');
+      const b = el('button', null);
+      b.type = 'button';
+      b.appendChild(enSpan(w.en));
+      b.setAttribute('aria-expanded', 'false');
+      b.addEventListener('click', () => {
+        if (b.classList.toggle('open')) { b.appendChild(el('small', null, w.uk)); b.setAttribute('aria-expanded', 'true'); autoSay(w, 'w'); }
+        else { const s = b.querySelector('small'); if (s) s.remove(); b.setAttribute('aria-expanded', 'false'); }
+      });
+      li.appendChild(b);
+      ul.appendChild(li);
+    });
+    d.appendChild(ul);
+    card.appendChild(d);
+  }
   if (missIds.length) {
     const d = el('div', 'details');
     d.appendChild(el('p', 'tip', 'Помилки цього заняття:'));
@@ -1422,8 +1477,13 @@ RENDER.intro = item => {
     d.appendChild(mnemonicBlock(w, false));
     $('card').appendChild(d);
     let v = null;
-    if (guessed === true) v = verdict('right', 'Вгадав', ' тепер запам\'ятай');
-    else if (guessed === false) v = verdict('info', 'Не вгадав, і це нормально', ' здогадка все одно допомагає запам\'ятати');
+    // Пояснення, чому здогадка корисна, потрібне лише перші кілька разів: далі коротко
+    const explain = (meta.introHints || 0) < 5;
+    if (guessed === true) v = verdict('right', 'Вгадав', explain ? ' тепер запам\'ятай' : null);
+    else if (guessed === false) {
+      v = verdict('info', explain ? 'Не вгадав, і це нормально' : 'Не вгадав', explain ? ' здогадка все одно допомагає запам\'ятати' : null);
+      if (explain) { meta.introHints = (meta.introHints || 0) + 1; save(KEYS.meta, meta); }
+    }
     setFoot([button('Вже знаю', 'btn-quiet', known), button('Вчити', 'btn-primary', learn)], 2, v);
     keys = { enter: learn };
   };
@@ -1911,9 +1971,11 @@ RENDER.listen_ex = item => {
 function matchPartners(w, n) {
   const ids = Object.keys(cards).filter(id => id !== w.id && cards[id].st !== 'new');
   const out = [], uks = new Set([w.uk.toLowerCase()]), ens = new Set([w.en.toLowerCase()]);
-  for (const id of C.shuffle(ids)) {
-    const o = byId(id);
-    if (!o || uks.has(o.uk.toLowerCase()) || ens.has(o.en.toLowerCase()) || o.uk.length > 34 || o.en.length > 26) continue;
+  // Спершу слова тієї ж частини мови: пари не мають збігатися за формою слова
+  const pos = C.posClass(w);
+  const pool = C.shuffle(ids).map(byId).filter(Boolean);
+  for (const o of pool.filter(o => C.posClass(o) === pos).concat(pool.filter(o => C.posClass(o) !== pos))) {
+    if (uks.has(o.uk.toLowerCase()) || ens.has(o.en.toLowerCase()) || o.uk.length > 34 || o.en.length > 26) continue;
     uks.add(o.uk.toLowerCase()); ens.add(o.en.toLowerCase());
     out.push(o);
     if (out.length >= n) break;
@@ -2144,6 +2206,53 @@ RENDER.speak = item => {
     setFoot([rb]);
     keys = { enter: () => rb.click() };
   }
+};
+
+/* Скажи речення: український приклад → сказати англійською вголос → порівняти із записом Емми.
+   Оцінюється слово, а не все речення: інші слова можуть бути незнайомі. Проти «зависання» в розмові. */
+function markedExample(w) {
+  const p = el('p', 'ex said');
+  const ct = C.clozeIn(w, w.ex);
+  if (ct) {
+    const m = el('mark', 'gm'); m.appendChild(enText(ct.text));
+    p.append(enText(w.ex.slice(0, ct.start)), m, enText(w.ex.slice(ct.end)));
+  } else p.appendChild(enText(w.ex));
+  p.appendChild(sayBtn(w, 'x', true));
+  return p;
+}
+RENDER.say_sentence = item => {
+  const w = item.word;
+  if (!C.canSaySentence(w)) { item.exercise = 'speak'; return RENDER.speak(item); }
+  const body = frame(item);
+  const uk = el('p', 'say-uk', w.exUk); uk.lang = 'uk';
+  body.append(uk, el('p', 'prompt-sub', 'Скажи це речення англійською вголос, потім порівняй із записом'));
+  const reveal = wrong => {
+    if (ui.revealed) return;
+    ui.revealed = true;
+    $('card').onclick = null;
+    sayWord(w, 'x');
+    const slow = el('button', 'slow-btn', 'Повільніше');
+    slow.type = 'button';
+    slow.addEventListener('click', () => sayWord(w, 'x', 0.75));
+    const d = details(w, { ex: false, wrong });
+    d.prepend(markedExample(w), slow);
+    $('card').appendChild(d);
+    if (wrong) { nextButton(verdict('wrong', 'Правильно так:', null, pair(w))); return; }
+    const grade = g => { finish(g); nextItem(); };
+    const bs = [
+      button('Не згадав', 'btn-again', () => grade(1)),
+      button('З помилкою', '', () => grade(2)),
+      button('Правильно', 'btn-primary', () => grade(3))
+    ];
+    setFoot(bs, 3, verdict('info', 'Порівняй зі своїм варіантом', ' оцінюй слово, а не все речення', pair(w)));
+    keys = { num: n => bs[n - 1] && bs[n - 1].click() };
+  };
+  $('card').onclick = e => { if (!e.target.closest('button,textarea')) reveal(false); };
+  setFoot([
+    button('Не знаю', 'btn-quiet', () => { if (!ui.answered && !ui.revealed) { finish(1); reveal(true); } }),
+    button('Показати відповідь', 'btn-primary', () => reveal(false))
+  ], 2);
+  keys = { enter: () => reveal(false), space: () => reveal(false) };
 };
 
 /* Своє речення: продуктивне вживання слова */
