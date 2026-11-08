@@ -601,7 +601,7 @@ function renderLearn() {
       home.appendChild(rep);
     } else {
       home.appendChild(el('h2', 'hero', 'Сьогодні вільно'));
-      home.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Налаштуваннях.'));
+      home.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Параметрах.'));
     }
     const consolidate = () => startSession(fresh, false, null, 'fresh');
     const practice = () => startSession(misses, false, null, 'misses');
@@ -647,7 +647,7 @@ function setupItems() {
     body: () => {
       const b = el('div', 'setup-body');
       b.appendChild(el('p', null, 'У Safari натисни «Поділитися» (квадрат зі стрілкою; в iOS 26 він у меню «•••»), прокрути й вибери «На початковий екран» (Add to Home Screen), потім «Додати».'));
-      b.appendChild(el('p', 'muted', 'Значок Words з\'явиться поруч з іншими програмами. Прогрес у Safari і в програмі окремий, тож краще одразу вчити з програми, а копію перенести через Налаштування → Резервна копія.'));
+      b.appendChild(el('p', 'muted', 'Значок Words з\'явиться поруч з іншими програмами. Прогрес у Safari і в програмі окремий, тож краще одразу вчити з програми, а копію перенести через Параметри → Резервна копія.'));
       return b;
     }
   });
@@ -705,7 +705,7 @@ function setupSection() {
   const title = el('h3', 'section-title', 'Налаштуй один раз');
   const hide = el('button', 'link-btn small', 'сховати');
   hide.type = 'button';
-  hide.addEventListener('click', () => { meta.setupHidden = true; save(KEYS.meta, meta); renderLearn(); toast('Це все є в Налаштуваннях'); });
+  hide.addEventListener('click', () => { meta.setupHidden = true; save(KEYS.meta, meta); renderLearn(); toast('Це все є в Параметрах'); });
   title.appendChild(hide);
   sec.appendChild(title);
   const list = el('div', 'setup');
@@ -739,7 +739,7 @@ const ANCHORS = [
 ];
 function reminderPanel(onDone) {
   const box = el('div', 'setup-body remind');
-  box.appendChild(el('p', null, 'Коли саме вчитимеш? Прив\'язка до звичної справи спрацьовує краще, ніж «колись увечері».'));
+  box.appendChild(el('p', 'note2', 'Коли саме вчитимеш? Прив\'язка до звичної справи спрацьовує краще, ніж «колись увечері».'));
   const cur = meta.reminder || {};
   let anchor = cur.a || ANCHORS[3][0];
   const chips = el('div', 'chips wrap');
@@ -1490,12 +1490,14 @@ RENDER.intro = item => {
   if (settings.pretest !== false && !(session && session.practice)) {
     body.appendChild(el('p', 'prompt-sub', 'Як гадаєш, що це означає?'));
     const opts = C.shuffle([w].concat(C.distractors(w, allWords(), 'uk', 3, Math.random, false)));
+    const labels = C.optionLabels(opts, 'uk');
     const box = el('div', 'options');
     const btns = [];
     opts.forEach((o, i) => {
       const b = el('button', 'opt-btn');
       b.type = 'button';
-      b.append(el('span', 'k', String(i + 1)), el('span', null, o.uk));
+      b.dataset.id = o.id;
+      b.append(el('span', 'k', String(i + 1)), el('span', null, labels[i]));
       b.addEventListener('click', () => {
         if (ui.guessed != null) return;
         const ok = o.id === w.id;
@@ -1535,12 +1537,14 @@ function mcq(item, prompt, field) {
   }
   const close = !!(item.card && item.card.st !== 'learn');
   const opts = C.shuffle([w].concat(C.distractors(w, allWords(), field, 3, Math.random, close)));
+  const labels = C.optionLabels(opts, field);
   const box = el('div', 'options');
   const btns = [];
   opts.forEach((o, i) => {
     const b = el('button', 'opt-btn' + (field === 'en' ? ' en' : ''));
     b.type = 'button';
-    b.append(el('span', 'k', String(i + 1)), el('span', null, o[field]));
+    b.dataset.id = o.id;
+    b.append(el('span', 'k', String(i + 1)), el('span', null, labels[i]));
     if (field === 'en') b.lastChild.lang = 'en';
     b.addEventListener('click', () => choose(o, b));
     btns.push(b);
@@ -1669,7 +1673,9 @@ function typing(item, kind) {
     display = w.en;
   } else {
     body.appendChild(bigWord(w.uk, 'uk'));
-    body.appendChild(el('p', 'prompt-sub', 'Напиши англійською'));
+    // Заголовок уже каже «Напиши англійською»: підказка лише там, де вона щось додає
+    if (/^to /i.test(w.en)) body.appendChild(el('p', 'prompt-sub', 'Можна без «to»'));
+    else if (/^(the|a|an) /i.test(w.en)) body.appendChild(el('p', 'prompt-sub', 'Можна без артикля'));
     targets = C.answerTargets(w.en);
     display = w.en.replace(/[.!?]+$/, '');
   }
@@ -1990,22 +1996,23 @@ RENDER.match = item => {
   body.appendChild(el('p', 'prompt-sub pairs-sub', 'Торкнись слова, потім його перекладу'));
   const set = C.shuffle([w].concat(others));
   const grid = el('div', 'pairs');
-  const colL = el('div', 'pairs-col'), colR = el('div', 'pairs-col');
-  grid.append(colL, colR);
+  grid.style.setProperty('--n', set.length);
   let sel = null, left = set.length, missT = 0;
   const all = [];
-  const mk = (o, side, col) => {
-    const b = el('button', 'pair-btn' + (side === 'en' ? ' en' : ''), o[side]);
+  const ukLabel = new Map(); C.optionLabels(set, 'uk').forEach((t, i) => ukLabel.set(set[i].id, t));
+  const mk = (o, side) => {
+    const b = el('button', 'pair-btn' + (side === 'en' ? ' en' : ''), side === 'uk' ? ukLabel.get(o.id) : o.en);
     b.type = 'button';
     if (side === 'en') b.lang = 'en';
     b.dataset.id = o.id;
     b.dataset.side = side;
     b.addEventListener('click', () => tap(b));
-    col.appendChild(b);
+    grid.appendChild(b);
     all.push(b);
   };
-  set.forEach(o => mk(o, 'en', colL));
-  C.shuffle(set.slice()).forEach(o => mk(o, 'uk', colR));
+  // Одна сітка на обидві колонки: рядки однакової висоти, слова зліва, переклади справа
+  set.forEach(o => mk(o, 'en'));
+  C.shuffle(set.slice()).forEach(o => mk(o, 'uk'));
   $('card').appendChild(grid);
   const end = g => {
     finish(g);
@@ -2316,6 +2323,7 @@ function startSprint() {
   if (currentTab !== 'learn') showTab('learn');
   $('stage').hidden = false;
   $('learnHome').hidden = true;
+  updateTape();   // екран заняття: без шапки й вкладок, з хрестиком
   sprint.timer = setInterval(() => {
     if (!sprint) return;
     sprint.left = Math.max(0, SPRINT_SECONDS - Math.floor((performance.now() - sprint.t0) / 1000));

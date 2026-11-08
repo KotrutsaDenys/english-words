@@ -59,8 +59,7 @@ def answer(page, wrong=False, scheme='light'):
         btns = page.locator('.opt-btn')
         target = None
         for i in range(btns.count()):
-            txt = btns.nth(i).locator('span').nth(1).inner_text()
-            if (txt == w[field]) != wrong:
+            if (btns.nth(i).get_attribute('data-id') == w['id']) != wrong:
                 target = btns.nth(i)
                 break
         target.click()
@@ -367,7 +366,7 @@ try:
         (a_id, a_uk), (b_id, b_uk) = pair
         page.evaluate('([id]) => window.EW.force(id, "mcq_en_uk")', [a_id])
         page.wait_for_timeout(150)
-        page.locator('.opt-btn').filter(has=page.locator('span', has_text=a_uk)).first.click()
+        page.locator('.opt-btn[data-id="%s"]' % a_id).click()
         assert visible(page, '#foot.sheet.right'), 'правильна відповідь'
         assert visible(page, '#foot button.auto'), 'смужка відліку'
         for _ in range(30):
@@ -378,7 +377,7 @@ try:
         # Торкнувся картки: стоїть
         page.evaluate('([id]) => window.EW.force(id, "mcq_en_uk")', [b_id])
         page.wait_for_timeout(150)
-        page.locator('.opt-btn').filter(has=page.locator('span', has_text=b_uk)).first.click()
+        page.locator('.opt-btn[data-id="%s"]' % b_id).click()
         page.locator('#card .ex-head').dispatch_event('pointerdown')
         assert not visible(page, '#foot button.auto')
         page.wait_for_timeout(4500)

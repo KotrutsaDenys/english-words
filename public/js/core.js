@@ -592,6 +592,21 @@
   function confusables(id) { return CONF_MAP[id] || []; }
 
   /* ---------- Варіанти відповіді для тестів ---------- */
+  /* Перший сенс перекладу для варіантів: «отримати; дістатися; ставати» → «отримати». Варіанти стають
+     однакової довжини й читаються з одного погляду; повний переклад лишається у відповіді й словнику. */
+  function shortSense(uk) {
+    const s = String(uk || '').trim();
+    if (s.indexOf(';') < 0) return s;
+    const first = s.split(';')[0].trim();
+    return first.length >= 3 ? first : s;
+  }
+  /* Підписи варіантів: короткі, якщо вони не збігаються між собою, інакше повні */
+  function optionLabels(opts, field) {
+    if (field !== 'uk') return opts.map(o => o[field]);
+    const short = opts.map(o => shortSense(o.uk));
+    const uniq = new Set(short.map(norm));
+    return uniq.size === short.length ? short : opts.map(o => o.uk);
+  }
   /* Груба частина мови за формою: дієслово («to …» або переклад на -ти), прикметник (переклад на -ий/-ій),
      прислівник («-ly»), інше. Варіанти тієї ж частини мови не видають відповідь формою слова. */
   const LY_NOT_ADV = /^(only|early|family|likely|friendly|lonely|lovely|ugly|silly|holy|daily|weekly|monthly|yearly|elderly|lively|deadly|costly|oily|chilly|jolly|smelly|bully|belly|jelly|rally|ally|supply|apply|reply|rely|fly|july|italy|butterfly|assembly|melancholy)$/i;
@@ -986,7 +1001,7 @@
     paceAdvice,
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
     wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canSaySentence, canType, canDictate, isPhrase,
-    EXERCISES, pickExercise, eligible, distractors, posClass, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
+    EXERCISES, pickExercise, eligible, distractors, posClass, shortSense, optionLabels, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
     migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, taskSrs, practiceDue, pickPractice, pickMistakes, pickTopicPractice, pickTasks, grammarSchedule, pickSectionTasks
   };

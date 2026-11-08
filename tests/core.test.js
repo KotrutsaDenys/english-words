@@ -285,6 +285,17 @@ test('Порада щодо темпу: за низької точності п�
   assert.strictEqual(C.paceAdvice(old, { newPerDay: 10 }, t, 0), null, 'old days ignored');
 });
 
+test('Підписи варіантів: перший сенс довгого перекладу, повний — якщо короткі збігаються', () => {
+  assert.strictEqual(C.shortSense('отримати; дістатися; ставати'), 'отримати');
+  assert.strictEqual(C.shortSense('правда, істина'), 'правда, істина');
+  assert.strictEqual(C.shortSense('перетворювати, переробляти; переводити (одиниці)'), 'перетворювати, переробляти');
+  const opts = [{ id: 'a', uk: 'брати; хапати; приймати' }, { id: 'b', uk: 'отримати; дістатися; ставати' }];
+  assert.deepStrictEqual(C.optionLabels(opts, 'uk'), ['брати', 'отримати']);
+  const clash = [{ id: 'a', uk: 'брати; хапати; приймати (щось)' }, { id: 'b', uk: 'брати; позичати на час у когось' }];
+  assert.deepStrictEqual(C.optionLabels(clash, 'uk'), clash.map(o => o.uk));
+  assert.deepStrictEqual(C.optionLabels([{ en: 'to get' }, { en: 'to take' }], 'en'), ['to get', 'to take']);
+});
+
 test('Варіанти в тестах тієї ж частини мови й форми, що й слово', () => {
   assert.strictEqual(C.posClass({ en: 'to know', uk: 'знати' }), 'verb');
   assert.strictEqual(C.posClass({ en: 'cut corners', uk: 'халтурити, економити' }), 'verb');
