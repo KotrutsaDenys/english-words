@@ -789,6 +789,8 @@ body.typing .tabs{display:none}
 
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 84px);transform:translate(-50%,8px);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:12px;font-weight:700;font-size:15px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:10;width:max-content;max-width:calc(100% - 32px);text-align:center;box-shadow:0 12px 30px -12px rgba(0,0,0,.5)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.act{pointer-events:auto;display:flex;align-items:center;gap:14px}
+.toast.act button{font:inherit;font-weight:800;color:var(--mark);background:none;border:0;padding:0}
 /* Повідомлення над нижньою панеллю, щоб не закривати кнопки вгорі */
 body:has(#learnHome.has-dock:not([hidden])) .toast{bottom:calc(env(safe-area-inset-bottom) + 152px)}
 body.in-session .toast{bottom:max(calc(var(--foot-h,0px) + var(--kb,0px) + 12px),calc(env(safe-area-inset-bottom) + 16px))}

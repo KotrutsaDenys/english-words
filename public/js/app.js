@@ -13,9 +13,15 @@ const PHRASES = window.PHRASES || {};
 const $ = id => document.getElementById(id);
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 let toastTimer;
-function toast(msg) {
+function toast(msg, action, onAction) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  t.classList.toggle('act', !!action);
+  if (action) {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = action;
+    b.addEventListener('click', () => { t.classList.remove('show'); onAction(); });
+    t.appendChild(b);
+  }
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), action ? 9000 : 2400);
 }
 const KEYS = { cards: 'ew.cards', progress: 'ew.progress', custom: 'ew.custom', log: 'ew.log', settings: 'ew.settings', notes: 'ew.notes', meta: 'ew.meta', own: 'ew.own', grammar: 'ew.grammar' };
 function load(key, fallback) {
@@ -4576,6 +4582,27 @@ renderAll();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
 }
+/* Оновлення. Програма з головного екрана живе в пам'яті й сама сторінку не перезавантажує, тому після
+   кожного коміту люди бачили стару версію, доки не закриють її вручну. Тепер при відкритті й при поверненні
+   до програми звіряємо хеш app.css у свіжому index.html з нашим: поза заняттям перезавантажуємось одразу
+   (увесь стан у сховищі), під час заняття пропонуємо кнопку. */
+const MY_VERSION = ((document.querySelector('link[href*="app.css"]') || {}).href || '').replace(/^.*\?v=/, '');
+let updateSeen = false;
+async function checkUpdate() {
+  if (updateSeen || !MY_VERSION || navigator.onLine === false || /[?&]test=1/.test(location.search)) return;
+  try {
+    const r = await fetch('/?u=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const m = (await r.text()).match(/app\.css\?v=([0-9a-f]+)/);
+    if (!m || m[1] === MY_VERSION) return;
+    updateSeen = true;
+    const key = 'ew.reload.' + m[1];
+    if (!mode && !sessionStorage.getItem(key)) { sessionStorage.setItem(key, '1'); location.reload(); return; }
+    toast('Є нова версія сайту', 'Оновити', () => location.reload());
+  } catch (e) {}
+}
+window.addEventListener('load', () => setTimeout(checkUpdate, 1200));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUpdate(); });
 /* Нова вправа з'являється пружно, як картка в iOS (не під час автотестів, щоб не гальмувати їх) */
 (() => {
   const card = $('card');
