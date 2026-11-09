@@ -46,7 +46,8 @@ const DEFAULT_SETTINGS = {
   newPerDay: 10, mode: 'mix', typing: true, speaking: true, sessionLen: 0, retention: 0.9,
   autoplay: true, voiceSrc: 'emma', voice: '', rate: 1, cats: {}, pretest: true,
   autoNext: true, quiet: false, haptics: true,
-  listen: { shadow: false, phrases: false, uk: true }
+  listen: { shadow: false, phrases: false, uk: true },
+  theme: 'cobalt', appearance: 'auto'
 };
 let settings = Object.assign({}, DEFAULT_SETTINGS, load(KEYS.settings, {}));
 settings.cats = Object.assign({}, settings.cats || {});
@@ -82,6 +83,26 @@ function todayLog() {
 }
 function persist() { save(KEYS.cards, cards); save(KEYS.log, log); }
 function saveSettings() { save(KEYS.settings, settings); }
+
+/* ---------- Оформлення: тема й вигляд (світла / темна / авто) ---------- */
+const THEMES = [
+  ['cobalt', 'Кобальт', '#2F56D9', '#7C5CF0'], ['ocean', 'Океан', '#0E8C9B', '#1FA98A'], ['emerald', 'Смарагд', '#1D8A5E', '#19A3A8'],
+  ['plum', 'Слива', '#7338E0', '#C04BD6'], ['rose', 'Троянда', '#D43A6D', '#F08A4B'], ['graphite', 'Графіт', '#262B3D', '#4A5068']
+];
+const LOOKS = [['auto', 'Авто'], ['light', 'Світла'], ['dark', 'Темна']];
+if (!THEMES.some(t => t[0] === settings.theme)) settings.theme = 'cobalt';
+if (!LOOKS.some(l => l[0] === settings.appearance)) settings.appearance = 'auto';
+function applyLook() {
+  const root = document.documentElement;
+  if (settings.theme === 'cobalt') delete root.dataset.theme; else root.dataset.theme = settings.theme;
+  if (settings.appearance === 'auto') delete root.dataset.appearance; else root.dataset.appearance = settings.appearance;
+  // Колір рядка стану iPhone як тло сторінки
+  requestAnimationFrame(() => {
+    const bg = getComputedStyle(root).backgroundColor;   // вже обчислений колір, не вираз light-dark()
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => { if (bg) m.setAttribute('content', bg); });
+  });
+}
+applyLook();
 
 /* ---------- Вимова: записи Емми і голос iPhone як запасний ---------- */
 const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
@@ -458,6 +479,51 @@ function planSentence(cnt) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 const lowerFirst = s => s.charAt(0).toLowerCase() + s.slice(1);
+/* Рух вимкнено: тестовий режим або системне «зменшити рух» */
+function motionOff() {
+  return document.documentElement.classList.contains('no-motion') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+/* Заголовок дня: числа набігають від нуля (≈ 0,7 с), текст між ними звичайний */
+function heroEl(text) {
+  const h = el('h2', 'hero');
+  const parts = text.split(/(\d+)/);
+  const nums = [];
+  parts.forEach(part => {
+    if (/^\d+$/.test(part)) { const n = el('span', 'num', part); nums.push([n, +part]); h.appendChild(n); }
+    else if (part) h.appendChild(document.createTextNode(part));
+  });
+  if (nums.length && !motionOff()) {
+    const t0 = performance.now(), dur = 700;
+    nums.forEach(([n]) => { n.textContent = '0'; });
+    const step = now => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      nums.forEach(([n, v]) => { n.textContent = String(Math.round(v * e)); });
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  return h;
+}
+/* Правильна відповідь: спалах 14 частинок у кольорах теми з верхнього краю нижньої панелі */
+function burst() {
+  if (motionOff()) return;
+  const foot = $('foot');
+  const r = foot ? foot.getBoundingClientRect() : { left: 0, width: innerWidth, top: innerHeight - 120 };
+  const box = el('div', 'burst');
+  box.style.transform = 'translate(' + Math.round(r.left + r.width / 2) + 'px,' + Math.round(r.top + 6) + 'px)';
+  const cs = getComputedStyle(document.documentElement);
+  const colors = ['--accent', '--accent-2', '--mark', '--ok'].map(k => cs.getPropertyValue(k).trim());
+  for (let i = 0; i < 14; i++) {
+    const p = el('i');
+    p.style.setProperty('--a', Math.round(-80 + Math.random() * 160) + 'deg');
+    p.style.setProperty('--d', Math.round(70 + Math.random() * 110) + 'px');
+    p.style.setProperty('--c', colors[i % colors.length]);
+    p.style.animationDelay = Math.round(Math.random() * 60) + 'ms';
+    box.appendChild(p);
+  }
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 900);
+}
 function studied(d) { const l = log[C.dayKey(d)]; return !!(l && (l.r > 0 || l.c > 0 || l.gt > 0)); }
 function weekSection() {
   const t = today();
@@ -565,7 +631,7 @@ function renderLearn() {
   home.appendChild(el('p', 'greet', greeting()));
   if (total) {
     const sentence = planSentence(cnt);
-    home.appendChild(el('h2', 'hero', l.r ? 'Ще ' + lowerFirst(sentence) : sentence));
+    home.appendChild(heroEl(l.r ? 'Ще ' + lowerFirst(sentence) : sentence));
     if (meta.reminder && meta.reminder.a) home.appendChild(el('p', 'plan-line', 'Твій план: ' + meta.reminder.a + ', о ' + meta.reminder.t));
     if (settings.quiet) {
       const q = el('button', 'plan-line quiet-chip');
@@ -853,6 +919,20 @@ function toggleQuiet() {
 }
 
 /* Підсумок заняття */
+/* Кільце з відсотком: коло довжиною 2πr, малюється зсувом штриха */
+function ring(pct, label) {
+  const wrap = el('div', 'ring');
+  const R = 52, len = 2 * Math.PI * R;
+  wrap.style.setProperty('--len', len.toFixed(1));
+  wrap.style.setProperty('--off', (len * (1 - Math.max(0, Math.min(100, pct)) / 100)).toFixed(1));
+  wrap.innerHTML = '<svg viewBox="0 0 118 118" aria-hidden="true"><circle class="track" cx="59" cy="59" r="' + R + '"/><circle class="val" cx="59" cy="59" r="' + R + '"/></svg>';
+  const txt = el('span', 'ring-txt');
+  txt.append(el('b', null, pct + '%'), el('small', null, label));
+  wrap.appendChild(txt);
+  wrap.setAttribute('aria-label', label + ' ' + pct + '%');
+  requestAnimationFrame(() => requestAnimationFrame(() => wrap.classList.add('go')));
+  return wrap;
+}
 function showSummary(manual, practice) {
   mode = 'summary';
   const s0 = sess || { r: 0, a: 0, n: 0, ms: 0, miss: [] };
@@ -882,10 +962,12 @@ function showSummary(manual, practice) {
   const titleText = practice ? (kind === 'misses' ? 'Помилки розібрано' : kind === 'fresh' ? 'Нові слова закріплено' : 'Готово')
     : !leftTotal ? 'Усе на сьогодні!' : manual ? 'Добра перерва' : 'Готово';
   body.appendChild(el('h2', 'word', titleText));
-  const stats = el('div', 'stats');
+  // Кільце точності малюється, під ним дві цифри
+  if (r) body.appendChild(ring(Math.round((r - a) / r * 100), 'точність'));
+  const stats = el('div', 'stats' + (r ? ' two' : ''));
   const stat = (v, k) => { const d = el('div', 'stat'); d.append(el('b', null, v), el('span', null, k)); stats.appendChild(d); };
   stat(String(r + n), C.plural(r + n, 'вправа', 'вправи', 'вправ'));
-  stat(r ? Math.round((r - a) / r * 100) + '%' : '—', 'точність');
+  if (!r) stat('—', 'точність');
   stat(mins(Math.max(1, Math.round(ms / 60000))), 'час');
   body.appendChild(stats);
   if (n) body.appendChild(el('p', 'prompt-sub', 'Нових слів: ' + n + '.'));
@@ -1325,6 +1407,7 @@ function nextInfo() {
 }
 /* Висновок для нижньої панелі. answer: правильна відповідь (рядок або вузол), extra: вузол під нею */
 function verdict(kind, text, sub, answer, extra) {
+  if (kind === 'right' && (mode === 'session' || mode === 'gtest')) burst();
   const v = el('div', 'verdict ' + kind);
   v.dataset.kind = kind;
   v.setAttribute('role', 'status');
@@ -4129,14 +4212,46 @@ async function copyReport() {
 $('copyReport').addEventListener('click', copyReport);
 
 /* ---------- Налаштування ---------- */
+/* Сегменти: під обраним ковзає пігулка (.seg.slide, позиція в --i/--n), а не перефарбовується кнопка */
 function segment(boxId, options, value, onPick) {
-  const box = $(boxId); box.innerHTML = '';
-  options.forEach(([val, label]) => {
+  const box = $(boxId);
+  const same = box.classList.contains('slide') && box.childElementCount === options.length &&
+    [...box.children].every((b, i) => b.textContent === options[i][1]);
+  const idx = Math.max(0, options.findIndex(([val]) => val === value));
+  box.classList.add('slide');
+  box.style.setProperty('--n', options.length);
+  box.style.setProperty('--i', idx);
+  if (same) { [...box.children].forEach((b, i) => b.setAttribute('aria-pressed', String(i === idx))); return; }
+  box.innerHTML = '';
+  options.forEach(([val, label], i) => {
     const b = el('button', null, label);
     b.type = 'button';
-    b.setAttribute('aria-pressed', String(value === val));
+    b.setAttribute('aria-pressed', String(i === idx));
     b.addEventListener('click', () => onPick(val));
     box.appendChild(b);
+  });
+}
+/* Оформлення: мініатюри вигляду і свотчі тем */
+function renderLooks() {
+  const looks = $('looks'); looks.innerHTML = '';
+  LOOKS.forEach(([val, label]) => {
+    const b = el('button', 'look');
+    b.type = 'button';
+    b.setAttribute('aria-pressed', String(settings.appearance === val));
+    b.append(el('span', 'look-pic ' + val), document.createTextNode(label));
+    b.addEventListener('click', () => { settings.appearance = val; saveSettings(); applyLook(); renderLooks(); });
+    looks.appendChild(b);
+  });
+  const sw = $('swatches'); sw.innerHTML = '';
+  THEMES.forEach(([val, label, c1, c2]) => {
+    const b = el('button', 'swatch ' + val);
+    b.type = 'button';
+    b.setAttribute('aria-pressed', String(settings.theme === val));
+    b.setAttribute('aria-label', 'Тема ' + label);
+    const dot = el('i'); dot.style.setProperty('--sw', c1); dot.style.setProperty('--sw-2', c2); dot.innerHTML = ICON.check;
+    b.append(dot, el('span', null, label));
+    b.addEventListener('click', () => { settings.theme = val; saveSettings(); applyLook(); renderLooks(); haptic('ok'); });
+    sw.appendChild(b);
   });
 }
 function renderVoices() {
@@ -4159,6 +4274,7 @@ const RET_NOTES = {
 };
 function renderSettings() {
   const re = () => { saveSettings(); renderSettings(); };
+  renderLooks();
   segment('segNew', [[5, '5'], [10, '10'], [15, '15'], [20, '20']], settings.newPerDay, v => { settings.newPerDay = v; re(); });
   segment('segMode', [['mix', 'Вправи'], ['cards', 'Тільки картки']], settings.mode, v => { settings.mode = v; re(); });
   segment('segLen', [[0, 'Усе'], [15, '≈ 5 хв'], [30, '≈ 10 хв']], settings.sessionLen, v => { settings.sessionLen = v; re(); });

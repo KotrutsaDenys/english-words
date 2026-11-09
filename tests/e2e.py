@@ -776,6 +776,30 @@ try:
         page.evaluate('window.EW.showTab("settings")')
         page.wait_for_timeout(200)
         assert 'наступних' in page.inner_text('#offlineAudio') and 'МБ' in page.inner_text('#offlineAll')
+        # Оформлення: тема й вигляд перемикаються, зберігаються й переживають перезавантаження без спалаху
+        accent0 = page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()")
+        page.locator('.swatch.plum').click(); page.wait_for_timeout(150)
+        assert page.evaluate("document.documentElement.dataset.theme") == 'plum'
+        accent1 = page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()")
+        assert accent1 != accent0, (accent0, accent1)
+        assert page.locator('.swatch.plum[aria-pressed="true"]').count() == 1
+        page.locator('.look').nth(2).click(); page.wait_for_timeout(150)
+        assert page.evaluate("document.documentElement.dataset.appearance") == 'dark'
+        bg_dark = page.evaluate("getComputedStyle(document.documentElement).backgroundColor")
+        page.locator('.look').nth(1).click(); page.wait_for_timeout(150)
+        bg_light = page.evaluate("getComputedStyle(document.documentElement).backgroundColor")
+        assert bg_dark != bg_light, (bg_dark, bg_light)
+        assert page.evaluate("document.querySelector('meta[name=theme-color]').getAttribute('content')") == bg_light
+        page.reload(); page.wait_for_timeout(500)
+        assert page.evaluate("[document.documentElement.dataset.theme, document.documentElement.dataset.appearance]") == ['plum', 'light']
+        # сегменти з повзунком: позиція в --i
+        page.evaluate('window.EW.showTab("settings")'); page.wait_for_timeout(200)
+        page.locator('#segNew button').nth(2).click(); page.wait_for_timeout(100)
+        assert page.evaluate("document.getElementById('segNew').style.getPropertyValue('--i')") == '2'
+        assert page.evaluate('window.EW.settings.newPerDay') == 15
+        page.locator('.look').nth(0).click(); page.locator('.swatch.cobalt').click(); page.wait_for_timeout(100)
+        assert page.evaluate("[document.documentElement.dataset.theme, document.documentElement.dataset.appearance]") == [None, None]
+        shot(page, 'light-settings-look')
         ctx.close()
         b.close()
 finally:
