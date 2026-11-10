@@ -634,19 +634,37 @@ function renderLearn() {
   const evening = hour >= 19 || hour < 4;
   const tiles = [];
   let main = null;
-  home.appendChild(el('p', 'greet', greeting()));
+  // Картка дня: градієнт теми, заголовок, смуга дня і чіпи. Це перше, що видно на головній.
+  const card = el('section', 'hero-card');
+  card.appendChild(el('p', 'greet', greeting()));
+  const doneUnits = (l.r || 0) + (l.n || 0) + (l.k || 0);
+  const heroProg = (done, all, right) => {
+    const box = el('div', 'hero-prog');
+    const bar = el('div', 'bar'); const fill = el('i'); bar.appendChild(fill);
+    const pct = all > 0 ? Math.min(100, done / all * 100) : 0;
+    requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = pct + '%'; }));
+    const lbl = el('div', 'lbl');
+    const lt = el('span'); lt.innerHTML = 'Сьогодні <b>' + done + '</b> з ' + all;
+    lbl.append(lt, el('span', null, right || ''));
+    box.append(bar, lbl);
+    return box;
+  };
+  const chips = el('div', 'hero-chips');
+  home.appendChild(card);
   if (total) {
     const sentence = planSentence(cnt);
-    home.appendChild(heroEl(l.r ? 'Ще ' + lowerFirst(sentence) : sentence));
-    if (meta.reminder && meta.reminder.a) home.appendChild(el('p', 'plan-line', 'Твій план: ' + meta.reminder.a + ', о ' + meta.reminder.t));
+    card.appendChild(heroEl(l.r ? 'Ще ' + lowerFirst(sentence) : sentence));
+    card.appendChild(heroProg(doneUnits, doneUnits + units, 'ще ≈ ' + mins(estimateMinutes(units))));
+    if (meta.reminder && meta.reminder.a) { const c = el('span', 'chip'); c.innerHTML = ICON.calendar; c.append(document.createTextNode('План: ' + meta.reminder.a + ', о ' + meta.reminder.t)); chips.appendChild(c); }
     if (settings.quiet) {
-      const q = el('button', 'plan-line quiet-chip');
+      const q = el('button', 'chip quiet-chip');
       q.type = 'button';
       q.innerHTML = ICON.mute;
-      q.append(document.createTextNode('Тихий режим увімкнено · '), el('u', null, 'вимкнути'));
+      q.append(document.createTextNode('Тихий режим · '), el('u', null, 'вимкнути'));
       q.addEventListener('click', () => { settings.quiet = false; saveSettings(); renderLearn(); toast('Звук увімкнено'); });
-      home.appendChild(q);
+      chips.appendChild(q);
     }
+    if (chips.childElementCount) card.appendChild(chips);
     if (plan.newPaused) home.appendChild(el('p', 'tip', 'Після пропущених днів накопичилось ' + plan.overdue + ' ' + C.plural(plan.overdue, 'повторення', 'повторення', 'повторень') + '. Нові слова почекають, поки не розбереш їх: найслабші йдуть першими.'));
     else if (cnt.reviews >= 40 && cnt.fresh) home.appendChild(el('p', 'tip', 'Повторень сьогодні багато. Нічого страшного, якщо зробиш лише їх, а нові слова почекають до завтра.'));
     main = dock(l.r ? 'Продовжити' : 'Почати', '≈ ' + mins(estimateMinutes(units)), () => startSession());
@@ -659,12 +677,12 @@ function renderLearn() {
     plan.reviews.slice(0, 3).concat(plan.newIds.slice(0, 2)).forEach(id => preloadWord(byId(id)));
   } else {
     if (l.r) {
-      home.appendChild(el('h2', 'hero', 'Готово на сьогодні'));
+      card.appendChild(el('h2', 'hero', 'Готово на сьогодні'));
+      card.appendChild(heroProg(doneUnits, doneUnits, 'усе на сьогодні'));
       const acc = Math.round((l.r - (l.a || 0)) / l.r * 100);
-      const ul = el('ul', 'done-list');
-      [['Час', mins(Math.max(1, Math.round((l.ms || 0) / 60000)))], ['Нових слів', String(l.n || 0)], ['Повторено', String(l.rv || 0)], ['Точність', acc + '%']]
-        .forEach(([a, b]) => { const li = el('li'); li.append(el('span', null, a), el('b', null, b)); ul.appendChild(li); });
-      home.appendChild(ul);
+      [[mins(Math.max(1, Math.round((l.ms || 0) / 60000))), 'час'], [String(l.n || 0), 'нових'], [String(l.rv || 0), 'повторено'], [acc + '%', 'точність']]
+        .forEach(([b, a]) => { const c = el('span', 'chip'); c.append(el('b', null, b), document.createTextNode(' ' + a)); chips.appendChild(c); });
+      card.appendChild(chips);
       const tm = dueTomorrow();
       home.appendChild(el('p', 'tip', tm ? 'Завтра чекає ' + tm + ' ' + C.plural(tm, 'повторення', 'повторення', 'повторень') + '.' : 'Завтра повторень майже немає, можна взяти нові слова.'));
       const rep = el('button', 'link-btn', 'Скопіювати звіт');
@@ -672,8 +690,8 @@ function renderLearn() {
       rep.addEventListener('click', copyReport);
       home.appendChild(rep);
     } else {
-      home.appendChild(el('h2', 'hero', 'Сьогодні вільно'));
-      home.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Параметрах.'));
+      card.appendChild(el('h2', 'hero', 'Сьогодні вільно'));
+      card.appendChild(el('p', 'hero-sub', left ? 'Повторень немає, а ліміт нових на сьогодні вичерпано.' : 'Нових слів не залишилось. Додай свої у Словнику або увімкни інші теми в Параметрах.'));
     }
     const consolidate = () => startSession(fresh, false, null, 'fresh');
     const practice = () => startSession(misses, false, null, 'misses');
@@ -3006,8 +3024,8 @@ function renderGramList() {
   if (!ids.length) { box.appendChild(el('p', 'tip', 'Теми з\'являться після оновлення.')); return; }
   const done = ids.filter(id => gres[id] && gres[id].best != null);
   const avg = done.length ? Math.round(done.reduce((a, id) => a + gres[id].best, 0) / done.length) : 0;
-  box.appendChild(el('p', 'gintro', ids.length + ' ' + C.plural(ids.length, 'тема', 'теми', 'тем') + ': «Головне» на 20 секунд, правило простими словами, приклади, типові помилки й тест на 12 завдань. Кожна правильна відповідь — 1 бал з 12.'));
-  if (done.length) box.appendChild(el('p', 'gintro strong', 'Пройдено ' + done.length + ' з ' + ids.length + ', середній бал ' + avg + '.'));
+  box.appendChild(el('p', 'page-sub', ids.length + ' ' + C.plural(ids.length, 'тема', 'теми', 'тем') + (done.length ? ' · пройдено ' + done.length + ' · середній бал ' + avg : ' · ще не починав')));
+  box.appendChild(el('p', 'gintro', '«Головне» на 20 секунд, правило простими словами, приклади, типові помилки й тест на 12 завдань. Кожна правильна відповідь — 1 бал з 12.'));
   const card = (id, small) => {
     const t = GR.topics[id];
     const b = el('button', 'gnext');
@@ -3869,6 +3887,8 @@ function renderList() {
   renderStatusSeg(counts);
   const items = dictStatus === 'all' ? base : base.filter(w => C.statusOf(cards[w.id]) === dictStatus);
   $('dictCount').textContent = words(items.length) + (dictStatus === 'all' && counts.known ? ', знаю ' + counts.known : '');
+  const tot = {}; allWords().forEach(w => { const st = C.statusOf(cards[w.id]); tot[st] = (tot[st] || 0) + 1; });
+  $('dictSub').textContent = words(allWords().length) + (tot.learning ? ' · вчу ' + tot.learning : '') + (tot.known ? ' · знаю ' + tot.known : '');
   renderDictActs(items, q);
   if (!items.length) {
     list.appendChild(el('li', 'empty', q ? 'Нічого не знайдено. Можна додати це слово.' : 'Тут поки порожньо.'));
@@ -4602,6 +4622,10 @@ async function checkUpdate() {
   } catch (e) {}
 }
 window.addEventListener('load', () => setTimeout(checkUpdate, 1200));
+/* Липкі заголовки отримують тло лише коли справді прилипли: вгорі сторінки вони прозорі */
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('.dict-tools,.gtop').forEach(h => h.classList.toggle('stuck', h.getBoundingClientRect().top <= 0.5 && window.scrollY > 0));
+}, { passive: true });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUpdate(); });
 /* Нова вправа з'являється пружно, як картка в iOS (не під час автотестів, щоб не гальмувати їх) */
 (() => {

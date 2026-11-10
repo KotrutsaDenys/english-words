@@ -800,11 +800,12 @@ body.in-session .toast{bottom:max(calc(var(--foot-h,0px) + var(--kb,0px) + 12px)
    (вкладки, нижня панель, кнопки заняття, підказки, аркуші); сам зміст
    (картки, тексти) лишається непрозорим і легким для читання.
    ========================================================================= */
-.tabs-inner,.toast,.peek,.gsheet-panel,#stage .foot,.sbar .icon-btn,.gjump,.dict-tools,.gtop{
+.tabs-inner,.toast,.peek,.gsheet-panel,#stage .foot,.sbar .icon-btn,.gjump,.dict-tools.stuck,.gtop.stuck{
   -webkit-backdrop-filter:blur(30px) saturate(1.8);backdrop-filter:blur(30px) saturate(1.8)}
 /* Липкі заголовки (пошук у словнику, «Усі теми»): напівпрозорі, зміст м'яко пропливає під ними;
    нижній край розчиняється маскою, щоб не було різкої межі між заголовком і сторінкою */
-.dict-tools,.gtop{background:color-mix(in srgb,var(--bg) 78%,transparent);
+.dict-tools,.gtop{background:transparent}
+.dict-tools.stuck,.gtop.stuck{background:color-mix(in srgb,var(--bg) 78%,transparent);
   -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 14px),transparent)}
 .dict-tools{padding-bottom:22px;margin-bottom:-12px}
 .gtop{padding-bottom:16px;margin-bottom:-12px}
@@ -1084,8 +1085,48 @@ select.field{appearance:none;-webkit-appearance:none;padding-right:40px;
 /* Відповідь розкривається рядок за рядком */
 .details > *{animation:rise .45s var(--spring-soft) both}
 .details > :nth-child(2){animation-delay:50ms}.details > :nth-child(3){animation-delay:100ms}.details > :nth-child(4){animation-delay:150ms}.details > :nth-child(n+5){animation-delay:200ms}
+/* ---------- Картка дня на головній ---------- */
+.hero-card{position:relative;overflow:hidden;isolation:isolate;margin:10px 0 18px;padding:18px 18px 20px;border-radius:28px;color:var(--on-accent);
+  background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--on-accent) 30%,transparent),transparent 55%),
+    linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 45%,var(--accent-2)) 62%,var(--accent-2));
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--on-accent) 40%,transparent),0 26px 50px -26px color-mix(in srgb,var(--accent) 80%,transparent),var(--lift)}
+.hero-card::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.14;mix-blend-mode:overlay;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .8 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* Водяний знак «Aa» як на іконці: великий, ледь помітний */
+.hero-card::after{content:"Aa";position:absolute;right:-10px;bottom:-56px;z-index:-1;font-family:var(--display);font-weight:800;font-size:150px;line-height:1;letter-spacing:-.07em;color:color-mix(in srgb,var(--on-accent) 9%,transparent);pointer-events:none}
+.hero-card .greet{margin:0 0 10px;color:color-mix(in srgb,var(--on-accent) 80%,transparent);font-size:14px}
+.hero-card .hero{color:var(--on-accent);font-size:34px;max-width:95%}
+.hero-card .hero-sub{color:color-mix(in srgb,var(--on-accent) 85%,transparent);font-size:16px;margin-top:8px}
+.hero-prog{margin-top:18px}
+.hero-prog .bar{height:10px;border-radius:999px;background:color-mix(in srgb,var(--on-accent) 22%,transparent);overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.14)}
+.hero-prog .bar i{display:block;height:100%;width:0;border-radius:999px;background:var(--on-accent);box-shadow:0 0 12px color-mix(in srgb,var(--on-accent) 60%,transparent);transition:width 1s var(--spring-soft)}
+.hero-prog .lbl{display:flex;justify-content:space-between;gap:10px;margin-top:9px;font-size:14px;font-weight:700;color:color-mix(in srgb,var(--on-accent) 82%,transparent)}
+.hero-prog .lbl b{color:var(--on-accent);font-weight:800}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hero-chips .chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font:inherit;font-size:13px;font-weight:700;color:var(--on-accent);
+  background:color-mix(in srgb,var(--on-accent) 16%,transparent);border:1px solid color-mix(in srgb,var(--on-accent) 24%,transparent);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--on-accent) 25%,transparent)}
+.hero-chips .chip svg{width:15px;height:15px}
+.hero-chips .chip b{font-weight:800;font-size:15px}
+.hero-chips button.chip{cursor:pointer}
+.hero-chips .chip u{text-underline-offset:3px}
+/* Смуга дня в шапці лише під час заняття: на головній вона в картці дня */
+body:not(.in-session) .sbar,body:not(.in-session) .tape-meta{display:none}
+body:not(.in-session) header{padding-bottom:4px}
+/* ---------- Екран вправи: більше слово, тип вправи пігулкою ---------- */
+.word{font-size:50px;letter-spacing:-.035em}
+.word.uk{font-size:40px}
+.ex-label{display:inline-flex;align-items:center;gap:7px;padding:4px 11px 4px 4px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text);font-weight:800}
+.ex-label .ex-ic{background:var(--surface);color:var(--accent-text);width:24px;height:24px;border-radius:999px;box-shadow:0 1px 2px rgba(22,27,46,.1)}
+.ex-label .ex-ic.new{background:var(--accent);color:var(--on-accent)}
+.ex-label .ex-ic.done{background:var(--ok);color:#fff}
+.card{background-image:linear-gradient(180deg,color-mix(in srgb,var(--accent-soft) 55%,transparent),transparent 150px)}
+/* Заголовки вкладок: великі, з рядком-підсумком кольору теми */
+.report-title{font-size:32px;letter-spacing:-.03em;margin:4px 0 12px}
+.page-sub{margin:-8px 0 14px;color:var(--accent-text);font-weight:700;font-size:14px}
 @media (prefers-reduced-motion: reduce){.bg i,.tape-fill::after,.dock .btn-primary::before{animation:none}}
 html.no-motion *,html.no-motion *::before,html.no-motion *::after{animation-duration:0s !important;animation-delay:0s !important;transition-duration:0s !important;transition-delay:0s !important}
+/* У тестах без важких фільтрів: програмний рендер у headless повільний на розмитті */
+html.no-motion .bg,html.no-motion body::after,html.no-motion .dock .btn-primary::before,html.no-motion .hero-card::before{display:none}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
 }
