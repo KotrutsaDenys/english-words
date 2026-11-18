@@ -237,6 +237,19 @@ def main():
     prev = load_js('audio.js', 'AUDIO') if os.path.exists(os.path.join(PUBLIC, 'audio.js')) else None
     prev_phr = (prev or {}).get('phrases') or {}
     prev_one = (prev or {}).get('one') or {}
+    prev_files = (prev or {}).get('files') or {}
+
+    def snapshot(n):
+        # Проміжний audio.js: слова, до яких ще не дійшли, беруть записи з попереднього маніфесту,
+        # інакше коміт посеред роботи тимчасово забрав би озвучку в решти слів
+        rest = [w['id'] for w in words[n:]]
+        def fill(cur, old):
+            out = dict(cur)
+            for wid in rest:
+                if wid in old and wid not in out:
+                    out[wid] = old[wid]
+            return out
+        write_manifest(fill(manifest, prev_files), fill(pmanifest, prev_phr), fill(omanifest, prev_one))
     import time
     started = time.time()
     omanifest = {}
@@ -274,7 +287,7 @@ def main():
                 omanifest[wid] = [oh] + build_one(speaker, voice, all_texts, path)
                 done += len(all_texts)
             if n % args.every == 0:
-                write_manifest(manifest, pmanifest, omanifest)
+                snapshot(n)
                 print(f'{n}/{len(words)} слів, нових записів: {done}', flush=True)
             continue
         ok = True
@@ -306,7 +319,7 @@ def main():
                 pmanifest[wid] = [ph] + times
                 done += len(plist)
         if n % args.every == 0:
-            write_manifest(manifest, pmanifest, omanifest)
+            snapshot(n)
             print(f'{n}/{len(words)} слів, нових записів: {done}', flush=True)
 
     write_manifest(manifest, pmanifest, omanifest)
