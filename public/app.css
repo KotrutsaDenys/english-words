@@ -309,6 +309,10 @@ body.kb-open .card .prompt{padding-top:2px}
 .ex-uk{color:var(--muted);font-size:15px;margin:4px 0 0}
 .note{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:var(--sunk);font-size:15px;line-height:1.4;border-left:4px solid var(--accent)}
 .note b{font-weight:800}
+/* «Де кажуть»: контекст слова */
+.use{margin:12px 0 0;font-size:15px;line-height:1.4;color:var(--ink)}
+.use.first{margin:0 0 10px}
+.use b{display:inline-block;margin-right:8px;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text);font-size:12px;font-weight:800;vertical-align:1px}
 
 /* ---------- Нижня панель: кнопки і висновок після відповіді ---------- */
 #stage .foot{position:fixed;left:0;right:0;bottom:var(--kb,0px);z-index:6;margin:0;padding:12px 16px calc(env(safe-area-inset-bottom) + 12px);

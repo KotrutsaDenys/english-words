@@ -401,7 +401,12 @@ try:
         click_text(page, 'На головну')
         page.wait_for_timeout(200)
         assert visible(page, '.tabs') and page.evaluate('window.EW.mode') is None
-        # Відсіяти знайомі
+        # Новина про великий словник (одна за раз), потім про базовий: відсіяти знайомі
+        if page.locator('.news:has-text("Великий словник")').count():
+            assert 'Де кажуть' in page.inner_text('.news')
+            page.click('.news button:has-text("Зрозуміло")')
+            page.wait_for_timeout(200)
+            assert page.locator('.news:has-text("Великий словник")').count() == 0
         page.click('.news button:has-text("Відсіяти знайомі")')
         page.wait_for_timeout(200)
         assert page.locator('.tri').count() == 20
@@ -775,7 +780,7 @@ try:
         # Записи для офлайну: за замовчуванням не всі 660 МБ
         page.evaluate('window.EW.showTab("settings")')
         page.wait_for_timeout(200)
-        assert 'наступних' in page.inner_text('#offlineAudio') and 'МБ' in page.inner_text('#offlineAll')
+        assert 'наступних' in page.inner_text('#offlineAudio') and any(u in page.inner_text('#offlineAll') for u in ('МБ', 'ГБ'))
         # Оформлення: тема й вигляд перемикаються, зберігаються й переживають перезавантаження без спалаху
         accent0 = page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()")
         page.locator('.swatch.plum').click(); page.wait_for_timeout(150)

@@ -10,6 +10,7 @@ const ctx = { window: {} };
 vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words.js'), 'utf8'), ctx);
 if (fs.existsSync(path.join(__dirname, '../public/words-base.js'))) vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words-base.js'), 'utf8'), ctx);
+if (fs.existsSync(path.join(__dirname, '../public/words-more.js'))) vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words-more.js'), 'utf8'), ctx);
 const WORDS = ctx.window.WORDS;
 const byId = id => WORDS.find(w => w.id === id);
 let passed = 0;
@@ -547,7 +548,7 @@ test('Слово з прикладу знаходиться в словнику 
   assert.strictEqual(base('families'), 'family');
   assert.strictEqual(base('Walls'), 'wall');
   assert.ok(find('trowel').exact);
-  assert.ok(!find('wrecked'));
+  assert.ok(!find('xylophonist'));
   // Вираз з речення важливіший за окреме слово, а службові слова беруться з глосарію
   assert.strictEqual(find('off', 'Tomorrow is my day off.').phrases[0].en, 'day off');
   assert.ok(find('picked', 'He picked it up on the way.').phrases.some(w => /pick up/.test(w.en)));

@@ -156,6 +156,27 @@ function clipUrl(w, kind) {
   const h = f && (kind === 'x2' ? f[2] : kind === 'x' ? f[1] : f[0]);
   return h ? '/audio/' + voice + '/' + w.id + '-' + h + '.mp3' : null;
 }
+/* Нові слова: усе в одному файлі (слово, два приклади, фрази), AUDIO.one[id] = [хеш, [початок, кінець], ...].
+   Так слово займає один файл, а не чотири (ліміт Cloudflare 20 000 файлів). */
+function oneOf(w) {
+  const voice = settings.voiceSrc;
+  if (!w || !AUD.one || !AUD.voices.includes(voice)) return null;
+  const o = AUD.one[w.id];
+  return o ? { url: '/audio/' + voice + '/' + w.id + '-a' + o[0] + '.mp3', segs: o.slice(1) } : null;
+}
+function clipSeg(w, kind) {
+  const o = oneOf(w);
+  if (!o) return null;
+  if (kind === 'x' && w.exN === 2) kind = 'x2';
+  const t = o.segs[kind === 'x2' ? 2 : kind === 'x' ? 1 : 0];
+  return t ? { url: o.url, from: t[0], to: t[1] } : null;
+}
+/* Часові мітки фраз: [хеш, [початок, кінець] × 5] для обох форматів */
+function phraseTimes(w) {
+  const o = oneOf(w);
+  if (o) return [''].concat(o.segs.slice(3));
+  return (AUD.phrases && w && AUD.phrases[w.id]) || null;
+}
 function canListen() { return (AUD.voices.includes(settings.voiceSrc) && AUD.voices.length > 0) || !!synth; }
 function stopAudio() { clearSegment(); try { player.pause(); } catch (e) {} if (synth) synth.cancel(); }
 /* Фрази слова лежать в одному файлі: граємо шматок [початок, кінець] і зупиняємось у паузі після нього */
@@ -198,7 +219,7 @@ function preloadUrl(url) {
     }
   }).catch(() => { blobs.delete(url); });
 }
-function preloadWord(w) { if (!w) return; preloadUrl(clipUrl(w, 'w')); if (w.ex) preloadUrl(clipUrl(w, 'x')); if (w.ex2) preloadUrl(clipUrl(w, 'x2')); }
+function preloadWord(w) { if (!w) return; const o = oneOf(w); if (o) { preloadUrl(o.url); return; } preloadUrl(clipUrl(w, 'w')); if (w.ex) preloadUrl(clipUrl(w, 'x')); if (w.ex2) preloadUrl(clipUrl(w, 'x2')); }
 function playUrl(url, fallbackText, rate) {
   stopAudio();
   playing = url;
@@ -213,6 +234,8 @@ player.addEventListener('error', () => { if (playing) { const t = player.dataset
 /* Файл з усіма фразами слова: AUDIO.phrases[id] = [хеш, [початок, кінець], ...] */
 function phrasePackUrl(w) {
   const voice = settings.voiceSrc;
+  const one = oneOf(w);
+  if (one) return one.segs.length > 3 ? one.url : null;
   if (!w || !AUD.voices.includes(voice) || !AUD.phrases) return null;
   const pk = AUD.phrases[w.id];
   return pk && typeof pk[0] === 'string' ? '/audio/' + voice + '/' + w.id + '-p' + pk[0] + '.mp3' : null;
@@ -221,7 +244,7 @@ function sayPhrase(w, i) {
   const p = (PHRASES[w.id] || [])[i];
   if (!p) return;
   const url = phrasePackUrl(w);
-  const t = url && AUD.phrases[w.id][i + 1];
+  const t = url && phraseTimes(w)[i + 1];
   if (t) playSegment(url, t[0], t[1], p[0]); else speakDevice(p[0]);
 }
 function cleanPhrase(t) { return String(t).replace(/[?!.,]+$/g, '').replace(/[“”"]/g, '').trim(); }
@@ -277,6 +300,8 @@ function sayWord(w, kind, rate) {
   if (!w) return;
   const text = textFor(w, kind);
   if (!text) return;
+  const seg = clipSeg(w, kind);
+  if (seg) { playSegment(seg.url, seg.from, seg.to, text, rate); return; }
   const url = clipUrl(w, kind);
   if (url) playUrl(url, text, rate); else speakDevice(text, rate);
 }
@@ -774,6 +799,18 @@ function paceCard(plan) {
 }
 /* Разове повідомлення про новий базовий словник: одразу запропонувати відсіяти знайоме */
 function newsCard() {
+  // Великий словник (words-more.js): разова новина з числом слів і тим, що нового в картках
+  const more = allWords().filter(w => w.use).length;
+  if (more > 500 && (meta.seenMore || 0) < more - 300) {
+    const box = el('section', 'news');
+    box.appendChild(el('h3', 'section-title', 'Великий словник'));
+    box.appendChild(el('p', null, 'У словнику тепер ' + words(allWords().length) + ': додала ' + more + ' з живої мови — фільми, побут, фразові дієслова, розмовні звороти. У нових картках є рядок «Де кажуть» і пояснення там, де прямого перекладу немає. Теми вмикаються в Параметрах.'));
+    const row = el('div', 'btn-row');
+    const seen = () => { meta.seenMore = more; save(KEYS.meta, meta); };
+    row.append(button('Зрозуміло', 'btn-quiet', () => { seen(); renderLearn(); }), button('Відкрити словник', 'btn-primary', () => { seen(); showTab('dict'); }));
+    box.appendChild(row);
+    return box;
+  }
   if (meta.seenBase || !allWords().some(w => w.cat === 'spoken')) return null;
   const box = el('section', 'news');
   box.appendChild(el('h3', 'section-title', 'Новий базовий словник'));
@@ -1398,6 +1435,13 @@ function mnemonicBlock(w, openByDefault) {
 }
 
 /* Блок з відповіддю в картці: слово, переклад, приклад, фрази, асоціація */
+/* «Де кажуть»: контекст і регістр слова (поле use) окремим рядком з підписом */
+function useLine(w) {
+  if (!w.use) return null;
+  const p = el('p', 'use');
+  p.append(el('b', null, 'Де кажуть'), document.createTextNode(w.use));
+  return p;
+}
 function details(w, opts) {
   opts = opts || {};
   const d = el('div', 'details');
@@ -1413,6 +1457,7 @@ function details(w, opts) {
     d.appendChild(ex);
     if (w.exUk) d.appendChild(el('p', 'ex-uk', w.exUk));
   }
+  { const u = useLine(w); if (u) d.appendChild(u); }
   if (w.note) { const n = el('p', 'note'); n.textContent = w.note; d.appendChild(n); }
   if (opts.tip) d.appendChild(el('p', 'tip', opts.tip));
   const pb = phraseBlock(w, false);
@@ -1576,6 +1621,7 @@ RENDER.intro = item => {
       const p = el('p', 'ex'); p.append(enText(ex), sayBtn(w, kind, true)); d.appendChild(p);
       if (exUk) d.appendChild(el('p', 'ex-uk', exUk));
     });
+    { const u = useLine(w); if (u) d.appendChild(u); }
     if (w.note) { const n = el('p', 'note'); n.textContent = w.note; d.appendChild(n); }
     d.appendChild(el('p', 'tip', 'Скажи слово і приклад уголос: сказане тримається довше, ніж прочитане.'));
     if (!meta.peekUsed) d.appendChild(el('p', 'tip', 'Незнайоме слово в прикладі? Торкнись його, і з\'явиться переклад.'));
@@ -2618,6 +2664,8 @@ function lRun() {
   const w = lWord();
   if (a.t === 'show') { lShow(a.what); done(); return; }
   if (a.t === 'say') {
+    const seg = clipSeg(w, a.kind);
+    if (seg) { lPlay(seg.url, seg.from, seg.to, done); return; }
     const url = clipUrl(w, a.kind);
     if (url) { lPlay(url, 0, 0, done); return; }
     const text = textFor(w, a.kind);
@@ -2631,8 +2679,9 @@ function lRun() {
   }
   if (a.t === 'gap') { lGap(a.sh && settings.listen.shadow ? Math.max(a.d, listen.lastDur * 1.15 + 0.8) : a.d, done); return; }
   const url = phrasePackUrl(w);
-  const times = url && AUD.phrases[w.id];
-  if (a.t === 'pack' && url) { listen.pack = times.slice(1); lPlay(url, 0, 0, () => { if (listen) { listen.pack = null; lMark(-1); } done(); }); return; }
+  const times = url && phraseTimes(w);
+  const whole = oneOf(w) && times && times.length > 1;   // в одному файлі фрази — лише його кінець
+  if (a.t === 'pack' && url) { listen.pack = times.slice(1); lPlay(url, whole ? times[1][0] : 0, whole ? times[times.length - 1][1] : 0, () => { if (listen) { listen.pack = null; lMark(-1); } done(); }); return; }
   if (a.t === 'phrase' && times && times[a.i + 1]) { lMark(a.i); lPlay(url, times[a.i + 1][0], times[a.i + 1][1], done); return; }
   done();
 }
@@ -3813,7 +3862,7 @@ function renderStatusSeg(counts) {
   });
 }
 /* Теми: кнопка з вибраною темою і сітка всіх тем з кількістю слів (20 тем у рядок не вміщаються) */
-const BASE_CATS = ['spoken', 'idioms', 'base1', 'base2', 'base3'];
+const BASE_CATS = ['spoken', 'idioms', 'base1', 'base2', 'base3', 'base4', 'base5', 'base6', 'base7'];
 function renderChips() {
   $('catName').textContent = dictCat === 'all' ? 'Усі теми' : (CATS[dictCat] || 'Усі теми');
   $('catChev').innerHTML = ICON.chevron;
@@ -3979,6 +4028,8 @@ function renderDictActs(items, q) {
 function itemBody(w, c, t) {
   const body = el('div', 'item-body');
   preloadWord(w);
+  // Спершу де так кажуть, потім приклади з різних ситуацій
+  { const u = useLine(w); if (u) { u.classList.add('first'); body.appendChild(u); } }
   [[w.ex, w.exUk, 'x'], [w.ex2, w.ex2Uk, 'x2']].forEach(([ex, exUk, kind]) => {
     if (!ex) return;
     const p = el('p', 'ex'); p.append(enText(ex), sayBtn(w, kind, true)); body.appendChild(p);
@@ -4367,6 +4418,8 @@ let offlineBusy = false;
 const MB_PER_WORD = 0.21;
 function wordUrls(w) {
   const out = [];
+  const one = oneOf(w);
+  if (one) return [one.url];
   ['w', 'x', 'x2'].forEach(k => { const u = clipUrl(w, k); if (u) out.push(u); });
   const pk = phrasePackUrl(w); if (pk) out.push(pk);
   return out;

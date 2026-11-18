@@ -183,13 +183,41 @@ def build_pack(speaker, voice, folder, wid, texts, out_path):
     return times
 
 
-def write_manifest(manifest, pmanifest):
+ONE_BITRATE = '40k'
+
+
+def build_one(speaker, voice, texts, out_path):
+    """Нове слово одним файлом: слово, приклад 1, приклад 2, фрази. Повертає [[початок, кінець], ...]."""
+    global BITRATE
+    parts = [np.zeros(int(SR * PACK_EDGE), np.float32)]
+    pos = len(parts[0])
+    times = []
+    for i, t in enumerate(texts):
+        seg = speaker.synth(t, voice)
+        if i:
+            gap = np.zeros(int(SR * PACK_GAP), np.float32)
+            parts.append(gap)
+            pos += len(gap)
+        times.append([round(pos / SR, 2), round((pos + len(seg)) / SR, 2)])
+        parts.append(seg)
+        pos += len(seg)
+    parts.append(np.zeros(int(SR * PACK_EDGE), np.float32))
+    old, BITRATE = BITRATE, ONE_BITRATE
+    try:
+        encode(np.concatenate(parts), out_path)
+    finally:
+        BITRATE = old
+    return times
+
+
+def write_manifest(manifest, pmanifest, omanifest=None):
     path = os.path.join(PUBLIC, 'audio.js')
     tmp = path + '.tmp'
     with open(tmp, 'w', encoding='utf-8') as fh:
         fh.write('// Згенеровано tools/make_audio.py. Не редагувати вручну.\n')
-        fh.write('// files: [слово, приклад 1, приклад 2]; phrases: [хеш файла фраз, [початок, кінець] для кожної фрази].\n')
-        fh.write('window.AUDIO = ' + json.dumps({'voices': list(VOICES), 'files': manifest, 'phrases': pmanifest},
+        fh.write('// files: [слово, приклад 1, приклад 2]; phrases: [хеш файла фраз, [початок, кінець] для кожної фрази];\n')
+        fh.write('// one (нові слова, усе в одному файлі <id>-a<хеш>.mp3): [хеш, слово, приклад 1, приклад 2, фрази...] як [початок, кінець].\n')
+        fh.write('window.AUDIO = ' + json.dumps({'voices': list(VOICES), 'files': manifest, 'phrases': pmanifest, 'one': omanifest or {}},
                                                  ensure_ascii=False, separators=(',', ':')) + ';\n')
     os.replace(tmp, path)
 
@@ -200,13 +228,19 @@ def main():
     ap.add_argument('--voices', required=True)
     ap.add_argument('--only', help='через кому: id слів, які перегенерувати')
     ap.add_argument('--every', type=int, default=50, help='як часто (у словах) оновлювати audio.js')
+    ap.add_argument('--minutes', type=float, default=0, help='зупинитися після стількох хвилин (решта наступного запуску)')
     ap.add_argument('--no-new-phrases', action='store_true', help='спершу лише слова й приклади: нові файли фраз не створювати')
     args = ap.parse_args()
 
-    words = load_js(['words.js', 'words-base.js'], 'WORDS')
-    phrases = load_js(['phrases.js', 'phrases-base.js'], 'PHRASES') or {}
+    words = load_js(['words.js', 'words-base.js', 'words-more.js'], 'WORDS')
+    phrases = load_js(['phrases.js', 'phrases-base.js', 'phrases-more.js'], 'PHRASES') or {}
     prev = load_js('audio.js', 'AUDIO') if os.path.exists(os.path.join(PUBLIC, 'audio.js')) else None
     prev_phr = (prev or {}).get('phrases') or {}
+    prev_one = (prev or {}).get('one') or {}
+    import time
+    started = time.time()
+    omanifest = {}
+    stopped = False
     speaker = Speaker(args.model, args.voices)
     only = set(args.only.split(',')) if args.only else None
     name, voice = 'emma', VOICES['emma']
@@ -220,6 +254,29 @@ def main():
         force = bool(only and wid in only)
         texts = [w.get('say') or w['en'], w.get('sayEx') or w.get('ex') or '', w.get('sayEx2') or w.get('ex2') or '']
         hashes = [text_hash(t) if t else None for t in texts]
+        plist0 = [p[0] for p in (phrases.get(wid) or [])]
+        # Старий формат (окремі файли) лишається для слів, у яких ці файли вже є; усе інше — одним файлом
+        separate = all(os.path.exists(os.path.join(folder, f'{wid}-{h}.mp3')) for h in hashes if h) and not (wid in prev_one)
+        if not separate and texts[1] and texts[2]:
+            all_texts = texts + plist0
+            oh = text_hash('one|' + '\n'.join(all_texts))
+            fname = f'{wid}-a{oh}.mp3'
+            keep.add(fname)
+            path = os.path.join(folder, fname)
+            old = prev_one.get(wid)
+            if os.path.exists(path) and not force and isinstance(old, list) and old and old[0] == oh:
+                omanifest[wid] = old
+            elif stopped or (args.minutes and time.time() - started > args.minutes * 60):
+                stopped = True
+                if isinstance(old, list) and old and os.path.exists(os.path.join(folder, f'{wid}-a{old[0]}.mp3')):
+                    omanifest[wid] = old; keep.add(f'{wid}-a{old[0]}.mp3')   # текст змінився, новий запис ще не готовий
+            else:
+                omanifest[wid] = [oh] + build_one(speaker, voice, all_texts, path)
+                done += len(all_texts)
+            if n % args.every == 0:
+                write_manifest(manifest, pmanifest, omanifest)
+                print(f'{n}/{len(words)} слів, нових записів: {done}', flush=True)
+            continue
         ok = True
         for t, h in zip(texts, hashes):
             if not h:
@@ -249,17 +306,19 @@ def main():
                 pmanifest[wid] = [ph] + times
                 done += len(plist)
         if n % args.every == 0:
-            write_manifest(manifest, pmanifest)
+            write_manifest(manifest, pmanifest, omanifest)
             print(f'{n}/{len(words)} слів, нових записів: {done}', flush=True)
 
-    write_manifest(manifest, pmanifest)
+    write_manifest(manifest, pmanifest, omanifest)
+    if stopped:
+        print(f'ЧАС ВИЙШОВ. Нових записів: {done}, одним файлом: {len(omanifest)}')
     removed = 0
     for f in os.listdir(folder):
         if f.endswith('.mp3') and f not in keep:
             os.unlink(os.path.join(folder, f))
             removed += 1
     print(f'Готово. Нових записів: {done}, видалено старих файлів: {removed}, слів у маніфесті: {len(manifest)}, '
-          f'файлів фраз: {len(pmanifest)}, усього файлів: {len(os.listdir(folder))}')
+          f'файлів фраз: {len(pmanifest)}, одним файлом: {len(omanifest)}, усього файлів: {len(os.listdir(folder))}')
 
 
 if __name__ == '__main__':

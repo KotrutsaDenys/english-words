@@ -754,7 +754,8 @@
   /* ---------- Порядок нових слів: свої першими, далі теми з вагами ---------- */
   // Розмовні слова з базового словника йдуть найчастіше: вони покривають більшість живої мови
   const CAT_WEIGHT = { spoken: 12, core: 4, base1: 4, talk: 3, idioms: 3, irish: 2, verbs: 2, site: 2, work: 1, base2: 2,
-    feel: 1, health: 1, phone: 1, shop: 1, car: 1, weather: 1, false: 1, travel: 1, base3: 1 };
+    feel: 1, health: 1, phone: 1, shop: 1, car: 1, weather: 1, false: 1, travel: 1, base3: 1,
+    home: 2, food: 2, people: 2, clothes: 1, docs: 1, tech: 1, nature: 1, leisure: 1, base4: 1, base5: 1, base6: 1, base7: 1 };
   function orderNew(words, cards, cats, perDay, today, priority) {
     const first = new Set(priority || []);
     const pool = words.filter(w => !cards[w.id] && (first.has(w.id) || (cats ? cats[w.cat] !== false : true)));
