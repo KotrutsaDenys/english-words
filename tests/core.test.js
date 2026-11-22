@@ -697,6 +697,76 @@ test('Діалоги: зібрані з dialogues/*.json, озвучка в пр
   assert.deepStrictEqual(C.dialogDue({ a: { due: 5 }, b: { due: 3 }, c: { due: 9 }, d: {} }, ['a', 'b', 'c', 'd'], 6), ['b', 'a']);
 });
 
+test('Диктант: перевірка по словах, описки, скорочення, підказка, вибір речень', () => {
+  const st = (a, b) => C.dictationCheck(a, b).words.map(w => w.st).join(' ');
+  assert.ok(C.dictationCheck('Have you got any sellotape?', 'have you got any sellotape').perfect, 'регістр і розділові знаки не важать');
+  assert.ok(C.dictationCheck("I'm in no rush.", 'I am in no rush').perfect, "I'm = I am");
+  assert.ok(C.dictationCheck("I'm in no rush.", 'im in no rush').perfect, 'скорочення без апострофа з телефона');
+  assert.ok(C.dictationCheck("Don't worry.", 'Do not worry').perfect);
+  const r = C.dictationCheck('Have you got any sellotape?', 'have you get any selotape');
+  assert.strictEqual(st('Have you got any sellotape?', 'have you get any selotape'), 'ok ok bad ok typo');
+  assert.strictEqual(r.words[2].got, 'get');
+  assert.strictEqual(r.words[4].got, 'selotape');
+  assert.deepStrictEqual(r.extra, []);
+  assert.ok(!r.perfect && r.score > 0.6 && r.score < 0.8);
+  assert.strictEqual(st('The boss was giving out about the mess.', 'the boss giving out about mess'), 'ok ok miss ok ok ok miss ok');
+  const ex = C.dictationCheck('Could you toast it?', 'could you toast it please');
+  assert.deepStrictEqual(ex.extra, ['please']);
+  assert.ok(!ex.perfect);
+  assert.strictEqual(st('I will cover everything.', 'I will cover every thing'), 'ok ok ok typo', 'розірване слово — описка');
+  assert.strictEqual(st('Is it ill?', 'is it il'), 'ok ok bad', 'короткі слова без поблажок');
+  assert.strictEqual(C.dictationCheck('Is it OK?', 'is it okay').perfect, true);
+  const empty = C.dictationCheck('The gate closes soon.', '');
+  assert.strictEqual(empty.score, 0);
+  assert.ok(empty.words.every(w => w.st === 'miss'));
+  assert.strictEqual(C.dictSkeleton("Sorry, could you say that again?"), 'S____, c____ y__ s__ t___ a____?');
+  assert.strictEqual(C.dictSkeleton("It's fine."), "I_'_ f___.");
+  // Речення лише зі слів, які вже вчаться; одне слово — одне речення
+  const cards = {};
+  WORDS.slice(0, 40).forEach((w, i) => { cards[w.id] = { st: 'review', reps: 2, last: i, s: 5 }; });
+  const items = C.pickDictation(WORDS, cards, 10, seeded(5));
+  assert.strictEqual(items.length, 10);
+  assert.strictEqual(new Set(items.map(x => x.id)).size, 10);
+  items.forEach(x => {
+    assert.ok(cards[x.id], 'речення з вивченого слова');
+    const w = WORDS.find(y => y.id === x.id);
+    assert.strictEqual(x.en, x.k === 'x' ? w.ex : w.ex2);
+    const n = C.tokens(x.en).length;
+    assert.ok(n >= 4 && n <= 12 && !/\d/.test(x.en));
+  });
+  assert.deepStrictEqual(C.pickDictation(WORDS, {}, 10), []);
+});
+
+test('Розповідь 4/3/2: теми повні, вибір найдавнішої, свої нові слова', () => {
+  const tctx = { window: {} };
+  vm.createContext(tctx);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/talks.js'), 'utf8'), tctx);
+  const T = JSON.parse(JSON.stringify(tctx.window.TALKS));
+  assert.ok(T.length >= 15);
+  assert.strictEqual(new Set(T.map(t => t.id)).size, T.length, 'id тем різні');
+  T.forEach(t => {
+    assert.ok(/^[a-z-]+$/.test(t.id) && /[а-яіїєґ]/i.test(t.uk) && !/[а-яіїєґ]/i.test(t.en), t.id);
+    assert.strictEqual(t.q.length, 4, t.id + ': 4 питання');
+    assert.strictEqual(t.help.length, 5, t.id + ': 5 готових шматків');
+    t.q.concat(t.help).forEach(([en, uk]) => {
+      assert.ok(en && uk && !/[а-яіїєґ]/i.test(en) && /[а-яіїєґ]/i.test(uk), t.id + ': ' + en);
+      assert.ok(!/[ыэъё]/i.test(uk), 'російські літери: ' + uk);
+    });
+  });
+  assert.deepStrictEqual(C.TELL_ROUNDS, [120, 90, 60]);
+  // Спершу нерозказані, далі найдавніша
+  const used = {}; T.forEach((t, i) => { used[t.id] = 100 + i; });
+  delete used[T[7].id];
+  assert.strictEqual(C.pickTalk(T, used, 200, seeded(1)).id, T[7].id);
+  used[T[7].id] = 150;
+  assert.strictEqual(C.pickTalk(T, used, 200, seeded(1)).id, T[0].id);
+  const cards = {};
+  WORDS.slice(0, 30).forEach((w, i) => { cards[w.id] = { st: 'review', reps: 1, first: i < 15 ? 95 : 50 }; });
+  const ws = C.talkWords(WORDS, cards, 100, 5, seeded(2));
+  assert.ok(ws.length <= 5 && ws.length > 0);
+  ws.forEach(w => assert.ok(cards[w.id].first >= 86, 'лише вивчені за 14 днів'));
+});
+
 test('Стилі й скрипти в index.html мають актуальні ?v= (python3 tools/stamp.py)', () => {
   const crypto = require('crypto');
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');

@@ -457,6 +457,7 @@ function updateTape() {
   if (mode === 'listen' && listen) { listenTape(); return; }
   if ((mode === 'gtest' || mode === 'gresult') && gt) { gtTape(); return; }
   if (DL_MODES.includes(mode) && dl) { dlTape(); return; }
+  if (PR_MODES.includes(mode) && pr) { prTape(); return; }
   if (session && session.practice) { renderTape(practiceDone, practiceDone + session.remaining(), 'Тренування'); return; }
   const l = todayLog();
   const done = (l.r || 0) + (l.n || 0) + (l.k || 0);
@@ -505,6 +506,7 @@ window.addEventListener('popstate', () => {
   else if (mode === 'listen') finishListen();
   else if (mode === 'gtest' || mode === 'gresult') endGramTest();
   else if (DL_MODES.includes(mode)) endDlg();
+  else if (PR_MODES.includes(mode)) endPr();
   else if (mode) { triage = null; mode = null; renderLearn(); }
 });
 function estimateMinutes(units) { return Math.max(1, Math.ceil(units * 10 / 60)); }
@@ -576,7 +578,7 @@ function burst() {
   document.body.appendChild(box);
   setTimeout(() => box.remove(), 900);
 }
-function studied(d) { const l = log[C.dayKey(d)]; return !!(l && (l.r > 0 || l.c > 0 || l.gt > 0 || l.dl > 0)); }
+function studied(d) { const l = log[C.dayKey(d)]; return !!(l && (l.r > 0 || l.c > 0 || l.gt > 0 || l.dl > 0 || l.dc > 0 || l.tk > 0)); }
 function weekSection() {
   const t = today();
   const wd = new Date(t * 86400000).getUTCDay();
@@ -753,6 +755,7 @@ function renderLearn() {
   }
   const dtile = dlgTile();
   if (dtile) tiles.push(dtile);
+  prTiles().forEach(t => tiles.push(t));
   const ls = canListen() ? listenIds().length : 0;
   if (ls >= 3) tiles.push(quick('listen', 'Слухати', 'у дорогу: ' + words(ls) + ' голосом, без рук', () => startListen()));
   if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
@@ -1514,7 +1517,7 @@ function nextInfo() {
 }
 /* Висновок для нижньої панелі. answer: правильна відповідь (рядок або вузол), extra: вузол під нею */
 function verdict(kind, text, sub, answer, extra) {
-  if (kind === 'right' && (mode === 'session' || mode === 'gtest' || mode === 'dtrain')) burst();
+  if (kind === 'right' && (mode === 'session' || mode === 'gtest' || mode === 'dtrain' || mode === 'dict')) burst();
   const v = el('div', 'verdict ' + kind);
   v.dataset.kind = kind;
   v.setAttribute('role', 'status');
@@ -3937,7 +3940,7 @@ function dlgStopAll() {
   if (!p) return;
   if (p.timer) clearInterval(p.timer);
   if (p.utter && synth) synth.cancel();
-  document.querySelectorAll('.bub.now').forEach(b => b.classList.remove('now'));
+  document.querySelectorAll('.bub.now, .bub.echo').forEach(b => b.classList.remove('now', 'echo'));
   const btn = $('dlgPlayBtn');
   if (btn) dlgPlayLabel(btn, false);
 }
@@ -3980,11 +3983,12 @@ function dlgPlayAll(d, from) {
   if (player.readyState >= 1) seek(); else player.addEventListener('loadedmetadata', seek, { once: true });
   player.defaultPlaybackRate = dlgRate();
   player.playbackRate = dlgRate();
-  const p = { id: d.id, timer: null, last: -1, t0: performance.now() };
+  const p = { id: d.id, timer: null, last: -1, t0: performance.now(), echo: !!settings.dlgEcho, cur: from, wait: 0 };
   dplay = p;
   p.timer = setInterval(() => {
     if (dplay !== p) return;
     if (player.error) { dlgStopAll(); dlgPlayDevice(d, Math.max(from, p.last)); return; }
+    if (p.echo) { dlgEchoTick(d, p, segs); return; }
     const t = player.currentTime;
     // Зупинили ззовні (навушники, інший звук): лише прибираємо підсвітку
     if (player.paused && performance.now() - p.t0 > 1500) { dlgStopAll(); return; }
@@ -3997,6 +4001,38 @@ function dlgPlayAll(d, from) {
   if (pr && pr.catch) pr.catch(err => { if (err && err.name !== 'AbortError' && dplay === p) { dlgStopAll(); dlgPlayDevice(d, from); } });
   const btn = $('dlgPlayBtn');
   if (btn) dlgPlayLabel(btn, true);
+}
+/* Паузи для повтору (шедоуінг): після кожної репліки запис замовкає на її довжину з запасом, а ти повторюєш уголос */
+function dlgEchoGap(dur) { return (dur * 1.3 / dlgRate() + 0.9) * 1000; }
+function dlgEchoMark(i, on) {
+  const b = document.querySelector('#dlgChat .bub[data-li="' + i + '"]');
+  if (b) b.classList.toggle('echo', on);
+}
+function dlgEchoTick(d, p, segs) {
+  const n = segs.length, now = performance.now();
+  if (p.wait) {
+    if (now < p.wait) return;
+    p.wait = 0;
+    dlgEchoMark(p.cur, false);
+    p.cur++;
+    if (p.cur >= n) { dlgStopAll(); dlgHeard(d); return; }
+    try { player.currentTime = Math.max(0, segs[p.cur][0] - 0.04); } catch (e) {}
+    p.t0 = now;
+    const pr2 = player.play();
+    if (pr2 && pr2.catch) pr2.catch(() => {});
+    p.last = p.cur;
+    dlgMark(p.cur);
+    return;
+  }
+  if (p.last !== p.cur) { p.last = p.cur; dlgMark(p.cur); }
+  const t = player.currentTime;
+  if (t >= segs[p.cur][1]) {
+    try { player.pause(); } catch (e) {}
+    p.wait = now + dlgEchoGap(segs[p.cur][1] - segs[p.cur][0]);
+    dlgEchoMark(p.cur, true);
+    return;
+  }
+  if (player.paused && now - p.t0 > 1500) dlgStopAll();
 }
 /* Поки записів немає: голос пристрою, репліка за реплікою */
 function dlgPlayDevice(d, from) {
@@ -4011,7 +4047,12 @@ function dlgPlayDevice(d, from) {
     const v = pickVoice();
     if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
     u.rate = dlgRate() * 0.95;
-    u.onend = () => setTimeout(() => next(i + 1), 350);
+    const echo = settings.dlgEcho;
+    u.onend = () => {
+      if (!echo) { setTimeout(() => next(i + 1), 350); return; }
+      dlgEchoMark(i, true);
+      setTimeout(() => { dlgEchoMark(i, false); next(i + 1); }, dlgEchoGap(C.tokens(d.lines[i].en).length * 0.38));
+    };
     u.onerror = () => { if (dplay === p) dlgStopAll(); };
     synth.speak(u);
   };
@@ -4224,7 +4265,8 @@ function renderDlgPage(d) {
   const opts = el('div', 'dlg-opts');
   opts.append(
     tog('Переклад', settings.dlgUk !== false, v => { settings.dlgUk = v; saveSettings(); chat.classList.toggle('no-uk', !v); }),
-    tog('Повільніше', settings.dlgRate === 0.8, v => { settings.dlgRate = v ? 0.8 : 1; saveSettings(); if (dplay) { player.playbackRate = dlgRate(); } })
+    tog('Повільніше', settings.dlgRate === 0.8, v => { settings.dlgRate = v ? 0.8 : 1; saveSettings(); if (dplay) { player.playbackRate = dlgRate(); } }),
+    tog('Паузи, щоб повторювати', !!settings.dlgEcho, v => { settings.dlgEcho = v; saveSettings(); if (dplay && dplay.id === d.id) { stopAudio(); dlgPlayAll(d, 0); } })
   );
   bar.append(play, opts);
   box.appendChild(bar);
@@ -4705,6 +4747,455 @@ function endDlg() {
   if (started) toast(kind === 'train' ? 'Тренування перервано' : 'Рольову гру перервано');
 }
 
+/* ---------- Методики: диктант і розповідь 4/3/2 (екран заняття, mode dict / tell / prres) ---------- */
+const TALKS = window.TALKS || [];
+const PR_MODES = ['dict', 'tell', 'prres'];
+const DICT_N = 10;
+let pr = null;
+function beginPr(o) {
+  stopAudio(); cancelAuto(); closePeek();
+  if (listen) endListen();
+  if (sprint) endSprint();
+  session = null; current = null; triage = null; gt = null; dl = null;
+  pr = o;
+  mode = o.mode;
+  showTab('learn');
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+}
+function prTape() {
+  if (pr.kind === 'dict') {
+    const n = pr.items.length;
+    renderTape(mode === 'prres' ? n : pr.i + (pr.answered ? 1 : 0), n, 'Речення', null, true);
+    $('tapeLeft').textContent = pr.perfect ? 'без помилок ' + pr.perfect : '';
+  } else {
+    const n = C.TELL_ROUNDS.length;
+    renderTape(mode === 'prres' ? n : pr.round + (pr.state === 'after' ? 1 : 0), n, 'Раунд', null, true);
+    $('tapeLeft').textContent = '';
+  }
+}
+function prCard(label, right, icon) {
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  card.appendChild(dlHead(label, right || '', icon));
+  return card;
+}
+function endPr() {
+  const p = pr;
+  const started = p && mode !== 'prres' && (p.kind === 'dict' ? p.i + (p.answered ? 1 : 0) > 0 : p.round > 0 || p.state === 'run');
+  if (p && p.kind === 'tell') tellCleanup(p);
+  pr = null;
+  mode = null;
+  stopAudio();
+  document.body.classList.remove('typing');
+  renderLearn();
+  if (started) toast(p.kind === 'dict' ? 'Диктант перервано' : 'Розповідь перервано');
+}
+
+/* Диктант: почуй речення-приклад і напиши його. Перевірка по словах з описками й скороченнями */
+function dictCount() { return settings.quiet ? 0 : C.dictationPool(allWords(), cards).length; }
+function startDict(rng) {
+  const items = C.pickDictation(allWords(), cards, DICT_N, rng || Math.random);
+  if (items.length < 3) { toast('Для диктанту треба кілька вивчених слів'); return; }
+  beginPr({ kind: 'dict', mode: 'dict', items, i: 0, perfect: 0, sum: 0, answered: false, results: [] });
+  dictShow();
+}
+function dictWord(it) { return byId(it.id); }
+function dictSay(it, rate) { const w = dictWord(it); if (w) sayWord(w, it.k, rate); }
+function dictShow() {
+  const it = pr.items[pr.i];
+  pr.answered = false;
+  pr.hinted = false;
+  pr.t0 = performance.now();
+  ui = { t0: performance.now(), answered: false };
+  const card = prCard('Диктант', (pr.i + 1) + ' з ' + pr.items.length, 'dictation');
+  const body = el('div', 'prompt dict');
+  const big = el('button', 'listen-big');
+  big.type = 'button';
+  big.innerHTML = ICON.speaker;
+  big.setAttribute('aria-label', 'Послухати ще раз');
+  big.addEventListener('click', () => dictSay(it));
+  const slow = el('button', 'slow-btn', 'Повільніше');
+  slow.type = 'button';
+  slow.addEventListener('click', () => dictSay(it, 0.75));
+  body.append(big, slow, el('p', 'prompt-sub', 'Напиши речення, яке чуєш'));
+  card.appendChild(body);
+  const skel = el('p', 'dict-skel');
+  skel.hidden = true;
+  skel.lang = 'en';
+  const ta = el('textarea', 'answer dict-input');
+  ta.rows = 2;
+  ta.lang = 'en';
+  ta.placeholder = 'Пиши англійською…';
+  ta.setAttribute('autocapitalize', 'sentences');
+  ta.setAttribute('autocorrect', 'off');
+  ta.setAttribute('autocomplete', 'off');
+  ta.spellcheck = false;
+  ta.setAttribute('enterkeyhint', 'done');
+  ta.setAttribute('aria-label', 'Що ти почув');
+  ta.style.resize = 'none';
+  card.append(skel, ta);
+  ta.addEventListener('focus', () => document.body.classList.add('typing'));
+  ta.addEventListener('blur', () => setTimeout(() => document.body.classList.remove('typing'), 50));
+  ta.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!pr.answered) check(); else dictNext(); } });
+  const hint = el('button', 'link-btn small dict-hint', 'Підказка: перші літери');
+  hint.type = 'button';
+  hint.addEventListener('click', () => { skel.textContent = C.dictSkeleton(it.en); skel.hidden = false; pr.hinted = true; hint.remove(); });
+  card.appendChild(hint);
+  const check = skip => {
+    if (pr.answered) return;
+    pr.answered = true;
+    ui.answered = true;
+    ta.blur();
+    const typed = skip ? '' : ta.value;
+    const r = C.dictationCheck(it.en, typed);
+    pr.sum += r.score;
+    if (r.perfect) pr.perfect++;
+    pr.results.push({ it, r });
+    const lg = todayLog();
+    lg.dc = (lg.dc || 0) + 1;
+    lg.ms = (lg.ms || 0) + Math.min(120000, Math.max(0, performance.now() - pr.t0));
+    save(KEYS.log, log);
+    renderStreak();
+    haptic(r.perfect ? 'ok' : r.score >= 0.7 ? 'ok' : 'wrong');
+    ta.hidden = true;
+    skel.hidden = true;
+    if (hint.isConnected) hint.remove();
+    card.appendChild(dictResultLine(it, r, typed));
+    const kind = r.perfect ? 'right' : r.score >= 0.7 ? 'info' : 'wrong';
+    const title = r.perfect ? 'Без помилок' : skip ? 'Ось що було в записі' : r.score >= 0.7 ? 'Майже: ' + dictMistakes(r) : 'Ось як правильно';
+    const v = verdict(kind, title, r.perfect || skip ? null : ' ' + Math.round(r.score * 100) + '% слів');
+    if (!settings.quiet) dictSay(it);
+    const last = pr.i >= pr.items.length - 1;
+    const nb = button(last ? 'Результат' : 'Далі', 'btn-primary', dictNext);
+    setFoot([button('Ще раз', 'btn-quiet', () => dictSay(it)), nb], 2, v);
+    keys = { enter: () => nb.click() };
+    updateTape();
+  };
+  const checkBtn = button('Перевірити', 'btn-primary', () => check(false));
+  setFoot([button('Не знаю', 'btn-quiet', () => check(true)), checkBtn], 2);
+  keys = {};
+  updateTape();
+  window.scrollTo(0, 0);
+  if (!settings.quiet) setTimeout(() => { if (pr && pr.items[pr.i] === it && !pr.answered) dictSay(it); }, 250);
+}
+function dictMistakes(r) {
+  const n = r.words.length - r.ok + r.extra.length;
+  return n + ' ' + C.plural(n, 'помилка', 'помилки', 'помилок');
+}
+/* Речення зі станом кожного слова: правильно, описка, інше слово, пропущено */
+function dictResultLine(it, r, typed) {
+  const box = el('div', 'dict-res');
+  const line = el('p', 'dict-line');
+  line.lang = 'en';
+  r.words.forEach((w, i) => {
+    const s = el('span', 'dw ' + w.st, w.w);
+    if (w.got && w.st !== 'ok') {
+      const g = el('small', null, w.got);
+      s.appendChild(g);
+    }
+    line.appendChild(s);
+    if (i < r.words.length - 1) line.appendChild(document.createTextNode(' '));
+  });
+  box.appendChild(line);
+  if (r.extra.length) {
+    const ex = el('p', 'dict-extra');
+    ex.append(document.createTextNode('Зайве: '));
+    const s = el('s', null, r.extra.join(' ')); s.lang = 'en';
+    ex.appendChild(s);
+    box.appendChild(ex);
+  }
+  box.appendChild(el('p', 'dict-uk', it.uk));
+  if (!r.perfect && typed.trim()) {
+    const y = el('p', 'dict-yours');
+    y.append(el('small', null, 'Ти написав: '));
+    const t = el('span', null, typed.trim()); t.lang = 'en';
+    y.appendChild(t);
+    box.appendChild(y);
+  }
+  return box;
+}
+function dictNext() {
+  if (!pr) return;
+  if (pr.i >= pr.items.length - 1) { dictDone(); return; }
+  pr.i++;
+  stopAudio();
+  dictShow();
+}
+function dictDone() {
+  mode = 'prres';
+  stopAudio();
+  const n = pr.items.length, pct = Math.round(pr.sum / n * 100);
+  const l = todayLog();
+  l.dcr = { n: (l.dcr ? l.dcr.n : 0) + n, ok: (l.dcr ? l.dcr.ok : 0) + pr.perfect, pct };
+  save(KEYS.log, log);
+  meta.dictBest = Math.max(meta.dictBest || 0, pct);
+  save(KEYS.meta, meta);
+  const card = prCard('Диктант завершено', '', 'check');
+  card.querySelector('.ex-ic').classList.add('done');
+  const body = el('div', 'prompt summary gres');
+  const score = el('p', 'gres-score ' + (pct >= 85 ? 'g-top' : pct >= 60 ? 'g-ok' : 'g-low'));
+  score.append(el('b', null, String(pr.perfect)), el('span', null, 'з ' + n));
+  body.append(score, el('p', 'gres-note', 'речень без жодної помилки'));
+  body.appendChild(el('p', 'prompt-sub', 'Правильних слів: ' + pct + '%. ' + (pct >= 85
+    ? 'Вухо добре тримає речення. Наступного разу спробуй без «Повільніше».'
+    : 'Слухай речення двічі: спершу цілком, потім шматками. Що не розчув, переслухай повільніше.')));
+  card.appendChild(body);
+  const miss = [];
+  pr.results.forEach(({ r }) => r.words.forEach(w => { if (w.st !== 'ok' && !miss.includes(w.w.toLowerCase())) miss.push(w.w.toLowerCase()); }));
+  if (miss.length) {
+    const box = el('div', 'details gres-list');
+    box.appendChild(el('p', 'tip', 'Слова, де помилився або не розчув'));
+    const p = el('p', 'dict-miss'); p.lang = 'en';
+    p.textContent = miss.slice(0, 30).join(', ');
+    box.appendChild(p);
+    card.appendChild(box);
+  }
+  const btns = [button('Готово', 'btn-quiet', endPr), button('Ще ' + DICT_N, 'btn-primary', () => startDict())];
+  setFoot(btns, 2);
+  keys = { enter: () => btns[0].click() };
+  updateTape();
+  window.scrollTo(0, 0);
+}
+
+/* Розповідь 4/3/2: тема, план-питання й готові шматки → та сама історія тричі: 2:00, 1:30, 1:00.
+   Можна записувати себе й наприкінці переслухати перший і останній раунд */
+function canRecord() { return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
+function fmtClock(s) { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+function startTell(topicId, rng) {
+  if (!TALKS.length) return;
+  meta.talks = meta.talks || {};
+  const topic = (topicId && TALKS.find(t => t.id === topicId)) || C.pickTalk(TALKS, meta.talks, today(), rng || Math.random);
+  const ws = C.talkWords(allWords(), cards, today(), 5, rng || Math.random);
+  beginPr({ kind: 'tell', mode: 'tell', topic, words: ws, round: 0, state: 'intro', spoke: [], recs: [], rec: null, stream: null, timer: null });
+  tellIntro();
+}
+function tellPlan(t, compact) {
+  const box = el('div', 'tell-plan' + (compact ? ' compact' : ''));
+  const ol = el('ol', 'tell-q');
+  t.q.forEach(([en, uk]) => {
+    const li = el('li');
+    const e = el('span', 'en', en); e.lang = 'en';
+    li.append(e);
+    if (!compact) li.appendChild(el('span', 'uk', uk));
+    ol.appendChild(li);
+  });
+  box.appendChild(ol);
+  return box;
+}
+function tellIntro() {
+  const t = pr.topic;
+  pr.state = 'intro';
+  const card = prCard('Розповідь 4/3/2', 'тема ' + (TALKS.indexOf(t) + 1) + ' з ' + TALKS.length, 'speak');
+  const body = el('div', 'tell-intro');
+  const h = el('h2', 'tell-title', t.uk);
+  const en = el('p', 'tell-en', t.en); en.lang = 'en';
+  body.append(h, en);
+  body.appendChild(el('p', 'tell-how', 'Розкажи вголос ту саму історію тричі: 2 хвилини, потім 1,5, потім 1. Перший раз шукаєш слова, далі вони вже є, і мова йде плавніше. Не зупиняйся через помилки.'));
+  body.appendChild(el('h3', 'gh', 'План'));
+  body.appendChild(tellPlan(t));
+  body.appendChild(el('h3', 'gh', 'Можна почати так'));
+  const hl = el('div', 'tell-help');
+  t.help.forEach(([e, u]) => {
+    const row = el('p', 'tell-chunk');
+    const s = el('b', null, e); s.lang = 'en';
+    row.append(s, el('span', null, u));
+    hl.appendChild(row);
+  });
+  body.appendChild(hl);
+  if (pr.words.length) {
+    body.appendChild(el('h3', 'gh', 'Спробуй вжити свої нові слова'));
+    const wl = el('div', 'tell-words');
+    pr.words.forEach(w => {
+      const c = el('button', 'chip tell-word');
+      c.type = 'button';
+      const e = el('b', null, w.en); e.lang = 'en';
+      c.append(e, el('span', null, C.shortSense(w.uk)));
+      c.addEventListener('click', () => sayWord(w, 'w'));
+      wl.appendChild(c);
+    });
+    body.appendChild(wl);
+  }
+  if (canRecord()) {
+    const rec = el('div', 'toggle tell-rec');
+    const lab = el('span', null, 'Записувати себе');
+    lab.appendChild(el('span', 'opt', 'наприкінці послухаєш перший і останній раунд'));
+    const sw = el('input', 'switch');
+    sw.type = 'checkbox';
+    sw.checked = !!settings.tellRec;
+    sw.setAttribute('aria-label', 'Записувати себе');
+    sw.addEventListener('change', () => { settings.tellRec = sw.checked; saveSettings(); });
+    rec.append(lab, sw);
+    body.appendChild(rec);
+  }
+  card.appendChild(body);
+  const go = button('Почати · ' + fmtClock(C.TELL_ROUNDS[0]), 'btn-primary', () => tellRun());
+  setFoot([button('Інша тема', 'btn-quiet', () => tellOther()), go], 2);
+  keys = { enter: () => go.click() };
+  updateTape();
+  window.scrollTo(0, 0);
+}
+function tellOther() {
+  meta.talks = meta.talks || {};
+  // Пропущена тема відкладається, ніби її щойно розповідали
+  meta.talks[pr.topic.id] = today() - 0.5;
+  save(KEYS.meta, meta);
+  const next = C.pickTalk(TALKS.filter(t => t.id !== pr.topic.id), meta.talks, today());
+  pr.topic = next || pr.topic;
+  tellIntro();
+}
+async function tellRecStart(p) {
+  if (!settings.tellRec || !canRecord()) return;
+  try {
+    if (!p.stream) p.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    if (pr !== p || p.state !== 'run') return;
+    const chunks = [];
+    const r = new MediaRecorder(p.stream);
+    r.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    r.onstop = () => { if (chunks.length) p.recs[r.round] = URL.createObjectURL(new Blob(chunks, { type: r.mimeType || 'audio/mp4' })); };
+    r.round = p.round;
+    r.start();
+    p.rec = r;
+  } catch (e) {
+    settings.tellRec = false; saveSettings();
+    toast('Мікрофон недоступний, розповідь без запису');
+  }
+}
+function tellRecStop(p) { if (p.rec && p.rec.state !== 'inactive') { try { p.rec.stop(); } catch (e) {} } p.rec = null; }
+function tellCleanup(p) {
+  if (p.timer) clearInterval(p.timer);
+  p.timer = null;
+  tellRecStop(p);
+  if (p.stream) { try { p.stream.getTracks().forEach(t => t.stop()); } catch (e) {} p.stream = null; }
+}
+function tellRun() {
+  const p = pr, t = p.topic, secs = C.TELL_ROUNDS[p.round];
+  p.state = 'run';
+  p.start = performance.now();
+  stopAudio();
+  const card = prCard('Розповідь 4/3/2', 'раунд ' + (p.round + 1) + ' з ' + C.TELL_ROUNDS.length, 'speak');
+  const body = el('div', 'prompt tell-run');
+  const h = el('p', 'tell-run-title', t.uk);
+  const ringEl = el('div', 'tell-ring');
+  ringEl.style.setProperty('--p', '1');
+  const clock = el('b', 'tell-clock', fmtClock(secs));
+  ringEl.appendChild(clock);
+  body.append(h, ringEl);
+  if (settings.tellRec && canRecord()) body.appendChild(el('p', 'tell-recdot', 'Запис іде'));
+  body.appendChild(el('p', 'prompt-sub', p.round === 0 ? 'Говори англійською, ідучи за планом. Забув слово — скажи інакше.' : p.round === 1 ? 'Те саме, але швидше. Можна пропускати дрібниці.' : 'Остання хвилина: найголовніше, без пауз.'));
+  card.appendChild(body);
+  card.appendChild(tellPlan(t, true));
+  tellRecStart(p);
+  const finish = () => {
+    if (pr !== p || p.state !== 'run') return;
+    clearInterval(p.timer);
+    p.timer = null;
+    tellRecStop(p);
+    const spent = Math.min(secs, (performance.now() - p.start) / 1000);
+    p.spoke[p.round] = Math.round(spent);
+    const lg = todayLog();
+    lg.tk = (lg.tk || 0) + 1;
+    lg.ms = (lg.ms || 0) + Math.round(spent * 1000);
+    save(KEYS.log, log);
+    renderStreak();
+    haptic('ok');
+    p.state = 'after';
+    if (p.round >= C.TELL_ROUNDS.length - 1) { setTimeout(() => { if (pr === p) tellDone(); }, 150); return; }
+    tellBetween();
+  };
+  p.timer = setInterval(() => {
+    if (pr !== p) return;
+    const left = secs - (performance.now() - p.start) / 1000;
+    clock.textContent = fmtClock(left);
+    ringEl.style.setProperty('--p', String(Math.max(0, left / secs)));
+    ringEl.classList.toggle('low', left <= 10);
+    if (left <= 0) finish();
+  }, 200);
+  const done = button('Розповів', 'btn-primary', finish);
+  setFoot([done]);
+  keys = { enter: () => done.click() };
+  p.finish = finish;
+  updateTape();
+  window.scrollTo(0, 0);
+}
+function tellBetween() {
+  const p = pr;
+  const next = C.TELL_ROUNDS[p.round + 1];
+  const card = prCard('Розповідь 4/3/2', 'раунд ' + (p.round + 1) + ' готово', 'speak');
+  const body = el('div', 'prompt');
+  body.appendChild(el('h2', 'word tell-next', fmtClock(next)));
+  body.appendChild(el('p', 'prompt-sub', 'Тепер ту саму історію за ' + (next >= 90 ? 'півтори хвилини' : 'хвилину') + '. Ті самі події, ті самі слова, але швидше й без довгих пауз.'));
+  card.appendChild(body);
+  const go = button('Почати · ' + fmtClock(next), 'btn-primary', () => { p.round++; tellRun(); });
+  setFoot([button('Досить', 'btn-quiet', () => tellDone()), go], 2);
+  keys = { enter: () => go.click() };
+  updateTape();
+}
+function tellDone() {
+  const p = pr;
+  tellRecStop(p);
+  if (p.stream) { try { p.stream.getTracks().forEach(t => t.stop()); } catch (e) {} p.stream = null; }
+  mode = 'prres';
+  meta.talks = meta.talks || {};
+  meta.talks[p.topic.id] = today();
+  save(KEYS.meta, meta);
+  const l = todayLog();
+  l.tkr = (l.tkr || []).filter(x => x.id !== p.topic.id).concat([{ id: p.topic.id, r: p.spoke.filter(x => x != null).length, s: p.spoke.reduce((a, b) => a + (b || 0), 0) }]);
+  save(KEYS.log, log);
+  const card = prCard('Розповідь завершено', '', 'check');
+  card.querySelector('.ex-ic').classList.add('done');
+  const body = el('div', 'prompt summary');
+  const total = p.spoke.reduce((a, b) => a + (b || 0), 0);
+  body.appendChild(el('h2', 'word', fmtClock(total)));
+  body.appendChild(el('p', 'prompt-sub', 'Говорив англійською про «' + lowerFirst(p.topic.uk) + '»'));
+  const bars = el('div', 'tell-bars');
+  C.TELL_ROUNDS.forEach((s, i) => {
+    const row = el('div', 'tell-bar' + (p.spoke[i] == null ? ' skip' : ''));
+    const fill = el('i');
+    fill.style.width = Math.round(((p.spoke[i] || 0) / C.TELL_ROUNDS[0]) * 100) + '%';
+    row.append(el('span', null, 'Раунд ' + (i + 1)), el('span', 'track'), el('b', null, p.spoke[i] == null ? '—' : fmtClock(p.spoke[i])));
+    row.querySelector('.track').appendChild(fill);
+    if (p.recs[i]) {
+      const play = el('button', 'say sm');
+      play.type = 'button';
+      play.innerHTML = ICON.speaker;
+      play.setAttribute('aria-label', 'Послухати себе, раунд ' + (i + 1));
+      play.addEventListener('click', () => { stopAudio(); playing = p.recs[i]; player.dataset.fallback = ''; player.src = p.recs[i]; player.playbackRate = 1; const pp = player.play(); if (pp && pp.catch) pp.catch(() => {}); });
+      row.appendChild(play);
+    }
+    bars.appendChild(row);
+  });
+  body.appendChild(bars);
+  body.appendChild(el('p', 'prompt-sub', p.recs.some(Boolean)
+    ? 'Послухай перший і останній раунд: зазвичай у третьому менше пауз і «е-е-е».'
+    : 'Повтори цю тему через кілька днів: побачиш, що слова приходять швидше.'));
+  card.appendChild(body);
+  const id = p.topic.id;
+  const btns = [button('Готово', 'btn-quiet', endPr), button('Інша тема', 'btn-primary', () => { const nx = C.pickTalk(TALKS.filter(t => t.id !== id), meta.talks, today()); endPrQuiet(); startTell(nx && nx.id); })];
+  setFoot(btns, 2);
+  keys = { enter: () => btns[0].click() };
+  updateTape();
+  window.scrollTo(0, 0);
+}
+function endPrQuiet() { if (pr && pr.kind === 'tell') tellCleanup(pr); pr = null; mode = null; }
+function prReport(l) {
+  const out = [];
+  if (l.dcr) out.push(['Диктант', l.dcr.n + ' ' + C.plural(l.dcr.n, 'речення', 'речення', 'речень') + ', без помилок ' + l.dcr.ok + ', останній раз ' + l.dcr.pct + '% слів']);
+  if (l.tkr && l.tkr.length) out.push(['Розповідь', l.tkr.map(x => { const t = TALKS.find(y => y.id === x.id); return (t ? '«' + t.uk + '»' : x.id) + ', ' + x.r + ' ' + C.plural(x.r, 'раунд', 'раунди', 'раундів') + ', ' + fmtClock(x.s); }).join('; ')]);
+  return out;
+}
+function prTiles() {
+  const out = [];
+  const dc = dictCount();
+  if (dc >= 10) out.push(quick('dictation', 'Диктант', DICT_N + ' речень на слух: почуй і напиши', () => startDict()));
+  if (TALKS.length) {
+    const t = C.pickTalk(TALKS, meta.talks || {}, today(), () => 0.5);
+    out.push(quick('speak', 'Розповідь 4/3/2', 'тема: ' + lowerFirst(t.uk) + ', тричі щоразу коротше', () => startTell(t.id)));
+  }
+  return out;
+}
+
 /* Клавіатура (для комп'ютера) */
 document.addEventListener('keydown', e => {
   if (currentTab !== 'learn') return;
@@ -5018,7 +5509,7 @@ function reportRows() {
     ['Знаю', words(tt.known)]
   ].concat(l.sp ? [['Спринт', l.sp + ' за хвилину']] : [])
     .concat(l.ls ? [['Слухав', words(l.ls) + ', ' + mins(Math.max(1, Math.round((l.lms || 0) / 60000)))]] : [])
-    .concat(gramReport(l), dlgReport(l));
+    .concat(gramReport(l), dlgReport(l), prReport(l));
 }
 /* Теми й розділи, пройдені сьогодні */
 function gramReport(l) {
@@ -5450,7 +5941,8 @@ document.addEventListener('visibilitychange', () => {
     lastDay = today();
     if (sprint) endSprint();
     if (listen) return;
-    session = null; current = null; ui = null; mode = null; triage = null; gt = null; dl = null;
+    if (pr && pr.kind === 'tell') tellCleanup(pr);
+    session = null; current = null; ui = null; mode = null; triage = null; gt = null; dl = null; pr = null;
     renderAll();
   }
 });
@@ -5465,6 +5957,7 @@ $('exitBtn').addEventListener('click', () => {
   if (mode === 'listen') { finishListen(); return; }
   if (mode === 'gtest' || mode === 'gresult') { endGramTest(); return; }
   if (DL_MODES.includes(mode)) { endDlg(); return; }
+  if (PR_MODES.includes(mode)) { endPr(); return; }
   triage = null; mode = null; renderLearn();
 });
 $('undoBtn').addEventListener('click', doUndo);
@@ -5576,7 +6069,7 @@ if (/[?&]test=1/.test(location.search)) {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
     get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, listenIds, startListen,
-    get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, gramPracticeDue,
+    get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, get pr() { return pr; }, startDict, startTell, TALKS, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, gramPracticeDue,
     debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());

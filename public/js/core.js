@@ -1076,7 +1076,149 @@
       .sort((a, b) => dres[a].due - dres[b].due);
   }
 
+  /* ---------- Диктант: почуй речення й напиши його ----------
+     Порівняння по словах: скорочення розгортаються з обох боків (I'm = I am), різниця в одну літеру
+     (у довгих словах — у дві) — описка, а не помилка. Кожне слово еталона отримує стан ok / typo / miss,
+     зайві написані слова рахуються окремо. */
+  const DICT_EXPAND = {
+    "i'm": 'i am', "you're": 'you are', "we're": 'we are', "they're": 'they are', "it's": 'it is', "that's": 'that is',
+    "there's": 'there is', "here's": 'here is', "what's": 'what is', "where's": 'where is', "who's": 'who is', "how's": 'how is',
+    "he's": 'he is', "she's": 'she is', "let's": 'let us', "i've": 'i have', "you've": 'you have', "we've": 'we have',
+    "they've": 'they have', "i'll": 'i will', "you'll": 'you will', "he'll": 'he will', "she'll": 'she will', "it'll": 'it will',
+    "we'll": 'we will', "they'll": 'they will', "that'll": 'that will', "i'd": 'i would', "you'd": 'you would', "he'd": 'he would',
+    "she'd": 'she would', "we'd": 'we would', "they'd": 'they would', "isn't": 'is not', "aren't": 'are not', "wasn't": 'was not',
+    "weren't": 'were not', "don't": 'do not', "doesn't": 'does not', "didn't": 'did not', "can't": 'can not', "cannot": 'can not',
+    "couldn't": 'could not', "won't": 'will not', "wouldn't": 'would not', "shouldn't": 'should not', "haven't": 'have not',
+    "hasn't": 'has not', "hadn't": 'had not', "mustn't": 'must not', "needn't": 'need not', "gonna": 'going to', "wanna": 'want to',
+    'ok': 'okay'
+  };
+  // Скорочення без апострофа, як їх часто набирають на телефоні (dont, im). Справжні слова (ill, well, its) не чіпаємо
+  const DICT_NOAPO = {};
+  Object.keys(DICT_EXPAND).forEach(k => { const b = k.replace(/'/g, ''); if (b !== k && !['ill', 'well', 'were', 'shed', 'wed', 'hell', 'its', 'lets', 'wont', 'id', 'shell', 'hed', 'whos', 'hes'].includes(b)) DICT_NOAPO[b] = k; });
+  function dictWords(s, typed) {
+    // Слова з посиланням на вихідне слово (щоб розфарбувати саме його)
+    const out = [];
+    tokens(String(s || '').replace(/[-–—]/g, ' ')).forEach((t, i) => {
+      let low = t.toLowerCase();
+      if (typed && DICT_NOAPO[low]) low = DICT_NOAPO[low];
+      const exp = DICT_EXPAND[low];
+      (exp ? exp.split(' ') : [low]).forEach(x => out.push({ t: x, i }));
+    });
+    return out;
+  }
+  function dictNear(a, b) {
+    if (a === b) return 2;
+    const n = Math.max(a.length, b.length);
+    if (n < 4) return 0;
+    return levenshtein(a, b) <= (n >= 8 ? 2 : 1) ? 1 : 0;
+  }
+  function dictationCheck(target, typed) {
+    const shown = tokens(String(target || '').replace(/[-–—]/g, ' '));
+    const T = dictWords(target), G = dictWords(typed, true);
+    // Найдовша спільна послідовність з вагами: точний збіг 2, описка 1
+    const n = T.length, m = G.length;
+    const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+    for (let i = n - 1; i >= 0; i--) {
+      for (let j = m - 1; j >= 0; j--) {
+        const s = dictNear(T[i].t, G[j].t);
+        dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1], s ? s + dp[i + 1][j + 1] : 0);
+      }
+    }
+    const tState = new Array(n).fill('miss'), tGot = new Array(n).fill('');
+    const pairs = [];
+    let i = 0, j = 0;
+    while (i < n && j < m) {
+      const s = dictNear(T[i].t, G[j].t);
+      if (s && dp[i][j] === s + dp[i + 1][j + 1]) { tState[i] = s === 2 ? 'ok' : 'typo'; tGot[i] = G[j].t; pairs.push([i, j]); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) i++;
+      else j++;
+    }
+    // Проміжки між збігами: «get» замість «got» — неправильне слово на своєму місці, а не пропуск і зайве;
+    // «every thing» замість «everything» — описка
+    const extra = [];
+    pairs.push([n, m]);
+    let pi = -1, pj = -1;
+    pairs.forEach(([a, b]) => {
+      const tg = [], gg = [];
+      for (let x = pi + 1; x < a; x++) tg.push(x);
+      for (let y = pj + 1; y < b; y++) gg.push(y);
+      if (tg.length === 1 && gg.length === 2 && G[gg[0]].t + G[gg[1]].t === T[tg[0]].t) {
+        tState[tg[0]] = 'typo'; tGot[tg[0]] = G[gg[0]].t + ' ' + G[gg[1]].t;
+      } else {
+        const k = Math.min(tg.length, gg.length);
+        for (let z = 0; z < k; z++) { tState[tg[z]] = 'bad'; tGot[tg[z]] = G[gg[z]].t; }
+        for (let z = k; z < gg.length; z++) extra.push(G[gg[z]].t);
+      }
+      pi = a; pj = b;
+    });
+    // Стан вихідного слова: найгірший з його частин (I'm = I + am)
+    const rank = { ok: 0, typo: 1, bad: 2, miss: 3 };
+    const words = shown.map(w => ({ w, st: 'ok', got: '' }));
+    T.forEach((x, k) => {
+      const o = words[x.i];
+      if (rank[tState[k]] > rank[o.st]) o.st = tState[k];
+      if (tGot[k] && tState[k] !== 'ok') o.got = (o.got ? o.got + ' ' : '') + tGot[k];
+    });
+    const ok = words.filter(w => w.st === 'ok').length, typo = words.filter(w => w.st === 'typo').length;
+    const score = words.length ? Math.max(0, (ok + 0.5 * typo - 0.5 * extra.length) / words.length) : 0;
+    return { words, extra, ok, typo, wrong: words.length - ok - typo, score, perfect: ok === words.length && !extra.length };
+  }
+  /* Підказка: перша літера кожного слова, решта рисками (Have you got → H___ y__ g__) */
+  function dictSkeleton(s) {
+    return String(s || '').replace(/[A-Za-z][A-Za-z'’]*/g, w => w[0] + w.slice(1).replace(/[A-Za-z]/g, '_'));
+  }
+  /* Речення для диктанту: приклади слів, які вже вчиш (свіжіші частіше), 4–12 слів, без цифр */
+  function dictationPool(words, cards) {
+    const out = [];
+    words.forEach(w => {
+      const c = cards[w.id];
+      if (!c || c.st === 'new' || !(c.reps > 0)) return;
+      [['x', w.ex, w.exUk], ['x2', w.ex2, w.ex2Uk]].forEach(([k, en, uk]) => {
+        if (!en || !uk || /\d/.test(en)) return;
+        const n = tokens(en).length;
+        if (n >= 4 && n <= 12) out.push({ id: w.id, k, en, uk, last: c.last != null ? c.last : 0 });
+      });
+    });
+    return out;
+  }
+  function pickDictation(words, cards, n, rng) {
+    rng = rng || Math.random;
+    const pool = dictationPool(words, cards);
+    if (!pool.length) return [];
+    // Половина — з 60 найсвіжіших слів, решта — з усіх; одне слово дає не більше одного речення
+    const fresh = pool.slice().sort((a, b) => b.last - a.last).slice(0, 120);
+    const seen = new Set(), out = [];
+    const take = arr => { for (const s of shuffle(arr.slice(), rng)) { if (out.length >= n) return; if (!seen.has(s.id)) { seen.add(s.id); out.push(s); } } };
+    const half = Math.ceil(n / 2);
+    take(fresh.slice(0, Math.max(half * 2, 12)));
+    if (out.length > half) out.length = half;
+    take(pool);
+    return out;
+  }
+
+  /* ---------- Розповідь 4/3/2: та сама історія тричі, щоразу коротше ----------
+     Методика Пола Нейшна: повтор з тиском часу робить мовлення плавнішим, бо слова й будова речень
+     уже знайдені в першому раунді. Для рівня A2 раунди 2:00, 1:30 і 1:00. */
+  const TELL_ROUNDS = [120, 90, 60];
+  function pickTalk(talks, used, today, rng) {
+    rng = rng || Math.random;
+    if (!talks.length) return null;
+    // Найдавніше розказана (або ще не розказана) тема, серед рівних — випадкова
+    const score = t => (used && used[t.id] != null ? used[t.id] : -1e9) + rng();
+    return talks.slice().sort((a, b) => score(a) - score(b))[0];
+  }
+  /* Слова, які варто вжити в розповіді: вивчені за останні 14 днів, одне слово (не вираз) */
+  function talkWords(words, cards, today, n, rng) {
+    rng = rng || Math.random;
+    const pool = words.filter(w => {
+      const c = cards[w.id];
+      return c && c.st !== 'new' && c.first != null && today - c.first <= 14 && tokens(w.en.replace(/^to /, '')).length <= 3;
+    });
+    return shuffle(pool, rng).slice(0, n);
+  }
+
   const api = {
+    dictationCheck, dictSkeleton, dictationPool, pickDictation, TELL_ROUNDS, pickTalk, talkWords,
     dialogYou, dialogClips, dialogClipIndex, dialogTasks, dialogOrderOk, dialogSchedule, dialogStars, dialogDue,
     paceAdvice,
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,

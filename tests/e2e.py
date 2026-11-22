@@ -450,7 +450,8 @@ try:
         page.wait_for_timeout(200)
         page.locator('.item-head').first.click()
         page.wait_for_timeout(300)
-        seg = page.evaluate('window.AUDIO.phrases["site-trowel"][3]')
+        # Кіара: [хеш, слово, приклад 1, приклад 2, фрази…]; Емма: окремий файл фраз [хеш, фрази…]
+        seg = page.evaluate('(window.AUDIO_CIARA && window.AUDIO_CIARA["site-trowel"]) ? window.AUDIO_CIARA["site-trowel"][6] : window.AUDIO.phrases["site-trowel"][3]')
         page.evaluate('document.querySelectorAll(".phrase .say")[2].click()')
         ts = []
         for _ in range(45):
@@ -866,6 +867,66 @@ try:
         assert visible(page, '#dlgList') and not visible(page, '#dlgPage')
         page.evaluate('window.EW.showTab("report")'); page.wait_for_timeout(150)
         assert 'Діалоги' in page.inner_text('#docket') and 'рольова гра 10 з 10' in page.inner_text('#docket')
+        # Шедоуінг: «Паузи, щоб повторювати» — після репліки запис чекає з позначкою «Повтори вголос»
+        page.evaluate('window.EW.openDialog("cafe-takeaway")'); page.wait_for_timeout(200)
+        page.click('.dlg-opts .chip:has-text("Паузи")'); page.wait_for_timeout(100)
+        assert page.evaluate('window.EW.settings.dlgEcho') is True
+        if page.evaluate('!!(window.DLG_AUDIO && window.DLG_AUDIO["cafe-takeaway"])'):
+            page.click('#dlgPlayBtn')
+            for _ in range(40):
+                page.wait_for_timeout(250)
+                if page.locator('#dlgChat .bub.echo').count():
+                    break
+            assert page.locator('#dlgChat .bub.echo').count() == 1, 'пауза для повтору не настала'
+            page.click('#dlgPlayBtn'); page.wait_for_timeout(100)
+            assert page.locator('#dlgChat .bub.echo, #dlgChat .bub.now').count() == 0
+        page.click('.dlg-opts .chip:has-text("Паузи")'); page.wait_for_timeout(100)
+        assert page.evaluate('window.EW.settings.dlgEcho') is False
+        # Диктант: пишемо почуте речення точно — кожне без помилок
+        page.evaluate('window.EW.showTab("learn")'); page.wait_for_timeout(200)
+        if page.locator('.qa:has-text("Диктант")').count():
+            page.click('.qa:has-text("Диктант")')
+        else:
+            page.evaluate('window.EW.startDict()')
+        page.wait_for_timeout(200)
+        if page.evaluate('window.EW.mode') == 'dict':
+            n = page.evaluate('window.EW.pr.items.length')
+            assert 3 <= n <= 10
+            first = True
+            while page.evaluate('window.EW.mode') == 'dict':
+                en = page.evaluate('window.EW.pr.items[window.EW.pr.i].en')
+                if first:
+                    page.click('.dict-hint'); page.wait_for_timeout(50)
+                    assert '_' in page.inner_text('.dict-skel')
+                    first = False
+                page.fill('.dict-input', en.lower().replace(',', '').replace('?', '').replace('.', ''))
+                page.locator('#foot button:has-text("Перевірити")').click(); page.wait_for_timeout(60)
+                assert page.locator('#foot .verdict.right').count() == 1, 'точно написане речення має бути без помилок: ' + en
+                assert page.locator('.dict-line .dw.ok').count() == len(page.evaluate('EWCore.tokens(window.EW.pr.items[window.EW.pr.i].en.replace(/[-–—]/g, " "))'))
+                page.locator('#foot .btn-primary').click(); page.wait_for_timeout(60)
+            assert page.evaluate('window.EW.mode') == 'prres' and page.inner_text('.gres-score b') == str(n)
+            shot(page, 'light-dictation-result')
+            page.locator('#foot button:has-text("Готово")').click(); page.wait_for_timeout(200)
+            assert page.evaluate('window.EW.mode') is None
+        # Розповідь 4/3/2: три раунди (у тесті по секунді), результат і тема запам'ятовується
+        page.evaluate('EWCore.TELL_ROUNDS[0] = 2; EWCore.TELL_ROUNDS[1] = 1; EWCore.TELL_ROUNDS[2] = 1;')
+        page.click('.qa:has-text("Розповідь")'); page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') == 'tell' and page.locator('.tell-q li').count() == 4 and page.locator('.tell-chunk').count() == 5
+        topic = page.evaluate('window.EW.pr.topic.id')
+        page.locator('#foot button:has-text("Інша тема")').click(); page.wait_for_timeout(100)
+        assert page.evaluate('window.EW.pr.topic.id') != topic
+        topic = page.evaluate('window.EW.pr.topic.id')
+        page.locator('#foot .btn-primary').click(); page.wait_for_timeout(2600)
+        assert page.locator('#foot button:has-text("Почати")').count() == 1, 'після раунду — перерва'
+        page.locator('#foot .btn-primary').click(); page.wait_for_timeout(300)
+        page.locator('#foot button:has-text("Розповів")').click(); page.wait_for_timeout(150)
+        page.locator('#foot .btn-primary').click(); page.wait_for_timeout(1500)
+        assert page.evaluate('window.EW.mode') == 'prres' and page.locator('.tell-bar').count() == 3
+        assert page.evaluate('window.EW.meta.talks["' + topic + '"]') == page.evaluate('EWCore.dayNum()')
+        page.evaluate('EWCore.TELL_ROUNDS[0] = 120; EWCore.TELL_ROUNDS[1] = 90; EWCore.TELL_ROUNDS[2] = 60;')
+        page.locator('#foot button:has-text("Готово")').click(); page.wait_for_timeout(200)
+        page.evaluate('window.EW.showTab("report")'); page.wait_for_timeout(150)
+        assert 'Розповідь' in page.inner_text('#docket')
         # Записи для офлайну: за замовчуванням не всі 660 МБ
         page.evaluate('window.EW.showTab("settings")')
         page.wait_for_timeout(200)
