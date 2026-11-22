@@ -1,0 +1,54 @@
+# Озвучка діалогів (tools/dialogue_audio.py): Chatterbox Turbo з ірландськими голосами VCTK.
+# Моделі з Hugging Face, тому працює тут, а не в робочому середовищі Claude. Результат комітить у main.
+name: dialogue-audio
+on:
+  push:
+    branches: [main]
+    paths: ['dialogues/**', 'tools/dialogue_audio.py', '.github/workflows/dialogue-audio.yml']
+  workflow_dispatch:
+concurrency:
+  group: dialogue-audio
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  voice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Записи слів (сотні МБ) не потрібні: лише діалоги, інструменти й те, що хешує stamp.py
+          sparse-checkout: |
+            dialogues
+            tools
+            public/js
+            public/audio/dlg
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - run: pip install -q chatterbox-tts faster-whisper huggingface_hub soundfile --extra-index-url https://download.pytorch.org/whl/cpu
+      - run: python tools/dialogue_audio.py
+      - name: Commit
+        run: |
+          git config user.name "dialogue-audio"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/out
+          cp -r public/audio/dlg /tmp/out/ 2>/dev/null || mkdir -p /tmp/out/dlg
+          cp public/dialogue-audio.js /tmp/out/
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            rm -rf public/audio/dlg
+            mkdir -p public/audio
+            cp -r /tmp/out/dlg public/audio/
+            cp /tmp/out/dialogue-audio.js public/
+            python tools/stamp.py
+            git add -A public/audio/dlg public/dialogue-audio.js public/index.html
+            if git diff --cached --quiet; then echo "нічого нового"; exit 0; fi
+            git commit -q -m "Озвучка діалогів"
+            if git push -q origin HEAD:main; then exit 0; fi
+            sleep 7
+          done
+          exit 1
