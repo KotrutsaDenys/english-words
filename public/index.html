@@ -14,11 +14,10 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="manifest" href="/manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="preload" href="/fonts/onest-cyrillic-v5.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/unbounded-cyrillic-v5.woff2" as="font" type="font/woff2" crossorigin>
 <script>try{var ewS=JSON.parse(localStorage.getItem('ew.settings')||'{}');if(ewS.theme&&ewS.theme!=='cobalt')document.documentElement.dataset.theme=ewS.theme;if(ewS.appearance&&ewS.appearance!=='auto')document.documentElement.dataset.appearance=ewS.appearance;}catch(e){}</script>
-<link rel="stylesheet" href="/app.css?v=b32b2b7f4d">
+<link rel="stylesheet" href="/app.css?v=42e3d50e8f">
 </head>
 <body>
 <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -94,35 +93,47 @@
 
   <!-- Звіт -->
   <section id="screen-report" data-screen="report" hidden>
-    <h2 class="report-title" id="reportTitle"></h2>
+    <h2 class="report-title">Звіт</h2>
+    <p class="page-sub" id="reportTitle"></p>
     <div class="callout" id="backupCallout" hidden>
       <span id="backupText"></span>
       <button class="btn" id="backupNow">Зберегти копію</button>
     </div>
-    <div class="docket"><dl id="docket"></dl></div>
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="docket" id="docketBox"><dl id="docket"></dl></div>
     <div class="stack"><button class="btn btn-primary" id="copyReport">Скопіювати звіт</button></div>
-    <h3 class="h3">Пам'ять</h3>
-    <div id="gaugeBox"></div>
-    <p class="insight" id="retention"></p>
-    <h3 class="h3">Активність за 20 тижнів</h3>
-    <div id="heatBox"></div>
-    <h3 class="h3">Відповіді за 14 днів</h3>
-    <div class="chart" id="chart" role="img"></div>
-    <div class="chart-legend"><span id="chartFrom"></span><span>сьогодні</span></div>
-    <h3 class="h3">Повторення на тиждень уперед</h3>
-    <div class="chart short" id="forecast" role="img" style="--cols:7"></div>
-    <div class="chart-legend cols" id="forecastLegend" style="--cols:7"></div>
-    <h3 class="h3">Словник</h3>
-    <div class="vocab-bar" id="vocabBar" role="img"></div>
-    <dl class="rows" id="totals"></dl>
-    <div id="baseBox" hidden>
+    <section class="rcard">
+      <h3 class="h3">Пам'ять</h3>
+      <div id="gaugeBox"></div>
+      <p class="insight" id="retention"></p>
+    </section>
+    <section class="rcard">
+      <h3 class="h3">Активність за 20 тижнів</h3>
+      <div id="heatBox"></div>
+    </section>
+    <section class="rcard">
+      <h3 class="h3">Відповіді за 14 днів</h3>
+      <div class="chart" id="chart" role="img"></div>
+      <div class="chart-legend"><span id="chartFrom"></span><span>сьогодні</span></div>
+    </section>
+    <section class="rcard">
+      <h3 class="h3">Повторення на тиждень уперед</h3>
+      <div class="chart short" id="forecast" role="img" style="--cols:7"></div>
+      <div class="chart-legend cols" id="forecastLegend" style="--cols:7"></div>
+    </section>
+    <section class="rcard">
+      <h3 class="h3">Словник</h3>
+      <div class="vocab-bar" id="vocabBar" role="img"></div>
+      <dl class="rows" id="totals"></dl>
+    </section>
+    <section class="rcard" id="baseBox" hidden>
       <h3 class="h3">Базовий словник</h3>
       <div id="baseProgress"></div>
-    </div>
-    <div id="hardBox" hidden>
+    </section>
+    <section class="rcard" id="hardBox" hidden>
       <h3 class="h3">Найважчі слова</h3>
       <ul class="list" id="hardList"></ul>
-    </div>
+    </section>
   </section>
 
   <!-- Налаштування -->
@@ -237,7 +248,7 @@
     <div class="group bare">
       <button class="btn btn-danger" id="resetAll" style="width:100%">Скинути весь прогрес</button>
     </div>
-    <p class="version">Версія 18 від 22.11.2026</p>
+    <p class="version">Версія 19 від 22.11.2026</p>
   </section>
   </main>
 </div>
@@ -270,6 +281,6 @@
 <script src="/audio.js?v=83a997a0a6"></script>
 <script src="/js/fsrs.js?v=3951b09840"></script>
 <script src="/js/core.js?v=6094ade526"></script>
-<script src="/js/app.js?v=0fa9f9e8dc"></script>
+<script src="/js/app.js?v=c984646679"></script>
 </body>
 </html>

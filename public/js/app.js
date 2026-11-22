@@ -646,13 +646,22 @@ function vocabSection() {
 }
 
 /* Плитка швидкої дії на головній */
+/* Кольори методик (як кольорові теми в Drops): кожна практика має свій відтінок */
+const PRACTICE_HUE = { pen: 'sky', chat: 'mint', dictation: 'violet', speak: 'coral', listen: 'amber', timer: 'rose' };
 function quick(icon, title, sub, onClick, cls) {
   const b = el('button', 'qa' + (cls ? ' ' + cls : ''));
   b.type = 'button';
+  b.dataset.icon = icon;
   const ic = el('span', 'qa-ic'); ic.innerHTML = ICON[icon] || '';
   const txt = el('span', 'qa-text');
   txt.append(el('b', null, title), el('small', null, sub));
   b.append(ic, txt);
+  const hue = PRACTICE_HUE[icon];
+  if (hue) {
+    b.classList.add('pt', 'hue-' + hue);
+    const wm = el('span', 'pt-wm'); wm.innerHTML = ICON[icon] || '';
+    b.appendChild(wm);
+  } else b.classList.add('xp');
   b.addEventListener('click', onClick);
   return b;
 }
@@ -768,10 +777,20 @@ function renderLearn() {
   if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
   const quests = questsCard(plan);
   if (quests) home.appendChild(quests);
-  if (tiles.length) {
-    const grid = el('div', 'qa-list');
-    tiles.forEach(x => grid.appendChild(x));
-    home.appendChild(grid);
+  const extras = tiles.filter(x => x.classList.contains('xp'));
+  const practice = tiles.filter(x => x.classList.contains('pt'));
+  if (extras.length) {
+    const row = el('div', 'xrow');
+    extras.forEach(x => row.appendChild(x));
+    home.appendChild(row);
+  }
+  if (practice.length) {
+    const sec = el('section', 'practice');
+    sec.appendChild(el('h3', 'section-title', 'Практика'));
+    const grid = el('div', 'pgrid' + (practice.length % 2 ? ' odd' : ''));
+    practice.forEach(x => grid.appendChild(x));
+    sec.appendChild(grid);
+    home.appendChild(sec);
   }
   const pace = paceCard(plan);
   if (pace) home.appendChild(pace);
@@ -779,8 +798,9 @@ function renderLearn() {
   if (news) home.appendChild(news);
   const setup = setupSection();
   if (setup) home.appendChild(setup);
-  home.appendChild(weekSection());
-  home.appendChild(vocabSection());
+  const prog = el('div', 'progress-card');
+  prog.append(weekSection(), vocabSection());
+  home.appendChild(prog);
   if (main) {
     home.appendChild(main.box);
     home.classList.add('has-dock');
@@ -5578,14 +5598,18 @@ function renderList() {
     const txt = el('span', 'item-text');
     const en = el('span', 'item-en', w.en); en.lang = 'en';
     txt.append(en, el('span', 'item-uk', w.uk));
+    const st = C.statusOf(c);
+    // Кільце пам'яті: наскільки слово зараз тримається в голові (як «сила слова» в Memrise)
+    const ring = el('span', 'wring ' + st);
     if (c && c.st === 'review') {
       const r = C.strength(c, t);
-      const m = el('span', 'meter'); const i = el('i'); i.style.width = Math.round(r * 100) + '%'; m.appendChild(i);
-      m.title = 'Пам\'ять зараз: ' + Math.round(r * 100) + '%';
-      txt.appendChild(m);
-    }
-    const st = C.statusOf(c);
-    head.appendChild(txt);
+      ring.style.setProperty('--p', r.toFixed(2));
+      ring.title = 'Пам\'ять зараз: ' + Math.round(r * 100) + '%';
+      ring.setAttribute('aria-label', ring.title);
+    } else if (c) { ring.style.setProperty('--p', '0.18'); ring.setAttribute('aria-label', 'Вчиш'); }
+    else ring.setAttribute('aria-label', 'Ще не вчив');
+    ring.setAttribute('role', 'img');
+    head.append(ring, txt);
     // Мітка лише там, де вона щось каже: нові слова без мітки, «вчу» тихо
     if (st !== 'new') head.appendChild(el('span', 'status ' + st, STATUS_TEXT[st]));
     else if ((meta.priority || []).includes(w.id)) head.appendChild(el('span', 'status pri', 'першим'));
@@ -5754,6 +5778,29 @@ function totals() {
   all.forEach(w => { by[C.statusOf(cards[w.id])]++; });
   return { all: all.length, ...by };
 }
+const WD_LONG = ['неділя', 'понеділок', 'вівторок', 'середа', 'четвер', "п'ятниця", 'субота'];
+/* Головні числа дня плитками: великий шрифт, свій колір у кожної */
+function renderStatGrid() {
+  const g = $('statGrid');
+  if (!g) return;
+  g.innerHTML = '';
+  const l = todayLog(), tt = totals(), s = streak();
+  const m = Math.round(((l.ms || 0) + (l.lms || 0)) / 60000);
+  const acc = l.r ? Math.round((l.r - (l.a || 0)) / l.r * 100) : null;
+  [
+    ['timer', 'sky', String(m), C.plural(m, 'хвилина', 'хвилини', 'хвилин')],
+    ['plus', 'mint', String(l.n || 0), C.plural(l.n || 0, 'нове слово', 'нові слова', 'нових слів')],
+    ['repeat', 'violet', String(l.rv || 0), 'повторено'],
+    ['target', 'amber', acc == null ? '—' : acc + '%', 'точність'],
+    ['flame', 'coral', String(s), C.plural(s, 'день поспіль', 'дні поспіль', 'днів поспіль')],
+    ['check', 'rose', String(tt.known), C.plural(tt.known, 'слово знаю', 'слова знаю', 'слів знаю')]
+  ].forEach(([icon, hue, big, label]) => {
+    const t = el('div', 'stat hue-' + hue);
+    const ic = el('span', 'stat-ic'); ic.innerHTML = ICON[icon];
+    t.append(ic, el('b', null, big), el('span', null, label));
+    g.appendChild(t);
+  });
+}
 function reportRows() {
   const l = todayLog();
   const tt = totals();
@@ -5787,9 +5834,12 @@ function reportText() {
 }
 function renderReport() {
   const t = today();
-  $('reportTitle').textContent = 'Звіт за ' + C.fmtDate(t);
+  $('reportTitle').textContent = WD_LONG[new Date(t * 86400000).getUTCDay()] + ', ' + C.fmtDate(t);
+  renderStatGrid();
   const docket = $('docket'); docket.innerHTML = '';
-  reportRows().forEach(([a, b]) => { const d = el('div'); d.append(el('dt', null, a), el('dd', null, b)); docket.appendChild(d); });
+  const more = reportRows().slice(7);
+  more.forEach(([a, b]) => { const d = el('div'); d.append(el('dt', null, a), el('dd', null, b)); docket.appendChild(d); });
+  $('docketBox').hidden = !more.length;
 
   const hasProgress = Object.keys(cards).length > 0;
   const lastB = meta.lastBackup;
@@ -5869,16 +5919,20 @@ function renderReport() {
     const st = C.statusOf(cards[w.id]);
     if (st === 'known') a.k++; else if (st !== 'new') a.l++;
   });
+  bp.className = 'bp-grid';
   BASE_CATS.filter(k => agg[k]).forEach(k => {
     const a = agg[k];
-    const row = el('div', 'bp-row');
-    const top = el('div', 'bp-top');
-    top.append(el('b', null, CATS[k]), el('span', null, 'знаю ' + a.k + (a.l ? ', вчу ' + a.l : '') + ' з ' + a.n));
-    const bar = el('div', 'vocab-bar small');
-    bar.setAttribute('role', 'img');
-    bar.setAttribute('aria-label', CATS[k] + ': знаю ' + a.k + ', вчу ' + a.l + ' з ' + a.n);
-    [['k', a.k], ['l', a.l]].forEach(([c, v]) => { if (!v) return; const i = el('i', c); i.style.width = (v / a.n * 100) + '%'; bar.appendChild(i); });
-    row.append(top, bar);
+    const pk = a.k / a.n, pl = (a.k + a.l) / a.n;
+    const row = el('div', 'bp-tile');
+    const ring = el('span', 'bp-ring');
+    ring.style.setProperty('--k', pk.toFixed(3));
+    ring.style.setProperty('--l', pl.toFixed(3));
+    ring.appendChild(el('b', null, Math.round(pl * 100) + '%'));
+    ring.setAttribute('role', 'img');
+    ring.setAttribute('aria-label', CATS[k] + ': знаю ' + a.k + ', вчу ' + a.l + ' з ' + a.n);
+    const txt = el('span', 'bp-text');
+    txt.append(el('b', null, CATS[k]), el('span', null, 'знаю ' + a.k + (a.l ? ', вчу ' + a.l : '') + ' з ' + a.n));
+    row.append(ring, txt);
     bp.appendChild(row);
   });
   $('baseBox').hidden = !bp.childNodes.length;

@@ -1,9 +1,10 @@
 // Сторінка: мережа першою (з 3-секундним запасом на повільний інтернет), щоб після коміту одразу була свіжа версія.
 // Стилі й скрипти мають у адресі ?v=<хеш> (tools/stamp.py): їх беремо з кешу одразу, бо вміст за такою адресою не змінюється.
 // Записи вимови: кеш першим, бо назва файлу містить хеш і вміст не змінюється.
-const CACHE = 'ew-v11';
+const CACHE = 'ew-v12';
 const AUDIO_CACHE = 'ew-audio-v2';
-const CORE = ['/', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/audio/gap.mp3'];
+const CORE = ['/', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/audio/gap.mp3',
+  '/fonts/onest-latin-v5.woff2', '/fonts/onest-cyrillic-v5.woff2', '/fonts/unbounded-latin-v5.woff2', '/fonts/unbounded-cyrillic-v5.woff2'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', event => {
@@ -65,6 +66,12 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;
   // Подію для Календаря віддає воркер щоразу свіжою, кешувати її не треба
   if (url.pathname.endsWith('.ics')) return;
+
+  // Шрифти (Onest, Unbounded) лежать на сайті, у назві версія: з кешу одразу
+  if (url.pathname.startsWith('/fonts/')) {
+    event.respondWith(cacheFirst(req, CACHE));
+    return;
+  }
 
   if (url.pathname.startsWith('/audio/')) {
     event.respondWith(cacheFirst(req, AUDIO_CACHE));
