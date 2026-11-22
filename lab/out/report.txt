@@ -1,0 +1,60 @@
+chatterbox-default.mp3
+  Sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough, we'll do it tomorrow.
+  missing: []  extra: []
+chatterbox-irish-p245.mp3
+  Cellotape. Have you got any cellotape? We're not a cellotape. The boss was giving out about the mess. How are you, Grand? Thanks. Fair enough. We'll do it tomorrow.
+  missing: ['sellotape', 'sellotape', 'run', 'of', 'sellotape']  extra: ['cellotape', 'cellotape', "we're", 'not', 'a', 'cellotape']
+chatterbox-irish-p288.mp3
+  Sellotape. Have you got any sellotape? Run out of sellotape? The boss was giving out about the mess. How are you? Grand thanks. Fair enough. We'll do it tomorrow.
+  missing: []  extra: []
+chatterbox-irish-p298.mp3
+  sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough. We'll do it tomorrow.
+  missing: []  extra: []
+chatterturbo-default.mp3
+  Sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand? Thanks. Fair enough. We'll do it tomorrow.
+  missing: []  extra: []
+chatterturbo-irish-p245.mp3
+  Sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough. We'll do it tomorrow.
+  missing: []  extra: []
+chatterturbo-irish-p288.mp3
+  Sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough. We'll do it tomorrow.
+  missing: []  extra: []
+chatterturbo-irish-p298.mp3
+  Sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough, we'll do it tomorrow.
+  missing: []  extra: []
+pocket-alba.mp3
+  Celotape Have you got any Celotape? Run out of Celotape The boss was giving out about the mess How are you? Grand, thanks Fair enough. We'll do it tomorrow
+  missing: ['sellotape', 'sellotape', 'sellotape']  extra: ['celotape', 'celotape', 'celotape']
+pocket-anna.mp3
+  Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough, we'll do it tomorrow.
+  missing: []  extra: []
+pocket-charles.mp3
+  Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you, Grand, thanks. Fair enough. We'll do it tomorrow.
+  missing: []  extra: []
+pocket-eve.mp3
+  sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand thanks. Fair enough, we'll do it tomorrow.
+  missing: []  extra: []
+pocket-george.mp3
+  Have you got any Silotape? Run out of Silotape. The boss was giving out about the mess. How are you? Grand thanks. Fair enough. We'll do it tomorrow.
+  missing: ['sellotape', 'sellotape', 'sellotape']  extra: ['silotape', 'silotape']
+pocket-jane.mp3
+  solo tape Have you got any solo tape? Run out of solo tape The boss was giving out about the mess How are you grand? Thanks? Fair enough. We'll do it tomorrow
+  missing: ['sellotape', 'sellotape', 'sellotape']  extra: ['solo', 'tape', 'solo', 'tape', 'solo', 'tape']
+pocket-mary.mp3
+  solo tape. Have you got any solo tape? Run out of solo tape. The boss was giving out about the mess. How are you? Grand thanks. Fair enough, we'll do it tomorrow.
+  missing: ['sellotape', 'sellotape', 'sellotape']  extra: ['solo', 'tape', 'solo', 'tape', 'solo', 'tape']
+pocket-michael.mp3
+  solo tape have you got any solo tape run out of solo tape the boss was giving out about the mess how are you grand thanks fair enough we'll do it tomorrow
+  missing: ['sellotape', 'sellotape', 'sellotape']  extra: ['solo', 'tape', 'solo', 'tape', 'solo', 'tape']
+pocket-paul.mp3
+  Sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you, Grand Thanks? Fair enough, we'll do it tomorrow.
+  missing: []  extra: []
+pocket-peter_yearsley.mp3
+  Have you got any cellotape? Run out of cellotape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough. We'll do it tomorrow.
+  missing: ['sellotape', 'sellotape', 'sellotape']  extra: ['cellotape', 'cellotape']
+pocket-stuart_bell.mp3
+  sellotape. Have you got any sellotape? Run out of sellotape. The boss was giving out about the mess. How are you? Grand thanks. Fair enough, we'll do it tomorrow.
+  missing: []  extra: []
+pocket-vera.mp3
+  Have you got any cello tape? Run out of cello tape. The boss was giving out about the mess. How are you? Grand, thanks. Fair enough, we'll do it tomorrow.
+  missing: ['sellotape', 'sellotape', 'sellotape']  extra: ['cello', 'tape', 'cello', 'tape']
