@@ -70,13 +70,42 @@ def write_manifest(man):
         fh.write('window.DLG_AUDIO = ' + json.dumps(man, separators=(',', ':')) + ';\n')
 
 
+NUM_WORDS = set('zero oh one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen '
+                'seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred thousand'.split())
+SAME = {'okay': 'ok', 'alright': 'all', 'toasty': 'toastie'}
+
+
 def words(s):
-    return re.findall(r"[a-z0-9']+", s.lower().replace('’', "'"))
+    return [SAME.get(w, w) for w in re.findall(r"[a-z0-9']+", s.lower().replace('’', "'").replace('-', ' '))]
+
+
+def is_num(w):
+    return w.isdigit() or w in NUM_WORDS
+
+
+def split_nums(ws):
+    """Слова без чисел і кількість числових груп: Whisper пише «ten forty» як 1040, «four one two» як 412"""
+    plain, groups, prev = [], 0, False
+    for w in ws:
+        n = is_num(w)
+        if n and not prev:
+            groups += 1
+        if not n:
+            plain.append(w)
+        prev = n
+    return plain, groups
 
 
 def similarity(c, got):
-    g = words(got)
-    return max(difflib.SequenceMatcher(None, words(t), g).ratio() for t in (c['text'], c['en']))
+    g, gn = split_nums(words(got))
+    best = 0.0
+    for t in (c['text'], c['en']):
+        p, n = split_nums(words(t))
+        r = difflib.SequenceMatcher(None, p, g).ratio() if (p or g) else 1.0
+        if n != gn:
+            r *= 0.7      # пропало чи зайве число (номер виходу, ціна, час)
+        best = max(best, r)
+    return best
 
 
 def speak_text(t):

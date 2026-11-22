@@ -998,7 +998,86 @@
     return null;
   }
 
+  /* ---------- Діалоги ----------
+     Озвучка діалогу — один файл: спершу всі репліки поспіль (так грає «Слухати весь діалог»), потім варіанти
+     alt по черзі реплік, потім ключові фрази. tools/dialogue_audio.py кладе їх у тому самому порядку. */
+  function dialogYou(d) { return Object.keys(d.roles).find(k => d.roles[k].you) || 'b'; }
+  function dialogClips(d) {
+    const out = [];
+    d.lines.forEach((l, i) => out.push({ k: 'l', i, s: l.s, text: l.say || l.en }));
+    d.lines.forEach((l, i) => (l.alt || []).forEach((a, j) => out.push({ k: 'a', i, j, s: l.s, text: a.say || a.en })));
+    (d.phrases || []).forEach((p, i) => out.push({ k: 'p', i, s: dialogYou(d), text: p.say || p.en }));
+    return out;
+  }
+  /* Номер шматка в DLG_AUDIO: репліка i, її варіант j або ключова фраза */
+  function dialogClipIndex(d, k, i, j) {
+    return dialogClips(d).findIndex(c => c.k === k && c.i === i && (k !== 'a' || c.j === j));
+  }
+  /* Тренування за діалогом, від легшого до складнішого:
+     «Послухай і вибери переклад» (репліки співрозмовника), «Що ти відповіси?» (твоя репліка після його),
+     «Склади свою репліку» з плиток. me — чию роль тренуємо. */
+  function dialogTasks(d, me, rng, sizes) {
+    rng = rng || Math.random;
+    me = me || dialogYou(d);
+    const other = me === 'a' ? 'b' : 'a';
+    const L = d.lines;
+    const n = Object.assign({ listen: 4, reply: 3, order: 3 }, sizes);
+    const all = L.map((l, i) => i);
+    const of = s => all.filter(i => L[i].s === s);
+    const pick = (arr, k) => shuffle(arr.slice(), rng).slice(0, k).sort((a, b) => a - b);
+    const listen = pick(of(other).filter(i => tokens(L[i].en).length >= 3), n.listen).map(i => {
+      const wrong = shuffle(all.filter(j => j !== i && L[j].uk !== L[i].uk), rng).slice(0, 3);
+      const opts = shuffle([i].concat(wrong), rng);
+      return { type: 'listen', li: i, opts, a: opts.indexOf(i) };
+    });
+    const replyable = of(me).filter(i => i > 0 && L[i - 1].s === other);
+    const reply = pick(replyable, n.reply).map(i => {
+      // Неправильні варіанти — твої ж репліки з інших місць розмови, не сусідні
+      const wrong = shuffle(of(me).filter(j => Math.abs(j - i) > 2), rng).slice(0, 2);
+      const opts = shuffle([i].concat(wrong), rng);
+      return { type: 'reply', li: i, prev: i - 1, opts, a: opts.indexOf(i) };
+    });
+    const usedReply = new Set(reply.map(t => t.li));
+    const buildable = of(me).filter(i => { const t = tokens(L[i].en).length; return t >= 4 && t <= 12; });
+    const fresh = buildable.filter(i => !usedReply.has(i));
+    // Спершу репліки, яких не було в «Що ти відповіси?»
+    const orderIds = shuffle(fresh.slice(), rng).concat(shuffle(buildable.filter(i => usedReply.has(i)), rng))
+      .slice(0, n.order).sort((a, b) => a - b);
+    const order = orderIds.map(i => {
+      const toks = tokens(L[i].en);
+      let words = shuffle(toks.slice(), rng), guard = 0;
+      while (words.join(' ') === toks.join(' ') && guard++ < 8) words = shuffle(words, rng);
+      return { type: 'order', li: i, words };
+    });
+    return listen.concat(reply, order);
+  }
+  /* Чи правильно складено репліку: ті самі слова в тому ж порядку (без різниці у великих літерах і апострофах) */
+  function dialogOrderOk(line, placed) {
+    const want = tokens(line.en).map(t => t.toLowerCase());
+    const got = placed.map(t => String(t).toLowerCase().replace(/’/g, "'"));
+    return want.length === got.length && want.every((t, i) => t === got[i]);
+  }
+  /* Коли повторити діалог після рольової гри: добре — 3 дні, далі ×2,5 до 90; погано — завтра */
+  function dialogSchedule(prev, ratio, today) {
+    let iv;
+    if (ratio >= 0.8) iv = prev && prev.iv >= 3 ? Math.min(90, Math.round(prev.iv * 2.5)) : 3;
+    else iv = 1;
+    return { iv, due: today + iv };
+  }
+  /* Три етапи діалогу: прослухав повністю, тренування на 80 %+, зіграв свою роль */
+  function dialogStars(r, d) {
+    if (!r) return 0;
+    const me = d ? dialogYou(d) : 'b';
+    return (r.heard ? 1 : 0) + (r.tr >= 0.8 ? 1 : 0) + (r.role && r.role[me] ? 1 : 0);
+  }
+  /* Діалоги, які час повторити (пройдені, день настав), найдавніші першими */
+  function dialogDue(dres, order, today) {
+    return order.filter(id => { const r = dres[id]; return r && r.due != null && r.due <= today; })
+      .sort((a, b) => dres[a].due - dres[b].due);
+  }
+
   const api = {
+    dialogYou, dialogClips, dialogClipIndex, dialogTasks, dialogOrderOk, dialogSchedule, dialogStars, dialogDue,
     paceAdvice,
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
     wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canSaySentence, canType, canDictate, isPhrase,

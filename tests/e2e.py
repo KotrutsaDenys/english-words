@@ -407,6 +407,12 @@ try:
             page.click('.news button:has-text("Зрозуміло")')
             page.wait_for_timeout(200)
             assert page.locator('.news:has-text("Великий словник")').count() == 0
+        # Новина про діалоги: кнопка веде до списку, «Пізніше» прибирає назавжди
+        if page.locator('.news:has-text("Діалоги")').count():
+            assert page.locator('.news button:has-text("Відкрити діалоги")').count() == 1
+            page.click('.news button:has-text("Пізніше")')
+            page.wait_for_timeout(200)
+            assert page.locator('.news:has-text("Діалоги")').count() == 0
         page.click('.news button:has-text("Відсіяти знайомі")')
         page.wait_for_timeout(200)
         assert page.locator('.tri').count() == 20
@@ -777,6 +783,89 @@ try:
         page.wait_for_timeout(150)
         assert 'Граматика' in page.inner_text('#docket') and 'розділ' in page.inner_text('#docket'), 'бали теми й розділу у звіті за день'
         assert 'закріплено' in page.inner_text('#docket'), 'закріплення у звіті'
+        # Діалоги: з головної до списку, сторінка, тренування за ключем, рольова гра, повторення, звіт
+        page.evaluate('window.EW.showTab("learn")'); page.wait_for_timeout(200)
+        page.click('.qa:has-text("Діалоги")'); page.wait_for_timeout(200)
+        dorder = page.evaluate('window.DIALOGS.order')
+        assert visible(page, '#dlgList') and page.locator('.dlg-item').count() == len(dorder) >= 3
+        assert page.locator('[data-tab="learn"][aria-current="page"]').count() == 1, 'діалоги — частина «Вчити»'
+        page.click('.dlg-item[data-id="cafe-takeaway"]'); page.wait_for_timeout(200)
+        assert 'café' in page.inner_text('#dlgPage .gtitle') and page.locator('#dlgChat .bub').count() == 20
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'сторінка діалогу ширша за екран'
+        b0 = page.locator('#dlgChat .bub[data-li="0"]')
+        assert not b0.locator('.bub-alts').is_visible()
+        b0.locator('.bub-alt-btn').click(); page.wait_for_timeout(100)
+        assert b0.locator('.bub-alts').is_visible() and b0.locator('.bub-alt').count() == 2
+        page.click('.dlg-opts .chip:has-text("Переклад")'); page.wait_for_timeout(100)
+        assert not b0.locator('.bub-uk').first.is_visible() and page.evaluate('window.EW.settings.dlgUk') is False
+        page.click('.dlg-opts .chip:has-text("Переклад")'); page.wait_for_timeout(100)
+        assert b0.locator('.bub-uk').first.is_visible()
+        shot(page, 'light-dialog-page')
+        # «Слухати весь діалог» з записом: кнопка стає «Зупинити», репліка підсвічується; без запису — голос пристрою
+        if page.evaluate('!!(window.DLG_AUDIO && window.DLG_AUDIO["cafe-takeaway"])'):
+            page.click('#dlgPlayBtn'); page.wait_for_timeout(1500)
+            assert page.evaluate('!!window.EW.dplay') and 'Зупинити' in page.inner_text('#dlgPlayBtn')
+            assert page.locator('#dlgChat .bub.now').count() == 1, 'грає, але не підсвічує репліку'
+            page.click('#dlgPlayBtn'); page.wait_for_timeout(100)
+            assert not page.evaluate('!!window.EW.dplay') and 'Слухати весь діалог' in page.inner_text('#dlgPlayBtn')
+            assert page.locator('#dlgChat .bub.now').count() == 0
+        # Тренування: 10 завдань, відповідаємо за ключем
+        page.click('.dlg-step[data-step="train"]'); page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') == 'dtrain' and visible(page, '#exitBtn')
+        kinds = set()
+        while page.evaluate('window.EW.mode') == 'dtrain':
+            t = page.evaluate('(() => { const d = window.EW.dl; const t = d.tasks[d.i]; return { type: t.type, a: t.a, want: EWCore.tokens(d.d.lines[t.li].en) }; })()')
+            kinds.add(t['type'])
+            if t['type'] in ('listen', 'reply'):
+                page.locator('#card .options .opt-btn').nth(t['a']).click()
+            else:
+                used = set()
+                for w in t['want']:
+                    tiles = page.locator('.build-bank .tile')
+                    for j in range(tiles.count()):
+                        if j not in used and tiles.nth(j).get_attribute('data-w') == w:
+                            tiles.nth(j).click(); used.add(j); break
+                page.locator('#foot button:has-text("Перевірити")').click()
+            page.wait_for_timeout(80)
+            assert page.locator('#foot .verdict.right').count() == 1, 'відповідь за ключем має бути правильною'
+            page.locator('#foot .btn-primary').click()
+            page.wait_for_timeout(80)
+        assert kinds == {'listen', 'reply', 'order'}, kinds
+        assert page.evaluate('window.EW.mode') == 'dresult' and '10' in page.inner_text('.gres-score')
+        shot(page, 'light-dialog-train-result')
+        page.locator('#foot button:has-text("Рольова гра")').click(); page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') == 'drole'
+        mine = 0
+        for _ in range(60):
+            if page.evaluate('window.EW.mode') != 'drole':
+                break
+            labels = page.locator('#foot .btn').all_text_contents()
+            if any('Показати' in x for x in labels):
+                assert page.locator('#dlRoleChat .bub.ask').count() == 1
+                page.locator('#foot button:has-text("Показати")').click()
+                page.wait_for_timeout(60)
+                page.locator('#foot button:has-text("Вийшло")').click(); mine += 1
+            else:
+                page.locator('#foot .btn-primary').click()
+            page.wait_for_timeout(60)
+        assert page.evaluate('window.EW.mode') == 'dresult' and mine == 10, mine
+        shot(page, 'light-dialog-role-result')
+        r = page.evaluate('window.EW.dres["cafe-takeaway"]')
+        t0 = page.evaluate('EWCore.dayNum()')
+        assert r['tr'] == 1 and r['trk'] == [10, 10] and r['role']['b'] == t0 and r['due'] == t0 + 3, r
+        page.locator('#foot button:has-text("Готово")').click(); page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') is None and visible(page, '#dlgPage')
+        assert page.locator('.dlg-step.done').count() == 2, 'тренування й роль позначені'
+        # Хрестик посеред тренування повертає на сторінку діалогу
+        page.evaluate('window.EW.startDlgTrain("airport-checkin")'); page.wait_for_timeout(150)
+        page.locator('#card .options .opt-btn').first.click(); page.wait_for_timeout(60)
+        page.click('#exitBtn'); page.wait_for_timeout(200)
+        assert page.evaluate('window.EW.mode') is None and visible(page, '#dlgPage') and 'Checking in' in page.inner_text('#dlgPage .gtitle')
+        # Жест «назад» зі сторінки діалогу — до списку
+        page.go_back(); page.wait_for_timeout(300)
+        assert visible(page, '#dlgList') and not visible(page, '#dlgPage')
+        page.evaluate('window.EW.showTab("report")'); page.wait_for_timeout(150)
+        assert 'Діалоги' in page.inner_text('#docket') and 'рольова гра 10 з 10' in page.inner_text('#docket')
         # Записи для офлайну: за замовчуванням не всі 660 МБ
         page.evaluate('window.EW.showTab("settings")')
         page.wait_for_timeout(200)

@@ -630,6 +630,73 @@ test('Граматика: public/grammar.js зібрано з grammar/*.json (py
   assert.ok(built.every(id => order.some(s => s.topics.includes(id))));
 });
 
+test('Діалоги: зібрані з dialogues/*.json, озвучка в правильному порядку, тренування коректне', () => {
+  const dctx = { window: {} };
+  vm.createContext(dctx);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/dialogues.js'), 'utf8'), dctx);
+  const D = JSON.parse(JSON.stringify(dctx.window.DIALOGS));
+  const order = JSON.parse(fs.readFileSync(path.join(__dirname, '../dialogues/_order.json'), 'utf8'));
+  assert.deepStrictEqual(D.order, order, 'запусти python3 tools/build_dialogues.py');
+  for (const id of order) {
+    const src = JSON.parse(fs.readFileSync(path.join(__dirname, '../dialogues', id + '.json'), 'utf8'));
+    assert.deepStrictEqual(D.items[id], src, id + ': public/dialogues.js застарів, запусти tools/build_dialogues.py');
+    const d = D.items[id];
+    const me = C.dialogYou(d);
+    assert.ok(d.roles[me].you);
+    // Шматки озвучки: спершу всі репліки поспіль, потім варіанти, потім фрази
+    const clips = C.dialogClips(d);
+    const alts = d.lines.reduce((n, l) => n + (l.alt || []).length, 0);
+    assert.strictEqual(clips.length, d.lines.length + alts + d.phrases.length);
+    clips.slice(0, d.lines.length).forEach((c, i) => { assert.strictEqual(c.k, 'l'); assert.strictEqual(c.i, i); });
+    assert.strictEqual(clips[d.lines.length].k, alts ? 'a' : 'p');
+    assert.strictEqual(C.dialogClipIndex(d, 'p', 0), d.lines.length + alts);
+    const firstAlt = d.lines.findIndex(l => l.alt && l.alt.length);
+    if (firstAlt >= 0) assert.strictEqual(C.dialogClipIndex(d, 'a', firstAlt, 0), d.lines.length);
+    for (const role of ['a', 'b']) {
+      for (let s = 1; s <= 5; s++) {
+        const tasks = C.dialogTasks(d, role, seeded(s * 31 + role.length));
+        assert.strictEqual(tasks.length, 10, id + ' ' + role + ': ' + tasks.length + ' завдань');
+        const other = role === 'a' ? 'b' : 'a';
+        tasks.forEach(t => {
+          const l = d.lines[t.li];
+          if (t.type === 'listen') {
+            assert.strictEqual(l.s, other);
+            assert.strictEqual(t.opts.length, 4);
+            assert.strictEqual(t.opts[t.a], t.li);
+            assert.strictEqual(new Set(t.opts.map(j => d.lines[j].uk)).size, 4, 'варіанти перекладу різні');
+          } else if (t.type === 'reply') {
+            assert.strictEqual(l.s, role);
+            assert.strictEqual(d.lines[t.prev].s, other);
+            assert.strictEqual(t.prev, t.li - 1);
+            assert.strictEqual(t.opts.length, 3);
+            assert.strictEqual(t.opts[t.a], t.li);
+            assert.ok(t.opts.every(j => d.lines[j].s === role));
+          } else {
+            assert.strictEqual(t.type, 'order');
+            assert.strictEqual(l.s, role);
+            const toks = C.tokens(l.en);
+            assert.deepStrictEqual(t.words.slice().sort(), toks.slice().sort());
+            assert.notStrictEqual(t.words.join(' '), toks.join(' '), 'плитки перемішані');
+            assert.ok(C.dialogOrderOk(l, toks));
+            assert.ok(!C.dialogOrderOk(l, t.words));
+          }
+        });
+        assert.deepStrictEqual(tasks.map(t => t.type), ['listen', 'listen', 'listen', 'listen', 'reply', 'reply', 'reply', 'order', 'order', 'order']);
+      }
+    }
+  }
+  // Розклад повторень і етапи
+  assert.deepStrictEqual(C.dialogSchedule(null, 0.9, 100), { iv: 3, due: 103 });
+  assert.deepStrictEqual(C.dialogSchedule({ iv: 3 }, 0.9, 103), { iv: 8, due: 111 });
+  assert.deepStrictEqual(C.dialogSchedule({ iv: 60 }, 1, 200), { iv: 90, due: 290 });
+  assert.deepStrictEqual(C.dialogSchedule({ iv: 8 }, 0.5, 111), { iv: 1, due: 112 });
+  const d0 = D.items[order[0]];
+  assert.strictEqual(C.dialogStars(null, d0), 0);
+  assert.strictEqual(C.dialogStars({ heard: 5, tr: 0.7 }, d0), 1);
+  assert.strictEqual(C.dialogStars({ heard: 5, tr: 0.8, role: { [C.dialogYou(d0)]: 6 } }, d0), 3);
+  assert.deepStrictEqual(C.dialogDue({ a: { due: 5 }, b: { due: 3 }, c: { due: 9 }, d: {} }, ['a', 'b', 'c', 'd'], 6), ['b', 'a']);
+});
+
 test('Стилі й скрипти в index.html мають актуальні ?v= (python3 tools/stamp.py)', () => {
   const crypto = require('crypto');
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');

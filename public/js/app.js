@@ -23,7 +23,7 @@ function toast(msg, action, onAction) {
   }
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), action ? 9000 : 2400);
 }
-const KEYS = { cards: 'ew.cards', progress: 'ew.progress', custom: 'ew.custom', log: 'ew.log', settings: 'ew.settings', notes: 'ew.notes', meta: 'ew.meta', own: 'ew.own', grammar: 'ew.grammar' };
+const KEYS = { cards: 'ew.cards', progress: 'ew.progress', custom: 'ew.custom', log: 'ew.log', settings: 'ew.settings', notes: 'ew.notes', meta: 'ew.meta', own: 'ew.own', grammar: 'ew.grammar', dialogs: 'ew.dialogs' };
 function load(key, fallback) {
   try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; }
 }
@@ -147,6 +147,7 @@ player.preload = 'auto';
 try { player.preservesPitch = true; player.webkitPreservesPitch = true; } catch (e) {}
 const blobs = new Map();
 let playing = '';
+let dplay = null;       // «Слухати весь діалог»: { id, timer, … }
 function textFor(w, kind) { return kind === 'x2' ? (w.sayEx2 || w.ex2) : kind === 'x' ? (w.sayEx || w.ex) : (w.say || w.en); }
 function clipUrl(w, kind) {
   const voice = settings.voiceSrc;
@@ -178,7 +179,7 @@ function phraseTimes(w) {
   return (AUD.phrases && w && AUD.phrases[w.id]) || null;
 }
 function canListen() { return (AUD.voices.includes(settings.voiceSrc) && AUD.voices.length > 0) || !!synth; }
-function stopAudio() { clearSegment(); try { player.pause(); } catch (e) {} if (synth) synth.cancel(); }
+function stopAudio() { if (dplay) dlgStopAll(); clearSegment(); try { player.pause(); } catch (e) {} if (synth) synth.cancel(); }
 /* Фрази слова лежать в одному файлі: граємо шматок [початок, кінець] і зупиняємось у паузі після нього */
 let segEnd = 0, segTimer = null, segToken = 0;
 function clearSegment() { segEnd = 0; if (segTimer) { clearInterval(segTimer); segTimer = null; } }
@@ -374,7 +375,14 @@ const ICON = {
   book: SVG('<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15.5H5.5A1.5 1.5 0 0 0 4 21z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15.5h5.5A1.5 1.5 0 0 1 20 21z"/>'),
   timer: SVG('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M10 2.5h4M18.5 6l1.5-1.5"/>'),
   letters: SVG('<rect x="3" y="7" width="8" height="10" rx="2"/><rect x="13" y="7" width="8" height="10" rx="2"/><path d="M5.5 14l1.5-4.5L8.5 14M6 12.6h2M15.5 10h1.8a1.2 1.2 0 0 1 0 2.4h-1.8zm0 2.4h2a1.3 1.3 0 0 1 0 2.6h-2z"/>'),
-  pairs: SVG('<rect x="3" y="4" width="7" height="6" rx="1.8"/><rect x="14" y="14" width="7" height="6" rx="1.8"/><rect x="3" y="14" width="7" height="6" rx="1.8"/><rect x="14" y="4" width="7" height="6" rx="1.8"/><path d="M10 7h4M10 17h4"/>')
+  pairs: SVG('<rect x="3" y="4" width="7" height="6" rx="1.8"/><rect x="14" y="14" width="7" height="6" rx="1.8"/><rect x="3" y="14" width="7" height="6" rx="1.8"/><rect x="14" y="4" width="7" height="6" rx="1.8"/><path d="M10 7h4M10 17h4"/>'),
+  // діалоги
+  chat: SVG('<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h7A2.5 2.5 0 0 1 16 6.5v4a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3h0A1.5 1.5 0 0 1 4 11.5z"/><path d="M19 9.5a1.5 1.5 0 0 1 1 1.4v4.6a1.5 1.5 0 0 1-1.5 1.5H18v2.5L15 17h-3.5a1.5 1.5 0 0 1-1.4-1"/>'),
+  plane: SVG('<path d="M10.5 13.5 4 11l1.5-1.5 7 1L16 7a1.6 1.6 0 0 1 2.3 2.3l-3.5 3.5 1 7L14.3 21l-2.5-6.5-3.3 3.3.4 2.2-1.4 1.4-1.2-3.2L3.2 17l1.4-1.4 2.2.4z"/>'),
+  cup: SVG('<path d="M5 8h11v5.5A5.5 5.5 0 0 1 10.5 19h0A5.5 5.5 0 0 1 5 13.5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 3.5c-.6.8-.6 1.6 0 2.4M12 3.5c-.6.8-.6 1.6 0 2.4"/>'),
+  house: SVG('<path d="M4 11 12 4.5 20 11"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5.5h4V20"/>'),
+  pin: SVG('<path d="M12 21s-6.5-5.4-6.5-11a6.5 6.5 0 0 1 13 0c0 5.6-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>'),
+  role: SVG('<circle cx="8" cy="8" r="3"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15 5.5h5.5v4H18l-1.5 1.5V9.5H15z"/>')
 };
 const EX_ICON = {
   intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
@@ -441,6 +449,7 @@ function updateTape() {
   if (sprint) { sprintTape(); return; }
   if (mode === 'listen' && listen) { listenTape(); return; }
   if ((mode === 'gtest' || mode === 'gresult') && gt) { gtTape(); return; }
+  if (DL_MODES.includes(mode) && dl) { dlTape(); return; }
   if (session && session.practice) { renderTape(practiceDone, practiceDone + session.remaining(), 'Тренування'); return; }
   const l = todayLog();
   const done = (l.r || 0) + (l.n || 0) + (l.k || 0);
@@ -478,12 +487,17 @@ function syncHistory() {
 window.addEventListener('popstate', () => {
   if (ignorePop) { ignorePop = false; return; }
   // Відкрита тема граматики: «назад» повертає до списку тем
-  if (!histPushed) { if (gramPushed) { gramPushed = false; closeTopic(); } return; }
+  if (!histPushed) {
+    if (dlgPushed) { dlgPushed = false; closeDialog(); }
+    else if (gramPushed) { gramPushed = false; closeTopic(); }
+    return;
+  }
   histPushed = false;
   if (mode === 'session') endSession(true);
   else if (mode === 'sprint') endSprint();
   else if (mode === 'listen') finishListen();
   else if (mode === 'gtest' || mode === 'gresult') endGramTest();
+  else if (DL_MODES.includes(mode)) endDlg();
   else if (mode) { triage = null; mode = null; renderLearn(); }
 });
 function estimateMinutes(units) { return Math.max(1, Math.ceil(units * 10 / 60)); }
@@ -555,7 +569,7 @@ function burst() {
   document.body.appendChild(box);
   setTimeout(() => box.remove(), 900);
 }
-function studied(d) { const l = log[C.dayKey(d)]; return !!(l && (l.r > 0 || l.c > 0 || l.gt > 0)); }
+function studied(d) { const l = log[C.dayKey(d)]; return !!(l && (l.r > 0 || l.c > 0 || l.gt > 0 || l.dl > 0)); }
 function weekSection() {
   const t = today();
   const wd = new Date(t * 86400000).getUTCDay();
@@ -730,6 +744,8 @@ function renderLearn() {
     else if (gd.length) tiles.push(quick('pen', 'Граматика: повторити', GR.topics[gd[0]].title + (gd.length > 1 ? ' і ще ' + (gd.length - 1) : ''), () => openTopic(gd[0])));
     else if (gn && GR.topics[gn]) tiles.push(quick('pen', 'Граматика', 'наступна тема: ' + GR.topics[gn].title, () => openTopic(gn)));
   }
+  const dtile = dlgTile();
+  if (dtile) tiles.push(dtile);
   const ls = canListen() ? listenIds().length : 0;
   if (ls >= 3) tiles.push(quick('listen', 'Слухати', 'у дорогу: ' + words(ls) + ' голосом, без рук', () => startListen()));
   if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
@@ -808,6 +824,21 @@ function newsCard() {
     const row = el('div', 'btn-row');
     const seen = () => { meta.seenMore = more; save(KEYS.meta, meta); };
     row.append(button('Зрозуміло', 'btn-quiet', () => { seen(); renderLearn(); }), button('Відкрити словник', 'btn-primary', () => { seen(); showTab('dict'); }));
+    box.appendChild(row);
+    return box;
+  }
+  // Діалоги: разова новина, коли з'явилися (і коли додалася нова порція)
+  const dn = dlgIds().length;
+  if (dn && (meta.seenDlg || 0) < dn) {
+    const box = el('section', 'news');
+    const fresh = dn - (meta.seenDlg || 0);
+    box.appendChild(el('h3', 'section-title', meta.seenDlg ? 'Нові діалоги' : 'Діалоги'));
+    box.appendChild(el('p', null, meta.seenDlg
+      ? 'Додала ' + fresh + ' ' + C.plural(fresh, 'діалог', 'діалоги', 'діалогів') + ': ' + dlgIds().slice(-fresh).map(id => DLG.items[id].uk.toLowerCase()).join(', ') + '.'
+      : 'Живі розмови з життя: аеропорт, кав\'ярня, клієнт на роботі. Послухай з ірландським акцентом, потренуйся на слух і зіграй свою роль уголос.'));
+    const row = el('div', 'btn-row');
+    const seen = () => { meta.seenDlg = dn; save(KEYS.meta, meta); };
+    row.append(button('Пізніше', 'btn-quiet', () => { seen(); renderLearn(); }), button('Відкрити діалоги', 'btn-primary', () => { seen(); openDialogs(); }));
     box.appendChild(row);
     return box;
   }
@@ -1476,7 +1507,7 @@ function nextInfo() {
 }
 /* Висновок для нижньої панелі. answer: правильна відповідь (рядок або вузол), extra: вузол під нею */
 function verdict(kind, text, sub, answer, extra) {
-  if (kind === 'right' && (mode === 'session' || mode === 'gtest')) burst();
+  if (kind === 'right' && (mode === 'session' || mode === 'gtest' || mode === 'dtrain')) burst();
   const v = el('div', 'verdict ' + kind);
   v.dataset.kind = kind;
   v.setAttribute('role', 'status');
@@ -3831,6 +3862,842 @@ function endGramTest() {
   if (wasTest) toast('Тест перервано, бал не збережено');
 }
 
+/* ---------- Діалоги ----------
+   Список і сторінка діалогу — окремий екран (з головної, вкладка «Вчити» лишається вибраною).
+   Тренування й рольова гра — на екрані заняття (mode dtrain / drole / dresult).
+   Озвучка: один файл на діалог, DLG_AUDIO[id] = [хеш, [початок, кінець]…] у порядку C.dialogClips. */
+const DLG = window.DIALOGS || { order: [], items: {} };
+const DAUD = window.DLG_AUDIO || {};
+const DL_MODES = ['dtrain', 'drole', 'dresult'];
+let dres = load(KEYS.dialogs, {});        // { id: { heard, tr, trk: [ok, n], trn, role: { a, b }, rr, iv, due, last } }
+let dlgOpen = null;                       // відкритий діалог
+let dlgPushed = false;                    // запис в історії для жесту «назад»
+let dlgListY = 0;
+let dl = null;                            // тренування чи рольова гра, що йде
+function saveDres() { save(KEYS.dialogs, dres); }
+function dlgIds() { return DLG.order.filter(id => DLG.items[id]); }
+function dlgNext() { return dlgIds().find(id => C.dialogStars(dres[id], DLG.items[id]) < 3) || null; }
+function dlgClipText(d, k, i, j) {
+  if (k === 'p') { const p = d.phrases[i]; return p.say || p.en; }
+  const l = d.lines[i];
+  if (k === 'a') { const a = l.alt[j]; return a.say || a.en; }
+  return l.say || l.en;
+}
+function dlgUrl(d) { const a = DAUD[d.id]; return a ? '/audio/dlg/' + d.id + '-' + a[0] + '.mp3' : null; }
+function dlgSeg(d, k, i, j) {
+  const a = DAUD[d.id];
+  if (!a) return null;
+  const n = C.dialogClipIndex(d, k, i, j);
+  const t = n >= 0 ? a[n + 1] : null;
+  return t ? { url: dlgUrl(d), from: t[0], to: t[1] } : null;
+}
+function dlgRate() { return settings.dlgRate === 0.8 ? 0.8 : 1; }
+function dlgSay(d, k, i, j, rate) {
+  const text = dlgClipText(d, k, i, j);
+  const s = dlgSeg(d, k, i, j);
+  if (s) playSegment(s.url, s.from, s.to, text, rate || dlgRate()); else speakDevice(text, rate || dlgRate());
+}
+function dlgSayBtn(d, k, i, j, label) {
+  const b = el('button', 'say sm');
+  b.type = 'button';
+  b.innerHTML = ICON.speaker;
+  b.setAttribute('aria-label', label || 'Послухати');
+  b.addEventListener('click', e => { e.stopPropagation(); dlgSay(d, k, i, j); });
+  return b;
+}
+function dlgIcon(d, cls) { const s = el('span', 'dlg-ic' + (cls ? ' ' + cls : '')); s.innerHTML = ICON[d.icon] || ICON.chat; s.setAttribute('aria-hidden', 'true'); return s; }
+function dlgPips(d) {
+  const n = C.dialogStars(dres[d.id], d);
+  const p = el('span', 'dlg-pips');
+  p.setAttribute('role', 'img');
+  p.setAttribute('aria-label', n ? 'Пройдено етапів: ' + n + ' з 3' : 'Ще не почато');
+  for (let i = 0; i < 3; i++) p.appendChild(el('i', i < n ? 'on' : null));
+  return p;
+}
+const dlgLinesN = n => n + ' ' + C.plural(n, 'репліка', 'репліки', 'реплік');
+/* Назва ролі для підписів: «Ти, пасажир» → «Пасажир», коли за пасажира говорить запис */
+function dlgRole(d, s) { const u = d.roles[s].uk; if (!d.roles[s].you) return u; const x = u.replace(/^Ти,\s*/, ''); return x.charAt(0).toUpperCase() + x.slice(1); }
+
+/* «Слухати весь діалог»: записи йдуть одним шматком, активна репліка підсвічується */
+function dlgPlayLabel(btn, on) {
+  btn.innerHTML = on ? ICON.pause : ICON.play;
+  btn.appendChild(document.createTextNode(on ? 'Зупинити' : 'Слухати весь діалог'));
+  btn.setAttribute('aria-pressed', String(!!on));
+}
+function dlgStopAll() {
+  const p = dplay;
+  dplay = null;
+  if (!p) return;
+  if (p.timer) clearInterval(p.timer);
+  if (p.utter && synth) synth.cancel();
+  document.querySelectorAll('.bub.now').forEach(b => b.classList.remove('now'));
+  const btn = $('dlgPlayBtn');
+  if (btn) dlgPlayLabel(btn, false);
+}
+function dlgMark(i) {
+  document.querySelectorAll('#dlgChat .bub[data-li]').forEach(b => {
+    const on = +b.dataset.li === i;
+    if (on && !b.classList.contains('now')) {
+      b.classList.add('now');
+      const r = b.getBoundingClientRect();
+      if (r.top < 70 || r.bottom > innerHeight - 110) b.scrollIntoView({ block: 'center', behavior: motionOff() ? 'auto' : 'smooth' });
+    } else if (!on) b.classList.remove('now');
+  });
+}
+function dlgHeard(d) {
+  const r = dres[d.id] = Object.assign({}, dres[d.id]);
+  const first = !r.heard;
+  r.heard = today();
+  r.last = today();
+  saveDres();
+  const l = todayLog(); l.dl = (l.dl || 0) + 1; save(KEYS.log, log);
+  renderStreak();
+  if (first) toast('Діалог прослухано: перший етап є');
+  if (dlgOpen === d.id && currentTab === 'dialogs') refreshDlgSteps(d);
+}
+function dlgPlayAll(d, from) {
+  if (dplay && dplay.id === d.id) { stopAudio(); return; }
+  stopAudio();
+  from = from || 0;
+  const n = d.lines.length;
+  const a = DAUD[d.id];
+  if (!a || a.length <= n) { dlgPlayDevice(d, from); return; }
+  const url = dlgUrl(d);
+  const segs = a.slice(1, n + 1);
+  const src = blobs.get(url) || url;
+  playing = url;
+  player.dataset.fallback = '';
+  if (player.getAttribute('src') !== src) player.src = src;
+  const start = Math.max(0, segs[from][0] - 0.04);
+  const seek = () => { try { player.currentTime = start; } catch (e) {} };
+  if (player.readyState >= 1) seek(); else player.addEventListener('loadedmetadata', seek, { once: true });
+  player.defaultPlaybackRate = dlgRate();
+  player.playbackRate = dlgRate();
+  const p = { id: d.id, timer: null, last: -1, t0: performance.now() };
+  dplay = p;
+  p.timer = setInterval(() => {
+    if (dplay !== p) return;
+    if (player.error) { dlgStopAll(); dlgPlayDevice(d, Math.max(from, p.last)); return; }
+    const t = player.currentTime;
+    // Зупинили ззовні (навушники, інший звук): лише прибираємо підсвітку
+    if (player.paused && performance.now() - p.t0 > 1500) { dlgStopAll(); return; }
+    let i = -1;
+    for (let k = 0; k < n; k++) if (t >= segs[k][0] - 0.05) i = k;
+    if (i !== p.last) { p.last = i; dlgMark(i); }
+    if (t >= segs[n - 1][1] + 0.1 || player.ended) { try { player.pause(); } catch (e) {} dlgStopAll(); dlgHeard(d); }
+  }, 80);
+  const pr = player.play();
+  if (pr && pr.catch) pr.catch(err => { if (err && err.name !== 'AbortError' && dplay === p) { dlgStopAll(); dlgPlayDevice(d, from); } });
+  const btn = $('dlgPlayBtn');
+  if (btn) dlgPlayLabel(btn, true);
+}
+/* Поки записів немає: голос пристрою, репліка за реплікою */
+function dlgPlayDevice(d, from) {
+  if (!synth) { toast('Озвучка ще готується'); return; }
+  const p = { id: d.id, utter: true };
+  dplay = p;
+  const next = i => {
+    if (dplay !== p) return;
+    if (i >= d.lines.length) { dlgStopAll(); dlgHeard(d); return; }
+    dlgMark(i);
+    const u = new SpeechSynthesisUtterance(speakable(d.lines[i].say || d.lines[i].en));
+    const v = pickVoice();
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
+    u.rate = dlgRate() * 0.95;
+    u.onend = () => setTimeout(() => next(i + 1), 350);
+    u.onerror = () => { if (dplay === p) dlgStopAll(); };
+    synth.speak(u);
+  };
+  next(from || 0);
+  const btn = $('dlgPlayBtn');
+  if (btn) dlgPlayLabel(btn, true);
+}
+
+/* Репліка-бульбашка: ти праворуч, співрозмовник ліворуч */
+function dlgBubble(d, i, me, opts) {
+  opts = opts || {};
+  const l = d.lines[i];
+  const mine = l.s === me;
+  const b = el('div', 'bub ' + (mine ? 'me' : 'them'));
+  b.dataset.li = i;
+  const en = el('p', 'bub-en');
+  en.dataset.sent = l.en;
+  en.appendChild(enText(l.en));
+  b.appendChild(en);
+  if (!opts.noUk) b.appendChild(el('p', 'bub-uk', l.uk));
+  const acts = el('div', 'bub-acts');
+  acts.appendChild(dlgSayBtn(d, 'l', i, 0, 'Послухати репліку'));
+  let alts = null;
+  if (!opts.noAlt && l.alt && l.alt.length) {
+    const ab = el('button', 'bub-alt-btn');
+    ab.type = 'button';
+    ab.append(document.createTextNode(mine ? 'Можна сказати й так' : 'Інакше можуть сказати'), el('span', 'n', String(l.alt.length)));
+    ab.setAttribute('aria-expanded', String(!!opts.altOpen));
+    alts = el('div', 'bub-alts');
+    alts.hidden = !opts.altOpen;
+    l.alt.forEach((a, j) => {
+      const r = el('div', 'bub-alt');
+      const t = el('div', 'bub-alt-t');
+      const ae = el('p', 'bub-alt-en');
+      ae.dataset.sent = a.en;
+      ae.appendChild(enText(a.en));
+      t.append(ae, el('p', 'bub-uk', a.uk));
+      r.append(dlgSayBtn(d, 'a', i, j, 'Послухати варіант'), t);
+      alts.appendChild(r);
+    });
+    ab.addEventListener('click', e => { e.stopPropagation(); const o = alts.hidden; alts.hidden = !o; ab.setAttribute('aria-expanded', String(o)); });
+    acts.appendChild(ab);
+  }
+  b.appendChild(acts);
+  if (alts) b.appendChild(alts);
+  if (l.note && !opts.noNote) b.appendChild(el('p', 'bub-note', l.note));
+  return b;
+}
+
+function openDialogs() { if (dlgPushed) { dlgPushed = false; try { history.back(); } catch (e) {} } dlgOpen = null; showTab('dialogs'); }
+function renderDialogs() {
+  if (dlgOpen && DLG.items[dlgOpen]) renderDlgPage(DLG.items[dlgOpen]);
+  else { dlgOpen = null; renderDlgList(); }
+}
+function openDialog(id) {
+  if (!DLG.items[id]) return;
+  if (!dlgOpen) dlgListY = window.scrollY;
+  dlgOpen = id;
+  if (!dlgPushed) { try { history.pushState({ ew: 'dlg' }, ''); dlgPushed = true; } catch (e) {} }
+  if (currentTab !== 'dialogs') showTab('dialogs'); else renderDialogs();
+  window.scrollTo(0, 0);
+}
+function closeDialog() {
+  stopAudio();
+  closePeek();
+  dlgOpen = null;
+  if (currentTab === 'dialogs') { renderDlgList(); window.scrollTo(0, dlgListY); }
+}
+function leaveDialog() { if (dlgPushed) history.back(); else closeDialog(); }
+function gback(text, fn) {
+  const b = el('button', 'gback');
+  b.type = 'button';
+  b.innerHTML = ICON.chevron;
+  b.appendChild(document.createTextNode(text));
+  b.addEventListener('click', fn);
+  return b;
+}
+function renderDlgList() {
+  const box = $('dlgList');
+  $('dlgPage').hidden = true;
+  box.hidden = false;
+  box.innerHTML = '';
+  const top = el('div', 'gtop');
+  top.appendChild(gback('Головна', () => showTab('learn')));
+  box.appendChild(top);
+  box.appendChild(el('h2', 'report-title', 'Діалоги'));
+  const ids = dlgIds();
+  if (!ids.length) { box.appendChild(el('p', 'tip', 'Діалоги з\'являться після оновлення.')); return; }
+  const done = ids.filter(id => C.dialogStars(dres[id], DLG.items[id]) >= 3).length;
+  box.appendChild(el('p', 'page-sub', ids.length + ' ' + C.plural(ids.length, 'сцена', 'сцени', 'сцен') + (done ? ' · пройдено ' + done : ' · ще не починав')));
+  box.appendChild(el('p', 'gintro', 'Розмови з життя в Ірландії. Спершу послухай, потім потренуйся на слух і зіграй свою роль уголос. Тоді в справжній розмові слова прийдуть самі.'));
+  const lead = (id, small) => {
+    const d = DLG.items[id];
+    const b = el('button', 'gnext dlg-lead');
+    b.type = 'button';
+    const txt = el('span', 'gnext-text');
+    const en = el('b', null, d.title); en.lang = 'en';
+    txt.append(el('small', null, small), en, el('span', null, d.uk));
+    const chev = el('span', 'chev'); chev.innerHTML = ICON.chevron;
+    b.append(dlgIcon(d), txt, chev);
+    b.addEventListener('click', () => openDialog(id));
+    return b;
+  };
+  const due = C.dialogDue(dres, ids, today());
+  const nx = dlgNext();
+  if (due.length) box.appendChild(lead(due[0], due.length > 1 ? 'Час повторити, ще ' + (due.length - 1) + ' чекає' : 'Час повторити'));
+  else if (nx && dres[nx]) box.appendChild(lead(nx, 'Продовжити'));
+  const list = el('div', 'dlg-list');
+  ids.forEach(id => {
+    const d = DLG.items[id];
+    const b = el('button', 'dlg-item');
+    b.type = 'button';
+    b.dataset.id = id;
+    const txt = el('span', 'dlg-item-text');
+    const en = el('b', null, d.title); en.lang = 'en';
+    txt.append(en, el('span', null, d.uk), el('small', null, d.level + ' · ' + dlgLinesN(d.lines.length) + ' · ≈ ' + d.minutes + ' хв'));
+    b.append(dlgIcon(d), txt, dlgPips(d));
+    b.addEventListener('click', () => openDialog(id));
+    list.appendChild(b);
+  });
+  box.appendChild(list);
+  box.appendChild(el('p', 'tip gfoot', 'Три кружечки — три етапи: прослухав увесь діалог, пройшов тренування хоча б на 8 з 10 і зіграв свою роль. Зіграні діалоги нагадаю повторити через кілька днів, далі все рідше.'));
+}
+function refreshDlgSteps(d) {
+  const box = $('dlgSteps');
+  if (!box) return;
+  box.innerHTML = '';
+  const r = dres[d.id] || {}, me = C.dialogYou(d);
+  const step = (icon, title, sub, done, fn, k) => {
+    const b = el('button', 'dlg-step' + (done ? ' done' : ''));
+    b.type = 'button';
+    b.dataset.step = k;
+    const ic = el('span', 'ic'); ic.innerHTML = done ? ICON.check : ICON[icon];
+    b.append(ic, el('b', null, title), el('small', null, sub));
+    b.addEventListener('click', fn);
+    return b;
+  };
+  const played = r.role && r.role[me];
+  box.append(
+    step('listen', 'Послухати', r.heard ? 'прослухано' : 'увесь діалог', !!r.heard, () => {
+      const c = $('dlgChat');
+      if (c) c.scrollIntoView({ block: 'start', behavior: motionOff() ? 'auto' : 'smooth' });
+      if (!(dplay && dplay.id === d.id)) dlgPlayAll(d, 0);
+    }, 'listen'),
+    step('choose', 'Тренування', r.trk ? 'найкраще ' + r.trk[0] + ' з ' + r.trk[1] : '10 завдань', r.tr >= 0.8, () => startDlgTrain(d.id), 'train'),
+    step('role', 'Рольова гра', played ? 'зіграно' : 'твоя роль уголос', !!played, () => startDlgRole(d.id), 'role')
+  );
+  const note = $('dlgDue');
+  if (note) {
+    note.hidden = r.due == null;
+    if (r.due != null) note.textContent = r.due <= today() ? 'Час повторити: зіграй свою роль ще раз, поки не забулося.' : 'Наступне повторення ' + C.fmtDate(r.due) + '.';
+  }
+}
+function renderDlgPage(d) {
+  const box = $('dlgPage');
+  $('dlgList').hidden = true;
+  box.hidden = false;
+  box.innerHTML = '';
+  const me = C.dialogYou(d), other = me === 'a' ? 'b' : 'a';
+  const top = el('div', 'gtop');
+  top.append(gback('Усі діалоги', leaveDialog), el('span', 'gmeta', d.level + ', ≈ ' + d.minutes + ' хв'));
+  box.appendChild(top);
+  const head = el('div', 'dlg-head');
+  const title = el('h2', 'gtitle', d.title); title.lang = 'en';
+  head.append(dlgIcon(d, 'big'), title);
+  box.append(head, el('p', 'gsub', d.uk));
+  const sc = el('section', 'dlg-scene');
+  const place = el('p', 'dlg-place'); place.innerHTML = ICON.pin; place.appendChild(document.createTextNode(d.place));
+  sc.append(place, el('p', 'dlg-scene-t', d.scene));
+  const roles = el('div', 'dlg-roles');
+  roles.append(el('span', 'role-chip me', d.roles[me].uk), el('span', 'role-chip', d.roles[other].uk));
+  sc.appendChild(roles);
+  const goal = el('p', 'dlg-goal'); goal.append(el('b', null, 'Мета: '), document.createTextNode(d.goal));
+  sc.appendChild(goal);
+  box.appendChild(sc);
+  const steps = el('div', 'dlg-steps'); steps.id = 'dlgSteps';
+  const due = el('p', 'tip dlg-due'); due.id = 'dlgDue'; due.hidden = true;
+  box.append(steps, due);
+  refreshDlgSteps(d);
+  // Ключові фрази
+  box.appendChild(el('h3', 'gh', 'Ключові фрази'));
+  const ph = el('div', 'dlg-phrases');
+  d.phrases.forEach((p, i) => {
+    const row = el('div', 'dlg-phrase');
+    const txt = el('div', 'dlg-phrase-t');
+    const en = el('p', 'dlg-phrase-en'); en.dataset.sent = p.en; en.appendChild(enText(p.en));
+    txt.append(en, el('p', 'dlg-phrase-uk', p.uk));
+    if (p.note) txt.appendChild(el('p', 'dlg-phrase-note', p.note));
+    row.append(dlgSayBtn(d, 'p', i, 0, 'Послухати фразу'), txt);
+    ph.appendChild(row);
+  });
+  box.appendChild(ph);
+  // Сам діалог
+  box.appendChild(el('h3', 'gh', 'Діалог'));
+  const bar = el('div', 'dlg-bar');
+  const play = el('button', 'btn btn-primary dlg-play');
+  play.type = 'button';
+  play.id = 'dlgPlayBtn';
+  dlgPlayLabel(play, !!(dplay && dplay.id === d.id));
+  play.addEventListener('click', () => dlgPlayAll(d, 0));
+  const chat = el('div', 'dlg-chat' + (settings.dlgUk === false ? ' no-uk' : ''));
+  chat.id = 'dlgChat';
+  const tog = (label, on, fn) => {
+    const c = el('button', 'chip', label);
+    c.type = 'button';
+    c.setAttribute('aria-pressed', String(!!on));
+    c.addEventListener('click', () => { const v = c.getAttribute('aria-pressed') !== 'true'; c.setAttribute('aria-pressed', String(v)); fn(v); });
+    return c;
+  };
+  const opts = el('div', 'dlg-opts');
+  opts.append(
+    tog('Переклад', settings.dlgUk !== false, v => { settings.dlgUk = v; saveSettings(); chat.classList.toggle('no-uk', !v); }),
+    tog('Повільніше', settings.dlgRate === 0.8, v => { settings.dlgRate = v ? 0.8 : 1; saveSettings(); if (dplay) { player.playbackRate = dlgRate(); } })
+  );
+  bar.append(play, opts);
+  box.appendChild(bar);
+  let prevS = null;
+  d.lines.forEach((l, i) => {
+    if (l.s !== prevS) chat.appendChild(el('p', 'bub-who ' + (l.s === me ? 'me' : 'them'), l.s === me ? 'Ти' : d.roles[l.s].uk));
+    prevS = l.s;
+    chat.appendChild(dlgBubble(d, i, me));
+  });
+  box.appendChild(chat);
+  box.appendChild(el('h3', 'gh', 'Корисно знати'));
+  const ul = el('ul', 'glist dlg-tips');
+  d.tips.forEach(t => ul.appendChild(el('li', null, t)));
+  box.appendChild(ul);
+  const cta = el('div', 'btn-row dlg-cta');
+  cta.append(button('Тренування', 'btn-quiet', () => startDlgTrain(d.id)), button('Рольова гра', 'btn-primary', () => startDlgRole(d.id)));
+  box.appendChild(cta);
+  const ids = dlgIds(), k = ids.indexOf(d.id);
+  const nav = el('div', 'gnav');
+  const link = (id, dir) => {
+    const b = el('button', 'gnav-btn ' + dir);
+    b.type = 'button';
+    b.append(el('small', null, dir === 'prev' ? 'Попередній' : 'Наступний'), el('span', null, DLG.items[id].title));
+    b.addEventListener('click', () => { stopAudio(); dlgOpen = id; renderDialogs(); window.scrollTo(0, 0); });
+    return b;
+  };
+  if (k > 0) nav.appendChild(link(ids[k - 1], 'prev'));
+  if (k >= 0 && k < ids.length - 1) nav.appendChild(link(ids[k + 1], 'next'));
+  if (nav.childElementCount) box.appendChild(nav);
+  box.appendChild(el('p', 'tip dlg-credit', 'Голоси згенерувала модель Chatterbox (Resemble AI) за записами VCTK (Единбурзький університет, CC BY 4.0). Акцент ірландський, але м\'якший, ніж у живій розмові.'));
+  preloadUrl(dlgUrl(d));
+}
+/* Головна: плитка діалогів — що повторити або з чого продовжити */
+function dlgTile() {
+  const ids = dlgIds();
+  if (!ids.length) return null;
+  const due = C.dialogDue(dres, ids, today());
+  if (due.length) return quick('chat', 'Діалоги: повторити', DLG.items[due[0]].uk + (due.length > 1 ? ' і ще ' + (due.length - 1) : ''), () => openDialog(due[0]));
+  const nx = dlgNext();
+  if (nx) return quick('chat', 'Діалоги', (dres[nx] ? 'продовжити: ' : 'почни з: ') + lowerFirst(DLG.items[nx].uk), () => openDialogs());
+  return quick('chat', 'Діалоги', 'усі ' + ids.length + ' пройдено, повтори будь-який', () => openDialogs());
+}
+function dlgReport(l) {
+  const items = (l.dlr || []).filter(x => DLG.items[x.id]).map(x => DLG.items[x.id].title + (x.k === 't' ? ', тренування ' : ', рольова гра ') + x.ok + ' з ' + x.n);
+  if (!items.length && l.dl) items.push('послухав ' + l.dl + ' ' + C.plural(l.dl, 'раз', 'рази', 'разів'));
+  return items.length ? [['Діалоги', items.join('; ')]] : [];
+}
+function dlgLogResult(id, k, ok, n) {
+  const l = todayLog();
+  l.dlr = (l.dlr || []).filter(x => !(x.id === id && x.k === k)).concat([{ id, k, ok, n }]);
+  save(KEYS.log, log);
+}
+
+/* ---------- Тренування за діалогом і рольова гра (екран заняття) ---------- */
+function beginDl(o) {
+  stopAudio(); cancelAuto(); closePeek();
+  if (listen) endListen();
+  if (sprint) endSprint();
+  session = null; current = null; triage = null; gt = null;
+  dl = Object.assign({ i: 0, ok: 0, wrong: [], answered: false, t0: performance.now() }, o);
+  mode = o.mode;
+  showTab('learn');
+}
+function startDlgTrain(id, rng) {
+  const d = DLG.items[id];
+  if (!d) return;
+  const me = C.dialogYou(d);
+  beginDl({ kind: 'train', mode: 'dtrain', id, d, me, tasks: C.dialogTasks(d, me, rng || Math.random) });
+  dlShow();
+}
+function startDlgRole(id, me) {
+  const d = DLG.items[id];
+  if (!d) return;
+  me = me || C.dialogYou(d);
+  beginDl({ kind: 'role', mode: 'drole', id, d, me, mine: d.lines.filter(l => l.s === me).length, said: 0 });
+  dlRoleStart();
+}
+function dlTape() {
+  if (dl.kind === 'train') {
+    const n = dl.tasks.length;
+    renderTape(mode === 'dresult' ? n : dl.i + (dl.answered ? 1 : 0), n, 'Завдання', null, true);
+    $('tapeLeft').textContent = 'правильно ' + dl.ok;
+  } else {
+    const n = dl.d.lines.length;
+    renderTape(mode === 'dresult' ? n : dl.i, n, 'Репліка', null, true);
+    $('tapeLeft').textContent = dl.said ? 'вийшло ' + dl.ok + ' з ' + dl.said : '';
+  }
+}
+function dlHead(label, right, icon) {
+  const head = el('div', 'ex-head');
+  const lab = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic'); ic.innerHTML = ICON[icon] || ICON.chat;
+  lab.append(ic, document.createTextNode(label));
+  head.append(lab, el('span', 'ex-right', right));
+  return head;
+}
+function dlNext() {
+  if (!dl) return;
+  if (dl.i >= dl.tasks.length - 1) { dlTrainResult(); return; }
+  dl.i++;
+  stopAudio();
+  dlShow();
+}
+function dlShow() {
+  closePeek();
+  const t = dl.tasks[dl.i], d = dl.d, l = d.lines[t.li];
+  dl.answered = false;
+  dl.t0 = performance.now();
+  ui = { t0: performance.now(), answered: false };
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const label = t.type === 'listen' ? 'Послухай і зрозумій' : t.type === 'reply' ? 'Що ти відповіси?' : 'Склади свою репліку';
+  card.appendChild(dlHead(label, (dl.i + 1) + ' з ' + dl.tasks.length, t.type === 'listen' ? 'listen' : t.type === 'reply' ? 'chat' : 'build'));
+  const body = el('div', 'prompt dlq');
+  card.appendChild(body);
+  const quiet = !!settings.quiet;
+  const finish = (ok, given) => {
+    if (dl.answered) return;
+    dl.answered = true;
+    ui.answered = true;
+    if (ok) dl.ok++; else dl.wrong.push({ t, given });
+    const lg = todayLog();
+    lg.dl = (lg.dl || 0) + 1;
+    lg.ms = (lg.ms || 0) + Math.min(60000, Math.max(0, performance.now() - dl.t0));
+    save(KEYS.log, log);
+    haptic(ok ? 'ok' : 'wrong');
+    renderStreak();
+    const ans = el('span'); ans.lang = 'en'; ans.textContent = l.en;
+    const extra = el('span', 'gt-why');
+    if (!ok && given) {
+      const y = el('span', 'yours');
+      const s = el('s', null, given); if (!CYR_RX.test(given)) s.lang = 'en';
+      y.append(document.createTextNode('Твоя відповідь: '), s);
+      extra.appendChild(y);
+    }
+    extra.appendChild(el('span', 'why', l.uk));
+    if (l.note) extra.appendChild(el('span', 'why', l.note));
+    const v = verdict(ok ? 'right' : 'wrong', ok ? 'Правильно' : (given ? 'Ні, правильно так:' : 'Правильно так:'), null, ans, extra);
+    if (!quiet) dlgSay(d, 'l', t.li);
+    const last = dl.i >= dl.tasks.length - 1;
+    const nb = button(last ? 'Результат' : 'Далі', 'btn-primary', dlNext);
+    setFoot([nb], 0, v);
+    keys = { enter: () => nb.click() };
+    updateTape();
+  };
+  const options = (items, isEn) => {
+    const box = el('div', 'options');
+    const btns = [];
+    items.forEach((text, k) => {
+      const b = el('button', 'opt-btn' + (isEn ? ' en' : ''));
+      b.type = 'button';
+      b.dataset.li = t.opts[k];
+      const txt = el('span', null, text); if (isEn) txt.lang = 'en';
+      b.append(el('span', 'k', String(k + 1)), txt);
+      b.addEventListener('click', () => pick(k, b));
+      btns.push(b);
+      box.appendChild(b);
+    });
+    const pick = (k, b) => {
+      if (dl.answered) return;
+      btns.forEach((x, i) => {
+        x.disabled = true;
+        if (i === t.a) { x.classList.add('right'); x.firstChild.innerHTML = ICON.check; }
+        else if (x === b) { x.classList.add('wrong'); x.firstChild.innerHTML = ICON.cross; }
+        else x.classList.add('dim');
+      });
+      finish(k === t.a, b ? items[k] : '');
+    };
+    setFoot([button('Не знаю', 'btn-quiet', () => pick(-1, null))]);
+    keys = { num: n => btns[n - 1] && btns[n - 1].click() };
+    return box;
+  };
+  if (t.type === 'listen') {
+    body.appendChild(el('p', 'prompt-sub dl-who', dlgRole(d, l.s) + ' каже:'));
+    const lb = el('button', 'listen-big');
+    lb.type = 'button';
+    lb.innerHTML = ICON.speaker;
+    lb.setAttribute('aria-label', 'Послухати ще раз');
+    lb.addEventListener('click', () => dlgSay(d, 'l', t.li));
+    const slow = el('button', 'slow-btn', 'Повільніше');
+    slow.type = 'button';
+    slow.addEventListener('click', () => dlgSay(d, 'l', t.li, 0, 0.75));
+    const text = el('p', 'dl-text');
+    text.dataset.sent = l.en;
+    text.appendChild(enText(l.en));
+    text.hidden = !quiet;
+    body.append(lb, slow, text);
+    if (!quiet) {
+      const show = el('button', 'link-btn small dl-show', 'Показати текст');
+      show.type = 'button';
+      show.addEventListener('click', () => { text.hidden = false; show.remove(); });
+      body.appendChild(show);
+      setTimeout(() => { if (dl && dl.tasks[dl.i] === t && !dl.answered) dlgSay(d, 'l', t.li); }, 300);
+    }
+    card.appendChild(options(t.opts.map(j => d.lines[j].uk), false));
+  } else if (t.type === 'reply') {
+    const pl = d.lines[t.prev];
+    body.appendChild(el('p', 'prompt-sub dl-who', dlgRole(d, pl.s) + ' каже:'));
+    const bub = dlgBubble(d, t.prev, dl.me, { noUk: true, noAlt: true, noNote: true });
+    body.appendChild(bub);
+    if (!quiet) setTimeout(() => { if (dl && dl.tasks[dl.i] === t && !dl.answered) dlgSay(d, 'l', t.prev); }, 300);
+    card.appendChild(options(t.opts.map(j => d.lines[j].en), true));
+  } else {
+    if (t.li > 0 && d.lines[t.li - 1].s !== dl.me) {
+      body.appendChild(el('p', 'prompt-sub dl-who', dlgRole(d, d.lines[t.li - 1].s) + ' каже:'));
+      body.appendChild(dlgBubble(d, t.li - 1, dl.me, { noAlt: true, noNote: true }));
+    }
+    const ask = el('p', 'dl-ask');
+    ask.append(el('small', null, 'Ти хочеш сказати:'), document.createTextNode(l.uk));
+    body.appendChild(ask);
+    const answerBox = el('div', 'build-answer');
+    answerBox.setAttribute('aria-label', 'Твоя репліка');
+    const bank = el('div', 'build-bank');
+    const placed = [];
+    const bankBtns = [];
+    const checkBtn = button('Перевірити', 'btn-primary', () => check(false));
+    checkBtn.disabled = true;
+    const redraw = () => {
+      answerBox.innerHTML = '';
+      placed.forEach((tile, pos) => {
+        const b = el('button', 'tile', tile.t);
+        b.type = 'button'; b.lang = 'en';
+        if (tile.state) b.classList.add(tile.state);
+        b.addEventListener('click', () => { if (dl.answered) return; placed.splice(pos, 1); bankBtns[tile.i].classList.remove('used'); redraw(); });
+        answerBox.appendChild(b);
+      });
+      checkBtn.disabled = placed.length !== t.words.length;
+    };
+    t.words.forEach((w, i) => {
+      const b = el('button', 'tile', w);
+      b.type = 'button'; b.lang = 'en';
+      b.dataset.w = w;
+      b.addEventListener('click', () => { if (dl.answered || b.classList.contains('used')) return; placed.push({ t: w, i }); b.classList.add('used'); redraw(); });
+      bankBtns.push(b);
+      bank.appendChild(b);
+    });
+    card.append(answerBox, bank);
+    const check = skip => {
+      if (dl.answered) return;
+      const want = C.tokens(l.en).map(x => x.toLowerCase());
+      const ok = !skip && C.dialogOrderOk(l, placed.map(p => p.t));
+      placed.forEach((p, i) => { p.state = want[i] === p.t.toLowerCase().replace(/’/g, "'") ? 'good' : 'bad'; });
+      redraw();
+      finish(ok, skip ? '' : placed.map(p => p.t).join(' '));
+    };
+    setFoot([button('Не знаю', 'btn-quiet', () => check(true)), checkBtn], 2);
+    keys = { enter: () => { if (!checkBtn.disabled) check(false); } };
+  }
+  preloadUrl(dlgUrl(d));
+  updateTape();
+  window.scrollTo(0, 0);
+}
+function dlTrainResult() {
+  const d = dl.d, n = dl.tasks.length, ratio = n ? dl.ok / n : 0;
+  mode = 'dresult';
+  stopAudio();
+  const r = dres[d.id] = Object.assign({}, dres[d.id]);
+  const before = C.dialogStars(r, d);
+  if (!r.trk || dl.ok / n > r.trk[0] / r.trk[1]) r.trk = [dl.ok, n];
+  r.tr = Math.max(r.tr || 0, ratio);
+  r.trn = (r.trn || 0) + 1;
+  r.last = today();
+  saveDres();
+  dlgLogResult(d.id, 't', dl.ok, n);
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic done'); ic.innerHTML = ICON.check;
+  label.append(ic, document.createTextNode('Тренування завершено'));
+  head.appendChild(label);
+  card.appendChild(head);
+  const body = el('div', 'prompt summary gres');
+  const cls = ratio >= 0.8 ? 'g-top' : ratio >= 0.5 ? 'g-ok' : 'g-low';
+  const score = el('p', 'gres-score ' + cls);
+  score.append(el('b', null, String(dl.ok)), el('span', null, 'з ' + n));
+  body.appendChild(score);
+  const tt = el('p', 'prompt-sub', d.title); tt.lang = 'en';
+  body.appendChild(tt);
+  const played = r.role && r.role[dl.me];
+  body.appendChild(el('p', 'prompt-sub', ratio >= 0.8
+    ? (C.dialogStars(r, d) > before ? 'Другий етап пройдено. ' : '') + (played ? 'Можна ще раз зіграти свою роль: повторення закріплює.' : 'Тепер найцікавіше: рольова гра. Співрозмовник говорить, а ти відповідаєш уголос.')
+    : 'Переслухай діалог і спробуй ще раз: щоразу завдання інші.'));
+  card.appendChild(body);
+  if (dl.wrong.length) {
+    const box = el('div', 'details gres-list');
+    box.appendChild(el('p', 'tip', 'Де помилився'));
+    dl.wrong.forEach(({ t }) => {
+      const l = d.lines[t.li];
+      const it = el('div', 'gres-item');
+      const s = el('p', 'gres-sent'); s.lang = 'en';
+      s.append(el('mark', 'gm', l.en));
+      it.append(s, el('p', 'gres-why', l.uk));
+      box.appendChild(it);
+    });
+    card.appendChild(box);
+  }
+  const id = d.id;
+  const btns = [button('Готово', 'btn-quiet', endDlg)];
+  btns.push(ratio >= 0.8 ? button('Рольова гра', 'btn-primary', () => startDlgRole(id)) : button('Ще раз', 'btn-primary', () => startDlgTrain(id)));
+  setFoot(btns, 2);
+  keys = { enter: () => btns[1].click() };
+  updateTape();
+  window.scrollTo(0, 0);
+}
+
+/* Рольова гра: співрозмовник говорить (з текстом або без), ти кажеш свою репліку вголос за українською
+   підказкою, відкриваєш запис і чесно оцінюєш себе. Розмова лишається на екрані, як переписка. */
+function dlRoleStart() {
+  const d = dl.d;
+  $('stage').hidden = false;
+  $('learnHome').hidden = true;
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const other = dl.me === 'a' ? 'b' : 'a';
+  card.appendChild(dlHead('Рольова гра', 'ти: ' + lowerFirst(dlgRole(d, dl.me)), 'role'));
+  const intro = el('p', 'dl-role-intro');
+  intro.textContent = 'Співрозмовник: ' + lowerFirst(dlgRole(d, other)) + '. Коли твоя черга, скажи репліку англійською вголос, потім відкрий і порівняй.';
+  const hide = el('button', 'chip dl-hide', 'Без тексту');
+  hide.type = 'button';
+  hide.setAttribute('aria-pressed', String(!!settings.dlgHide));
+  hide.addEventListener('click', () => {
+    settings.dlgHide = !settings.dlgHide; saveSettings();
+    hide.setAttribute('aria-pressed', String(settings.dlgHide));
+    chat.classList.toggle('veiled', settings.dlgHide);
+  });
+  const row = el('div', 'dl-role-bar');
+  row.append(intro, hide);
+  card.appendChild(row);
+  const chat = el('div', 'dlg-chat role' + (settings.dlgHide ? ' veiled' : ''));
+  chat.id = 'dlRoleChat';
+  card.appendChild(chat);
+  dl.chat = chat;
+  dl.prevS = null;
+  preloadUrl(dlgUrl(d));
+  updateTape();
+  window.scrollTo(0, 0);
+  dlRoleStep();
+}
+function dlRoleScroll(node) {
+  requestAnimationFrame(() => { try { node.scrollIntoView({ block: 'end', behavior: motionOff() ? 'auto' : 'smooth' }); } catch (e) {} });
+}
+function dlRoleWho(s) {
+  if (s === dl.prevS) return;
+  dl.prevS = s;
+  dl.chat.appendChild(el('p', 'bub-who ' + (s === dl.me ? 'me' : 'them'), s === dl.me ? 'Ти' : dlgRole(dl.d, s)));
+}
+function dlRoleStep() {
+  const d = dl.d;
+  if (dl.i >= d.lines.length) { dlRoleResult(); return; }
+  const i = dl.i, l = d.lines[i];
+  ui = { t0: performance.now(), answered: false };
+  updateTape();
+  if (l.s !== dl.me) {
+    dlRoleWho(l.s);
+    const b = dlgBubble(d, i, dl.me, { noAlt: false, noNote: true });
+    // Без тексту: репліку чути, а текст відкривається дотиком
+    b.addEventListener('click', e => { if (dl && dl.chat.classList.contains('veiled') && !e.target.closest('button')) b.classList.add('seen'); });
+    dl.chat.appendChild(b);
+    dlRoleScroll(b);
+    if (!settings.quiet) dlgSay(d, 'l', i);
+    const go = button(i + 1 < d.lines.length && d.lines[i + 1].s === dl.me ? 'Твоя черга' : 'Далі', 'btn-primary', () => { dl.i++; dlRoleStep(); });
+    setFoot([button('Ще раз', 'btn-quiet', () => dlgSay(d, 'l', i)), go], 2);
+    keys = { enter: () => go.click() };
+    return;
+  }
+  dlRoleWho(l.s);
+  const ask = el('div', 'bub me ask');
+  ask.dataset.li = i;
+  ask.append(el('small', null, 'Скажи англійською'), el('p', 'ask-uk', l.uk));
+  const hint = el('button', 'link-btn small ask-hint', 'Підказка');
+  hint.type = 'button';
+  hint.addEventListener('click', () => {
+    const toks = C.tokens(l.en);
+    hint.replaceWith(el('p', 'ask-first', toks.slice(0, Math.min(2, toks.length - 1)).join(' ') + ' …'));
+  });
+  ask.appendChild(hint);
+  dl.chat.appendChild(ask);
+  dlRoleScroll(ask);
+  const reveal = knew => {
+    if (ui.answered) return;
+    ui.answered = true;
+    const b = dlgBubble(d, i, dl.me, { altOpen: false });
+    b.classList.add('said');
+    ask.replaceWith(b);
+    dlRoleScroll(b);
+    dlgSay(d, 'l', i);
+    const grade = ok => {
+      dl.said++;
+      if (ok) dl.ok++;
+      const lg = todayLog();
+      lg.dl = (lg.dl || 0) + 1;
+      lg.ms = (lg.ms || 0) + Math.min(60000, Math.max(0, performance.now() - ui.t0));
+      save(KEYS.log, log);
+      renderStreak();
+      haptic(ok ? 'ok' : 'wrong');
+      b.classList.add(ok ? 'ok' : 'hard');
+      dl.i++;
+      dlRoleStep();
+    };
+    if (!knew) {
+      const v = verdict('wrong', 'Так кажуть:', null, (() => { const a = el('span'); a.lang = 'en'; a.textContent = l.en; return a; })());
+      const nb = button('Далі', 'btn-primary', () => grade(false));
+      setFoot([nb], 0, v);
+      keys = { enter: () => nb.click() };
+      return;
+    }
+    const v = verdict('info', 'Порівняй зі своїм варіантом', ' головне — зміст, не кожне слово');
+    const bs = [button('Важко', 'btn-again', () => grade(false)), button('Вийшло', 'btn-primary', () => grade(true))];
+    setFoot(bs, 2, v);
+    keys = { num: n => bs[n - 1] && bs[n - 1].click(), enter: () => bs[1].click() };
+  };
+  const show = button('Показати', 'btn-primary', () => reveal(true));
+  setFoot([button('Не знаю', 'btn-quiet', () => reveal(false)), show], 2);
+  keys = { enter: () => show.click(), space: () => show.click() };
+}
+function dlRoleResult() {
+  const d = dl.d, me = dl.me;
+  const n = dl.said, ratio = n ? dl.ok / n : 0;
+  mode = 'dresult';
+  stopAudio();
+  const r = dres[d.id] = Object.assign({}, dres[d.id]);
+  r.role = Object.assign({}, r.role, { [me]: today() });
+  r.last = today();
+  if (me === C.dialogYou(d)) { r.rr = Math.max(r.rr || 0, ratio); Object.assign(r, C.dialogSchedule(r, ratio, today())); }
+  saveDres();
+  dlgLogResult(d.id, 'r' + me, dl.ok, n);
+  const card = $('card');
+  card.innerHTML = '';
+  card.onclick = null;
+  const head = el('div', 'ex-head');
+  const label = el('span', 'ex-label');
+  const ic = el('span', 'ex-ic done'); ic.innerHTML = ICON.check;
+  label.append(ic, document.createTextNode('Розмову завершено'));
+  head.appendChild(label);
+  card.appendChild(head);
+  const body = el('div', 'prompt summary gres');
+  const cls = ratio >= 0.8 ? 'g-top' : ratio >= 0.5 ? 'g-ok' : 'g-low';
+  const score = el('p', 'gres-score ' + cls);
+  score.append(el('b', null, String(dl.ok)), el('span', null, 'з ' + n));
+  body.appendChild(score);
+  body.appendChild(el('p', 'gres-note', 'реплік вийшло сказати'));
+  const tt = el('p', 'prompt-sub', d.title); tt.lang = 'en';
+  body.appendChild(tt);
+  if (me === C.dialogYou(d)) {
+    body.appendChild(el('p', 'prompt-sub', ratio >= 0.8
+      ? 'Добре. Нагадаю повторити ' + C.fmtDate(r.due) + ': через кілька днів роль має йти легше, ніж сьогодні.'
+      : 'Ще раз завтра: щоразу виходитиме більше. Можна спершу переслухати діалог.'));
+    body.appendChild(el('p', 'prompt-sub', 'Спробуй і за співрозмовника: так краще розумієш, що тобі можуть сказати.'));
+  } else body.appendChild(el('p', 'prompt-sub', 'Тепер ти знаєш обидві сторони розмови.'));
+  card.appendChild(body);
+  const id = d.id, other = me === 'a' ? 'b' : 'a';
+  const again = el('button', 'link-btn dl-again', 'Ще раз цю роль');
+  again.type = 'button';
+  again.addEventListener('click', () => startDlgRole(id, me));
+  card.appendChild(again);
+  const btns = [button('Готово', 'btn-quiet', endDlg), button(other === C.dialogYou(d) ? 'За себе' : 'За співрозмовника', 'btn-primary', () => startDlgRole(id, other))];
+  setFoot(btns, 2);
+  keys = { enter: () => btns[0].click() };
+  updateTape();
+  window.scrollTo(0, 0);
+}
+function endDlg() {
+  const started = dl && mode !== 'dresult' && (dl.kind === 'train' ? dl.i + (dl.answered ? 1 : 0) > 0 : dl.said > 0);
+  const kind = dl && dl.kind;
+  const id = dl ? dl.id : dlgOpen;
+  dl = null;
+  mode = null;
+  stopAudio();
+  document.body.classList.remove('typing');
+  dlgOpen = id && DLG.items[id] ? id : null;
+  showTab('dialogs');
+  if (started) toast(kind === 'train' ? 'Тренування перервано' : 'Рольову гру перервано');
+}
+
 /* Клавіатура (для комп'ютера) */
 document.addEventListener('keydown', e => {
   if (currentTab !== 'learn') return;
@@ -4144,7 +5011,7 @@ function reportRows() {
     ['Знаю', words(tt.known)]
   ].concat(l.sp ? [['Спринт', l.sp + ' за хвилину']] : [])
     .concat(l.ls ? [['Слухав', words(l.ls) + ', ' + mins(Math.max(1, Math.round((l.lms || 0) / 60000)))]] : [])
-    .concat(gramReport(l));
+    .concat(gramReport(l), dlgReport(l));
 }
 /* Теми й розділи, пройдені сьогодні */
 function gramReport(l) {
@@ -4470,7 +5337,7 @@ $('offlineAll').addEventListener('click', () => {
 });
 
 /* Резервна копія */
-function backupData() { return { app: 'english-words', version: 5, saved: new Date().toISOString(), cards, custom, notes, own, log, settings, meta, grammar: gres }; }
+function backupData() { return { app: 'english-words', version: 5, saved: new Date().toISOString(), cards, custom, notes, own, log, settings, meta, grammar: gres, dialogs: dres }; }
 function markBackup() { meta.lastBackup = today(); save(KEYS.meta, meta); }
 async function saveBackup() {
   const json = JSON.stringify(backupData());
@@ -4508,6 +5375,7 @@ $('backupFile').addEventListener('change', async e => {
     custom = data.custom || []; log = data.log || {}; notes = data.notes || {}; own = data.own || {};
     meta = Object.assign({}, data.meta || {});
     gres = Object.assign({}, data.grammar || {}); saveGres(); gramOpen = null;
+    dres = Object.assign({}, data.dialogs || {}); saveDres(); dlgOpen = null;
     settings = Object.assign({}, DEFAULT_SETTINGS, data.settings || {});
     settings.cats = Object.assign({}, settings.cats || {});
     settings.listen = Object.assign({}, DEFAULT_SETTINGS.listen, settings.listen || {});
@@ -4524,6 +5392,7 @@ $('resetAll').addEventListener('click', () => {
   if (!confirm('Скинути весь прогрес і статистику? Свої слова й асоціації залишаться. Скасувати це не вийде.')) return;
   cards = {}; log = {}; persist();
   gres = {}; saveGres(); gramOpen = null; gt = null;
+  dres = {}; saveDres(); dlgOpen = null; dl = null;
   session = null; current = null; mode = null;
   renderAll();
   toast('Прогрес скинуто');
@@ -4542,7 +5411,7 @@ function showTab(name) {
   currentTab = name;
   document.querySelectorAll('[data-screen]').forEach(s => { s.hidden = s.dataset.screen !== name; });
   document.querySelectorAll('[data-tab]').forEach((t, i) => {
-    if (t.dataset.tab === name) {
+    if (t.dataset.tab === name || (name === 'dialogs' && t.dataset.tab === 'learn')) {
       t.setAttribute('aria-current', 'page');
       moveLens(i);
     } else t.removeAttribute('aria-current');
@@ -4556,6 +5425,7 @@ function showTab(name) {
   if (name === 'dict') { renderChips(); renderList(); }
   if (name === 'report') renderReport();
   if (name === 'grammar') renderGrammar();
+  if (name === 'dialogs') renderDialogs();
   if (name === 'settings') renderSettings();
   window.scrollTo(0, 0);
 }
@@ -4573,7 +5443,7 @@ document.addEventListener('visibilitychange', () => {
     lastDay = today();
     if (sprint) endSprint();
     if (listen) return;
-    session = null; current = null; ui = null; mode = null; triage = null; gt = null;
+    session = null; current = null; ui = null; mode = null; triage = null; gt = null; dl = null;
     renderAll();
   }
 });
@@ -4587,6 +5457,7 @@ $('exitBtn').addEventListener('click', () => {
   if (mode === 'sprint') { endSprint(); return; }
   if (mode === 'listen') { finishListen(); return; }
   if (mode === 'gtest' || mode === 'gresult') { endGramTest(); return; }
+  if (DL_MODES.includes(mode)) { endDlg(); return; }
   triage = null; mode = null; renderLearn();
 });
 $('undoBtn').addEventListener('click', doUndo);
@@ -4698,7 +5569,7 @@ if (/[?&]test=1/.test(location.search)) {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
     get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, listenIds, startListen,
-    get gt() { return gt; }, get gres() { return gres; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, gramPracticeDue,
+    get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, gramPracticeDue,
     debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());
