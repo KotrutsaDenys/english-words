@@ -1,0 +1,93 @@
+# Озвучка слів голосом «Кіара» (tools/word_voice.py): 20 частин паралельно, потім збирач зливає, комітить
+# і, якщо слова лишились і щось додалося, запускає себе ще раз. Запуск вручну: Actions → word-voice → Run,
+# або gh workflow run word-voice.yml. Після нової порції словника — запустити знову (озвучить лише нові).
+name: word-voice
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Скільки слів на частину (0 — усі; для проби 3)'
+        default: '0'
+concurrency:
+  group: word-voice
+  cancel-in-progress: false
+permissions:
+  contents: write
+  actions: write
+jobs:
+  voice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Записи не потрібні: що озвучувати, видно з маніфесту public/audio-ciara.js
+          sparse-checkout: |
+            tools
+            public/js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+      - run: pip install -q chatterbox-tts faster-whisper huggingface_hub soundfile --extra-index-url https://download.pytorch.org/whl/cpu
+      - run: python tools/word_voice.py --shard ${{ matrix.shard }} --of 20 --minutes 320 --out shard-out --limit ${{ inputs.limit || '0' }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shard-${{ matrix.shard }}
+          path: shard-out
+          if-no-files-found: ignore
+          retention-days: 3
+  collect:
+    needs: voice
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools
+            public/js
+            public/audio/ciara
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -q numpy soundfile
+      - uses: actions/download-artifact@v4
+        with:
+          path: collected
+          pattern: shard-*
+      - id: merge
+        run: python tools/word_voice.py --merge collected
+      - name: Commit
+        run: |
+          git config user.name "word-voice"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/out
+          cp -r public/audio/ciara /tmp/out/ 2>/dev/null || mkdir -p /tmp/out/ciara
+          cp public/audio-ciara.js /tmp/out/
+          for i in 1 2 3 4 5 6; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            rm -rf public/audio/ciara
+            mkdir -p public/audio
+            cp -r /tmp/out/ciara public/audio/
+            cp /tmp/out/audio-ciara.js public/
+            python tools/stamp.py
+            git add --sparse -A public/audio/ciara public/audio-ciara.js public/index.html
+            if git diff --cached --quiet; then echo "нічого нового"; break; fi
+            git commit -q -m "Озвучка слів голосом Кіари: ${{ steps.merge.outputs.added }} нових, лишилось ${{ steps.merge.outputs.remaining }}"
+            if git push -q origin HEAD:main; then break; fi
+            sleep 9
+          done
+      - name: Continue
+        if: steps.merge.outputs.remaining != '0' && steps.merge.outputs.added != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run word-voice.yml --ref main

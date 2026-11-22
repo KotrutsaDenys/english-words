@@ -158,6 +158,19 @@ class Engine:
         self.sr = self.tts.sr
         self.asr = WhisperModel('small.en', device='cpu', compute_type='int8')
         self.refs = {v: hf_hub_download('kyutai/tts-voices', 'vctk/%s_023.wav' % p) for v, p in VOICES.items()}
+        self.conds, self.cur = {}, None
+
+    def use(self, voice):
+        """Голос рахується з еталонного запису один раз, далі береться готовий (так швидше)"""
+        if not hasattr(self.tts, 'prepare_conditionals'):
+            return {'audio_prompt_path': self.refs[voice]}
+        if self.cur != voice:
+            if voice not in self.conds:
+                self.tts.prepare_conditionals(self.refs[voice])
+                self.conds[voice] = self.tts.conds
+            self.tts.conds = self.conds[voice]
+            self.cur = voice
+        return {}
 
     def hear(self, a):
         with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp:
@@ -169,11 +182,12 @@ class Engine:
         finally:
             os.unlink(path)
 
-    def say(self, c, voice, seed):
+    def say(self, c, voice, seed, tries=TRIES):
         best = None
-        for t in range(TRIES):
+        kw = self.use(voice)
+        for t in range(tries):
             self.torch.manual_seed(seed * 7 + t * 1009)
-            wav = self.tts.generate(speak_text(c['text']), audio_prompt_path=self.refs[voice])
+            wav = self.tts.generate(speak_text(c['text']), **kw)
             a = trim(wav.squeeze(0).cpu().numpy().astype(np.float32), self.sr)
             got = self.hear(a)
             score = similarity(c, got)
