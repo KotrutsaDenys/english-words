@@ -784,6 +784,25 @@ try:
         page.wait_for_timeout(150)
         assert 'Граматика' in page.inner_text('#docket') and 'розділ' in page.inner_text('#docket'), 'бали теми й розділу у звіті за день'
         assert 'закріплено' in page.inner_text('#docket'), 'закріплення у звіті'
+        # Завдання дня, «N поспіль», календар серії, карта активності
+        page.evaluate('window.EW.showTab("learn")'); page.wait_for_timeout(200)
+        assert page.locator('#quests .quest').count() == 3, 'три завдання дня'
+        assert all('/' in x for x in page.locator('#quests .q-num').all_text_contents())
+        cb = page.evaluate('(window.EW.log[EWCore.dayKey(EWCore.dayNum())] || {}).cb || 0')
+        assert cb >= 1, 'найдовша серія правильних відповідей за день пишеться в журнал'
+        page.click('#streak'); page.wait_for_timeout(300)
+        assert visible(page, '#appSheet') and page.locator('#appSheet .st-day.today').count() == 1
+        assert page.locator('#appSheet .st-day.done').count() >= 1
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        shot(page, 'light-streak-sheet')
+        page.keyboard.press('Escape'); page.wait_for_timeout(150)
+        assert page.locator('#appSheet').count() == 0
+        page.click('.week-cal'); page.wait_for_timeout(200)
+        assert page.locator('#appSheet').count() == 1
+        page.click('#appSheet .gsheet-head .icon-btn'); page.wait_for_timeout(150)
+        assert page.locator('#appSheet').count() == 0
+        page.evaluate('window.EW.showTab("report")'); page.wait_for_timeout(200)
+        assert page.locator('#heatBox .heat-grid i').count() == 140 and page.locator('#heatBox .heat-grid i.today').count() == 1
         # Діалоги: з головної до списку, сторінка, тренування за ключем, рольова гра, повторення, звіт
         page.evaluate('window.EW.showTab("learn")'); page.wait_for_timeout(200)
         page.click('.qa:has-text("Діалоги")'); page.wait_for_timeout(200)

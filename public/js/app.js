@@ -416,8 +416,12 @@ function streakInfo() { return C.streakInfo(studied, today()); }
 function streak() { return streakInfo().days; }
 function renderStreak() {
   const s = streak();
-  $('streak').innerHTML = s > 0 ? ICON.flame + '<span><b>' + days(s) + '</b> поспіль</span>' : '';
+  const b = $('streak');
+  b.innerHTML = s > 0 ? ICON.flame + '<span><b>' + days(s) + '</b> поспіль</span>' : ICON.flame + '<span>серія</span>';
+  b.classList.toggle('zero', !s);
+  b.setAttribute('aria-label', s > 0 ? 'Серія ' + days(s) + ' поспіль: відкрити календар' : 'Календар серії');
 }
+$('streak').addEventListener('click', () => openStreakSheet());
 function renderTape(done, total, label, remUnits, hideLeft, floorPct) {
   const pct = total > 0 ? Math.min(100, Math.max(floorPct || 0, done / total * 100)) : 0;
   $('tapeFill').style.width = pct + '%';
@@ -559,9 +563,9 @@ function heroEl(text) {
   return h;
 }
 /* Правильна відповідь: спалах 14 частинок у кольорах теми з верхнього краю нижньої панелі */
-function burst() {
+function burst(anchor) {
   if (motionOff()) return;
-  const foot = $('foot');
+  const foot = anchor || $('foot');
   const r = foot ? foot.getBoundingClientRect() : { left: 0, width: innerWidth, top: innerHeight - 120 };
   const box = el('div', 'burst');
   box.style.transform = 'translate(' + Math.round(r.left + r.width / 2) + 'px,' + Math.round(r.top + 6) + 'px)';
@@ -587,7 +591,10 @@ function weekSection() {
   const rests = new Set(info.rests);
   const sec = el('section', 'section');
   const title = el('h3', 'section-title', 'Цей тиждень');
-  title.appendChild(el('span', null, info.days ? 'серія ' + days(info.days) : 'серія ще не почата'));
+  const cal = el('button', 'link-btn small week-cal', 'Календар');
+  cal.type = 'button';
+  cal.addEventListener('click', openStreakSheet);
+  title.appendChild(cal);
   sec.appendChild(title);
   const row = el('div', 'week');
   let restShown = false;
@@ -759,6 +766,8 @@ function renderLearn() {
   const ls = canListen() ? listenIds().length : 0;
   if (ls >= 3) tiles.push(quick('listen', 'Слухати', 'у дорогу: ' + words(ls) + ' голосом, без рук', () => startListen()));
   if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
+  const quests = questsCard(plan);
+  if (quests) home.appendChild(quests);
   if (tiles.length) {
     const grid = el('div', 'qa-list');
     tiles.forEach(x => grid.appendChild(x));
@@ -1559,6 +1568,7 @@ function finish(g) {
   addTime();
   const res = session.answer(current.id, g, current.exercise);
   ui.res = res;
+  comboAfter(g);
   const counted = !!(session.practice && res.done);
   if (counted) practiceDone++;
   pushHistory({ id: current.id, exercise: current.exercise, source: current.source, done: counted });
@@ -5196,6 +5206,256 @@ function prTiles() {
   return out;
 }
 
+/* ---------- Завдання дня (як щоденні квести в Duolingo): три завдання, прогрес із журналу ---------- */
+function questGo(q) {
+  if (q.go === 'dialogs') openDialogs();
+  else if (q.go === 'dict') startDict();
+  else if (q.go === 'tell') startTell();
+  else if (q.go === 'grammar') showTab('grammar');
+  else if (q.go === 'listen') startListen();
+  else { const b = document.querySelector('#learnHome .dock .btn-primary'); if (b) b.click(); else startSession(); }
+}
+function untilMidnight() {
+  const now = new Date();
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const m = Math.max(1, Math.round((end - now) / 60000));
+  return m >= 60 ? 'ще ' + Math.floor(m / 60) + ' год ' + (m % 60) + ' хв' : 'ще ' + m + ' хв';
+}
+function questsCard(plan) {
+  const opt = {
+    newWords: !plan.newPaused && C.orderNew(allWords(), cards, settings.cats).length > 0,
+    dialogs: dlgIds().length > 0,
+    dict: dictCount() >= 10,
+    tell: TALKS.length > 0,
+    grammar: !!(window.GRAMMAR && Object.keys(GR.topics).length),
+    listen: canListen() && listenIds().length >= 20
+  };
+  const qs = C.dailyQuests(today(), log[C.dayKey(today())], opt);
+  if (!qs.length) return null;
+  const all = qs.every(q => q.done);
+  const box = el('section', 'quests' + (all ? ' all' : ''));
+  box.id = 'quests';
+  const head = el('div', 'q-head');
+  const ttl = el('h3', 'section-title', all ? 'Завдання дня виконано' : 'Завдання дня');
+  head.append(ttl, el('span', 'q-left', all ? 'нові завтра' : untilMidnight()));
+  box.appendChild(head);
+  qs.forEach(q => {
+    const row = el('button', 'quest' + (q.done ? ' done' : ''));
+    row.type = 'button';
+    row.dataset.q = q.id;
+    const ic = el('span', 'q-ic');
+    ic.innerHTML = q.done ? ICON.check : (ICON[q.icon] || ICON.target);
+    const txt = el('span', 'q-text');
+    txt.appendChild(el('b', null, q.title));
+    const bar = el('span', 'q-bar');
+    const fill = el('i');
+    bar.appendChild(fill);
+    const pct = Math.round(q.value / q.target * 100);
+    requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = pct + '%'; }));
+    const num = el('span', 'q-num', q.value + ' / ' + q.target);
+    const line = el('span', 'q-line');
+    line.append(bar, num);
+    txt.appendChild(line);
+    row.append(ic, txt);
+    row.setAttribute('aria-label', q.title + ': ' + q.value + ' з ' + q.target + (q.done ? ', виконано' : ''));
+    if (!q.done) row.addEventListener('click', () => questGo(q));
+    else row.disabled = true;
+    box.appendChild(row);
+  });
+  if (all) {
+    const medal = el('div', 'q-medal');
+    medal.innerHTML = '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M15 4h8l4 10-6 4zM33 4h-8l-4 10 6 4z" fill="var(--accent-2)"/><circle cx="24" cy="30" r="13" fill="var(--mark)"/><circle cx="24" cy="30" r="9" fill="none" stroke="var(--mark-deep)" stroke-width="2"/><path d="m24 24 1.8 3.7 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" fill="var(--mark-deep)"/></svg>';
+    box.appendChild(medal);
+    if (meta.questDay !== today()) {
+      meta.questDay = today();
+      meta.questDays = (meta.questDays || 0) + 1;
+      save(KEYS.meta, meta);
+      setTimeout(() => { if (box.isConnected) { burst(box.querySelector('.q-head')); haptic('ok'); toast('Усі три завдання дня виконано'); } }, 350);
+    }
+  }
+  return box;
+}
+
+/* ---------- «N поспіль»: правильні відповіді підряд у занятті ---------- */
+let combo = 0, comboOf = null, comboTimer = null;
+function comboAfter(g) {
+  if (comboOf !== session) { combo = 0; comboOf = session; }
+  if (g === 1) { combo = 0; hideCombo(); return; }
+  combo++;
+  const l = todayLog();
+  if (combo > (l.cb || 0)) l.cb = combo;
+  if (combo >= 3) showCombo(combo);
+}
+function showCombo(n) {
+  let c = $('combo');
+  if (!c) {
+    c = el('div', 'combo');
+    c.id = 'combo';
+    c.setAttribute('role', 'status');
+    document.body.appendChild(c);
+  }
+  c.innerHTML = ICON.flame;
+  c.append(el('b', null, String(n)), document.createTextNode(' поспіль'));
+  const milestone = n % 5 === 0;
+  c.classList.remove('pop', 'big', 'gone');
+  c.style.visibility = 'hidden';
+  // Над нижньою панеллю з висновком: туди дивишся після відповіді
+  requestAnimationFrame(() => {
+    const f = $('foot');
+    const top = f ? f.getBoundingClientRect().top : innerHeight - 120;
+    c.style.top = Math.max(70, Math.round(top - 54)) + 'px';
+    c.style.visibility = '';
+    void c.offsetWidth;
+    c.classList.add('pop');
+    if (milestone) { c.classList.add('big'); burst(c); }
+  });
+  clearTimeout(comboTimer);
+  comboTimer = setTimeout(hideCombo, milestone ? 2600 : 1900);
+}
+function hideCombo() { const c = $('combo'); if (c) c.classList.add('gone'); clearTimeout(comboTimer); }
+
+/* ---------- Календар серії (як екран серії в Duolingo): місяць, вихідні, рекорди ---------- */
+const MONTHS = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+function firstStudyDay() {
+  let first = null;
+  Object.keys(log).forEach(k => { const d = Math.floor(Date.parse(k + 'T00:00:00Z') / 86400000); if (studied(d) && (first == null || d < first)) first = d; });
+  return first;
+}
+function closeAppSheet() {
+  const s = $('appSheet');
+  if (s) s.remove();
+  if (!$('ruleSheet')) document.body.classList.remove('sheet-open');
+}
+function openAppSheet(title, body) {
+  closeAppSheet();
+  const wrap = el('div', 'gsheet-wrap');
+  wrap.id = 'appSheet';
+  const panel = el('div', 'gsheet-panel');
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', title);
+  const head = el('div', 'gsheet-head');
+  const close = el('button', 'icon-btn');
+  close.type = 'button';
+  close.innerHTML = ICON.close;
+  close.setAttribute('aria-label', 'Закрити');
+  close.addEventListener('click', closeAppSheet);
+  head.append(el('b', null, title), close);
+  const b = el('div', 'gsheet-body');
+  b.appendChild(body);
+  panel.append(head, b);
+  wrap.appendChild(panel);
+  wrap.addEventListener('click', e => { if (e.target === wrap) closeAppSheet(); });
+  document.body.appendChild(wrap);
+  document.body.classList.add('sheet-open');
+  try { close.focus({ preventScroll: true }); } catch (e) {}
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('appSheet')) { e.stopPropagation(); closeAppSheet(); } }, true);
+function openStreakSheet() {
+  const t = today();
+  const info = streakInfo();
+  const first = firstStudyDay();
+  const best = first == null ? 0 : Math.max(info.days, C.bestStreak(studied, first, t));
+  let total = 0;
+  if (first != null) for (let d = first; d <= t; d++) if (studied(d)) total++;
+  const box = el('div', 'streak-sheet');
+  const hero = el('div', 'st-hero');
+  const fl = el('span', 'st-flame' + (info.todayDone ? ' lit' : ''));
+  fl.innerHTML = ICON.flame;
+  const num = el('div', 'st-num');
+  num.append(el('b', null, String(info.days)), el('span', null, C.plural(info.days, 'день поспіль', 'дні поспіль', 'днів поспіль')));
+  hero.append(fl, num);
+  box.appendChild(hero);
+  box.appendChild(el('p', 'st-note', info.todayDone ? 'Сьогодні вже займався: серію збережено.'
+    : info.restReady ? 'Сьогодні можна взяти вихідний: серія не обірветься. Але й 2 хвилини рахуються.'
+    : info.days ? 'Позаймайся сьогодні хоч 2 хвилини, щоб серія тривала.' : 'Почни сьогодні: навіть коротке заняття відкриває серію.'));
+  const stats = el('div', 'st-stats');
+  const stat = (v, l) => { const s = el('div', 'st-stat'); s.append(el('b', null, String(v)), el('span', null, l)); return s; };
+  let ym = C.monthOf(t);
+  const monthDays = () => { const g = C.monthGrid(ym.y, ym.m).flat().filter(d => d != null && d <= t && studied(d)); return g.length; };
+  stats.append(stat(best, 'найдовша серія'), stat(total, C.plural(total, 'день', 'дні', 'днів') + ' із заняттями'), stat(meta.questDays || 0, 'днів з усіма завданнями'));
+  box.appendChild(stats);
+  const cal = el('div', 'st-cal');
+  box.appendChild(cal);
+  const rests = new Set(info.rests);
+  const draw = () => {
+    cal.innerHTML = '';
+    const nav = el('div', 'st-nav');
+    const prev = el('button', 'icon-btn st-prev'); prev.type = 'button'; prev.innerHTML = ICON.chevron; prev.setAttribute('aria-label', 'Попередній місяць');
+    const next = el('button', 'icon-btn st-next'); next.type = 'button'; next.innerHTML = ICON.chevron; next.setAttribute('aria-label', 'Наступний місяць');
+    const cur = C.monthOf(t);
+    const firstM = first != null ? C.monthOf(first) : cur;
+    prev.disabled = ym.y * 12 + ym.m <= firstM.y * 12 + firstM.m;
+    next.disabled = ym.y * 12 + ym.m >= cur.y * 12 + cur.m;
+    prev.addEventListener('click', () => { if (ym.m === 0) ym = { y: ym.y - 1, m: 11 }; else ym = { y: ym.y, m: ym.m - 1 }; draw(); });
+    next.addEventListener('click', () => { if (ym.m === 11) ym = { y: ym.y + 1, m: 0 }; else ym = { y: ym.y, m: ym.m + 1 }; draw(); });
+    const md = monthDays();
+    const lbl = el('div', 'st-month');
+    lbl.append(el('b', null, MONTHS[ym.m] + ' ' + ym.y), el('span', null, md ? md + ' ' + C.plural(md, 'день', 'дні', 'днів') + ' із заняттями' : 'без занять'));
+    nav.append(prev, lbl, next);
+    cal.appendChild(nav);
+    const grid = el('div', 'st-grid');
+    ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'].forEach(w => grid.appendChild(el('span', 'st-wd', w)));
+    const lit = d => d != null && d <= t && (studied(d) || rests.has(d));
+    C.monthGrid(ym.y, ym.m).forEach(week => week.forEach((d, i) => {
+      if (d == null) { grid.appendChild(el('span', 'st-day out')); return; }
+      const done = d <= t && studied(d), rest = !done && rests.has(d);
+      const cls = ['st-day'];
+      if (done) cls.push('done');
+      if (rest) cls.push('rest');
+      if (d > t) cls.push('future');
+      if (d === t) cls.push('today');
+      if ((done || rest) && i > 0 && lit(week[i - 1])) cls.push('jl');
+      if ((done || rest) && i < 6 && lit(week[i + 1])) cls.push('jr');
+      const c = el('span', cls.join(' '));
+      const n = el('i', null, String(+C.dayKey(d).slice(8)));
+      if (rest) n.innerHTML = ICON.moon;
+      c.appendChild(n);
+      c.setAttribute('aria-label', C.fmtDate(d) + (done ? ': було заняття' : rest ? ': вихідний, серія не обірвалась' : ''));
+      grid.appendChild(c);
+    }));
+    cal.appendChild(grid);
+  };
+  draw();
+  const legend = el('p', 'st-legend');
+  const dot = el('i', 'lg done');
+  const moon = el('i', 'lg rest'); moon.innerHTML = ICON.moon;
+  legend.append(dot, document.createTextNode(' заняття   '), moon, document.createTextNode(' вихідний: один пропуск на 7 днів серію не обриває'));
+  box.appendChild(legend);
+  openAppSheet('Серія', box);
+}
+
+/* ---------- Карта активності за 20 тижнів (як у GitHub чи Anki): що темніше, то більше зроблено ---------- */
+function heatmap() {
+  const t = today();
+  const weeks = C.activityWeeks(log, t, 20);
+  const box = el('div', 'heat');
+  const months = el('div', 'heat-months');
+  let lastM = -1;
+  weeks.forEach((col, i) => {
+    const m = C.monthOf(col[0].d).m;
+    const s = el('span', null, m !== lastM && i < weeks.length - 1 ? MONTHS[m].slice(0, 3).toLowerCase() : '');
+    lastM = m;
+    months.appendChild(s);
+  });
+  const grid = el('div', 'heat-grid');
+  grid.setAttribute('role', 'img');
+  let active = 0;
+  weeks.forEach(col => col.forEach(c => {
+    const s = el('i', 'lv' + c.lvl + (c.d === t ? ' today' : ''));
+    if (c.lvl > 0) active++;
+    s.title = C.fmtDate(c.d) + (c.lvl < 0 ? '' : c.score ? ': ' + c.score + ' ' + C.plural(c.score, 'дія', 'дії', 'дій') : ': без занять');
+    grid.appendChild(s);
+  }));
+  grid.setAttribute('aria-label', 'Активність за 20 тижнів: днів із заняттями ' + active);
+  const legend = el('div', 'heat-legend');
+  legend.appendChild(el('span', null, 'менше'));
+  [0, 1, 2, 3, 4].forEach(l => legend.appendChild(el('i', 'lv' + l)));
+  legend.appendChild(el('span', null, 'більше'));
+  box.append(months, grid, legend);
+  grid.addEventListener('click', e => { const c = e.target.closest('i'); if (c && c.title) toast(c.title); });
+  return box;
+}
+
 /* Клавіатура (для комп'ютера) */
 document.addEventListener('keydown', e => {
   if (currentTab !== 'learn') return;
@@ -5559,6 +5819,8 @@ function renderReport() {
     rt.textContent = 'Оцінка з\'явиться після кількох днів повторень. Алгоритм тримає ціль ' + target + '%: саме стільки слів ти маєш згадувати на повторенні.';
   }
 
+  const hb = $('heatBox');
+  if (hb) { hb.innerHTML = ''; hb.appendChild(heatmap()); }
   const chart = $('chart'); chart.innerHTML = '';
   const vals = [];
   for (let d = t - 13; d <= t; d++) { const l = log[C.dayKey(d)]; vals.push({ d, r: l ? l.r || 0 : 0 }); }
@@ -6069,7 +6331,7 @@ if (/[?&]test=1/.test(location.search)) {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
     get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, listenIds, startListen,
-    get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, get pr() { return pr; }, startDict, startTell, TALKS, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, gramPracticeDue,
+    get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, get pr() { return pr; }, startDict, startTell, TALKS, openStreakSheet, get combo() { return combo; }, showCombo, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, gramPracticeDue,
     debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());

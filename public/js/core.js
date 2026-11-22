@@ -1217,7 +1217,88 @@
     return shuffle(pool, rng).slice(0, n);
   }
 
+  /* ---------- Завдання дня (як щоденні квести в Duolingo) ----------
+     Три завдання на день: одне на обсяг заняття, одне на якість, одне на іншу методику. Набір залежить
+     лише від дня (той самий весь день), прогрес — із сьогоднішнього запису в журналі. */
+  function dayRng(day) {
+    let s = Math.abs(Math.floor(day * 7919 + 104729)) % 2147483647 || 1;
+    return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  }
+  function dailyQuests(day, l, opt) {
+    l = l || {};
+    opt = opt || {};
+    const rng = dayRng(day);
+    const pick = arr => { const a = arr.filter(Boolean); return a.length ? a[Math.floor(rng() * a.length)] : null; };
+    const minutes = Math.floor(((l.ms || 0) + (l.lms || 0)) / 60000);
+    const study = pick([
+      { id: 'answers', icon: 'check', title: 'Дай 30 відповідей у заняттях', target: 30, value: l.r || 0, go: 'session' },
+      { id: 'minutes', icon: 'timer', title: 'Позаймайся 12 хвилин', target: 12, value: minutes, go: 'session' },
+      { id: 'right', icon: 'target', title: '25 правильних відповідей', target: 25, value: Math.max(0, (l.r || 0) - (l.a || 0)), go: 'session' }
+    ]);
+    const skill = pick([
+      { id: 'combo', icon: 'flame', title: '8 правильних відповідей поспіль', target: 8, value: l.cb || 0, go: 'session' },
+      opt.newWords ? { id: 'new', icon: 'plus', title: 'Познайомся з 5 новими словами', target: 5, value: l.n || 0, go: 'session' } : null
+    ]);
+    const method = pick([
+      opt.dialogs ? { id: 'dialog', icon: 'chat', title: 'Діалог: тренування або рольова гра', target: 1, value: (l.dlr || []).length, go: 'dialogs' } : null,
+      opt.dict ? { id: 'dict', icon: 'dictation', title: 'Диктант: напиши 10 речень', target: 10, value: l.dc || 0, go: 'dict' } : null,
+      opt.tell ? { id: 'tell', icon: 'speak', title: 'Розповідь 4/3/2: три раунди вголос', target: 3, value: l.tk || 0, go: 'tell' } : null,
+      opt.grammar ? { id: 'grammar', icon: 'pen', title: 'Граматика: 12 завдань', target: 12, value: (l.gt || 0) + (l.gp || 0), go: 'grammar' } : null,
+      opt.listen ? { id: 'listen', icon: 'listen', title: 'Послухай 20 слів у режимі «Слухати»', target: 20, value: l.ls || 0, go: 'listen' } : null
+    ]);
+    return [study, skill, method].filter(Boolean).map(q => Object.assign({}, q, { done: q.value >= q.target, value: Math.min(q.target, q.value) }));
+  }
+
+  /* ---------- Календар і карта активності ----------
+     Дні — номери dayNum. Тиждень з понеділка. Рівень активності 0–4 за кількістю відповідей і вправ. */
+  function weekdayOf(n) { return (new Date(n * 86400000).getUTCDay() + 6) % 7; }   // 0 = понеділок
+  function monthOf(n) { const k = dayKey(n); return { y: +k.slice(0, 4), m: +k.slice(5, 7) - 1 }; }
+  function monthGrid(y, m) {
+    const first = Math.floor(Date.UTC(y, m, 1) / 86400000);
+    const last = Math.floor(Date.UTC(y, m + 1, 1) / 86400000) - 1;
+    const weeks = [];
+    let week = new Array(weekdayOf(first)).fill(null);
+    for (let d = first; d <= last; d++) {
+      week.push(d);
+      if (week.length === 7) { weeks.push(week); week = []; }
+    }
+    if (week.length) { while (week.length < 7) week.push(null); weeks.push(week); }
+    return weeks;
+  }
+  function activityScore(l) {
+    if (!l) return 0;
+    return (l.r || 0) + (l.gt || 0) + (l.gp || 0) + (l.dl || 0) + (l.dc || 0) + (l.tk || 0) * 5 + Math.round((l.ls || 0) / 2);
+  }
+  function activityLevel(score) { return score <= 0 ? 0 : score < 15 ? 1 : score < 40 ? 2 : score < 80 ? 3 : 4; }
+  function activityWeeks(log, today, weeks) {
+    const end = today + (6 - weekdayOf(today));
+    const start = end - weeks * 7 + 1;
+    const out = [];
+    for (let w = 0; w < weeks; w++) {
+      const col = [];
+      for (let i = 0; i < 7; i++) {
+        const d = start + w * 7 + i;
+        const s = d > today ? -1 : activityScore(log[dayKey(d)]);
+        col.push({ d, score: Math.max(0, s), lvl: s < 0 ? -1 : activityLevel(s) });
+      }
+      out.push(col);
+    }
+    return out;
+  }
+  /* Найдовша серія за весь журнал (з тим самим правилом вихідного: один пропуск на 7 днів) */
+  function bestStreak(has, from, today) {
+    let best = 0, cur = 0, lastRest = null;
+    for (let d = from; d <= today; d++) {
+      if (has(d)) { cur++; best = Math.max(best, cur); continue; }
+      if (cur > 0 && has(d + 1) && (lastRest == null || d - lastRest >= 7)) { lastRest = d; continue; }
+      if (d === today) continue;
+      cur = 0; lastRest = null;
+    }
+    return best;
+  }
+
   const api = {
+    dailyQuests, weekdayOf, monthOf, monthGrid, activityScore, activityLevel, activityWeeks, bestStreak,
     dictationCheck, dictSkeleton, dictationPool, pickDictation, TELL_ROUNDS, pickTalk, talkWords,
     dialogYou, dialogClips, dialogClipIndex, dialogTasks, dialogOrderOk, dialogSchedule, dialogStars, dialogDue,
     paceAdvice,

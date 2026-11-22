@@ -1296,3 +1296,108 @@ html.no-motion .bub{transition:none}
 .tell-bar .say.sm{margin:0}
 html.no-motion .bub.echo::after,html.no-motion .tell-recdot::before{animation:none}
 @media (prefers-reduced-motion: reduce){.bub.echo::after,.tell-recdot::before{animation:none}}
+
+/* ---------- Ідеї з інших сервісів: завдання дня, «N поспіль», календар серії, карта активності ---------- */
+/* Серія в шапці — кнопка, що відкриває календар */
+button.streak{border:0;background:var(--surface);padding:7px 12px 7px 10px;border-radius:999px;min-height:36px;box-shadow:inset 0 0 0 1.5px var(--line-soft);cursor:pointer;font:inherit;font-size:14px;font-weight:700;color:var(--muted)}
+button.streak:active{transform:scale(.96)}
+button.streak.zero svg{color:var(--muted)}
+.week-cal{font-size:14px;margin:0;padding:0;min-height:0}
+/* Завдання дня */
+.quests{position:relative;margin:16px 0 0;padding:14px 14px 8px;border-radius:22px;background:var(--surface);border:1.5px solid var(--line-soft);overflow:hidden}
+.quests .q-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 2px 6px}
+.quests .q-head .section-title{margin:0}
+.q-left{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.quest{display:flex;align-items:center;gap:12px;width:100%;padding:9px 2px;border:0;background:none;text-align:left;color:var(--ink);font:inherit}
+.quest + .quest{border-top:1px solid var(--line-soft)}
+.quest:not(:disabled):active{opacity:.7}
+.q-ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-text)}
+.q-ic svg{width:20px;height:20px}
+.quest.done .q-ic{background:var(--ok);color:#fff}
+.q-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.q-text b{font-size:15px;font-weight:800;line-height:1.25}
+.quest.done .q-text b{color:var(--muted)}
+.q-line{display:flex;align-items:center;gap:10px}
+.q-bar{flex:1;height:10px;border-radius:5px;background:var(--sunk);overflow:hidden}
+.q-bar i{display:block;height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .9s var(--spring,ease)}
+.quest.done .q-bar i{background:var(--ok)}
+.q-num{flex:none;min-width:48px;text-align:right;font-size:12.5px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
+.quests.all{border-color:color-mix(in srgb,var(--mark) 70%,transparent);background:linear-gradient(160deg,color-mix(in srgb,var(--mark) 16%,var(--surface)),var(--surface) 60%)}
+.q-medal{position:absolute;right:12px;top:8px;width:44px;height:44px;animation:pop .7s var(--spring,ease) both}
+.quests.all .q-left{margin-right:48px}
+.q-medal svg{width:100%;height:100%}
+/* «N поспіль» під час заняття */
+.combo{position:fixed;left:50%;top:70px;z-index:30;display:flex;align-items:center;gap:5px;padding:7px 14px 7px 11px;border-radius:999px;background:var(--glass-strong,var(--surface));-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);box-shadow:0 10px 28px -14px rgba(0,0,0,.45),inset 0 0 0 1px var(--glass-edge,var(--line-soft));font-size:14px;font-weight:700;color:var(--ink);pointer-events:none;transform:translate(-50%,0);opacity:0}
+.combo svg{width:18px;height:18px;color:var(--orange)}
+.combo b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.combo.pop{animation:comboIn .45s var(--spring,ease) forwards}
+.combo.big{font-size:15px;padding:9px 18px 9px 14px}
+.combo.big svg{width:22px;height:22px}
+.combo.big b{font-size:20px}
+.combo.gone{animation:comboOut .35s ease forwards}
+@keyframes comboIn{from{opacity:0;transform:translate(-50%,-10px) scale(.8)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes comboOut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-8px)}}
+body:not(.in-session) .combo{display:none}
+/* Календар серії */
+.streak-sheet{padding-bottom:6px}
+.st-hero{display:flex;align-items:center;gap:14px;margin:4px 0 6px}
+.st-flame{width:62px;height:62px;border-radius:20px;display:grid;place-items:center;background:var(--sunk);color:var(--muted)}
+.st-flame svg{width:34px;height:34px}
+.st-flame.lit{background:linear-gradient(150deg,color-mix(in srgb,var(--orange) 22%,var(--surface)),color-mix(in srgb,var(--mark) 30%,var(--surface)));color:var(--orange)}
+.st-num b{display:block;font-family:var(--display);font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.st-num span{font-size:15px;font-weight:700;color:var(--muted)}
+.st-note{margin:6px 0 12px;font-size:15px;line-height:1.45}
+.st-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.st-stat{padding:10px 10px 11px;border-radius:16px;background:var(--surface);border:1.5px solid var(--line-soft)}
+.st-stat b{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.st-stat span{display:block;font-size:12px;font-weight:600;line-height:1.3;color:var(--muted)}
+.st-cal{margin-top:14px;padding:10px 10px 12px;border-radius:20px;background:var(--surface);border:1.5px solid var(--line-soft)}
+.st-nav{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.st-nav .icon-btn{flex:none}
+.st-prev svg{transform:rotate(180deg)}
+.st-nav .icon-btn:disabled{opacity:.3}
+.st-month{flex:1;text-align:center;display:flex;flex-direction:column}
+.st-month b{font-size:16px;font-weight:800}
+.st-month span{font-size:12.5px;font-weight:600;color:var(--muted)}
+.st-grid{display:grid;grid-template-columns:repeat(7,1fr);row-gap:6px}
+.st-wd{text-align:center;font-size:12px;font-weight:700;color:var(--muted);padding-bottom:2px}
+.st-day{position:relative;height:38px;display:grid;place-items:center}
+.st-day i{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.st-day.done i{background:var(--accent);color:var(--on-accent)}
+.st-day.rest i{background:var(--sunk);color:var(--accent-text)}
+.st-day.rest i svg{width:16px;height:16px}
+.st-day.future i{color:color-mix(in srgb,var(--muted) 55%,transparent)}
+.st-day.today i{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+.st-day.today:not(.done) i{box-shadow:inset 0 0 0 2px var(--accent)}
+/* Дні серії з'єднані стрічкою, як на календарі серії в Duolingo */
+.st-day.jl::before,.st-day.jr::after{content:"";position:absolute;top:7px;height:24px;background:color-mix(in srgb,var(--accent) 22%,transparent)}
+.st-day.jl::before{left:0;right:50%}
+.st-day.jr::after{left:50%;right:0}
+.st-legend{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:10px 2px 0;font-size:13px;color:var(--muted);line-height:1.4}
+.st-legend .lg{width:16px;height:16px;border-radius:50%;display:inline-grid;place-items:center}
+.st-legend .lg.done{background:var(--accent)}
+.st-legend .lg.rest{background:var(--sunk);color:var(--accent-text)}
+.st-legend .lg svg{width:11px;height:11px}
+/* Карта активності */
+.heat{margin:6px 0 4px}
+.heat-months,.heat-grid{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:3px}
+.heat-months span{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:visible;height:15px}
+.heat-grid{grid-auto-flow:column;grid-template-rows:repeat(7,auto)}
+.heat-grid i{aspect-ratio:1;border-radius:4px;background:var(--sunk)}
+.heat-grid i.lv-1{background:transparent}
+.heat-grid i.lv1{background:color-mix(in srgb,var(--accent) 28%,var(--sunk))}
+.heat-grid i.lv2{background:color-mix(in srgb,var(--accent) 52%,var(--sunk))}
+.heat-grid i.lv3{background:color-mix(in srgb,var(--accent) 78%,var(--sunk))}
+.heat-grid i.lv4{background:var(--accent)}
+.heat-grid i.today{box-shadow:inset 0 0 0 2px var(--ink)}
+.heat-legend{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:8px;font-size:12px;font-weight:600;color:var(--muted)}
+.heat-legend i{width:12px;height:12px;border-radius:3px;background:var(--sunk)}
+.heat-legend i.lv1{background:color-mix(in srgb,var(--accent) 28%,var(--sunk))}
+.heat-legend i.lv2{background:color-mix(in srgb,var(--accent) 52%,var(--sunk))}
+.heat-legend i.lv3{background:color-mix(in srgb,var(--accent) 78%,var(--sunk))}
+.heat-legend i.lv4{background:var(--accent)}
+.heat-legend span{margin:0 4px}
+html.no-motion .combo.pop,html.no-motion .combo.gone,html.no-motion .q-medal{animation:none}
+html.no-motion .combo.pop{opacity:1}
+html.no-motion .q-bar i{transition:none}
+@media (prefers-reduced-motion: reduce){.combo.pop{animation:none;opacity:1}.combo.gone{animation:none;opacity:0}.q-medal{animation:none}.q-bar i{transition:none}}

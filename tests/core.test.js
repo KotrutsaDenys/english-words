@@ -767,6 +767,41 @@ test('Розповідь 4/3/2: теми повні, вибір найдавні
   ws.forEach(w => assert.ok(cards[w.id].first >= 86, 'лише вивчені за 14 днів'));
 });
 
+test('Завдання дня, календар місяця, карта активності, найдовша серія', () => {
+  const all = { newWords: 1, dialogs: 1, dict: 1, tell: 1, grammar: 1, listen: 1 };
+  const t = C.dayNum(new Date(2026, 10, 22));
+  const q1 = C.dailyQuests(t, { r: 12, a: 2, ms: 400000, cb: 9, dc: 10 }, all);
+  assert.strictEqual(q1.length, 3);
+  assert.deepStrictEqual(C.dailyQuests(t, {}, all).map(q => q.id), q1.map(q => q.id), 'набір завдань сталий протягом дня');
+  q1.forEach(q => { assert.ok(q.value <= q.target); assert.strictEqual(q.done, q.value >= q.target); });
+  const ids = new Set();
+  for (let d = t; d < t + 30; d++) C.dailyQuests(d, {}, all).forEach(q => ids.add(q.id));
+  assert.ok(ids.size >= 8, 'завдання різняться день у день: ' + [...ids]);
+  const bare = C.dailyQuests(t, {}, {});
+  assert.ok(bare.length === 2 && bare.every(q => q.go === 'session'), 'без методик лишаються завдання на заняття');
+  assert.ok(C.dailyQuests(t, { cb: 8, r: 40, a: 0, ms: 13 * 60000, n: 5, dc: 10, tk: 3, gt: 12, ls: 20, dlr: [{}] }, all).every(q => q.done));
+  // Листопад 2026 починається в неділю: 6 рядків, перший день — сьомий у рядку
+  const g = C.monthGrid(2026, 10);
+  assert.strictEqual(g.length, 6);
+  assert.strictEqual(g[0].indexOf(C.dayNum(new Date(2026, 10, 1))), 6);
+  assert.strictEqual(g.flat().filter(d => d != null).length, 30);
+  assert.strictEqual(C.weekdayOf(C.dayNum(new Date(2026, 10, 23))), 0);
+  const log = {};
+  log[C.dayKey(t)] = { r: 50 };
+  log[C.dayKey(t - 1)] = { r: 5, tk: 3 };
+  const w = C.activityWeeks(log, t, 20);
+  assert.strictEqual(w.length, 20);
+  assert.ok(w.every(c => c.length === 7));
+  const flat = w.flat();
+  assert.strictEqual(flat.find(c => c.d === t).lvl, 3);
+  assert.strictEqual(flat.find(c => c.d === t - 1).lvl, 2);
+  assert.ok(flat.filter(c => c.d > t).every(c => c.lvl === -1), 'майбутні дні порожні');
+  assert.strictEqual(C.weekdayOf(w[0][0].d), 0, 'тиждень з понеділка');
+  const days = new Set([1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15].map(x => 1000 + x));
+  assert.strictEqual(C.bestStreak(d => days.has(d), 1000, 1016), 13, 'вихідні раз на 7 днів не обривають');
+  assert.strictEqual(C.bestStreak(d => days.has(d) && d !== 1008, 1000, 1016), 6, 'другий пропуск за тиждень обриває');
+});
+
 test('Стилі й скрипти в index.html мають актуальні ?v= (python3 tools/stamp.py)', () => {
   const crypto = require('crypto');
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
