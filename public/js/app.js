@@ -7,6 +7,8 @@ const F = window.FSRS;
 const CATS = window.CATEGORIES;
 const BASE = window.WORDS;
 const AUD = window.AUDIO || { voices: [], files: {} };
+/* Ірландський голос «Кіара» (Chatterbox + VCTK p288): AUDIO_CIARA[id] = [хеш, [початок, кінець] × 8], як AUDIO.one */
+const AUDV = window.AUDIO_CIARA || {};
 const PHRASES = window.PHRASES || {};
 
 /* ---------- Дрібниці ---------- */
@@ -50,7 +52,7 @@ function shortDays(n) {
 let currentTab = 'learn';
 const DEFAULT_SETTINGS = {
   newPerDay: 10, mode: 'mix', typing: true, speaking: true, sessionLen: 0, retention: 0.9,
-  autoplay: true, voiceSrc: 'emma', voice: '', rate: 1, cats: {}, pretest: true,
+  autoplay: true, voiceSrc: 'ciara', voice: '', rate: 1, cats: {}, pretest: true,
   autoNext: true, quiet: false, haptics: true,
   listen: { shadow: false, phrases: false, uk: true },
   theme: 'cobalt', appearance: 'auto'
@@ -67,6 +69,8 @@ let notes = load(KEYS.notes, {});
 let own = load(KEYS.own, {});
 let log = load(KEYS.log, {});
 let meta = load(KEYS.meta, {});
+// 22.11.2026 Денис вибрав ірландський голос: хто слухав Емму, переходить на Кіару один раз (повернути можна в Параметрах)
+if (settings.voiceSrc === 'emma' && !meta.ciara) { settings.voiceSrc = 'ciara'; meta.ciara = 1; save(KEYS.settings, settings); save(KEYS.meta, meta); }
 let cards = load(KEYS.cards, null);
 if (!cards) {
   const old = load(KEYS.progress, null);
@@ -110,7 +114,7 @@ function applyLook() {
 }
 applyLook();
 
-/* ---------- Вимова: записи Емми і голос iPhone як запасний ---------- */
+/* ---------- Вимова: записи Кіари, Емми й голос iPhone як запасний ---------- */
 const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
 let voices = [];
 let ukVoices = [];
@@ -141,7 +145,9 @@ function speakDevice(text, rate) {
 }
 if (synth) { loadVoices(); synth.addEventListener ? synth.addEventListener('voiceschanged', loadVoices) : (synth.onvoiceschanged = loadVoices); }
 
-const VOICE_NAMES = { emma: 'Емма' };
+const VOICE_NAMES = { ciara: 'Кіара', emma: 'Емма' };
+/* Слова, яких Кіара ще не озвучила, звучать Еммою */
+function emmaSrc() { return settings.voiceSrc === 'ciara' ? 'emma' : settings.voiceSrc; }
 const player = new Audio();
 player.preload = 'auto';
 try { player.preservesPitch = true; player.webkitPreservesPitch = true; } catch (e) {}
@@ -150,7 +156,7 @@ let playing = '';
 let dplay = null;       // «Слухати весь діалог»: { id, timer, … }
 function textFor(w, kind) { return kind === 'x2' ? (w.sayEx2 || w.ex2) : kind === 'x' ? (w.sayEx || w.ex) : (w.say || w.en); }
 function clipUrl(w, kind) {
-  const voice = settings.voiceSrc;
+  const voice = emmaSrc();
   if (!w || !AUD.voices.includes(voice)) return null;
   const f = AUD.files[w.id];
   if (kind === 'x' && w.exN === 2) kind = 'x2';
@@ -160,7 +166,8 @@ function clipUrl(w, kind) {
 /* Нові слова: усе в одному файлі (слово, два приклади, фрази), AUDIO.one[id] = [хеш, [початок, кінець], ...].
    Так слово займає один файл, а не чотири (ліміт Cloudflare 20 000 файлів). */
 function oneOf(w) {
-  const voice = settings.voiceSrc;
+  if (w && settings.voiceSrc === 'ciara' && AUDV[w.id]) { const c = AUDV[w.id]; return { url: '/audio/ciara/' + w.id + '-c' + c[0] + '.mp3', segs: c.slice(1) }; }
+  const voice = emmaSrc();
   if (!w || !AUD.one || !AUD.voices.includes(voice)) return null;
   const o = AUD.one[w.id];
   return o ? { url: '/audio/' + voice + '/' + w.id + '-a' + o[0] + '.mp3', segs: o.slice(1) } : null;
@@ -178,7 +185,7 @@ function phraseTimes(w) {
   if (o) return [''].concat(o.segs.slice(3));
   return (AUD.phrases && w && AUD.phrases[w.id]) || null;
 }
-function canListen() { return (AUD.voices.includes(settings.voiceSrc) && AUD.voices.length > 0) || !!synth; }
+function canListen() { return (AUD.voices.includes(emmaSrc()) && AUD.voices.length > 0) || !!synth; }
 function stopAudio() { if (dplay) dlgStopAll(); clearSegment(); try { player.pause(); } catch (e) {} if (synth) synth.cancel(); }
 /* Фрази слова лежать в одному файлі: граємо шматок [початок, кінець] і зупиняємось у паузі після нього */
 let segEnd = 0, segTimer = null, segToken = 0;
@@ -234,7 +241,7 @@ function playUrl(url, fallbackText, rate) {
 player.addEventListener('error', () => { if (playing) { const t = player.dataset.fallback; playing = ''; if (t) speakDevice(t); } });
 /* Файл з усіма фразами слова: AUDIO.phrases[id] = [хеш, [початок, кінець], ...] */
 function phrasePackUrl(w) {
-  const voice = settings.voiceSrc;
+  const voice = emmaSrc();
   const one = oneOf(w);
   if (one) return one.segs.length > 3 ? one.url : null;
   if (!w || !AUD.voices.includes(voice) || !AUD.phrases) return null;
@@ -2887,7 +2894,7 @@ function lOptions() {
   const hint = el('p', 'tip');
   const drawHint = () => {
     hint.textContent = settings.listen.shadow
-      ? 'Після кожного запису пауза: повтори вголос слідом за Еммою, так розмова пізніше йде легше.'
+      ? 'Після кожного запису пауза: повтори вголос слідом, так розмова пізніше йде легше.'
       : 'Слухай і згадуй переклад до того, як він з\'явиться. Розклад повторень це не змінює.';
   };
   const chip = (key, text, restart) => {
@@ -5237,7 +5244,7 @@ function renderSettings() {
     rb.appendChild(p);
   }
   rb.appendChild(reminderPanel(() => renderSettings()));
-  const vopts = AUD.voices.map(v => [v, VOICE_NAMES[v] || v]).concat([['device', 'iPhone']]);
+  const vopts = [['ciara', VOICE_NAMES.ciara]].concat(AUD.voices.map(v => [v, VOICE_NAMES[v] || v]), [['device', 'iPhone']]);
   segment('segVoice', vopts, settings.voiceSrc, v => { settings.voiceSrc = v; re(); sayWord(byId(SAMPLE_ID), 'x'); });
   segment('segRate', [[0.75, 'Повільно'], [0.9, 'Середньо'], [1, 'Звичайно']], settings.rate, v => { settings.rate = v; re(); sayWord(byId(SAMPLE_ID), 'x'); });
   $('voiceLbl').textContent = settings.voiceSrc === 'device' ? 'Голос iPhone' : 'Голос iPhone для слів, доданих на сайті';
