@@ -6094,9 +6094,11 @@ $('voice').addEventListener('change', e => { settings.voice = e.target.value; sa
 $('voiceTest').innerHTML = ICON.speaker;
 $('voiceTest').addEventListener('click', () => speakDevice('Can you give me a hand with this?'));
 
-/* Записи для офлайну. Усі записи важать ~660 МБ, тож за замовчуванням лише потрібні найближчим часом */
+/* Записи для офлайну. Файл Кіари на слово ≈ 0,08 МБ, Еммині записи слова разом ≈ 0,21 МБ,
+   тож за замовчуванням лише потрібні найближчим часом */
 let offlineBusy = false;
-const MB_PER_WORD = 0.21;
+const MB_CIARA = 0.08, MB_EMMA = 0.21;
+function mbFor(list) { return list.reduce((s, w) => s + (settings.voiceSrc === 'ciara' && AUDV[w.id] ? MB_CIARA : MB_EMMA), 0); }
 function wordUrls(w) {
   const out = [];
   const one = oneOf(w);
@@ -6116,8 +6118,8 @@ function renderOffline() {
   if (offlineBusy || !btn) return;
   const soon = offlineSoon();
   btn.innerHTML = '';
-  btn.append(document.createTextNode('Завантажити записи для офлайну'), el('small', null, words(soon.length) + ': ті, що вчиш, і 50 наступних, ≈ ' + mbText(soon.length * MB_PER_WORD)));
-  $('offlineAll').textContent = 'або всі ' + words(allWords().length) + ' (≈ ' + mbText(allWords().length * MB_PER_WORD) + ')';
+  btn.append(document.createTextNode('Завантажити записи для офлайну'), el('small', null, words(soon.length) + ': ті, що вчиш, і 50 наступних, ≈ ' + mbText(mbFor(soon))));
+  $('offlineAll').textContent = 'або всі ' + words(allWords().length) + ' (≈ ' + mbText(mbFor(allWords())) + ')';
   if ('caches' in window) caches.open('ew-audio-v2').then(c => c.keys()).then(k => {
     $('offlineNote').textContent = k.length ? 'На телефоні вже збережено ' + k.length + ' ' + C.plural(k.length, 'запис', 'записи', 'записів') + '.' : '';
   }).catch(() => {});
@@ -6145,8 +6147,7 @@ async function downloadAudio(list, btn) {
 }
 $('offlineAudio').addEventListener('click', () => downloadAudio(offlineSoon(), $('offlineAudio')));
 $('offlineAll').addEventListener('click', () => {
-  const n = allWords().length;
-  if (!confirm('Завантажити всі записи (≈ ' + mbText(n * MB_PER_WORD) + ')? Краще через Wi-Fi.')) return;
+  if (!confirm('Завантажити всі записи (≈ ' + mbText(mbFor(allWords())) + ')? Краще через Wi-Fi.')) return;
   downloadAudio(allWords(), $('offlineAudio'));
 });
 
