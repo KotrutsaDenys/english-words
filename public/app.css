@@ -604,11 +604,11 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 .fixw.target.was{background:var(--mark);color:var(--on-mark);border-bottom-color:var(--mark-deep)}
 .fix-uk:empty{display:none}
 .gdue{display:block;margin-top:2px;font-size:12.5px;font-weight:800;color:var(--accent-text)}
-.gsec-test{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:8px 0 0;padding:10px 12px;min-height:52px;border-radius:14px;border:1.5px dashed var(--line);background:none;color:var(--ink)}
+.gsec-test,.gspeak-all{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:8px 0 0;padding:10px 12px;min-height:52px;border-radius:14px;border:1.5px dashed var(--line);background:none;color:var(--ink)}
 .gsec-test .qa-ic{background:var(--accent-soft);color:var(--accent-text)}
-.gsec-test .qa-text{display:flex;flex-direction:column;gap:1px;min-width:0}
-.gsec-test b{font-weight:800;font-size:15px}
-.gsec-test small{color:var(--muted);font-size:13px;font-weight:600}
+.gsec-test .qa-text,.gspeak-all .qa-text{display:flex;flex-direction:column;gap:1px;min-width:0}
+.gsec-test b,.gspeak-all b{font-weight:800;font-size:15px}
+.gsec-test small,.gspeak-all small{color:var(--muted);font-size:13px;font-weight:600}
 /* «Головне»: коротка шпаргалка над правилом, жовта риска маркера як у значку */
 .gkey{margin:0 0 14px;padding:12px 16px 12px 18px;border-radius:20px;background:var(--surface);border:1.5px solid var(--line-soft);position:relative;overflow:hidden}
 .gkey::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--mark-deep)}
@@ -842,8 +842,8 @@ body:has(#learnHome.has-dock:not([hidden])) .toast{bottom:calc(env(safe-area-ins
   box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 0 .5px var(--glass-rim),0 12px 26px -12px rgba(20,30,80,.6);transition:opacity .25s,transform .5s var(--spring)}
 
 /* Кнопки: пружинять під пальцем — швидко стискаються, повертаються з легким перельотом */
-.btn,.opt-btn,.say,.listen-big,.icon-btn,.gnext,.gsec-test,.gnav-btn,.qa-ic,.chip,.cat-cell{transition:transform .5s var(--spring),background-color .2s,border-color .2s,box-shadow .2s,opacity .2s}
-.btn:active,.gnext:active,.gsec-test:active,.gnav-btn:active{transform:scale(.965);transition-duration:.1s}
+.btn,.opt-btn,.say,.listen-big,.icon-btn,.gnext,.gsec-test,.gspeak-all,.gnav-btn,.qa-ic,.chip,.cat-cell{transition:transform .5s var(--spring),background-color .2s,border-color .2s,box-shadow .2s,opacity .2s}
+.btn:active,.gnext:active,.gsec-test:active,.gspeak-all:active,.gnav-btn:active{transform:scale(.965);transition-duration:.1s}
 .opt-btn:active{transform:scale(.98);transition-duration:.1s}
 .say:active,.listen-big:active,.icon-btn:active{transform:scale(.9);transition-duration:.1s}
 .btn-primary{background-image:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,0) 55%);
@@ -1081,6 +1081,8 @@ select.field{appearance:none;-webkit-appearance:none;padding-right:40px;
 .qa-ic{background:var(--accent-soft);color:var(--accent-text)}
 /* Інші екрани теж з'являються каскадом (лише діти, бо transform на самому екрані зламав би закріплені кнопки) */
 #screen-dict:not([hidden]) > *,#screen-settings:not([hidden]) > *,#screen-report:not([hidden]) > *,#gramList:not([hidden]) > *,#gramTopic:not([hidden]) > *{animation:rise .55s var(--spring-soft) both;animation-delay:calc(var(--i,0) * 50ms)}
+/* «До завдань» з'являється лише коли тест поза екраном (.show); анімація з fill both тримала б його видимим завжди */
+#gramTopic:not([hidden]) > .gjump{animation:none}
 [data-screen] > :nth-child(2),#gramList > :nth-child(2),#gramTopic > :nth-child(2){--i:1}
 [data-screen] > :nth-child(3),#gramList > :nth-child(3),#gramTopic > :nth-child(3){--i:2}
 [data-screen] > :nth-child(4),#gramList > :nth-child(4),#gramTopic > :nth-child(4){--i:3}
@@ -1505,3 +1507,14 @@ html.no-motion .pgrid .qa.pt{transition:none}
 .dlg-head .gtitle{font-size:22px;font-weight:700;line-height:1.2}
 .report-title,.hero,.gtitle,.tell-title{text-wrap:balance}
 .rcard .rows > div:last-child{border-bottom:0}
+
+/* «Говори й пиши» (граматика мовою): сторінка теми, список тем, вправи */
+.gspeak{margin-top:16px;background:var(--surface);border-radius:22px;box-shadow:var(--lift);padding:4px 18px 18px}
+.gspeak .pgrid{margin-top:12px}
+.gspeak .pgrid .qa.pt{min-height:120px}
+.gspeak-all{border-style:solid;border-color:color-mix(in srgb,var(--c-coral) 40%,var(--line));margin:4px 0 14px}
+.gspeak-all .qa-ic{background:color-mix(in srgb,var(--c-coral) 18%,var(--surface));color:var(--c-coral)}
+.gq.sp-uk{font-size:21px;margin-top:6px}
+.sp-reveal{display:flex;align-items:flex-start;gap:10px;margin:14px 0 0;padding:12px 14px;border-radius:16px;background:var(--accent-soft)}
+.sp-reveal .gq{margin:0;flex:1;font-size:19px}
+.gres-uk{margin:2px 0 0;font-size:14.5px;color:var(--ink);opacity:.8}

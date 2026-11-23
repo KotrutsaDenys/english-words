@@ -612,6 +612,51 @@ test('Граматика: тест розділу бере з кожної те�
   assert.deepStrictEqual(out.map(x => x.tid).join(), out.map(x => x.tid).sort((x, y) => 'abcde'.indexOf(x) - 'abcde'.indexOf(y)).join());
 });
 
+test('Говори й пиши: речення з банку теми, перевірка й вибір', () => {
+  const gctx = { window: {} };
+  vm.createContext(gctx);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/grammar.js'), 'utf8'), gctx);
+  const G = gctx.window.GRAMMAR;
+  // Повні речення з кожного виду завдань
+  assert.deepStrictEqual(C.taskSentences({ type: 'input', q: 'He ___ (watch) TV.', a: ['watches'] }), ['He watches TV.']);
+  assert.deepStrictEqual(C.taskSentences({ type: 'choice', q: 'She ___ here.', opts: ['work', 'works'], a: 1 }), ['She works here.']);
+  assert.deepStrictEqual(C.taskSentences({ type: 'fix', q: 'She don\'t like coffee.', bad: "don't", a: ["doesn't"] }), ["She doesn't like coffee."]);
+  assert.deepStrictEqual(C.taskSentences({ type: 'order', words: ['you', 'where', 'live', 'do'], a: ['Where do you live?'] }), ['Where do you live?']);
+  let total = 0;
+  for (const [id, t] of Object.entries(G.topics)) {
+    const list = C.gramSentences(id, t.tasks);
+    total += list.length;
+    assert.ok(list.length >= 15, id + ': мало речень (' + list.length + ')');
+    for (const it of list) {
+      assert.ok(it.uk && it.en && !it.en.includes('___'), id + ' ' + it.en);
+      assert.ok(/^(— )?[A-Z0-9"'“]/.test(it.en), id + ': з великої літери: ' + it.en);
+      // Головне речення само себе зараховує — так само, як набране з iPhone
+      assert.ok(C.speechCheck(it.alts, it.en).perfect, id + ': ' + it.en);
+      assert.ok(C.speechCheck(it.alts, it.en.replace(/'/g, '’').toLowerCase().replace(/[.?!]$/, '')).perfect, id + ' iPhone: ' + it.en);
+    }
+  }
+  assert.ok(total > 1500, 'речень ' + total);
+  // she's = she has теж правильно; закінчення — помилка
+  const alts = C.gramSentences('x', [{ type: 'order', uk: 'Вона вже пішла.', words: [], a: ["She's already left."] }])[0].alts;
+  assert.ok(C.speechCheck(alts, 'She has already left').perfect);
+  assert.ok(!C.speechCheck([ 'She works in Gorey.' ], 'She work in Gorey.').perfect, 'work замість works — помилка, не описка');
+  // Вибір: помилки (не сьогоднішні) першими, потім невидані, потім найдавніші
+  const t = { id: 'present-simple', tasks: G.topics['present-simple'].tasks };
+  const all = C.gramSentences(t.id, t.tasks);
+  const sp = {}; all.forEach((x, i) => { sp[x.key] = [50 + i, 1]; });
+  sp[all[5].key] = [60, 0];        // помилка вчора
+  sp[all[6].key] = [70, 0];        // помилка сьогодні — не зараз
+  delete sp[all[7].key];           // ще не бачив
+  const pick = C.pickSpeech([Object.assign({ sp }, t)], 70, 3, seeded(1));
+  assert.strictEqual(pick[0].key, all[5].key);
+  assert.strictEqual(pick[1].key, all[7].key);
+  assert.strictEqual(pick[2].key, all[0].key);
+  // Види: mix чергує всі три, без звуку — лише переклад
+  const mix = C.speechKinds('mix', 9, false, seeded(2));
+  C.SPEECH_KINDS.forEach(k => assert.strictEqual(mix.filter(x => x === k).length, 3));
+  assert.ok(C.speechKinds('hear', 4, true).every(x => x === 'trans'));
+});
+
 test('Граматика: public/grammar.js зібрано з grammar/*.json (python3 tools/build_grammar.py)', () => {
   const gctx = { window: {} };
   vm.createContext(gctx);

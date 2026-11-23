@@ -249,6 +249,92 @@
     return shuffleArr(out, rng);
   }
   /* Мої помилки: завдання, де остання відповідь хибна */
+  /* ---------- Граматика мовою: переклади, скажи вголос, на слух ----------
+     Речення беруться з банку завдань теми (правильне повне речення + переклад), тож нових
+     завдань писати не треба: тест перевіряє правило, а тут ним треба скористатися самому. */
+  const FIX_PUNCT = /^([.,!?;:"“”«»()—–]*)(.*?)([.,!?;:"“”«»()—–]*)$/;
+  const fixNorm = x => String(x || '').replace(/’/g, "'").replace(FIX_PUNCT, '$2').toLowerCase();
+  // Речення завдання fix з заміною слова з помилкою (розділові знаки біля слова зберігаються)
+  function fixSentence(task, repl) {
+    const toks = task.q.split(/\s+/).filter(Boolean);
+    const bi = toks.findIndex(x => fixNorm(x) === fixNorm(task.bad));
+    if (bi < 0) return task.q;
+    const m = toks[bi].match(FIX_PUNCT);
+    toks[bi] = m[1] + repl + m[3];
+    return toks.join(' ');
+  }
+  // Усі правильні повні речення завдання; перше — головне
+  function taskSentences(task) {
+    if (task.type === 'order') return [].concat(task.a);
+    if (task.type === 'fix') return task.a.map(a => fixSentence(task, a));
+    const ans = task.type === 'choice' ? [task.opts[task.a]] : [].concat(task.a);
+    return ans.map(a => task.q && task.q.includes('___') ? task.q.replace('___', a).replace(/\s*\([^)]*\)/, '') : a);
+  }
+  const capFirst = x => x ? x.charAt(0).toUpperCase() + x.slice(1) : x;
+  // she's = she is / she has, I'd = I would / I had: обидва прочитання правильні
+  function sentenceVariants(list) {
+    const out = [];
+    const add = x => { if (x && !out.includes(x)) out.push(x); };
+    list.forEach(x => {
+      add(x);
+      add(x.replace(/\b(he|she|it|there|what|who|where|how|that|here)'s\b/gi, '$1 has'));
+      add(x.replace(/\b(i|you|he|she|we|they)'d\b/gi, '$1 had'));
+    });
+    return out;
+  }
+  function gramSentences(tid, tasks) {
+    const byUk = new Map(), out = [];
+    for (const task of tasks) {
+      if (!task.uk) continue;
+      const all = taskSentences(task).map(x => capFirst(String(x || '').trim())).filter(Boolean);
+      const en = all[0];
+      if (!en || en.includes('___') || /[\/=]/.test(en)) continue;
+      const n = tokens(en).length;
+      if (n < 3 || n > 16) continue;
+      const k = norm(task.uk);
+      const had = byUk.get(k);
+      if (had) { all.forEach(x => { if (!had.alts.includes(x)) had.alts.push(x); }); continue; }
+      const it = { tid, key: taskKey(task), en, alts: all, uk: task.uk, why: task.why };
+      byUk.set(k, it);
+      out.push(it);
+    }
+    out.forEach(it => { it.alts = sentenceVariants(it.alts); });
+    return out;
+  }
+  // Найкраще порівняння з усіма правильними варіантами
+  function speechCheck(alts, typed) {
+    let best = null;
+    for (const a of alts) {
+      const r = dictationCheck(a, typed);
+      if (!best || r.perfect && !best.perfect || r.score > best.score) best = Object.assign(r, { target: a });
+      if (best.perfect) break;
+    }
+    return best;
+  }
+  // Які речення дати: спершу ті, де помилявся (не сьогодні), потім ще не бачені, далі найдавніші
+  function pickSpeech(topics, today, n, rng) {
+    rng = rng || Math.random;
+    const all = [];
+    topics.forEach(t => {
+      const sp = t.sp || {};
+      gramSentences(t.id, t.tasks).forEach(it => {
+        const r = sp[it.key];
+        const rank = !r ? 1 : r[1] === 0 && r[0] < today ? 0 : r[0] >= today ? 3 : 2;
+        all.push({ it, rank, d: r ? r[0] : -1, r: rng() });
+      });
+    });
+    return all.sort((a, b) => a.rank - b.rank || a.d - b.d || a.r - b.r).slice(0, n).map(x => x.it);
+  }
+  // Види на підхід: «mix» чергує переклад, вголос і на слух; без звуку лише переклад
+  const SPEECH_KINDS = ['trans', 'say', 'hear'];
+  function speechKinds(kind, n, quiet, rng) {
+    if (quiet || kind === 'trans') return Array(n).fill('trans');
+    if (kind !== 'mix') return Array(n).fill(kind);
+    const out = [];
+    for (let i = 0; i < n; i++) out.push(SPEECH_KINDS[i % 3]);
+    return shuffle(out, rng);
+  }
+
   function pickMistakes(topics, n, rng) {
     rng = rng || Math.random;
     const out = [];
@@ -1364,6 +1450,7 @@
     paceAdvice,
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
     wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canSaySentence, canType, canDictate, isPhrase,
+    fixSentence, taskSentences, gramSentences, speechCheck, pickSpeech, speechKinds, SPEECH_KINDS,
     EXERCISES, pickExercise, eligible, distractors, optionClash, shareSense, senses, homophones, HOMOPHONES, posClass, shortSense, optionLabels, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, DAY_MISS, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
     migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, taskSrs, practiceDue, pickPractice, pickMistakes, pickTopicPractice, pickTasks, grammarSchedule, pickSectionTasks

@@ -3237,6 +3237,17 @@ function renderGramList() {
     sec.appendChild(row);
     box.appendChild(sec);
   }
+  // Говори й пиши: речення з усіх пройдених тем упереміш — переклад, вголос, на слух
+  if (done.length) {
+    const st = el('button', 'gspeak-all');
+    st.type = 'button';
+    const sic = el('span', 'qa-ic'); sic.innerHTML = ICON.speak;
+    const stx = el('span', 'qa-text');
+    stx.append(el('b', null, 'Говори й пиши'), el('small', null, settings.quiet ? 'переклади ' + SPEECH_N + ' речень з пройдених тем' : SPEECH_N + ' речень з пройдених тем: переклад, вголос, на слух'));
+    st.append(sic, stx);
+    st.addEventListener('click', () => startSpeech(null, 'mix'));
+    box.appendChild(st);
+  }
   // Спершу повторення пройденого, яке вже настав час освіжити, потім наступна нова тема
   const due = gramDue();
   if (due.length) {
@@ -3393,6 +3404,7 @@ function renderGramTopic(id) {
   const pr = button('Практика без оцінки', 'btn-quiet btn-big gpr-btn', () => startTopicPractice(id));
   test.appendChild(pr);
   box.appendChild(test);
+  box.appendChild(speechSection(id));
   // Довга тема: кнопка «До завдань», поки сам тест ще не на екрані
   const jump = el('button', 'gjump');
   jump.type = 'button';
@@ -3419,6 +3431,26 @@ function renderGramTopic(id) {
   box.appendChild(nav);
 }
 
+/* «Говори й пиши» на сторінці теми: ті самі речення, але без варіантів і плиток */
+function speechSection(id) {
+  const t = GR.topics[id];
+  const sec = el('section', 'gspeak');
+  sec.appendChild(el('h3', 'gh', 'Говори й пиши'));
+  const all = C.gramSentences(id, t.tasks);
+  const sp = (gres[id] || {}).sp || {};
+  const tried = all.filter(x => sp[x.key]).length;
+  sec.appendChild(el('p', 'gp', 'Ті самі правила, але без підказок: перекладаєш речення з української, кажеш уголос або пишеш на слух. Тест показує, чи знаєш правило, а це — чи вмієш ним користуватися.'));
+  if (tried) sec.appendChild(el('p', 'gbest muted2', 'Пробував ' + tried + ' з ' + all.length + ' ' + C.plural(all.length, 'речення', 'речення', 'речень') + ' теми.'));
+  const grid = el('div', 'pgrid');
+  grid.appendChild(quick('pen', 'Переклади', SPEECH_N + ' речень з української', () => startSpeech(id, 'trans')));
+  if (!settings.quiet) {
+    grid.appendChild(quick('speak', 'Скажи вголос', 'з української, без підказок', () => startSpeech(id, 'say')));
+    grid.appendChild(quick('dictation', 'На слух', 'почуй речення й напиши', () => startSpeech(id, 'hear')));
+    grid.classList.add('odd');
+  }
+  sec.appendChild(grid);
+  return sec;
+}
 /* Тест теми: на екрані заняття (весь екран, нижня панель з висновком) */
 function beginGt(g) {
   stopAudio(); cancelAuto(); closePeek();
@@ -3453,7 +3485,20 @@ function startTopicPractice(id, indices) {
   const sel = indices ? indices.map(i => ({ tid: id, task: t.tasks[i] })).filter(x => x.task) : C.pickTopicPractice({ id, tasks: t.tasks, p: (gres[id] || {}).p }, today(), 12, Math.random);
   beginGt({ kind: 'tpractice', id, from: 'topic', title: t.title, tasks: C.shuffle(sel.map(p => Object.assign({ tid: id }, p.task))) });
 }
-const isPracticeKind = k => k === 'practice' || k === 'mistakes' || k === 'tpractice';
+const isPracticeKind = k => k === 'practice' || k === 'mistakes' || k === 'tpractice' || k === 'speech';
+/* «Говори й пиши»: речення з банку теми (або всіх пройдених тем) — переклад, вголос, на слух. Без балів */
+const SPEECH_N = 8;
+function speechTopics(tid) { return tid ? [tid] : gramOrder().filter(id => gres[id] && gres[id].best != null); }
+function startSpeech(tid, kind) {
+  const ids = speechTopics(tid).filter(id => GR.topics[id]);
+  if (!ids.length) { toast('Спершу пройди тест хоч однієї теми'); return; }
+  const items = C.pickSpeech(ids.map(id => ({ id, tasks: GR.topics[id].tasks, sp: (gres[id] || {}).sp })), today(), SPEECH_N, Math.random);
+  if (!items.length) { toast('У цій темі немає речень для такої вправи'); return; }
+  const kinds = C.speechKinds(kind, items.length, settings.quiet, Math.random);
+  beginGt({ kind: 'speech', sk: kind, id: tid || 'speech', from: tid ? 'topic' : 'grammar', title: tid ? GR.topics[tid].title : 'Говори й пиши',
+    tasks: items.map((it, i) => Object.assign({ type: 'speech', speech: kinds[i] }, it)) });
+}
+const SPEECH_INSTR = { trans: 'Переклади англійською', say: 'Скажи англійською вголос', hear: 'Послухай і напиши, що почув' };
 function startSectionTest(sid) {
   const sec = GR.sections.find(s => s.id === sid);
   if (!sec) return;
@@ -3521,6 +3566,7 @@ function fixSentence(task, repl) {
   return toks.join(' ');
 }
 function gtFull(task) {
+  if (task.speech) return task.en;
   if (task.type === 'order') return [].concat(task.a)[0];
   if (task.type === 'fix') return fixSentence(task, task.a[0]);
   const ans = task.type === 'choice' ? task.opts[task.a] : task.a[0];
@@ -3546,7 +3592,7 @@ function gtShow() {
   head.append(label, el('span', 'ex-right', (gt.i + 1) + ' з ' + gt.tasks.length));
   card.appendChild(head);
   const body = el('div', 'prompt gt');
-  const instr = task.task || (task.type === 'choice' ? 'Вибери правильний варіант' : task.type === 'input' ? 'Впиши пропущене' : task.type === 'fix' ? 'Знайди помилку: торкнись неправильного слова' : 'Склади речення з цих слів');
+  const instr = task.speech ? SPEECH_INSTR[task.speech] : task.task || (task.type === 'choice' ? 'Вибери правильний варіант' : task.type === 'input' ? 'Впиши пропущене' : task.type === 'fix' ? 'Знайди помилку: торкнись неправильного слова' : 'Склади речення з цих слів');
   const instrEl = el('p', 'prompt-sub gt-instr', instr);
   body.appendChild(instrEl);
   let blank = null;
@@ -3559,53 +3605,81 @@ function gtShow() {
     if (parts.length > 1) { blank = el('span', 'blank'); blank.textContent = ' '; q.append(blank, document.createTextNode(parts[1])); }
     body.appendChild(q);
   }
-  if (task.uk && task.type !== 'fix') body.appendChild(el('p', task.type === 'order' ? 'gq uk' : 'ex-uk', task.uk));
+  if (task.uk && task.type !== 'fix' && !task.speech) body.appendChild(el('p', task.type === 'order' ? 'gq uk' : 'ex-uk', task.uk));
   card.appendChild(body);
-  const done = (ok, given, answerText) => {
+  const speechMark = ok => {
+    const g = gres[task.tid] = Object.assign({}, gres[task.tid]);
+    g.sp = Object.assign({}, g.sp);
+    g.sp[task.key] = [today(), ok ? 1 : 0];
+    saveGres();
+  };
+  const done = (ok, given, answerText, opt) => {
     if (gt.answered) return;
     gt.answered = true;
     ui.answered = true;
+    opt = opt || {};
     if (!task._retry) {
       if (ok) gt.ok++; else gt.wrong.push({ task, given });
       gt.res.push({ tid: task.tid, ok });
-      // Що бачив і де помилився: наступний тест поверне помилки й візьме нове, а закріплення поверне завдання в свій день
-      const key = C.taskKey(task);
-      const g = gres[task.tid] = Object.assign({}, gres[task.tid]);
-      g.seen = Object.assign({}, g.seen);
-      g.seen[key] = ok ? 2 : 1;
-      g.p = Object.assign({}, g.p);
-      g.p[key] = C.taskSrs(g.p[key], ok, today());
-      saveGres();
+      if (task.speech) speechMark(ok);
+      else {
+        // Що бачив і де помилився: наступний тест поверне помилки й візьме нове, а закріплення поверне завдання в свій день
+        const key = C.taskKey(task);
+        const g = gres[task.tid] = Object.assign({}, gres[task.tid]);
+        g.seen = Object.assign({}, g.seen);
+        g.seen[key] = ok ? 2 : 1;
+        g.p = Object.assign({}, g.p);
+        g.p[key] = C.taskSrs(g.p[key], ok, today());
+        saveGres();
+      }
       // У практиці помилку ще раз наприкінці цього ж підходу
       if (!ok && isPracticeKind(gt.kind)) gt.tasks.push(Object.assign({}, task, { _retry: true }));
     }
     const l = todayLog(); l.gt = (l.gt || 0) + 1;
-    if (isPracticeKind(gt.kind) && !task._retry) l.gp = (l.gp || 0) + 1;
+    if (task.speech && !task._retry) l.gl = (l.gl || 0) + 1;
+    else if (isPracticeKind(gt.kind) && !task._retry) l.gp = (l.gp || 0) + 1;
     l.ms = (l.ms || 0) + Math.min(60000, Math.max(0, performance.now() - ui.t0));
     save(KEYS.log, log);
     haptic(ok ? 'ok' : 'wrong');
     renderStreak();
     if (blank) { blank.textContent = answerText; blank.classList.add('filled'); }
     const full = gtFull(task);
-    if (!settings.quiet && settings.autoplay) speakDevice(full);
+    if (!settings.quiet && settings.autoplay && task.speech !== 'say') speakDevice(full);
     const extra = el('span', 'gt-why');
-    if (!ok && given) {
+    // Після перекладу й «на слух» твоє речення вже показано над панеллю
+    if (!ok && given && task.speech !== 'trans' && task.speech !== 'hear') {
       const y = el('span', 'yours');
       const s = el('s', null, given); if (!CYR_RX.test(given)) s.lang = 'en';
       y.append(document.createTextNode('Твоя відповідь: '), s);
       extra.appendChild(y);
     }
     extra.appendChild(el('span', 'why', task.why));
-    const ansNode = ok ? null : (() => { const a = el('span'); a.lang = 'en'; a.textContent = task.type === 'order' || task.type === 'fix' ? full : answerText; return a; })();
-    if (task._retry) extra.insertBefore(el('span', 'why', 'Повтор завдання, де була помилка.'), extra.firstChild);
-    const v = verdict(ok ? 'right' : 'wrong', ok ? 'Правильно' : (given ? 'Ні, правильно:' : 'Правильно:'), null, ansNode, extra);
+    // Речення з перекладу й на слух уже розібране по словах над панеллю: правильне ще раз не дублюємо
+    const shown = task.speech === 'trans' || task.speech === 'hear';
+    const ansNode = ok || shown ? null : (() => { const a = el('span'); a.lang = 'en'; a.textContent = task.type === 'order' || task.type === 'fix' ? full : answerText; return a; })();
+    if (task._retry) extra.insertBefore(el('span', 'why', task.speech ? 'Повтор речення, де була помилка.' : 'Повтор завдання, де була помилка.'), extra.firstChild);
+    const title = ok ? 'Правильно' : task.speech ? (shown ? (given ? 'Є помилки, порівняй' : 'Ось як правильно') : 'Повторимо наприкінці') : (given ? 'Ні, правильно:' : 'Правильно:');
+    const v = verdict(ok ? 'right' : 'wrong', title, null, ansNode, extra);
     const last = gt.i >= gt.tasks.length - 1;
     const nb = button(last ? 'Результат' : 'Далі', 'btn-primary', gtNext);
-    setFoot([nb], 0, v);
+    // Переклад може бути правильним і іншими словами: тоді вирішує сам учень
+    const claim = !ok && opt.claim && !task._retry ? button('Зарахувати', 'btn-quiet', () => {
+      if (gt.claimed === gt.i) return;
+      gt.claimed = gt.i;
+      gt.ok++;
+      gt.wrong.pop();
+      gt.res[gt.res.length - 1].ok = true;
+      speechMark(true);
+      const ri = gt.tasks.findIndex((x, j) => j > gt.i && x._retry && x.key === task.key);
+      if (ri >= 0) gt.tasks.splice(ri, 1);
+      gtNext();
+    }) : null;
+    setFoot(claim ? [claim, nb] : [nb], claim ? 2 : 0, v);
     keys = { enter: () => nb.click() };
     updateTape();
   };
-  if (task.type === 'choice') {
+  if (task.speech) speechTask(task, card, body, done);
+  else if (task.type === 'choice') {
     const opts = C.shuffle(task.opts.map((o, k) => ({ o, k })));
     const box = el('div', 'options');
     const btns = [];
@@ -3785,6 +3859,76 @@ function gtShow() {
   updateTape();
   window.scrollTo(0, 0);
 }
+/* Переклад, вголос, на слух: одне речення теми */
+function speechTask(task, card, body, done) {
+  const k = task.speech;
+  const say = rate => speakDevice(task.en, rate);
+  if (k !== 'hear') { const q = el('p', 'gq uk sp-uk', task.uk); body.appendChild(q); }
+  if (k === 'say') {
+    body.appendChild(el('p', 'prompt-sub', 'Скажи повним реченням, а тоді відкрий відповідь і чесно оціни себе'));
+    const reveal = skip => {
+      if (gt.answered || ui.revealed) return;
+      ui.revealed = true;
+      const box = el('div', 'sp-reveal');
+      const p = el('p', 'gq sp-en'); p.lang = 'en';
+      p.appendChild(enText(task.en));
+      box.append(p, gsay(task.en));
+      card.appendChild(box);
+      if (!settings.quiet) say();
+      if (skip) { done(false, '', task.en); return; }
+      const bad = button('Була помилка', 'btn-quiet', () => done(false, '', task.en));
+      const good = button('Сказав правильно', 'btn-primary', () => done(true, '', task.en));
+      setFoot([bad, good], 2);
+      keys = { enter: () => good.click() };
+    };
+    const show = button('Показати відповідь', 'btn-primary', () => reveal(false));
+    setFoot([button('Не знаю', 'btn-quiet', () => reveal(true)), show], 2);
+    keys = { enter: () => show.click() };
+    return;
+  }
+  if (k === 'hear') {
+    const big = el('button', 'listen-big');
+    big.type = 'button';
+    big.innerHTML = ICON.speaker;
+    big.setAttribute('aria-label', 'Послухати ще раз');
+    big.addEventListener('click', () => say());
+    const slow = el('button', 'slow-btn', 'Повільніше');
+    slow.type = 'button';
+    slow.addEventListener('click', () => say(0.7));
+    body.append(big, slow);
+    if (!settings.quiet) setTimeout(() => { if (gt && gt.tasks[gt.i] === task && !gt.answered) say(); }, 250);
+  }
+  const ta = el('textarea', 'answer dict-input');
+  ta.rows = 2;
+  ta.lang = 'en';
+  ta.placeholder = 'Пиши англійською…';
+  ta.setAttribute('autocapitalize', 'sentences');
+  ta.setAttribute('autocorrect', 'off');
+  ta.setAttribute('autocomplete', 'off');
+  ta.spellcheck = false;
+  ta.setAttribute('enterkeyhint', 'done');
+  ta.setAttribute('aria-label', k === 'hear' ? 'Що ти почув' : 'Переклад');
+  ta.style.resize = 'none';
+  card.appendChild(ta);
+  ta.addEventListener('focus', () => document.body.classList.add('typing'));
+  ta.addEventListener('blur', () => setTimeout(() => document.body.classList.remove('typing'), 50));
+  ta.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (!gt.answered) check(false); else gtNext(); } });
+  const check = skip => {
+    if (gt.answered) return;
+    const typed = skip ? '' : ta.value;
+    if (!skip && !typed.trim()) { ta.focus(); toast('Напиши речення або натисни «Не знаю»'); return; }
+    // Тут апостроф і закінчення — і є граматика: описка в слові рахується помилкою
+    const r = C.speechCheck(task.alts, typed);
+    ta.blur();
+    ta.hidden = true;
+    // Переклад показуємо лише після «на слух»: у перекладі він і так над полем
+    card.appendChild(dictResultLine({ uk: k === 'hear' ? task.uk : '' }, r, typed));
+    done(r.perfect, skip ? '' : typed.trim(), task.en, { claim: !skip && !r.perfect && k === 'trans' && r.score >= 0.4 });
+  };
+  setFoot([button('Не знаю', 'btn-quiet', () => check(true)), button('Перевірити', 'btn-primary', () => check(false))], 2);
+  keys = {};
+  try { ta.focus({ preventScroll: true }); } catch (e) {}
+}
 function gtNext() {
   if (!gt) return;
   if (gt.i >= gt.tasks.length - 1) { gtResult(); return; }
@@ -3889,7 +4033,7 @@ function gtMistakes(card) {
     d.appendChild(el('p', 'tip', 'Помилки: правильна відповідь виділена'));
     gt.wrong.forEach(({ task, given }) => {
       const it = el('div', 'gres-item');
-      if (gt.kind === 'section' || gt.kind === 'practice' || gt.kind === 'mistakes') { const tn = el('p', 'gres-topic', GR.topics[task.tid].title); tn.lang = 'en'; it.appendChild(tn); }
+      if (gt.kind === 'section' || gt.kind === 'practice' || gt.kind === 'mistakes' || gt.kind === 'speech' && gt.id === 'speech') { const tn = el('p', 'gres-topic', GR.topics[task.tid].title); tn.lang = 'en'; it.appendChild(tn); }
       const s2 = el('p', 'gres-sent'); s2.lang = 'en';
       const full = gtFull(task);
       if (task.type === 'fix') {
@@ -3901,6 +4045,7 @@ function gtMistakes(card) {
         s2.append(document.createTextNode(parts[0]), el('mark', 'gm', ans), document.createTextNode(parts[1] || ''));
       } else s2.appendChild(el('mark', 'gm', full));
       it.appendChild(s2);
+      if (task.speech) it.appendChild(el('p', 'gres-uk', task.uk));
       if (given) { const y = el('p', 'yours'); const g2 = el('s', null, given); y.append(document.createTextNode('Твоя відповідь: '), g2); it.appendChild(y); }
       it.appendChild(el('p', 'gres-why', task.why));
       d.appendChild(it);
@@ -3922,7 +4067,7 @@ function gpResult() {
   const head = el('div', 'ex-head');
   const label = el('span', 'ex-label');
   const ic = el('span', 'ex-ic done'); ic.innerHTML = ICON.check;
-  label.append(ic, document.createTextNode(gt.kind === 'tpractice' ? 'Практику завершено' : gt.kind === 'mistakes' ? 'Помилки пройдено' : 'Закріплення завершено'));
+  label.append(ic, document.createTextNode(gt.kind === 'speech' ? 'Говори й пиши: готово' : gt.kind === 'tpractice' ? 'Практику завершено' : gt.kind === 'mistakes' ? 'Помилки пройдено' : 'Закріплення завершено'));
   head.appendChild(label);
   card.appendChild(head);
   const body = el('div', 'prompt summary gres');
@@ -3931,20 +4076,23 @@ function gpResult() {
   const score = el('p', 'gres-score ' + cls);
   score.append(el('b', null, String(gt.ok)), el('span', null, 'з ' + n));
   body.appendChild(score);
-  if (gt.kind === 'tpractice') { const tt = el('p', 'prompt-sub', gt.title); tt.lang = 'en'; body.appendChild(tt); }
+  if (gt.kind === 'tpractice' || gt.kind === 'speech' && gt.id !== 'speech') { const tt = el('p', 'prompt-sub', gt.title); tt.lang = 'en'; body.appendChild(tt); }
   body.appendChild(el('p', 'gres-note', 'правильно з першої спроби'));
-  body.appendChild(el('p', 'prompt-sub', gt.wrong.length
+  body.appendChild(el('p', 'prompt-sub', gt.kind === 'speech'
+    ? (gt.wrong.length ? 'Речення з помилками дам першими наступного разу. Вголос і без підказок правило запам\'ятовується найміцніше.' : 'Без жодної помилки. Наступного разу візьму нові речення.')
+    : gt.wrong.length
     ? 'Помилки повернуться завтра, правильні — через кілька днів. Так правило закріплюється найкраще.'
     : 'Без жодної помилки. Ці завдання повернуться через кілька днів, далі все рідше.'));
   const pd = gramPracticeDue();
-  if (gt.kind !== 'tpractice' && pd) body.appendChild(el('p', 'prompt-sub', 'Ще на сьогодні: ' + pd + ' ' + C.plural(pd, 'завдання', 'завдання', 'завдань') + '.'));
+  if (gt.kind !== 'tpractice' && gt.kind !== 'speech' && pd) body.appendChild(el('p', 'prompt-sub', 'Ще на сьогодні: ' + pd + ' ' + C.plural(pd, 'завдання', 'завдання', 'завдань') + '.'));
   card.appendChild(body);
   gtMistakes(card);
-  const kind = gt.kind, id = gt.id;
+  const kind = gt.kind, id = gt.id, sk = gt.sk;
   const more = kind === 'practice' ? C.pickPractice(gramTopicsP(), today(), 1).length
     : kind === 'mistakes' ? C.pickMistakes(gramTopicsP()).length : 1;
   const btns = [button('Готово', 'btn-quiet', endGramTest)];
-  if (more) btns.push(button('Ще 12', 'btn-primary', () => kind === 'practice' ? startPractice(gt.from) : kind === 'mistakes' ? startMistakes() : startTopicPractice(id)));
+  if (kind === 'speech') btns.push(button('Ще ' + SPEECH_N, 'btn-primary', () => startSpeech(id === 'speech' ? null : id, sk)));
+  else if (more) btns.push(button('Ще 12', 'btn-primary', () => kind === 'practice' ? startPractice(gt.from) : kind === 'mistakes' ? startMistakes() : startTopicPractice(id)));
   setFoot(btns, btns.length > 1 ? 2 : 0);
   keys = { enter: () => btns[btns.length - 1].click() };
   updateTape();
@@ -3954,7 +4102,7 @@ function gpResult() {
 function endGramTest() {
   const practice = gt && isPracticeKind(gt.kind);
   const wasTest = !practice && mode === 'gtest' && gt && gt.i + (gt.answered ? 1 : 0) > 0;
-  const topicId = gt ? (gt.kind === 'topic' || gt.kind === 'tpractice' ? gt.id : null) : gramOpen;
+  const topicId = gt ? (gt.kind === 'topic' || gt.kind === 'tpractice' || gt.kind === 'speech' ? gt.id : null) : gramOpen;
   const fromHome = gt && gt.from === 'home';
   gt = null;
   mode = null;
@@ -5001,7 +5149,7 @@ function dictResultLine(it, r, typed) {
     ex.appendChild(s);
     box.appendChild(ex);
   }
-  box.appendChild(el('p', 'dict-uk', it.uk));
+  if (it.uk) box.appendChild(el('p', 'dict-uk', it.uk));
   if (!r.perfect && typed.trim()) {
     const y = el('p', 'dict-yours');
     y.append(el('small', null, 'Ти написав: '));
@@ -5892,6 +6040,7 @@ function gramReport(l) {
   };
   const items = (l.gtr || []).filter(x => name(x.id)).map(x => name(x.id) + ' ' + x.b + ' з 12');
   if (l.gp) items.push('закріплено ' + l.gp + ' ' + C.plural(l.gp, 'завдання', 'завдання', 'завдань'));
+  if (l.gl) items.push('говорив і писав ' + l.gl + ' ' + C.plural(l.gl, 'речення', 'речення', 'речень'));
   return items.length ? [['Граматика', items.join(', ')]] : [];
 }
 function reportText() {
@@ -6451,7 +6600,7 @@ if (/[?&]test=1/.test(location.search)) {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
     get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, listenIds, startListen,
-    get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, get pr() { return pr; }, startDict, startTell, TALKS, openStreakSheet, get combo() { return combo; }, showCombo, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, gramPracticeDue,
+    get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, get pr() { return pr; }, startDict, startTell, TALKS, openStreakSheet, get combo() { return combo; }, showCombo, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, startSpeech, endGramTest, gramPracticeDue,
     debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
       if (!session) session = new C.Session(envFor());

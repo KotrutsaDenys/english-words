@@ -978,6 +978,83 @@ try:
         shot(page, 'light-settings-look')
         ctx.close()
 
+        # Граматика мовою «Говори й пиши»: переклад, вголос, на слух — речення з банку теми, без балів
+        for scheme in ('light', 'dark'):
+            ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True, color_scheme=scheme)
+            page = ctx.new_page()
+            page.on('pageerror', lambda e: errors.append('speech pageerror: ' + str(e)))
+            page.goto(URL); page.wait_for_timeout(400)
+            page.evaluate("window.EW.openTopic('present-simple')"); page.wait_for_timeout(200)
+            assert page.locator('.gspeak .qa').count() == 3, 'три плитки на сторінці теми'
+            page.evaluate("document.querySelector('.gspeak').scrollIntoView({block: 'center'})"); page.wait_for_timeout(400)
+            assert not visible(page, '.gjump.show'), '«До завдань» не накриває плитки під тестом'
+            shot(page, f'{scheme}-gspeak-topic')
+            page.locator('.gspeak .qa', has_text='Переклади').click(); page.wait_for_timeout(150)
+            assert page.evaluate('window.EW.gt.kind') == 'speech' and page.evaluate('window.EW.gt.tasks.length') == 8
+            assert page.evaluate("window.EW.gt.tasks.every(t => t.speech === 'trans')")
+            # Правильний переклад, набраний як на iPhone: з малої, «кривий» апостроф, без крапки
+            en = page.evaluate('window.EW.gt.tasks[0].en')
+            page.fill('#card textarea', en.replace("'", '’').lower().rstrip('.?!'))
+            click_text(page, 'Перевірити'); page.wait_for_timeout(100)
+            assert visible(page, '.verdict.right'), ('переклад зараховано', en)
+            shot(page, f'{scheme}-gspeak-trans-ok')
+            click_text(page, 'Далі'); page.wait_for_timeout(100)
+            # Інший переклад: розбір по словах і «Мій варіант теж правильний»
+            en = page.evaluate('window.EW.gt.tasks[1].en')
+            words = en.rstrip('.?!').split(' ')
+            page.fill('#card textarea', ' '.join(words[:-1] + ['probably']))
+            click_text(page, 'Перевірити'); page.wait_for_timeout(100)
+            assert visible(page, '.dict-res .dw'), 'речення розібране по словах'
+            assert visible(page, '#foot button:has-text("Зарахувати")'), 'можна зарахувати свій варіант'
+            shot(page, f'{scheme}-gspeak-trans-diff')
+            click_text(page, 'Зарахувати'); page.wait_for_timeout(100)
+            assert page.evaluate('[window.EW.gt.ok, window.EW.gt.i, window.EW.gt.tasks.length]') == [2, 2, 8]
+            k = 0
+            while page.evaluate("window.EW.mode") == 'gtest' and k < 20:
+                click_text(page, 'Не знаю'); page.wait_for_timeout(60)
+                nb = page.locator('#foot button', has_text='Далі')
+                (nb if nb.count() else page.locator('#foot button', has_text='Результат')).first.click(); page.wait_for_timeout(60)
+                k += 1
+            assert page.evaluate("window.EW.mode") == 'gresult' and k == 12, ('6 «Не знаю» + 6 повторів наприкінці', k)
+            assert 'Говори й пиши' in page.inner_text('#card')
+            g = page.evaluate("window.EW.gres['present-simple']")
+            assert len(g.get('sp', {})) == 8 and not g.get('seen') and not g.get('p'), 'речення записані окремо від тесту'
+            assert page.evaluate('Object.values(window.EW.log).pop().gl') == 8
+            shot(page, f'{scheme}-gspeak-result')
+            # Наступний підхід бере спершу речення з помилками — але не сьогоднішні, тож нові
+            click_text(page, 'Ще 8'); page.wait_for_timeout(100)
+            keys2 = page.evaluate('window.EW.gt.tasks.map(t => t.key)')
+            assert not set(keys2) & set(g['sp']), 'сьогодні вже пробував ці — беремо інші'
+            page.evaluate('window.EW.endGramTest ? window.EW.endGramTest() : null')
+            # Скажи вголос: відповідь, самооцінка
+            page.evaluate("window.EW.startSpeech('past-simple', 'say')"); page.wait_for_timeout(100)
+            assert visible(page, '.sp-uk') and not visible(page, '.sp-reveal')
+            click_text(page, 'Показати відповідь'); page.wait_for_timeout(100)
+            assert visible(page, '.sp-reveal')
+            shot(page, f'{scheme}-gspeak-say')
+            click_text(page, 'Сказав правильно'); page.wait_for_timeout(100)
+            assert visible(page, '.verdict.right')
+            # На слух: переклад прихований до відповіді
+            page.evaluate("window.EW.startSpeech('will', 'hear')"); page.wait_for_timeout(100)
+            assert visible(page, '.listen-big') and not visible(page, '.sp-uk')
+            en = page.evaluate('window.EW.gt.tasks[0].en')
+            page.fill('#card textarea', en)
+            click_text(page, 'Перевірити'); page.wait_for_timeout(100)
+            assert visible(page, '.verdict.right') and visible(page, '.dict-uk')
+            shot(page, f'{scheme}-gspeak-hear')
+            # Зі списку тем: упереміш з пройдених тем
+            page.evaluate("() => { window.EW.gres['present-simple'] = Object.assign({}, window.EW.gres['present-simple'], { best: 10 }); window.EW.gres['will'] = { best: 9 }; }")
+            page.evaluate("window.EW.endGramTest()"); page.wait_for_timeout(100)
+            assert visible(page, '#gramTopic'), 'з практики теми — назад на сторінку теми'
+            page.click('#gramTopic .gback'); page.wait_for_timeout(150)
+            assert visible(page, '.gspeak-all'), 'плитка в списку тем'
+            shot(page, f'{scheme}-gspeak-list')
+            page.click('.gspeak-all'); page.wait_for_timeout(100)
+            kinds = page.evaluate('window.EW.gt.tasks.map(t => t.speech)')
+            assert set(kinds) == {'trans', 'say', 'hear'}, kinds
+            assert set(page.evaluate('window.EW.gt.tasks.map(t => t.tid)')) <= {'present-simple', 'will'}
+            ctx.close()
+
         # Справжній користувач: північ посеред заняття, запізніле розпізнавання мовлення, синонім і омофон при друці
         ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True)
         page = ctx.new_page()
