@@ -1056,6 +1056,37 @@ try:
             assert set(page.evaluate('window.EW.gt.tasks.map(t => t.tid)')) <= {'present-simple', 'will'}
             ctx.close()
 
+        # YouGlish: велике слово, слово в розборі, фрази зі словом і бульбашка перекладу ведуть у пошук YouGlish
+        ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True)
+        page = ctx.new_page()
+        page.on('pageerror', lambda e: errors.append('youglish pageerror: ' + str(e)))
+        page.goto(URL); page.wait_for_timeout(400)
+        page.evaluate("() => { const t = EWCore.dayNum(); EW.cards['core-cheap'] = EWCore.knownCard(t, 0.9, Math.random); EW.force('core-cheap', 'tf'); }")
+        page.wait_for_timeout(120)
+        assert page.get_attribute('h2.word a.yg', 'href') == 'https://youglish.com/pronounce/cheap/english/uk', 'велике слово'
+        assert page.get_attribute('h2.word a.yg', 'target') == '_blank'
+        click_text(page, 'Так' if page.inner_text('.tf-uk') == 'дешевий' else 'Ні'); page.wait_for_timeout(100)
+        page.click('.details .phrases-head'); page.wait_for_timeout(100)
+        ph = page.evaluate("[...document.querySelectorAll('.details .phrase-en a.yg')].map(a => [a.textContent, a.href])")
+        assert len(ph) == 5 and all('youglish.com/pronounce/' in h and '/english/uk' in h for _, h in ph), ph
+        acts = page.evaluate("[...document.querySelectorAll('.details .phrase-acts a')].map(a => a.href)")
+        assert len(acts) == 5 and all(h.startswith('https://clip.cafe/s/') for h in acts), acts
+        assert ' ' not in acts[0] and '+' in acts[0], ('слова через +', acts[0])
+        assert page.locator('a[href*="youtube"]').count() == 0, 'YouTube прибрано'
+        page.locator('.details .ex .tw').first.click(); page.wait_for_timeout(100)
+        assert page.locator('.peek a.mini[href*="youglish.com"]').count() >= 1 and page.locator('.peek a.mini[href*="clip.cafe/s/"]').count() >= 1, 'бульбашка перекладу'
+        shot(page, 'light-youglish-peek')
+        page.mouse.click(5, 300); page.wait_for_timeout(80)
+        # Розбір після відповіді: слово → YouGlish, поруч Clip.cafe
+        page.evaluate("window.EW.force('core-cheap', 'mcq_uk_en')"); page.wait_for_timeout(100)
+        page.click('.opt-btn[data-id="core-cheap"]'); page.wait_for_timeout(100)
+        assert page.get_attribute('.details .trans.en a.yg', 'href') == 'https://youglish.com/pronounce/cheap/english/uk', 'слово в розборі'
+        assert page.get_attribute('.details .trans.en a.mini', 'href') == 'https://clip.cafe/s/cheap'
+        shot(page, 'light-youglish-details')
+        page.evaluate("window.EW.endSession()"); page.wait_for_timeout(100)
+        # Спринт з таймером — без посилання
+        ctx.close()
+
         # «Згадай без підказок»: плитка з'являється, коли є ≥ 3 нові слова за сьогодні; вільно, потім за значенням, решта — завтра
         ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True)
         page = ctx.new_page()

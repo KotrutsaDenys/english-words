@@ -1542,3 +1542,12 @@ html.no-motion .pgrid .qa.pt{transition:none}
 .recall-note{min-height:20px;margin:6px 2px 0}
 .answer.shake{animation:shake .42s ease-out}
 .rc-line{margin:6px 0;font-size:15.5px}
+
+/* Слово чи фраза → YouGlish: ледь помітне пунктирне підкреслення кольору теми */
+a.yg{color:inherit;text-decoration:underline dotted;text-decoration-color:color-mix(in srgb,var(--accent) 55%,transparent);text-decoration-thickness:.07em;text-underline-offset:.16em;-webkit-tap-highlight-color:transparent;border-radius:4px}
+a.yg:active{background:var(--accent-soft)}
+h2.word a.yg{text-decoration-thickness:3px;text-underline-offset:7px}
+.phrase-en a.yg{font-weight:inherit}
+a.yg.link-btn{color:var(--accent-text);text-decoration:underline;text-decoration-style:solid;text-decoration-color:color-mix(in srgb,var(--accent-text) 40%,transparent)}
+.peek-acts{display:flex;gap:6px;margin:8px 0 2px}
+.peek-acts.peek-all{padding-top:8px;border-top:1px solid var(--line)}

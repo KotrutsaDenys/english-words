@@ -254,7 +254,31 @@ function sayPhrase(w, i) {
 }
 function cleanPhrase(t) { return String(t).replace(/[?!.,]+$/g, '').replace(/[“”"]/g, '').trim(); }
 function youglishUrl(t) { return 'https://youglish.com/pronounce/' + encodeURIComponent(cleanPhrase(t)) + '/english/uk'; }
-function youtubeUrl(t) { return 'https://m.youtube.com/results?search_query=' + encodeURIComponent('"' + cleanPhrase(t) + '"'); }
+/* Слово чи фраза, які відкривають YouGlish: відео, де носії кажуть саме це */
+function ygLink(text, query, cls) {
+  const a = el('a', 'yg' + (cls ? ' ' + cls : ''), text);
+  a.lang = 'en';
+  a.href = youglishUrl(query || text);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.title = 'Відкрити в YouGlish';
+  a.addEventListener('click', e => e.stopPropagation());
+  return a;
+}
+/* Clip.cafe: уривки з фільмів, де кажуть це слово чи фразу (пошук: /s/hello+there) */
+function clipUrl(t) { return 'https://clip.cafe/s/' + cleanPhrase(t).split(/\s+/).filter(Boolean).map(encodeURIComponent).join('+'); }
+function miniLink(label, href, title) {
+  const a = el('a', 'mini');
+  a.innerHTML = ICON.play + label;
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.title = title;
+  a.addEventListener('click', e => e.stopPropagation());
+  return a;
+}
+function ygMini(query, label) { return miniLink(label || 'YouGlish', youglishUrl(query), 'Відео, де носії це кажуть'); }
+function clipMini(query, label) { return miniLink(label || 'Clip.cafe', clipUrl(query), 'Уривки з фільмів з цим'); }
 /* Блок фраз: 5 коротких сполучень зі словом, кожна з озвучкою і відео, де її кажуть */
 function phraseBlock(w, open) {
   const list = PHRASES[w.id];
@@ -274,17 +298,11 @@ function phraseBlock(w, open) {
     play.setAttribute('aria-label', 'Послухати фразу');
     play.addEventListener('click', e => { e.stopPropagation(); sayPhrase(w, i); });
     const text = el('div', 'phrase-text');
-    const en = el('span', 'phrase-en'); en.appendChild(enText(p[0]));
+    // Торкнув фразу — YouGlish з цією фразою (переклад і так під нею)
+    const en = el('span', 'phrase-en'); en.appendChild(ygLink(p[0], p[0]));
     text.append(en, el('span', 'phrase-uk', p[1]));
     const acts = el('div', 'phrase-acts');
-    const link = (label, href, title) => {
-      const a = el('a', 'mini');
-      a.innerHTML = ICON.play + label;
-      a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.title = title;
-      a.addEventListener('click', e => e.stopPropagation());
-      return a;
-    };
-    acts.append(link('YouGlish', youglishUrl(p[0]), 'Відео, де носії кажуть цю фразу'), link('YouTube', youtubeUrl(p[0]), 'Пошук фрази в YouTube'));
+    acts.append(clipMini(p[0]));
     text.appendChild(acts);
     row.append(play, text);
     body.appendChild(row);
@@ -1321,8 +1339,10 @@ function button(text, cls, onClick, sub) {
   b.addEventListener('click', onClick);
   return b;
 }
-function bigWord(text, lang) {
-  const h = el('h2', 'word' + (lang === 'uk' ? ' uk' : ''), text);
+function bigWord(text, lang, yg) {
+  const h = el('h2', 'word' + (lang === 'uk' ? ' uk' : ''));
+  // Англійське слово на картці торкабельне: YouGlish (у спринті ні — там таймер)
+  if (yg) h.appendChild(ygLink(text, yg)); else h.textContent = text;
   h.lang = lang;
   requestAnimationFrame(() => fitWord(h));
   return h;
@@ -1330,7 +1350,7 @@ function bigWord(text, lang) {
 /* Слово і динамік поруч: видно, що слухати саме його, і менше місця по висоті */
 function wordWithSay(w) {
   const row = el('div', 'word-row');
-  row.append(bigWord(w.en, 'en'), sayBtn(w, 'w'));
+  row.append(bigWord(w.en, 'en', C.baseForm(w)), sayBtn(w, 'w'));
   return row;
 }
 function fitWord(node) {
@@ -1385,6 +1405,9 @@ function openPeek(span) {
     say.addEventListener('click', () => (w.gloss ? speakDevice(w.en) : sayWord(w, 'w')));
     row.append(txt, say);
     box.appendChild(row);
+    const yl = el('div', 'peek-acts');
+    yl.append(ygMini(w.gloss ? w.en : C.baseForm(w)), clipMini(w.gloss ? w.en : C.baseForm(w)));
+    box.appendChild(yl);
     if (w.gloss) return;
     const c = cards[w.id];
     if (c) { box.appendChild(el('p', 'peek-st', C.statusOf(c) === 'known' ? 'Знаєш це слово' : 'Вчиш це слово')); return; }
@@ -1411,6 +1434,7 @@ function openPeek(span) {
     singles.forEach(entry);
   } else {
     box.appendChild(el('p', 'peek-none', 'Слова «' + token + '» немає в словнику.'));
+    { const yl = el('div', 'peek-acts'); yl.append(ygMini(token), clipMini(token)); box.appendChild(yl); }
     if (!mode && /^[a-z'’-]{2,}$/i.test(token)) {
       const add = el('button', 'link-btn small', 'Додати своє слово');
       add.type = 'button';
@@ -1423,6 +1447,14 @@ function openPeek(span) {
       });
       box.appendChild(add);
     }
+  }
+  // Коротка фраза (діалог, фраза зі словом) — цілою в YouGlish
+  const sent = cleanPhrase(sentence || '');
+  const nw = C.tokens(sent).length;
+  if (nw >= 2 && nw <= 8) {
+    const all = el('div', 'peek-acts peek-all');
+    all.append(ygMini(sent, 'Фраза в YouGlish'), clipMini(sent, 'у Clip.cafe'));
+    box.appendChild(all);
   }
   document.body.appendChild(box);
   span.classList.add('on');
@@ -1528,7 +1560,7 @@ function details(w, opts) {
   const d = el('div', 'details');
   if (opts.en !== false) {
     const t = el('p', 'trans en');
-    t.append(enSpan(w.en), sayBtn(w, 'w', true));
+    t.append(ygLink(w.en, C.baseForm(w)), sayBtn(w, 'w', true), clipMini(C.baseForm(w)));
     d.appendChild(t);
   }
   if (opts.uk !== false) d.appendChild(el('p', 'trans', w.uk));
@@ -5745,6 +5777,8 @@ function itemBody(w, c, t) {
     acts.appendChild(b);
   };
   act('Послухати', () => sayWord(w, 'w'));
+  { const a = ygLink('YouGlish', C.baseForm(w), 'link-btn'); a.title = 'Відео, де носії кажуть це слово'; acts.appendChild(a); }
+  { const a = el('a', 'link-btn yg', 'Clip.cafe'); a.href = clipUrl(C.baseForm(w)); a.target = '_blank'; a.rel = 'noopener'; a.title = 'Уривки з фільмів з цим словом'; acts.appendChild(a); }
   if (!c) {
     const isPri = (meta.priority || []).includes(w.id);
     act(isPri ? 'Не першим' : 'Вчити першим', () => {
