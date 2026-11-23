@@ -1400,6 +1400,7 @@ body:not(.in-session) .combo{display:none}
 .heat-legend i.lv4{background:var(--accent)}
 .heat-legend span{margin:0 4px}
 html.no-motion .combo.pop,html.no-motion .combo.gone,html.no-motion .q-medal{animation:none}
+html.no-motion .combo.gone{opacity:0}
 html.no-motion .combo.pop{opacity:1}
 html.no-motion .q-bar i{transition:none}
 @media (prefers-reduced-motion: reduce){.combo.pop{animation:none;opacity:1}.combo.gone{animation:none;opacity:0}.q-medal{animation:none}.q-bar i{transition:none}}
@@ -1518,3 +1519,26 @@ html.no-motion .pgrid .qa.pt{transition:none}
 .sp-reveal{display:flex;align-items:flex-start;gap:10px;margin:14px 0 0;padding:12px 14px;border-radius:16px;background:var(--accent-soft)}
 .sp-reveal .gq{margin:0;flex:1;font-size:19px}
 .gres-uk{margin:2px 0 0;font-size:14.5px;color:var(--ink);opacity:.8}
+
+/* «Так чи ні?»: твердження «слово означає …» */
+.tf-claim{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin:16px 0 4px;padding:14px 16px;border-radius:18px;background:var(--accent-soft);transition:background .2s}
+.tf-eq{font-size:14px;font-weight:700;color:var(--muted)}
+.tf-uk{font-size:24px;font-weight:800;line-height:1.2;color:var(--ink)}
+.tf-claim.is-true{background:var(--ok-soft)}
+.tf-claim.is-false{background:var(--orange-soft)}
+.tf-claim.is-false .tf-uk{text-decoration:line-through;text-decoration-thickness:2px;opacity:.75}
+
+/* «Згадай без підказок»: клітинки нових слів, які відкриваються, коли згадав */
+.recall .gq{margin-bottom:4px}
+.recall-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0 12px}
+.rc{min-height:54px;border-radius:14px;padding:8px 12px;border:1.5px dashed var(--line);display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
+.rc b{font-size:17px;font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+.rc span{font-size:13px;line-height:1.25;color:var(--muted);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.rc:not(.got) b{color:var(--muted);opacity:.6}
+.rc.cue{border-style:solid;background:var(--accent-soft)}
+.rc.got{border-style:solid;border-color:transparent;background:var(--ok-soft);animation:bump .5s var(--spring)}
+.rc.got.cue{background:var(--amber-soft)}
+.recall .answer{margin-top:2px}
+.recall-note{min-height:20px;margin:6px 2px 0}
+.answer.shake{animation:shake .42s ease-out}
+.rc-line{margin:6px 0;font-size:15.5px}

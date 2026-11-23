@@ -536,6 +536,52 @@
       return ct && tokens(en).length >= tokens(ct.text).length + 2 ? Object.assign({ i, en, uk }, ct) : null;
     }).filter(Boolean);
   }
+  /* «Яке слово у фразі?»: фрази, де слово стоїть у початковій формі (варіанти не підкажуть закінченням) */
+  function phraseMcqTargets(word, phrases) {
+    const b = baseForm(word).toLowerCase();
+    return phraseTargets(word, phrases).filter(t => t.text.toLowerCase() === b && t.uk);
+  }
+  /* «Як пишеться?»: слова словника, схожі написанням (quiet / quite / quit), але не омофони й не синоніми.
+     Чути слово й упізнати його на письмі — саме це заважає розуміти живу мову. */
+  const NB_CACHE = new Map();
+  function spellingNeighbors(w, words) {
+    if (NB_CACHE.has(w.id)) return NB_CACHE.get(w.id);
+    const t = baseForm(w).toLowerCase();
+    const out = [];
+    if (/^[a-z]{3,12}$/.test(t)) {
+      const max = t.length <= 4 ? 1 : 2;
+      const seen = new Set([t]);
+      for (const o of words) {
+        const b = baseForm(o).toLowerCase();
+        if (seen.has(b) || !/^[a-z]{2,14}$/.test(b) || Math.abs(b.length - t.length) > max) continue;
+        const d = levenshtein(t, b);
+        if (d > max || optionClash(w, o)) continue;
+        seen.add(b);
+        out.push([d * 10 + Math.abs(b.length - t.length) + (b[0] === t[0] ? 0 : 3), b, o]);
+      }
+      out.sort((a, b) => a[0] - b[0] || (a[1] < b[1] ? -1 : 1));
+    }
+    const res = out.slice(0, 6).map(x => x[2]);
+    NB_CACHE.set(w.id, res);
+    return res;
+  }
+  /* «Згадай без підказок»: нові слова за сьогодні (або вчорашні, якщо сьогодні їх менше трьох) */
+  function recallSet(cards, words, today) {
+    const ids = new Set((words || []).map(w => w.id));
+    const of = d => Object.keys(cards).filter(id => ids.has(id) && cards[id].first === d && !cards[id].known);
+    const t = of(today);
+    if (t.length >= 3) return { ids: t, day: today };
+    const y = of(today - 1);
+    return y.length >= 3 ? { ids: y, day: today - 1 } : { ids: [], day: today };
+  }
+  // Яке слово з набору людина написала (точно або з дрібною описочкою)
+  function recallMatch(value, list) {
+    for (const w of list) {
+      const r = checkAnswer(value, answerTargets(w.en)).result;
+      if (r === 'exact' || r === 'typo') return w;
+    }
+    return null;
+  }
   /* Початкова форма без «to» й артикля */
   function baseForm(w) { return String(w.en || '').trim().replace(/[.!?]+$/, '').replace(/^to /i, '').replace(/^(the|a|an) /i, ''); }
   /* «Склади слово з літер»: одне слово з 3–12 літер */
@@ -575,7 +621,10 @@
     phrase_fill: 'Доповни фразу',
     listen_ex: 'Зрозумій на слух',
     match: 'Знайди пари',
-    say_sentence: 'Скажи речення'
+    say_sentence: 'Скажи речення',
+    tf: 'Так чи ні?',
+    listen_spell: 'Як пишеться?',
+    phrase_mcq: 'Яке слово у фразі?'
   };
   /* «Скажи речення»: приклад до 10 слів, який можна вимовити й порівняти із записом */
   function canSaySentence(w) { const n = tokens(w.ex).length; return !!w.ex && !!w.exUk && n >= 3 && n <= 10; }
@@ -591,7 +640,7 @@
     return Object.assign({}, w, { ex: e.ex, exUk: e.exUk, sayEx: e.sayEx, exN: e.n });
   }
   /* Вправи, яким потрібен звук або голос: у тихому режимі їх немає */
-  const SOUND_EXERCISES = ['listen_mcq', 'dictation', 'speak', 'listen_ex', 'say_sentence'];
+  const SOUND_EXERCISES = ['listen_mcq', 'dictation', 'speak', 'listen_ex', 'say_sentence', 'listen_spell'];
   function eligible(type, w, ctx) {
     const st = ctx.settings || {};
     const typing = st.typing !== false, speaking = st.speaking !== false;
@@ -610,6 +659,8 @@
       case 'phrase_fill': return typing && !!ctx.phrases && phraseTargets(w, ctx.phrases[w.id]).length > 0;
       case 'listen_ex': return !!ctx.canListen && !!w.ex && !!w.exUk;
       case 'say_sentence': return speaking && canSaySentence(w);
+      case 'listen_spell': return !!ctx.canListen && !!ctx.words && spellingNeighbors(w, ctx.words).length >= 3;
+      case 'phrase_mcq': return !!ctx.phrases && phraseMcqTargets(w, ctx.phrases[w.id]).length > 0;
       default: return true;
     }
   }
@@ -635,15 +686,15 @@
       return (ctx.rng || Math.random)() < 0.5 ? 'flip' : 'flip_rev';
     }
     if (card.st === 'learn') {
-      if (card.step <= 1) return choose([['mcq_en_uk', 3], ['listen_mcq', 2], ['match', 2]], ctx);
-      if (card.step === 2) return choose([['mcq_uk_en', 3], ['ctx_mcq', 2]], ctx) || 'mcq_uk_en';
+      if (card.step <= 1) return choose([['mcq_en_uk', 3], ['listen_mcq', 2], ['match', 2], ['tf', 1], ['listen_spell', 1]], ctx);
+      if (card.step === 2) return choose([['mcq_uk_en', 3], ['ctx_mcq', 2], ['phrase_mcq', 2]], ctx) || 'mcq_uk_en';
       return choose(PRODUCTIVE, ctx) || 'flip_rev';
     }
     if (card.st === 'relearn') return choose([['type_en', 4], ['build_phrase', 4], ['spell', 3], ['ctx_mcq', 1], ['mcq_uk_en', 1], ['flip_rev', 1]], ctx) || 'flip_rev';
     const s = card.s || 0;
     let list;
-    if (s < 4) list = [['mcq_uk_en', 3], ['listen_mcq', 2], ['ctx_mcq', 2], ['spell', 2], ['match', 1], ['flip_rev', 2], ['type_en', 2], ['build_phrase', 2]];
-    else if (s < 15) list = [['type_en', 4], ['cloze', 3], ['phrase_fill', 3], ['build_phrase', 3], ['listen_ex', 2], ['speak', 2], ['ctx_mcq', 1], ['flip_rev', 1], ['listen_mcq', 1]];
+    if (s < 4) list = [['mcq_uk_en', 3], ['listen_mcq', 2], ['ctx_mcq', 2], ['phrase_mcq', 2], ['spell', 2], ['match', 1], ['tf', 1], ['listen_spell', 1], ['flip_rev', 2], ['type_en', 2], ['build_phrase', 2]];
+    else if (s < 15) list = [['type_en', 4], ['cloze', 3], ['phrase_fill', 3], ['build_phrase', 3], ['listen_ex', 2], ['speak', 2], ['phrase_mcq', 1], ['listen_spell', 1], ['ctx_mcq', 1], ['flip_rev', 1], ['listen_mcq', 1]];
     else if (s < 45) list = [['type_en', 3], ['cloze', 2], ['phrase_fill', 3], ['dictation', 2], ['build_sentence', 3], ['listen_ex', 2], ['speak', 2], ['say_sentence', 2], ['flip', 1], ['own_sentence', 1]];
     else list = [['dictation', 3], ['build_sentence', 3], ['phrase_fill', 2], ['listen_ex', 2], ['speak', 2], ['say_sentence', 3], ['cloze', 2], ['flip', 1], ['own_sentence', 2]];
     return choose(list, ctx) || 'flip_rev';
@@ -1034,9 +1085,9 @@
     let exercise;
     if (this.practice) {
       const pseudo = { st: 'review', s: 5 };
-      exercise = pickExercise(word, pseudo, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen, phrases: this.env.phrases });
+      exercise = pickExercise(word, pseudo, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen, phrases: this.env.phrases, words: this.env.words });
     } else {
-      exercise = pickExercise(word, source === 'new' ? null : card, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen, phrases: this.env.phrases });
+      exercise = pickExercise(word, source === 'new' ? null : card, { settings: this.env.settings, rng: this.env.rng, recent: this.recent, canListen: this.env.canListen, phrases: this.env.phrases, words: this.env.words });
     }
     return { id, word, card, exercise, source };
   };
@@ -1389,8 +1440,7 @@
       opt.dialogs ? { id: 'dialog', icon: 'chat', title: 'Діалог: тренування або рольова гра', target: 1, value: (l.dlr || []).length, go: 'dialogs' } : null,
       opt.dict ? { id: 'dict', icon: 'dictation', title: 'Диктант: напиши 10 речень', target: 10, value: l.dc || 0, go: 'dict' } : null,
       opt.tell ? { id: 'tell', icon: 'speak', title: 'Розповідь 4/3/2: три раунди вголос', target: 3, value: l.tk || 0, go: 'tell' } : null,
-      opt.grammar ? { id: 'grammar', icon: 'pen', title: 'Граматика: 12 завдань', target: 12, value: (l.gt || 0) + (l.gp || 0), go: 'grammar' } : null,
-      opt.listen ? { id: 'listen', icon: 'listen', title: 'Послухай 20 слів у режимі «Слухати»', target: 20, value: l.ls || 0, go: 'listen' } : null
+      opt.grammar ? { id: 'grammar', icon: 'pen', title: 'Граматика: 12 завдань', target: 12, value: (l.gt || 0) + (l.gp || 0), go: 'grammar' } : null
     ]);
     return [study, skill, method].filter(Boolean).map(q => Object.assign({}, q, { done: q.value >= q.target, value: Math.min(q.target, q.value) }));
   }
@@ -1450,6 +1500,7 @@
     paceAdvice,
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
     wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canSaySentence, canType, canDictate, isPhrase,
+    phraseMcqTargets, spellingNeighbors, recallSet, recallMatch,
     fixSentence, taskSentences, gramSentences, speechCheck, pickSpeech, speechKinds, SPEECH_KINDS,
     EXERCISES, pickExercise, eligible, distractors, optionClash, shareSense, senses, homophones, HOMOPHONES, posClass, shortSense, optionLabels, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
     LEARN_STEPS, LEECH, DAY_MISS, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,

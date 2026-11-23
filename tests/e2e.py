@@ -31,7 +31,7 @@ def click_text(page, text):
     page.locator('#foot button', has_text=text).first.click()
 
 
-def answer(page, wrong=False, scheme='light'):
+def answer(page, wrong=False, scheme='light', expect=None):
     cur = page.evaluate('''() => { const c = window.EW.current; if (!c) return null;
         return { id: c.id, ex: c.exercise, w: c.word,
           cloze: (EWCore.clozeTarget(c.word) || {}).text || null, fill: c.fill || null,
@@ -54,7 +54,7 @@ def answer(page, wrong=False, scheme='light'):
             shot(page, f'{scheme}-{ex}-b')
         click_text(page, 'Вчити')
         return True
-    if ex in ('mcq_en_uk', 'mcq_uk_en', 'listen_mcq'):
+    if ex in ('mcq_en_uk', 'mcq_uk_en', 'listen_mcq', 'phrase_mcq', 'listen_spell'):
         field = 'en' if ex == 'mcq_uk_en' else 'uk'
         btns = page.locator('.opt-btn')
         target = None
@@ -63,6 +63,9 @@ def answer(page, wrong=False, scheme='light'):
                 target = btns.nth(i)
                 break
         target.click()
+    elif ex == 'tf':
+        truth = page.inner_text('.tf-uk') == page.evaluate('(u) => EWCore.shortSense(u)', w['uk'])
+        click_text(page, ('Ні' if truth else 'Так') if wrong else ('Так' if truth else 'Ні'))
     elif ex in ('flip', 'flip_rev'):
         click_text(page, 'Показати відповідь')
         click_text(page, 'Не знаю' if wrong else 'Знаю')
@@ -141,6 +144,10 @@ def answer(page, wrong=False, scheme='light'):
         seen_types[key + '-done'] = 1
         page.wait_for_timeout(150)
         shot(page, f'{scheme}-{ex}-b')
+    if expect:
+        assert visible(page, '.verdict.' + expect), (ex, expect, page.inner_text('#foot')[:200])
+        if expect == 'wrong':
+            shot(page, f'{scheme}-{ex}-wrong')
     if visible(page, '#foot button:has-text("Далі")'):
         click_text(page, 'Далі')
     return True
@@ -250,7 +257,7 @@ try:
             # Вправи для міцних слів, до яких бот за 3 тижні не доходить
             for ex_type, check in (('dictation', 'canDictate'), ('build_sentence', 'canBuildSentence'), ('flip', 'canType'), ('own_sentence', 'canDictate'),
                                    ('spell', 'spellTarget'), ('ctx_mcq', 'ctxTarget'), ('listen_ex', 'canBuildSentence'), ('match', 'canType'), ('phrase_fill', 'canType'),
-                                   ('say_sentence', 'canSaySentence')):
+                                   ('say_sentence', 'canSaySentence'), ('tf', 'canType')):
                 wid = page.evaluate('''([check]) => Object.entries(window.EW.cards).filter(([id, c]) => c.st === 'review')
                     .map(([id]) => window.WORDS.find(x => x.id === id)).find(w => w && EWCore[check](w)).id''', [check])
                 page.evaluate('([id, t]) => window.EW.force(id, t)', [wid, ex_type])
@@ -537,31 +544,6 @@ try:
         if page.evaluate('window.EW.mode') == 'summary':
             click_text(page, 'Готово' if visible(page, '#foot button:has-text("Готово")') else 'На головну')
             page.wait_for_timeout(200)
-        # Слухати: слово, пауза, переклад і приклад; кнопки, екран блокування, підсумок
-        page.evaluate('window.EW.showTab("learn")')
-        page.wait_for_timeout(200)
-        page.click('.qa:has-text("Слухати")')
-        page.wait_for_timeout(200)
-        assert page.evaluate('window.EW.mode') == 'listen' and visible(page, '#lUk.veil'), 'переклад спершу прихований'
-        for _ in range(40):
-            page.wait_for_timeout(200)
-            if not visible(page, '#lUk.veil'):
-                break
-        assert not visible(page, '#lUk.veil'), 'переклад так і не з\'явився'
-        title = page.evaluate('navigator.mediaSession && navigator.mediaSession.metadata && navigator.mediaSession.metadata.title')
-        assert title == page.inner_text('#card .word'), title
-        click_text(page, 'Пауза')
-        assert visible(page, '#foot button:has-text("Слухати")') and page.evaluate('window.EW.debug().paused')
-        click_text(page, 'Далі')
-        page.wait_for_timeout(200)
-        assert page.inner_text('#card .ex-right').strip().endswith('з ' + str(page.evaluate('window.EW.listenIds().length'))) and '2 з' in page.inner_text('#card .ex-right')
-        page.click('#exitBtn')
-        page.wait_for_timeout(200)
-        assert page.evaluate('window.EW.mode') == 'summary' and 'Прослухано' in page.inner_text('#card')
-        assert page.evaluate('window.EW.log[EWCore.dayKey(EWCore.dayNum())].ls') >= 1
-        click_text(page, 'Готово')
-        page.wait_for_timeout(200)
-        assert page.evaluate('window.EW.mode') is None and page.evaluate('window.EW.debug().paused')
         # Після пропущених днів: нові слова на паузі, але їх можна взяти
         page.evaluate('''() => { const t = EWCore.dayNum(); for (const w of window.WORDS.slice(500, 540)) window.EW.cards[w.id] = { st: 'review', s: 4, d: 5, last: t - 9, due: t - 3, reps: 2, lapses: 0, first: t - 20 }; }''')
         page.evaluate('window.EW.showTab("learn")')
@@ -581,7 +563,7 @@ try:
         assert not visible(page, '#dictActs'), 'без фільтра дій немає'
         page.click('#segStatus button:has-text("Вчу")')
         page.wait_for_timeout(200)
-        assert visible(page, '.act:has-text("Слухати")') and visible(page, '.act:has-text("Потренувати")')
+        assert not visible(page, '.act:has-text("Слухати")') and visible(page, '.act:has-text("Потренувати")')
         page.click('.act:has-text("Потренувати")')
         page.wait_for_timeout(200)
         assert page.evaluate('window.EW.mode') == 'session' and page.evaluate('window.EW.session.practice')
@@ -599,13 +581,32 @@ try:
         # Нові вправи (літери, пропущене слово, фраза, речення на слух, пари): кожна відкривається й зараховується
         page.evaluate('''() => { const ids = ['talk-borrow','core-cheap','sp-say','b1-rise','core-busy','sp-listen','core-remember','sp-wait','talk-wages','b2-guest'];
           ids.forEach(id => { if (!window.EW.cards[id]) window.EW.cards[id] = EWCore.knownCard(EWCore.dayNum(), 0.9, Math.random); }); }''')
-        for ex_type, wid in (('spell', 'core-remember'), ('ctx_mcq', 'core-busy'), ('phrase_fill', 'talk-borrow'), ('listen_ex', 'sp-wait'), ('match', 'core-cheap'), ('say_sentence', 'sp-say')):
+        for ex_type, wid in (('spell', 'core-remember'), ('ctx_mcq', 'core-busy'), ('phrase_fill', 'talk-borrow'), ('listen_ex', 'sp-wait'), ('match', 'core-cheap'), ('say_sentence', 'sp-say'),
+                             ('tf', 'core-cheap'), ('tf', 'b1-rise'), ('listen_spell', 'core-quiet'), ('phrase_mcq', 'talk-borrow')):
             for wrong in (False, True):
                 page.evaluate('([id, t]) => window.EW.force(id, t)', [wid, ex_type])
                 page.wait_for_timeout(80)
                 assert page.evaluate('window.EW.current.exercise') == ex_type, ex_type
-                answer(page, wrong=wrong)
+                if not wrong:
+                    shot(page, f'light-new-{ex_type}-q')
+                answer(page, wrong=wrong, expect=('wrong' if wrong else 'right') if ex_type in ('tf', 'listen_spell', 'phrase_mcq') else None)
                 page.wait_for_timeout(80)
+        # «Як пишеться?»: варіанти — схожі написанням слова, без омофонів; «Так чи ні?» не показує синонім як «неправильний» переклад
+        page.evaluate('([id, t]) => window.EW.force(id, t)', ['core-quiet', 'listen_spell'])
+        opts = page.evaluate("[...document.querySelectorAll('.opt-btn span:nth-child(2)')].map(s => s.textContent)")
+        assert 'quiet' in opts and len(opts) == 4 and all(abs(len(o) - 5) <= 2 for o in opts), opts
+        answer(page)
+        # Пропуск у фразі чи реченні: пари-плутанки не стоять поруч (lend і borrow обидва пасують у «___ it for a day»)
+        for t in ('phrase_mcq', 'ctx_mcq') * 5:
+            page.evaluate('([id, t]) => window.EW.force(id, t)', ['talk-borrow', t])
+            opts = page.evaluate("[...document.querySelectorAll('.opt-btn span:nth-child(2)')].map(s => s.textContent.toLowerCase())")
+            assert 'borrow' in opts and not {'lend', 'loan'} & set(opts), opts
+            answer(page)
+        for _ in range(12):
+            page.evaluate('([id, t]) => window.EW.force(id, t)', ['sp-say', 'tf'])
+            shown = page.inner_text('.tf-uk')
+            assert 'казати' not in shown or shown == page.evaluate("EWCore.shortSense(window.WORDS.find(w => w.id === 'sp-say').uk)"), shown
+            answer(page)
         assert page.evaluate("[...document.querySelectorAll('.spell-slots .slot')].every(s => s.getBoundingClientRect().right <= innerWidth)"), 'літери влазять'
         # Варіанти в тестах тієї ж частини мови: до дієслова лише дієслова
         page.evaluate('([id, t]) => window.EW.force(id, t)', ['sp-say', 'mcq_uk_en'])
@@ -1054,6 +1055,40 @@ try:
             assert set(kinds) == {'trans', 'say', 'hear'}, kinds
             assert set(page.evaluate('window.EW.gt.tasks.map(t => t.tid)')) <= {'present-simple', 'will'}
             ctx.close()
+
+        # «Згадай без підказок»: плитка з'являється, коли є ≥ 3 нові слова за сьогодні; вільно, потім за значенням, решта — завтра
+        ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True)
+        page = ctx.new_page()
+        page.on('pageerror', lambda e: errors.append('recall pageerror: ' + str(e)))
+        page.goto(URL); page.wait_for_timeout(400)
+        assert not visible(page, '.qa:has-text("Згадай без підказок")'), 'без нових слів плитки немає'
+        assert not visible(page, '.qa:has-text("Слухати")'), '«Слухати» прибрано'
+        rc_ids = ['core-cheap', 'core-busy', 'talk-borrow', 'core-remember', 'sp-wait']
+        page.evaluate('''(ids) => { const t = EWCore.dayNum(); ids.forEach(id => { const c = EWCore.knownCard(t, 0.9, Math.random); delete c.known; c.first = t; c.due = t + 5; EW.cards[id] = c; }); EW.showTab('learn'); }''', rc_ids)
+        page.wait_for_timeout(200)
+        assert visible(page, '.qa:has-text("Згадай без підказок")'), 'плитка згадування'
+        page.locator('.qa', has_text='Згадай без підказок').click(); page.wait_for_timeout(150)
+        assert page.evaluate('window.EW.mode') == 'recall' and page.locator('.rc').count() == 5
+        page.fill('.recall .answer, #card input.answer', 'chep'); page.keyboard.press('Enter'); page.wait_for_timeout(80)   # описка — зараховано
+        page.fill('#card input.answer', 'to borrow'); page.keyboard.press('Enter'); page.wait_for_timeout(80)
+        page.fill('#card input.answer', 'banana'); page.keyboard.press('Enter'); page.wait_for_timeout(80)
+        assert 'немає' in page.inner_text('.recall-note')
+        assert page.locator('.rc.got').count() == 2
+        shot(page, 'light-recall-free')
+        click_text(page, 'Більше не пам'); page.wait_for_timeout(100)
+        assert page.locator('.rc.cue').count() == 3, 'решта зі значенням'
+        page.fill('#card input.answer', 'busy'); page.keyboard.press('Enter'); page.wait_for_timeout(80)
+        shot(page, 'light-recall-cue')
+        click_text(page, 'Завершити'); page.wait_for_timeout(150)
+        assert page.evaluate('window.EW.mode') == 'prres' and '2' in page.inner_text('.gres-score')
+        cs = page.evaluate('window.EW.cards'); t0 = page.evaluate('EWCore.dayNum()')
+        assert cs['core-remember']['due'] == t0 + 1 and cs['sp-wait']['due'] == t0 + 1 and cs['core-busy']['due'] == t0 + 5, 'не згадане — завтра'
+        lg = page.evaluate('Object.values(window.EW.log).pop()')
+        assert lg['fr'] == 2 and lg['frn'] == 5
+        shot(page, 'light-recall-result')
+        click_text(page, 'Готово'); page.wait_for_timeout(150)
+        assert not visible(page, '.qa:has-text("Згадай без підказок")'), 'сьогодні вже згадував'
+        ctx.close()
 
         # Справжній користувач: північ посеред заняття, запізніле розпізнавання мовлення, синонім і омофон при друці
         ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True)

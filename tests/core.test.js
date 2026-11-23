@@ -12,6 +12,8 @@ vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words.js'), 'utf
 if (fs.existsSync(path.join(__dirname, '../public/words-base.js'))) vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words-base.js'), 'utf8'), ctx);
 if (fs.existsSync(path.join(__dirname, '../public/words-more.js'))) vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/words-more.js'), 'utf8'), ctx);
 const WORDS = ctx.window.WORDS;
+for (const f of ['phrases.js', 'phrases-base.js', 'phrases-more.js']) if (fs.existsSync(path.join(__dirname, '../public/' + f))) vm.runInContext(fs.readFileSync(path.join(__dirname, '../public/' + f), 'utf8'), ctx);
+const PHRASES = ctx.window.PHRASES || {};
 const byId = id => WORDS.find(w => w.id === id);
 let passed = 0;
 function test(name, fn) { fn(); passed++; }
@@ -815,7 +817,7 @@ test('Розповідь 4/3/2: теми повні, вибір найдавні
 });
 
 test('Завдання дня, календар місяця, карта активності, найдовша серія', () => {
-  const all = { newWords: 1, dialogs: 1, dict: 1, tell: 1, grammar: 1, listen: 1 };
+  const all = { newWords: 1, dialogs: 1, dict: 1, tell: 1, grammar: 1 };
   const t = C.dayNum(new Date(2026, 10, 22));
   const q1 = C.dailyQuests(t, { r: 12, a: 2, ms: 400000, cb: 9, dc: 10 }, all);
   assert.strictEqual(q1.length, 3);
@@ -868,6 +870,45 @@ test('Варіанти тесту: без синонімів, того само�
       ds.forEach(d => assert.ok(!C.optionClash(w, d), id + ': варіант ' + d.id + ' теж правильний'));
     }
   }
+});
+
+test('Нові вправи: «Так чи ні?», «Як пишеться?», «Яке слово у фразі?» і «Згадай без підказок»', () => {
+  const by = new Map(WORDS.map(w => [w.id, w]));
+  // Як пишеться: схожі написанням, без омофонів і синонімів
+  const nq = C.spellingNeighbors(by.get('core-quiet'), WORDS).map(C.baseForm);
+  assert.ok(nq.includes('quite') && nq.length >= 3, nq.join());
+  assert.ok(!C.spellingNeighbors(by.get('sp-week'), WORDS).some(o => o.id === 'b2-weak'), 'week / weak однаково звучать — не варіант');
+  C.spellingNeighbors(by.get('b1-rise'), WORDS).forEach(o => assert.ok(!C.optionClash(by.get('b1-rise'), o)));
+  // Яке слово у фразі: лише фрази, де слово в початковій формі
+  const pt = C.phraseMcqTargets(by.get('talk-borrow'), PHRASES['talk-borrow']);
+  assert.ok(pt.length > 0 && pt.every(t => t.text.toLowerCase() === 'borrow' && t.uk));
+  // Де з'являються: на першому кроці «Так чи ні?» і «Як пишеться?», на другому — фраза
+  const warm = k => { const r = seeded(k); r(); r(); r(); return r; };   // перші числа малого зерна майже нулі
+  const ctx = k => ({ settings: { mode: 'mix' }, canListen: true, phrases: PHRASES, words: WORDS, rng: warm(k) });
+  const seen = new Set();
+  for (let k = 1; k <= 400; k++) {
+    seen.add(C.pickExercise(by.get('core-quiet'), { st: 'learn', step: 1 }, ctx(k)));
+    seen.add(C.pickExercise(by.get('talk-borrow'), { st: 'learn', step: 2 }, ctx(k)));
+  }
+  ['tf', 'listen_spell', 'phrase_mcq'].forEach(t => assert.ok(seen.has(t), t));
+  const quiet = Object.assign(ctx(1), { settings: { mode: 'mix', quiet: true } });
+  for (let k = 1; k <= 200; k++) assert.notStrictEqual(C.pickExercise(by.get('core-quiet'), { st: 'learn', step: 1 }, Object.assign(quiet, { rng: warm(k) })), 'listen_spell');
+  // Згадай без підказок: сьогоднішні нові, а якщо їх менше трьох — учорашні; «Вже знаю» не рахується
+  const cards = {
+    a: { first: 100 }, b: { first: 100 }, c: { first: 100, known: true },
+    d: { first: 99 }, e: { first: 99 }, f: { first: 99 }
+  };
+  const ws = ['a', 'b', 'c', 'd', 'e', 'f'].map(id => ({ id, en: id }));
+  assert.deepStrictEqual(C.recallSet(cards, ws, 100), { ids: ['d', 'e', 'f'], day: 99 });
+  cards.g = { first: 100 }; ws.push({ id: 'g', en: 'g' });
+  assert.deepStrictEqual(C.recallSet(cards, ws, 100).ids, ['a', 'b', 'g']);
+  assert.deepStrictEqual(C.recallSet({}, ws, 100).ids, []);
+  const list = [by.get('core-cheap'), by.get('talk-borrow'), by.get('core-busy')];
+  assert.strictEqual(C.recallMatch('to borrow', list).id, 'talk-borrow');
+  assert.strictEqual(C.recallMatch('chep', list).id, 'core-cheap', 'описка');
+  assert.strictEqual(C.recallMatch('banana', list), null);
+  // «Слухати» прибрано: завдань дня з ним немає
+  for (let d = 0; d < 60; d++) C.dailyQuests(d, {}, { newWords: 1, dialogs: 1, dict: 1, tell: 1, grammar: 1, listen: 1 }).forEach(q => assert.notStrictEqual(q.id, 'listen'));
 });
 
 test('Слово, яке не йде: після п\'ятої помилки за день — до завтра, а не по колу', () => {

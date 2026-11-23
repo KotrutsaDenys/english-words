@@ -54,12 +54,10 @@ const DEFAULT_SETTINGS = {
   newPerDay: 10, mode: 'mix', typing: true, speaking: true, sessionLen: 0, retention: 0.9,
   autoplay: true, voiceSrc: 'ciara', voice: '', rate: 1, cats: {}, pretest: true,
   autoNext: true, quiet: false, haptics: true,
-  listen: { shadow: false, phrases: false, uk: true },
   theme: 'cobalt', appearance: 'auto'
 };
 let settings = Object.assign({}, DEFAULT_SETTINGS, load(KEYS.settings, {}));
 settings.cats = Object.assign({}, settings.cats || {});
-settings.listen = Object.assign({}, DEFAULT_SETTINGS.listen, settings.listen || {});
 if (![0.75, 0.9, 1].includes(settings.rate)) settings.rate = settings.rate < 0.8 ? 0.75 : settings.rate < 0.95 ? 0.9 : 1;
 if (![0.85, 0.9, 0.95].includes(settings.retention)) settings.retention = 0.9;
 delete settings.dir;
@@ -118,11 +116,9 @@ applyLook();
 /* ---------- Вимова: записи Кіари, Емми й голос iPhone як запасний ---------- */
 const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
 let voices = [];
-let ukVoices = [];
 function loadVoices() {
   if (!synth) return;
   const all = synth.getVoices();
-  ukVoices = all.filter(v => /^uk/i.test(v.lang));
   let list = all.filter(v => /^en[-_](GB|IE)/i.test(v.lang));
   if (!list.length) list = all.filter(v => /^en/i.test(v.lang));
   voices = list.sort((a, b) => (a.lang > b.lang ? 1 : a.lang < b.lang ? -1 : a.name.localeCompare(b.name)));
@@ -395,7 +391,8 @@ const ICON = {
 const EX_ICON = {
   intro: 'intro', mcq_en_uk: 'choose', mcq_uk_en: 'choose', listen_mcq: 'listen', flip: 'flip', flip_rev: 'flip',
   type_en: 'type', cloze: 'cloze', dictation: 'dictation', build_phrase: 'build', build_sentence: 'build', speak: 'speak', own_sentence: 'pen',
-  spell: 'letters', ctx_mcq: 'cloze', phrase_fill: 'cloze', listen_ex: 'listen', match: 'pairs', say_sentence: 'speak'
+  spell: 'letters', ctx_mcq: 'cloze', phrase_fill: 'cloze', listen_ex: 'listen', match: 'pairs', say_sentence: 'speak',
+  tf: 'choose', listen_spell: 'listen', phrase_mcq: 'cloze'
 };
 function sayBtn(w, kind, small, label) {
   const b = el('button', 'say' + (small ? ' sm' : ''));
@@ -461,7 +458,6 @@ function envFor(practiceIds, reviewOnly, limit) {
 function updateTape() {
   updateSessionBar();
   if (sprint) { sprintTape(); return; }
-  if (mode === 'listen' && listen) { listenTape(); return; }
   if ((mode === 'gtest' || mode === 'gresult') && gt) { gtTape(); return; }
   if (DL_MODES.includes(mode) && dl) { dlTape(); return; }
   if (PR_MODES.includes(mode) && pr) { prTape(); return; }
@@ -510,7 +506,6 @@ window.addEventListener('popstate', () => {
   histPushed = false;
   if (mode === 'session') endSession(true);
   else if (mode === 'sprint') endSprint();
-  else if (mode === 'listen') finishListen();
   else if (mode === 'gtest' || mode === 'gresult') endGramTest();
   else if (DL_MODES.includes(mode)) endDlg();
   else if (PR_MODES.includes(mode)) endPr();
@@ -650,7 +645,7 @@ function vocabSection() {
 
 /* Плитка швидкої дії на головній */
 /* Кольори методик (як кольорові теми в Drops): кожна практика має свій відтінок */
-const PRACTICE_HUE = { pen: 'sky', chat: 'mint', dictation: 'violet', speak: 'coral', listen: 'amber', timer: 'rose' };
+const PRACTICE_HUE = { pen: 'sky', chat: 'mint', dictation: 'violet', speak: 'coral', listen: 'amber', target: 'amber', timer: 'rose' };
 function quick(icon, title, sub, onClick, cls) {
   const b = el('button', 'qa' + (cls ? ' ' + cls : ''));
   b.type = 'button';
@@ -775,8 +770,6 @@ function renderLearn() {
   const dtile = dlgTile();
   if (dtile) tiles.push(dtile);
   prTiles().forEach(t => tiles.push(t));
-  const ls = canListen() ? listenIds().length : 0;
-  if (ls >= 3) tiles.push(quick('listen', 'Слухати', 'у дорогу: ' + words(ls) + ' голосом, без рук', () => startListen()));
   if (sp >= 8) tiles.push(quick('timer', 'Спринт', meta.sprintBest ? 'хвилина, рекорд ' + meta.sprintBest : 'хвилина на швидкість', startSprint));
   const quests = questsCard(plan);
   if (quests) home.appendChild(quests);
@@ -1034,6 +1027,7 @@ function nextItem() {
   cancelAuto();
   stopAudio();
   stopRec();
+  hideCombo();
   if (!session) return;
   rollDay();
   current = session.next();
@@ -1372,7 +1366,6 @@ function closePeek() {
 }
 function openPeek(span) {
   closePeek();
-  if (listen && !listen.paused) lPause();
   const token = span.textContent;
   const host = span.closest('[data-sent]');
   const sentence = host ? host.dataset.sent : span.parentNode ? span.parentNode.textContent : '';
@@ -2159,12 +2152,7 @@ RENDER.ctx_mcq = item => {
   const fit = s => cap ? s.charAt(0).toUpperCase() + s.slice(1) : s;
   const seen = new Set([ct.text.toLowerCase()]);
   const others = [];
-  C.distractors(w, allWords(), 'en', 14, Math.random, !!(item.card && item.card.st !== 'learn')).forEach(o => {
-    const b = C.baseForm(o);
-    if (others.length >= 3 || !/^[A-Za-z' -]+$/.test(b) || C.tokens(b).length !== n || seen.has(b.toLowerCase())) return;
-    seen.add(b.toLowerCase());
-    others.push({ o, text: fit(b) });
-  });
+  gapOthers(w, n, fit, seen).forEach(x => others.push(x));
   const opts = C.shuffle([{ o: w, text: ct.text }].concat(others));
   const box = el('div', 'options');
   const btns = opts.map((x, i) => {
@@ -2199,6 +2187,129 @@ RENDER.ctx_mcq = item => {
       mine.append(a, document.createTextNode(' — це ' + x.o.uk));
     }
     nextButton(ok ? verdict('right', 'Правильно') : verdict('wrong', x ? 'Ні, правильно:' : 'Правильно:', null, pair(w), mine), ok);
+  }
+};
+
+/* Три інші слова для пропуску в реченні чи фразі. Без пар-плутанок: lend і borrow обидва граматично
+   стають у «___ it for a day», а переклад «позичити» їх не розрізняє — правильних було б два */
+function gapOthers(w, n, fit, seen) {
+  const conf = C.confusables(w.id);
+  const out = [];
+  C.distractors(w, allWords(), 'en', 16, Math.random, false).forEach(o => {
+    const b = C.baseForm(o);
+    if (out.length >= 3 || conf.includes(o.id) || !/^[A-Za-z' -]+$/.test(b) || C.tokens(b).length !== n || seen.has(b.toLowerCase())) return;
+    seen.add(b.toLowerCase());
+    out.push({ o, text: fit(b) });
+  });
+  return out;
+}
+/* Варіанти-слова англійською з пропуском у тексті: спільне для «Яке слово у фразі?» і «Як пишеться?» */
+function enOptions(item, w, opts, onDone) {
+  const box = el('div', 'options');
+  const btns = opts.map((x, i) => {
+    const b = el('button', 'opt-btn en');
+    b.type = 'button';
+    b.dataset.id = x.o.id;
+    const t = el('span', null, x.text); t.lang = 'en';
+    b.append(el('span', 'k', String(i + 1)), t);
+    b.addEventListener('click', () => pick(x, b));
+    box.appendChild(b);
+    return b;
+  });
+  $('card').appendChild(box);
+  setFoot([button('Не знаю', 'btn-quiet', () => pick(null, null))]);
+  keys = { num: k => btns[k - 1] && btns[k - 1].click() };
+  function pick(x, b) {
+    if (ui.answered) return;
+    const ok = !!x && x.o.id === w.id;
+    finish(ok ? 3 : 1);
+    btns.forEach((y, i) => {
+      y.disabled = true;
+      if (opts[i].o.id === w.id) { y.classList.add('right'); y.firstChild.innerHTML = ICON.check; }
+      else if (y === b) { y.classList.add('wrong'); y.firstChild.innerHTML = ICON.cross; }
+      else y.classList.add('dim');
+    });
+    onDone(ok);
+    $('card').appendChild(details(w, { en: true, uk: true, wrong: !ok }));
+    let mine = null;
+    if (x && !ok) {
+      mine = el('span', 'yours');
+      const a = el('span', null, x.text); a.lang = 'en';
+      mine.append(a, document.createTextNode(' — це ' + C.shortSense(x.o.uk)));
+    }
+    nextButton(ok ? verdict('right', 'Правильно') : verdict('wrong', x ? 'Ні, правильно:' : 'Правильно:', null, pair(w), mine), ok);
+  }
+}
+/* «Яке слово у фразі?»: одна з п'яти фраз слова з пропуском і перекладом — нове поєднання щоразу */
+RENDER.phrase_mcq = item => {
+  const w = item.word;
+  const list = C.phraseMcqTargets(w, PHRASES[w.id]);
+  if (!list.length) { item.exercise = 'ctx_mcq'; return RENDER.ctx_mcq(item); }
+  const pt = list[Math.floor(Math.random() * list.length)];
+  const body = frame(item);
+  const p = el('p', 'cloze');
+  p.lang = 'en';
+  const blank = el('span', 'blank', pt.text);
+  p.append(document.createTextNode(pt.en.slice(0, pt.start)), blank, document.createTextNode(pt.en.slice(pt.end)));
+  body.appendChild(p);
+  body.appendChild(el('p', 'ex-uk', pt.uk));
+  body.appendChild(el('p', 'prompt-sub', 'Яке слово тут пропущено?'));
+  const n = C.tokens(pt.text).length;
+  const cap = /^[A-Z]/.test(pt.text);
+  const fit = x => cap ? x.charAt(0).toUpperCase() + x.slice(1) : x;
+  const seen = new Set([pt.text.toLowerCase()]);
+  const others = [];
+  gapOthers(w, n, fit, seen).forEach(x => others.push(x));
+  enOptions(item, w, C.shuffle([{ o: w, text: pt.text }].concat(others)), () => {
+    blank.classList.add('filled');
+    if (!settings.quiet) sayPhrase(w, pt.i);
+  });
+};
+/* «Як пишеться?»: чути слово й упізнати його серед схожих на письмі (quiet / quite / quit) */
+RENDER.listen_spell = item => {
+  const w = item.word;
+  const nb = C.shuffle(C.spellingNeighbors(w, allWords()).slice()).slice(0, 3);
+  if (nb.length < 3) { item.exercise = 'listen_mcq'; return mcq(item, 'audio', 'uk'); }
+  const body = frame(item);
+  listenPrompt(body, w);
+  body.appendChild(el('p', 'prompt-sub', 'Яке слово ти почув? Вибери, як воно пишеться'));
+  const opts = C.shuffle([{ o: w, text: C.baseForm(w) }].concat(nb.map(o => ({ o, text: C.baseForm(o) }))));
+  enOptions(item, w, opts, () => {});
+};
+/* «Так чи ні?»: слово й переклад — правильний або підступний (схоже слово, плутанка). Швидка перевірка, чи точно знаєш значення */
+RENDER.tf = item => {
+  const w = item.word;
+  const body = frame(item);
+  body.appendChild(wordWithSay(w));
+  if (settings.autoplay) autoSay(w, 'w');
+  const d = C.distractors(w, allWords(), 'uk', 1, Math.random, true)[0];
+  const truth = !d || Math.random() < 0.5;
+  const shown = truth ? w : d;
+  const claim = el('p', 'tf-claim');
+  claim.append(el('span', 'tf-eq', 'означає'), el('span', 'tf-uk', C.shortSense(shown.uk)));
+  body.appendChild(claim);
+  body.appendChild(el('p', 'prompt-sub', 'Це правильний переклад?'));
+  const no = button('Ні', 'btn-quiet tf-no', () => pick(false));
+  const dk = button('Не знаю', 'btn-quiet', () => pick(null));
+  const yes = button('Так', 'btn-primary tf-yes', () => pick(true));
+  setFoot([no, dk, yes], 3);
+  keys = { num: k => [no, dk, yes][k - 1] && [no, dk, yes][k - 1].click() };
+  function pick(v) {
+    if (ui.answered) return;
+    const ok = v !== null && v === truth;
+    finish(ok ? 3 : 1);
+    claim.classList.add(truth ? 'is-true' : 'is-false');
+    autoSay(w, 'w');
+    $('card').appendChild(details(w, { en: false, uk: true, wrong: !ok }));
+    // Підступний переклад: чий він насправді — так плутанка розводиться
+    let whose = null;
+    if (!truth) {
+      whose = el('span', 'yours');
+      const a = el('span', null, C.baseForm(d)); a.lang = 'en';
+      whose.append(document.createTextNode('«' + C.shortSense(d.uk) + '» — це '), a);
+    }
+    const title = ok ? (truth ? 'Так, правильно' : 'Правильно, це не воно') : v === null ? 'Правильно:' : (truth ? 'Ні, переклад був правильний:' : 'Ні, це не воно. Правильно:');
+    nextButton(verdict(ok ? 'right' : 'wrong', title, null, ok && truth ? null : pair(w), whose), ok);
   }
 };
 
@@ -2719,418 +2830,6 @@ function endSprint() {
   updateTape();
 }
 
-/* ---------- Слухати: слова голосом без рук (дорога, робота з одним навушником) ----------
-   Слово, пауза згадати, переклад, приклад. Усе грає один <audio>, і паузи теж записи (тиша):
-   коли екран заблоковано, таймери майже стоять, а звук грає далі, тож ланцюжок не рветься.
-   Розклад повторень не змінюється: це підготовка до заняття, а не заміна. */
-const GAP_URL = '/audio/gap.mp3', GAP_SEC = 0.55;
-let gapSrc = null;
-let listen = null;
-let lSeekTok = 0;
-function loadGap() {
-  if (gapSrc) return;
-  fetch(GAP_URL).then(r => (r.ok ? r.blob() : null)).then(b => { if (b && !gapSrc) gapSrc = URL.createObjectURL(b); }).catch(() => {});
-}
-function ukVoice() { return ukVoices.find(v => /lesya/i.test(v.name)) || ukVoices[0] || null; }
-function ukSpeakable(t) { return String(t).replace(/\s*\([^)]*\)/g, '').replace(/\s+([,;])/g, '$1').replace(/^[,;\s]+|[,;\s]+$/g, '').replace(/\s+/g, ' '); }
-/* Що слухати з головної: помилки дня, слова в процесі, повторення на сьогодні (найслабші першими),
-   свіжі слова за два тижні, кілька наступних нових для знайомства, далі решта вивчених */
-function listenIds() {
-  const t = today(), l = todayLog();
-  const out = [], seen = new Set();
-  const add = id => { if (!seen.has(id) && byId(id)) { seen.add(id); out.push(id); } };
-  const weak = (a, b) => C.strength(cards[a], t) - C.strength(cards[b], t);
-  const mine = Object.keys(cards).filter(id => byId(id) && !cards[id].known);
-  (l.miss || []).forEach(add);
-  mine.filter(id => cards[id].st !== 'review').forEach(add);
-  mine.filter(id => cards[id].st === 'review' && cards[id].due <= t).sort(weak).forEach(add);
-  mine.filter(id => cards[id].st === 'review' && cards[id].first >= t - 14).sort(weak).forEach(add);
-  if (out.length < 30) C.orderNew(allWords(), cards, settings.cats, settings.newPerDay, t, meta.priority).slice(0, 8).forEach(w => add(w.id));
-  mine.filter(id => cards[id].st === 'review').sort(weak).forEach(add);
-  return out.slice(0, 40);
-}
-function startListen(ids, source) {
-  ids = (ids || listenIds()).filter(id => byId(id));
-  if (!ids.length) { toast('Поки немає слів, які можна послухати'); return; }
-  stopAudio(); cancelAuto(); closePeek();
-  if (sprint) endSprint();
-  session = null; current = null; ui = null; triage = null;
-  // iPhone дозволяє голосу говорити без дотику лише після першої фрази, сказаної з дотику
-  if (synth) { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; synth.speak(u); } catch (e) {} }
-  loadGap();
-  listen = { ids, i: 0, k: 0, q: [], tok: 0, paused: false, onEnd: null, segEnd: 0, segFrom: 0, isGap: false, lastDur: 0,
-    heard: new Set(), ms: 0, t0: performance.now(), shown: {}, source: source || 'home', timer: null, pack: null, speakFin: null };
-  mode = 'listen';
-  if (currentTab !== 'learn') showTab('learn');
-  lMediaHandlers(true);
-  lLoad();
-}
-function lWord() { const id = listen.ids[listen.i]; return C.withExample(byId(id), cards[id]); }
-/* Черга дій для одного слова. sh: пауза, щоб повторити вголос (якщо ввімкнено) */
-function lQueue(w) {
-  const q = [{ t: 'say', kind: 'w' }, { t: 'gap', d: 1.6, sh: true }, { t: 'show', what: 'uk' }, { t: 'uk' }];
-  if (w.ex) q.push({ t: 'gap', d: 0.4 }, { t: 'show', what: 'ex' }, { t: 'say', kind: 'x' }, { t: 'gap', d: 1.1, sh: true });
-  if (settings.listen.phrases && PHRASES[w.id] && phrasePackUrl(w)) {
-    q.push({ t: 'show', what: 'ph' });
-    if (settings.listen.shadow) PHRASES[w.id].forEach((p, i) => q.push({ t: 'phrase', i }, { t: 'gap', d: 0.8, sh: true }));
-    else q.push({ t: 'pack' }, { t: 'gap', d: 0.6 });
-  }
-  q.push({ t: 'gap', d: 0.9 });
-  return q;
-}
-function lLoad() {
-  if (!listen) return;
-  const w = lWord();
-  listen.q = lQueue(w); listen.k = 0; listen.shown = {}; listen.lastDur = 0;
-  lRenderCard(w);
-  lMedia(w);
-  const nx = listen.ids[listen.i + 1] && byId(listen.ids[listen.i + 1]);
-  preloadWord(w);
-  if (nx) { preloadWord(C.withExample(nx, cards[nx.id])); if (settings.listen.phrases) preloadPhrases(nx); }
-  if (settings.listen.phrases) preloadPhrases(w);
-  updateTape();
-  if (!listen.paused) lRun();
-}
-function lRun() {
-  if (!listen || listen.paused) return;
-  const a = listen.q[listen.k];
-  if (!a) { lJump(1); return; }
-  const tok = ++listen.tok;
-  const done = () => { if (!listen || tok !== listen.tok || listen.paused) return; listen.k++; lRun(); };
-  const w = lWord();
-  if (a.t === 'show') { lShow(a.what); done(); return; }
-  if (a.t === 'say') {
-    const seg = clipSeg(w, a.kind);
-    if (seg) { lPlay(seg.url, seg.from, seg.to, done); return; }
-    const url = clipUrl(w, a.kind);
-    if (url) { lPlay(url, 0, 0, done); return; }
-    const text = textFor(w, a.kind);
-    if (text && !document.hidden) lSpeak(speakable(text), 'en', done); else done();
-    return;
-  }
-  if (a.t === 'uk') {
-    if (settings.listen.uk && ukVoice() && !document.hidden) lSpeak(ukSpeakable(w.uk), 'uk', done);
-    else lGap(1.0, done);
-    return;
-  }
-  if (a.t === 'gap') { lGap(a.sh && settings.listen.shadow ? Math.max(a.d, listen.lastDur * 1.15 + 0.8) : a.d, done); return; }
-  const url = phrasePackUrl(w);
-  const times = url && phraseTimes(w);
-  const whole = oneOf(w) && times && times.length > 1;   // в одному файлі фрази — лише його кінець
-  if (a.t === 'pack' && url) { listen.pack = times.slice(1); lPlay(url, whole ? times[1][0] : 0, whole ? times[times.length - 1][1] : 0, () => { if (listen) { listen.pack = null; lMark(-1); } done(); }); return; }
-  if (a.t === 'phrase' && times && times[a.i + 1]) { lMark(a.i); lPlay(url, times[a.i + 1][0], times[a.i + 1][1], done); return; }
-  done();
-}
-function lPlay(src, from, to, done) {
-  clearSegment();
-  if (synth && synth.speaking) synth.cancel();
-  playing = '';
-  listen.onEnd = done;
-  listen.isGap = src === gapSrc;
-  listen.segFrom = from || 0;
-  listen.segEnd = to ? to + 0.06 : 0;
-  const real = blobs.get(src) || src;
-  const tk = ++lSeekTok;
-  const seek = () => { if (tk !== lSeekTok) return; try { if (Math.abs(player.currentTime - (from || 0)) > 0.05) player.currentTime = from || 0; } catch (e) {} };
-  if (player.getAttribute('src') !== real) { player.src = real; player.addEventListener('loadedmetadata', seek, { once: true }); }
-  else seek();
-  player.defaultPlaybackRate = settings.rate;
-  player.playbackRate = settings.rate;
-  const p = player.play();
-  if (p && p.catch) p.catch(err => {
-    if (!listen || listen.onEnd !== done) return;
-    if (err && err.name === 'NotAllowedError') lPause();
-    else if (!err || err.name !== 'AbortError') lFire();
-  });
-}
-/* Запис дограв (або дійшов до кінця шматка): наступна дія */
-function lFire() {
-  if (!listen || !listen.onEnd) return;
-  if (!listen.isGap) listen.lastDur = (listen.segEnd ? listen.segEnd - listen.segFrom : (isFinite(player.duration) ? player.duration : 1.5)) / (settings.rate || 1);
-  const f = listen.onEnd;
-  listen.onEnd = null; listen.segEnd = 0;
-  f();
-}
-player.addEventListener('ended', () => { if (listen) lFire(); });
-player.addEventListener('error', () => { if (listen && listen.onEnd) lFire(); });
-player.addEventListener('timeupdate', () => {
-  if (!listen) return;
-  if (listen.segEnd && player.currentTime >= listen.segEnd) { try { player.pause(); } catch (e) {} lFire(); return; }
-  if (listen.pack) {
-    const t = player.currentTime;
-    lMark(listen.pack.findIndex(([a, b]) => t >= a - 0.1 && t <= b + 0.3));
-  }
-});
-function lGap(sec, done) {
-  if (!gapSrc) {
-    clearTimeout(listen.timer);
-    listen.timerOn = true;
-    listen.timer = setTimeout(() => { if (listen) listen.timerOn = false; done(); }, sec * 1000);
-    return;
-  }
-  let left = Math.max(1, Math.round(sec / GAP_SEC));
-  const loop = () => { if (!listen) return; if (left-- <= 0) { done(); return; } lPlay(gapSrc, 0, 0, loop); };
-  loop();
-}
-function lSpeak(text, lang, done) {
-  if (!synth || !text) { done(); return; }
-  try { player.pause(); } catch (e) {}
-  synth.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  const v = lang === 'uk' ? ukVoice() : pickVoice();
-  if (v) { u.voice = v; u.lang = v.lang; } else u.lang = lang === 'uk' ? 'uk-UA' : 'en-GB';
-  u.rate = lang === 'uk' ? 1 : Math.max(0.5, settings.rate * 0.95);
-  let fired = false;
-  const fin = () => { if (fired) return; fired = true; if (listen) { clearTimeout(listen.timer); listen.speakFin = null; } done(); };
-  u.onend = fin; u.onerror = fin;
-  listen.speakFin = fin;
-  // На iPhone подія кінця фрази інколи губиться: не чекаємо вічно
-  clearTimeout(listen.timer);
-  listen.timer = setTimeout(fin, 1800 + text.length * 110);
-  synth.speak(u);
-}
-/* Зупинити поточний звук і скасувати очікування */
-function lHalt() {
-  if (!listen) return;
-  listen.tok++;
-  listen.onEnd = null; listen.segEnd = 0; listen.pack = null; listen.speakFin = null; listen.timerOn = false;
-  clearTimeout(listen.timer);
-  try { player.pause(); } catch (e) {}
-  if (synth) synth.cancel();
-}
-function lHeard() {
-  const id = listen.ids[listen.i];
-  if (!listen.shown.uk || listen.heard.has(id)) return;
-  listen.heard.add(id);
-  const l = todayLog(); l.ls = (l.ls || 0) + 1;
-  save(KEYS.log, log);
-}
-function lPause() {
-  if (!listen || listen.paused) return;
-  lHalt();
-  listen.paused = true;
-  listen.ms += performance.now() - listen.t0;
-  lMediaState();
-  lRenderFoot();
-}
-/* Після паузи слово звучить спочатку: так легше підхопити */
-function lResume() {
-  if (!listen || !listen.paused) return;
-  listen.paused = false;
-  listen.t0 = performance.now();
-  lLoad();
-}
-function lJump(d) {
-  if (!listen) return;
-  lHeard();
-  lHalt();
-  if (listen.i + d >= listen.ids.length) { finishListen(); return; }
-  listen.i = Math.max(0, listen.i + d);
-  // «Наступне» з паузи (і з навушників) одразу грає; зміна налаштування на паузі лише перемальовує
-  if (listen.paused && d !== 0) { listen.paused = false; listen.t0 = performance.now(); }
-  lLoad();
-}
-function lShow(what) {
-  listen.shown[what] = true;
-  const n = $(what === 'uk' ? 'lUk' : what === 'ex' ? 'lEx' : 'lPh');
-  if (n) n.classList.remove('veil');
-}
-function lMark(i) {
-  const box = $('lPh');
-  if (!box) return;
-  Array.from(box.children).forEach((r, k) => {
-    const on = k === i;
-    if (on && !r.classList.contains('on') && !document.hidden) { try { r.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {} }
-    r.classList.toggle('on', on);
-  });
-}
-function lRenderCard(w) {
-  closePeek();
-  $('stage').hidden = false;
-  $('learnHome').hidden = true;
-  const card = $('card');
-  card.innerHTML = '';
-  card.onclick = null;
-  const head = el('div', 'ex-head');
-  const label = el('span', 'ex-label');
-  const ic = el('span', 'ex-ic'); ic.innerHTML = ICON.listen;
-  label.append(ic, document.createTextNode('Слухати'));
-  const right = el('span', 'ex-right');
-  if (!cards[w.id]) right.appendChild(el('span', 'badge fresh', 'нове'));
-  right.appendChild(document.createTextNode((listen.i + 1) + ' з ' + listen.ids.length));
-  head.append(label, right);
-  card.appendChild(head);
-  const body = el('div', 'prompt listen');
-  body.appendChild(bigWord(w.en, 'en'));
-  const uk = el('p', 'l-uk veil', w.uk); uk.id = 'lUk';
-  body.appendChild(uk);
-  card.appendChild(body);
-  if (w.ex) {
-    const exb = el('div', 'l-ex veil'); exb.id = 'lEx';
-    const p = el('p', 'ex'); p.appendChild(enText(w.ex));
-    exb.appendChild(p);
-    if (w.exUk) exb.appendChild(el('p', 'ex-uk', w.exUk));
-    card.appendChild(exb);
-  }
-  if (settings.listen.phrases && PHRASES[w.id]) {
-    const ph = el('div', 'l-ph veil'); ph.id = 'lPh';
-    PHRASES[w.id].forEach(p => {
-      const r = el('p', 'l-phr');
-      const en = el('span', 'phrase-en'); en.appendChild(enText(p[0]));
-      r.append(en, el('span', 'phrase-uk', p[1]));
-      ph.appendChild(r);
-    });
-    card.appendChild(ph);
-  }
-  card.appendChild(lOptions());
-  lRenderFoot();
-  window.scrollTo(0, 0);
-}
-function lOptions() {
-  const box = el('div', 'l-opts');
-  const row = el('div', 'chips wrap');
-  const hint = el('p', 'tip');
-  const drawHint = () => {
-    hint.textContent = settings.listen.shadow
-      ? 'Після кожного запису пауза: повтори вголос слідом, так розмова пізніше йде легше.'
-      : 'Слухай і згадуй переклад до того, як він з\'явиться. Розклад повторень це не змінює.';
-  };
-  const chip = (key, text, restart) => {
-    const b = el('button', 'chip', text);
-    b.type = 'button';
-    b.setAttribute('aria-pressed', String(!!settings.listen[key]));
-    b.addEventListener('click', () => {
-      settings.listen[key] = !settings.listen[key];
-      saveSettings();
-      b.setAttribute('aria-pressed', String(settings.listen[key]));
-      drawHint();
-      if (restart) lJump(0);
-    });
-    return b;
-  };
-  row.append(chip('shadow', 'Пауза, щоб повторити', true), chip('phrases', 'З фразами', true));
-  if (ukVoice()) row.appendChild(chip('uk', 'Переклад уголос'));
-  drawHint();
-  box.append(row, hint);
-  return box;
-}
-function lRenderFoot() {
-  if (!listen) return;
-  const mk = (icon, text, fn, cls) => {
-    const b = el('button', 'btn l-btn' + (cls ? ' ' + cls : ''));
-    b.type = 'button';
-    const i = el('span', 'l-ic'); i.innerHTML = ICON[icon];
-    b.append(i, el('span', null, text));
-    b.addEventListener('click', fn);
-    return b;
-  };
-  const prev = mk('prev', 'Назад', () => lJump(-1));
-  prev.disabled = listen.i === 0;
-  const pp = listen.paused ? mk('play', 'Слухати', lResume, 'btn-primary') : mk('pause', 'Пауза', lPause, 'btn-primary');
-  const last = listen.i >= listen.ids.length - 1;
-  const next = mk(last ? 'check' : 'next', last ? 'Кінець' : 'Далі', () => lJump(1));
-  setFoot([prev, pp, next], '3m');
-  keys = { space: () => (listen.paused ? lResume() : lPause()), enter: () => (listen.paused ? lResume() : lPause()) };
-  lMediaState();
-}
-function listenTape() {
-  const n = listen.ids.length;
-  renderTape(listen.i, n, 'Слово', null, true);
-  $('tapeDone').innerHTML = 'Слово <b>' + (listen.i + 1) + '</b> з ' + n;
-  const per = (settings.listen.phrases ? 20 : 9) * (settings.listen.shadow ? 1.6 : 1);
-  $('tapeLeft').textContent = 'ще ≈ ' + mins(Math.max(1, Math.round((n - listen.i) * per / 60)));
-}
-/* Екран блокування й навушники: назва слова, пауза, наступне/попереднє */
-function lMedia(w) {
-  if (!('mediaSession' in navigator)) return;
-  try {
-    navigator.mediaSession.metadata = new MediaMetadata({ title: w.en, artist: w.uk, album: 'English Words',
-      artwork: [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }] });
-  } catch (e) {}
-}
-function lMediaState() {
-  if (!('mediaSession' in navigator)) return;
-  try { navigator.mediaSession.playbackState = !listen ? 'none' : listen.paused ? 'paused' : 'playing'; } catch (e) {}
-}
-function lMediaHandlers(on) {
-  if (!('mediaSession' in navigator)) return;
-  const set = (a, f) => { try { navigator.mediaSession.setActionHandler(a, on ? f : null); } catch (e) {} };
-  set('play', () => lResume());
-  set('pause', () => lPause());
-  set('nexttrack', () => lJump(1));
-  set('previoustrack', () => lJump(-1));
-  set('stop', () => finishListen());
-}
-/* Зупинити слухання. Повертає стан, щоб показати підсумок */
-function endListen() {
-  if (!listen) return null;
-  lHeard();
-  lHalt();
-  const L = listen;
-  if (!L.paused) L.ms += performance.now() - L.t0;
-  const l = todayLog();
-  l.lms = (l.lms || 0) + Math.round(L.ms);
-  save(KEYS.log, log);
-  listen = null;
-  lMediaHandlers(false);
-  if ('mediaSession' in navigator) { try { navigator.mediaSession.metadata = null; } catch (e) {} }
-  lMediaState();
-  return L;
-}
-function finishListen() {
-  const L = endListen();
-  if (!L) return;
-  if (L.heard.size) { showListenDone(L); return; }
-  mode = null;
-  if (L.source === 'dict') showTab('dict'); else renderLearn();
-}
-function showListenDone(L) {
-  mode = 'summary';
-  $('stage').hidden = false;
-  $('learnHome').hidden = true;
-  const card = $('card');
-  card.innerHTML = '';
-  card.onclick = null;
-  const head = el('div', 'ex-head');
-  const label = el('span', 'ex-label');
-  const ic = el('span', 'ex-ic done'); ic.innerHTML = ICON.check;
-  label.append(ic, document.createTextNode('Слухання завершено'));
-  head.appendChild(label);
-  card.appendChild(head);
-  const body = el('div', 'prompt summary');
-  body.appendChild(el('h2', 'word', 'Прослухано'));
-  const stats = el('div', 'stats two');
-  const stat = (v, k) => { const d = el('div', 'stat'); d.append(el('b', null, v), el('span', null, k)); stats.appendChild(d); };
-  stat(String(L.heard.size), C.plural(L.heard.size, 'слово', 'слова', 'слів'));
-  stat(mins(Math.max(1, Math.round(L.ms / 60000))), 'час');
-  body.appendChild(stats);
-  const plan = new C.Session(envFor());
-  const c = plan.counts();
-  const todo = c.reviews + c.learning + c.fresh;
-  body.appendChild(el('p', 'prompt-sub', todo
-    ? 'Тепер ці слова легше згадати самому. На занятті чекає ' + lowerFirst(planSentence(c)) + '.'
-    : 'Слухання готує до заняття, а розклад повторень не змінює.'));
-  card.appendChild(body);
-  const back = () => { mode = null; if (L.source === 'dict') showTab('dict'); else renderLearn(); window.scrollTo(0, 0); };
-  const btns = [button('Готово', 'btn-quiet', back)];
-  if (todo && L.source !== 'dict') btns.push(button('Почати заняття', 'btn-primary', () => startSession()));
-  else btns.push(button('Слухати ще раз', 'btn-primary', () => startListen(L.ids, L.source)));
-  setFoot(btns, 2);
-  keys = { enter: () => btns[1].click() };
-  updateTape();
-}
-document.addEventListener('visibilitychange', () => {
-  if (!listen || listen.paused) return;
-  // Голос iPhone у фоні замовкає: не чекаємо його, а йдемо далі записами
-  if (document.hidden && listen.speakFin) { const f = listen.speakFin; if (synth) synth.cancel(); f(); return; }
-  // Повернувся до екрана, а ланцюжок десь зупинився: слово звучить заново
-  const stalled = () => listen && !listen.paused && (listen.onEnd ? player.paused : !listen.speakFin && !listen.timerOn);
-  if (!document.hidden && stalled()) setTimeout(() => { if (stalled()) { lHalt(); lLoad(); } }, 400);
-});
-/* Звук зупинила система (дзвінок, інша програма): показати паузу, а не чекати вічно */
-player.addEventListener('pause', () => {
-  if (listen && !listen.paused && listen.onEnd && player.paused && !player.ended) lPause();
-});
 
 /* ---------- Граматика: правило простими словами, приклади й 12 завдань з оцінкою ----------
    Теми збирає tools/build_grammar.py з grammar/*.json у window.GRAMMAR.
@@ -3454,7 +3153,6 @@ function speechSection(id) {
 /* Тест теми: на екрані заняття (весь екран, нижня панель з висновком) */
 function beginGt(g) {
   stopAudio(); cancelAuto(); closePeek();
-  if (listen) endListen();
   session = null; current = null; triage = null;
   gt = Object.assign({ i: 0, ok: 0, wrong: [], res: [], t0: performance.now(), answered: false }, g);
   mode = 'gtest';
@@ -4566,7 +4264,6 @@ function dlgLogResult(id, k, ok, n) {
 /* ---------- Тренування за діалогом і рольова гра (екран заняття) ---------- */
 function beginDl(o) {
   stopAudio(); cancelAuto(); closePeek();
-  if (listen) endListen();
   if (sprint) endSprint();
   session = null; current = null; triage = null; gt = null;
   dl = Object.assign({ i: 0, ok: 0, wrong: [], answered: false, t0: performance.now() }, o);
@@ -4992,12 +4689,11 @@ function endDlg() {
 
 /* ---------- Методики: диктант і розповідь 4/3/2 (екран заняття, mode dict / tell / prres) ---------- */
 const TALKS = window.TALKS || [];
-const PR_MODES = ['dict', 'tell', 'prres'];
+const PR_MODES = ['dict', 'tell', 'recall', 'prres'];
 const DICT_N = 10;
 let pr = null;
 function beginPr(o) {
   stopAudio(); cancelAuto(); closePeek();
-  if (listen) endListen();
   if (sprint) endSprint();
   session = null; current = null; triage = null; gt = null; dl = null;
   pr = o;
@@ -5007,6 +4703,11 @@ function beginPr(o) {
   $('learnHome').hidden = true;
 }
 function prTape() {
+  if (pr.kind === 'recall') {
+    renderTape(pr.got.size, pr.items.length, 'Згадано', null, true);
+    $('tapeLeft').textContent = '';
+    return;
+  }
   if (pr.kind === 'dict') {
     const n = pr.items.length;
     renderTape(mode === 'prres' ? n : pr.i + (pr.answered ? 1 : 0), n, 'Речення', null, true);
@@ -5026,14 +4727,135 @@ function prCard(label, right, icon) {
 }
 function endPr() {
   const p = pr;
-  const started = p && mode !== 'prres' && (p.kind === 'dict' ? p.i + (p.answered ? 1 : 0) > 0 : p.round > 0 || p.state === 'run');
+  const started = p && mode !== 'prres' && (p.kind === 'recall' ? p.got.size > 0 : p.kind === 'dict' ? p.i + (p.answered ? 1 : 0) > 0 : p.round > 0 || p.state === 'run');
   if (p && p.kind === 'tell') tellCleanup(p);
   pr = null;
   mode = null;
   stopAudio();
   document.body.classList.remove('typing');
   renderLearn();
-  if (started) toast(p.kind === 'dict' ? 'Диктант перервано' : 'Розповідь перервано');
+  if (started) toast(p.kind === 'recall' ? 'Згадування перервано' : p.kind === 'dict' ? 'Диктант перервано' : 'Розповідь перервано');
+}
+
+/* «Згадай без підказок»: вільне пригадування (free recall). Без жодної підказки назвати нові слова дня —
+   найсильніше тренування пам'яті; що не згадав сам, спершу за значенням, а що й так ні — повториться завтра */
+function recallAvail() {
+  const rs = C.recallSet(cards, allWords(), today());
+  if (rs.ids.length < 3 || (todayLog().frd || []).includes(rs.day)) return null;
+  return rs;
+}
+function startRecall() {
+  const rs = C.recallSet(cards, allWords(), today());
+  const items = rs.ids.map(byId).filter(Boolean);
+  if (items.length < 3) { toast('Треба хоча б 3 нові слова за сьогодні чи вчора'); return; }
+  beginPr({ kind: 'recall', mode: 'recall', items, day: rs.day, got: new Map(), cued: false });
+  recallShow();
+}
+function recallShow() {
+  ui = { t0: performance.now(), answered: false };
+  const n = pr.items.length;
+  const card = prCard('Згадай без підказок', pr.got.size + ' з ' + n, 'target');
+  const body = el('div', 'prompt recall');
+  const when = pr.day === today() ? 'сьогодні' : 'вчора';
+  body.appendChild(el('p', 'gq', 'Які нові слова ти ' + when + ' вчив?'));
+  body.appendChild(el('p', 'prompt-sub', pr.cued
+    ? 'Ось значення решти. Напиши англійською, які згадаєш.'
+    : 'Пиши англійською по одному, у будь-якому порядку. Згадати самому, без підказки, — найсильніше тренування пам\'яті.'));
+  card.appendChild(body);
+  const grid = el('div', 'recall-grid');
+  pr.items.forEach(w => {
+    const st = pr.got.get(w.id);
+    const chip = el('div', 'rc' + (st ? ' got ' + st : pr.cued ? ' cue' : ''));
+    const b = el('b', null, st ? C.baseForm(w) : '?');
+    if (st) b.lang = 'en';
+    chip.appendChild(b);
+    if (st || pr.cued) chip.appendChild(el('span', null, C.shortSense(w.uk)));
+    grid.appendChild(chip);
+  });
+  card.appendChild(grid);
+  const inp = el('input', 'answer');
+  inp.type = 'text';
+  inp.lang = 'en';
+  inp.placeholder = 'Слово англійською';
+  inp.setAttribute('autocapitalize', 'off');
+  inp.setAttribute('autocorrect', 'off');
+  inp.setAttribute('autocomplete', 'off');
+  inp.spellcheck = false;
+  inp.setAttribute('enterkeyhint', 'done');
+  inp.setAttribute('aria-label', 'Слово, яке згадав');
+  const note = el('p', 'prompt-sub recall-note');
+  card.append(inp, note);
+  inp.addEventListener('focus', () => document.body.classList.add('typing'));
+  inp.addEventListener('blur', () => setTimeout(() => document.body.classList.remove('typing'), 50));
+  const add = () => {
+    const v = inp.value.trim();
+    if (!v) { inp.focus(); return; }
+    const left = pr.items.filter(w => !pr.got.has(w.id));
+    const hit = C.recallMatch(v, left);
+    if (hit) {
+      pr.got.set(hit.id, pr.cued ? 'cue' : 'free');
+      haptic('right');
+      if (!settings.quiet) sayWord(hit, 'w');
+      if (pr.got.size === n) { recallDone(); return; }
+      recallShow();
+      return;
+    }
+    note.textContent = C.recallMatch(v, pr.items.filter(w => pr.got.has(w.id))) ? 'Це слово вже є' : 'Такого серед ' + (pr.day === today() ? 'сьогоднішніх' : 'вчорашніх') + ' нових немає. Спробуй інше';
+    inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
+    haptic('wrong');
+    inp.select();
+  };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+  const addBtn = button('Додати', 'btn-primary', add);
+  setFoot(pr.cued
+    ? [button('Завершити', 'btn-quiet', recallDone), addBtn]
+    : [button('Більше не пам\'ятаю', 'btn-quiet', () => { pr.cued = true; recallShow(); }), addBtn], 2);
+  keys = {};
+  updateTape();
+  try { inp.focus({ preventScroll: true }); } catch (e) {}
+}
+function recallDone() {
+  mode = 'prres';
+  document.body.classList.remove('typing');
+  const n = pr.items.length;
+  const missed = pr.items.filter(w => !pr.got.has(w.id));
+  const free = [...pr.got.values()].filter(x => x === 'free').length;
+  const cue = pr.got.size - free;
+  // Не згадав навіть за значенням: таке слово ще не закріпилося, повторимо вже завтра
+  const t = today();
+  missed.forEach(w => { const c = cards[w.id]; if (c && c.st === 'review' && c.due > t + 1) cards[w.id] = Object.assign({}, c, { due: t + 1 }); });
+  const l = todayLog();
+  l.fr = (l.fr || 0) + free;
+  l.frn = (l.frn || 0) + n;
+  l.frd = (l.frd || []).concat(pr.day);
+  persist();
+  const card = prCard('Згадування завершено', '', 'check');
+  card.querySelector('.ex-ic').classList.add('done');
+  const body = el('div', 'prompt summary gres');
+  const pct = free / n;
+  const score = el('p', 'gres-score ' + (pct >= 0.8 ? 'g-top' : pct >= 0.5 ? 'g-ok' : 'g-low'));
+  score.append(el('b', null, String(free)), el('span', null, 'з ' + n));
+  body.append(score, el('p', 'gres-note', 'згадав сам, без підказки'));
+  const parts = [];
+  if (cue) parts.push('за значенням ще ' + cue);
+  if (missed.length) parts.push('не згадав ' + missed.length);
+  body.appendChild(el('p', 'prompt-sub', (parts.length ? lowerFirst(parts.join(', ')) + '. ' : '') + (missed.length
+    ? 'Їх дам на повторення вже завтра: слово, яке не спливає саме, ще не закріпилося.'
+    : pct >= 0.8 ? 'Сильний результат: ці слова вже твої.' : 'Слова, згадані за значенням, повторюй вголос у дорозі: так вони спливатимуть самі.')));
+  card.appendChild(body);
+  if (missed.length || cue) {
+    const box = el('div', 'details gres-list');
+    box.appendChild(el('p', 'tip', missed.length ? 'Не згадав' : 'Згадав за значенням'));
+    (missed.length ? missed : pr.items.filter(w => pr.got.get(w.id) === 'cue')).forEach(w => { const p = el('p', 'rc-line'); p.appendChild(pair(w)); box.appendChild(p); });
+    card.appendChild(box);
+  }
+  const btns = [button('Готово', 'btn-quiet', endPr)];
+  const c = new C.Session(envFor()).counts();
+  if (c.reviews + c.learning + c.fresh) btns.push(button('До заняття', 'btn-primary', () => { pr = null; startSession(); }));
+  setFoot(btns, btns.length);
+  keys = { enter: () => btns[btns.length - 1].click() };
+  updateTape();
+  window.scrollTo(0, 0);
 }
 
 /* Диктант: почуй речення-приклад і напиши його. Перевірка по словах з описками й скороченнями */
@@ -5424,12 +5246,15 @@ function tellDone() {
 function endPrQuiet() { if (pr && pr.kind === 'tell') tellCleanup(pr); pr = null; mode = null; }
 function prReport(l) {
   const out = [];
+  if (l.frn) out.push(['Згадав без підказок', l.fr + ' з ' + l.frn + ' ' + C.plural(l.frn, 'слова', 'слів', 'слів')]);
   if (l.dcr) out.push(['Диктант', l.dcr.n + ' ' + C.plural(l.dcr.n, 'речення', 'речення', 'речень') + ', без помилок ' + l.dcr.ok + ', останній раз ' + l.dcr.pct + '% слів']);
   if (l.tkr && l.tkr.length) out.push(['Розповідь', l.tkr.map(x => { const t = TALKS.find(y => y.id === x.id); return (t ? '«' + t.uk + '»' : x.id) + ', ' + x.r + ' ' + C.plural(x.r, 'раунд', 'раунди', 'раундів') + ', ' + fmtClock(x.s); }).join('; ')]);
   return out;
 }
 function prTiles() {
   const out = [];
+  const rs = recallAvail();
+  if (rs) out.push(quick('target', 'Згадай без підказок', (rs.day === today() ? 'сьогоднішні' : 'вчорашні') + ' нові слова: ' + words(rs.ids.length), () => startRecall()));
   const dc = dictCount();
   if (dc >= 10) out.push(quick('dictation', 'Диктант', DICT_N + ' речень на слух: почуй і напиши', () => startDict()));
   if (TALKS.length) {
@@ -5445,7 +5270,6 @@ function questGo(q) {
   else if (q.go === 'dict') startDict();
   else if (q.go === 'tell') startTell();
   else if (q.go === 'grammar') showTab('grammar');
-  else if (q.go === 'listen') startListen();
   else { const b = document.querySelector('#learnHome .dock .btn-primary'); if (b) b.click(); else startSession(); }
 }
 function untilMidnight() {
@@ -5460,8 +5284,7 @@ function questsCard(plan) {
     dialogs: dlgIds().length > 0,
     dict: dictCount() >= 10,
     tell: TALKS.length > 0,
-    grammar: !!(window.GRAMMAR && Object.keys(GR.topics).length),
-    listen: canListen() && listenIds().length >= 20
+    grammar: !!(window.GRAMMAR && Object.keys(GR.topics).length)
   };
   const qs = C.dailyQuests(today(), log[C.dayKey(today())], opt);
   if (!qs.length) return null;
@@ -5864,7 +5687,6 @@ function renderDictActs(items, q) {
     b.addEventListener('click', fn);
     box.appendChild(b);
   };
-  if (canListen()) act('listen', 'Слухати', () => startListen(items.slice(0, 50).map(w => w.id), 'dict'));
   const studied = items.filter(w => cards[w.id]).sort((a, b) => C.strength(cards[a.id], t) - C.strength(cards[b.id], t));
   // Тренування не змінює розклад: до 20 найслабших слів з відібраних
   if (studied.length >= 2) act('target', 'Потренувати', () => {
@@ -6340,7 +6162,7 @@ function renderOffline() {
 }
 async function downloadAudio(list, btn) {
   if (offlineBusy) return;
-  const urls = [GAP_URL];
+  const urls = [];
   list.forEach(w => wordUrls(w).forEach(u => urls.push(u)));
   if (!urls.length) return;
   offlineBusy = true;
@@ -6407,7 +6229,6 @@ $('backupFile').addEventListener('change', async e => {
     dres = Object.assign({}, data.dialogs || {}); saveDres(); dlgOpen = null;
     settings = Object.assign({}, DEFAULT_SETTINGS, data.settings || {});
     settings.cats = Object.assign({}, settings.cats || {});
-    settings.listen = Object.assign({}, DEFAULT_SETTINGS.listen, settings.listen || {});
     if (![0.85, 0.9, 0.95].includes(settings.retention)) settings.retention = 0.9;
     save(KEYS.custom, custom); save(KEYS.notes, notes); save(KEYS.own, own); save(KEYS.meta, meta); saveSettings(); persist();
     reindex(); session = null; current = null; mode = null;
@@ -6447,7 +6268,6 @@ function showTab(name) {
   });
   closePeek();
   if (name !== 'learn') {
-    if (listen) { endListen(); mode = null; }
     stopAudio(); cancelAuto(); if (sprint) endSprint(); updateSessionBar();
   }
   if (name === 'learn') renderLearn();
@@ -6471,7 +6291,6 @@ document.addEventListener('visibilitychange', () => {
   if (today() !== lastDay) {
     lastDay = today();
     if (sprint) endSprint();
-    if (listen) return;
     if (pr && pr.kind === 'tell') tellCleanup(pr);
     session = null; current = null; ui = null; mode = null; triage = null; gt = null; dl = null; pr = null;
     renderAll();
@@ -6485,7 +6304,6 @@ $('undoBtn').innerHTML = ICON.undo;
 $('exitBtn').addEventListener('click', () => {
   if (mode === 'session') { endSession(true); return; }
   if (mode === 'sprint') { endSprint(); return; }
-  if (mode === 'listen') { finishListen(); return; }
   if (mode === 'gtest' || mode === 'gresult') { endGramTest(); return; }
   if (DL_MODES.includes(mode)) { endDlg(); return; }
   if (PR_MODES.includes(mode)) { endPr(); return; }
@@ -6599,7 +6417,7 @@ if (/[?&]test=1/.test(location.search)) {
   window.EW = {
     get session() { return session; }, get current() { return current; }, get cards() { return cards; }, get log() { return log; },
     settings, nextItem, showTab, startSprint, get sprint() { return sprint; }, get mode() { return mode; },
-    get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, listenIds, startListen,
+    get meta() { return meta; }, undo: doUndo, startTriage, startShort, endSession, startRecall, recallAvail,
     get gt() { return gt; }, get gres() { return gres; }, get dl() { return dl; }, get dres() { return dres; }, get pr() { return pr; }, startDict, startTell, TALKS, openStreakSheet, get combo() { return combo; }, showCombo, openDialogs, openDialog, startDlgTrain, startDlgRole, dlgPlayAll, get dplay() { return dplay; }, openTopic, startGramTest, startSectionTest, gramDue, openRuleSheet, startPractice, startMistakes, startTopicPractice, startSpeech, endGramTest, gramPracticeDue,
     debug() { return { auto: !!auto, busy: audioBusy(), paused: player.paused, ended: player.ended, playing, t: player.currentTime, speaking: !!(synth && synth.speaking) }; },
     force(id, exercise) {
