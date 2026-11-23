@@ -234,7 +234,9 @@ try:
                     answer(page, scheme='practice'); k += 1
                 print('practice answers', k)
             cards = page.evaluate('window.EW.cards')
-            assert len(cards) == 10 and all(c['st'] == 'review' for c in cards.values()), cards
+            # Слово з п'ятьма помилками за день відкладено на завтра (C.DAY_MISS), решта вивчені
+            rested = lambda c: c['st'] in ('learn', 'relearn') and c.get('mt', 0) >= 5 and c['due'] == c.get('md', -9) + 1
+            assert len(cards) == 10 and all(c['st'] == 'review' or rested(c) for c in cards.values()), cards
             for d in (2, 4, 7, 12, 20):
                 page.clock.set_fixed_time(start + timedelta(days=d))
                 page.reload()
@@ -974,6 +976,61 @@ try:
         page.locator('.look').nth(0).click(); page.locator('.swatch.cobalt').click(); page.wait_for_timeout(100)
         assert page.evaluate("[document.documentElement.dataset.theme, document.documentElement.dataset.appearance]") == [None, None]
         shot(page, 'light-settings-look')
+        ctx.close()
+
+        # Справжній користувач: північ посеред заняття, запізніле розпізнавання мовлення, синонім і омофон при друці
+        ctx = b.new_context(viewport={'width': 375, 'height': 667}, is_mobile=True, has_touch=True)
+        page = ctx.new_page()
+        page.on('pageerror', lambda e: errors.append('real-user pageerror: ' + str(e)))
+        page.add_init_script("""window.__srs = []; class FakeSR { constructor(){ window.__srs.push(this); } start(){} stop(){} abort(){ this.aborted = true; } }
+            window.webkitSpeechRecognition = FakeSR; window.SpeechRecognition = FakeSR;""")
+        page.clock.install(time=datetime(2026, 11, 23, 23, 55, 0))
+        page.goto(URL); page.wait_for_timeout(500)
+        page.evaluate('window.EW.meta.triaged = 1')
+        page.click('#learnHome .dock button'); page.wait_for_timeout(200)
+        for _ in range(2):
+            click_text(page, 'Показати одразу'); page.wait_for_timeout(80)
+            click_text(page, 'Вчити'); page.wait_for_timeout(120)
+        d0 = page.evaluate('window.EW.session.env.today')
+        page.clock.fast_forward('00:10:00')   # 00:05 наступного дня, заняття відкрите
+        for _ in range(3):
+            answer(page)
+        d1 = page.evaluate('window.EW.session.env.today')
+        lg = page.evaluate('window.EW.log')
+        assert d1 == d0 + 1, ('після півночі план дня новий', d0, d1)
+        assert lg.get('2026-11-24', {}).get('r', 0) >= 2, ('відповіді після півночі — у новий день', lg)
+        assert 'день' in page.inner_text('#streak'), page.inner_text('#streak')
+        page.evaluate('window.EW.endSession()'); page.wait_for_timeout(150)
+        # Розпізнавання мовлення відповіло вже після переходу далі: нова вправа не зараховується сама
+        ids = page.evaluate("""() => { const t = EWCore.dayNum(); const ids = ['sp-week', 'sp-sea', 'sp-son'];
+            ids.forEach(id => { EW.cards[id] = { st: 'review', s: 5, d: 5, last: t - 5, due: t, reps: 2, lapses: 0, first: t - 9 }; });
+            EW.force('sp-week', 'speak'); return ids; }""")
+        page.click('.mic'); page.wait_for_timeout(50)
+        click_text(page, 'Показати відповідь'); page.wait_for_timeout(50)
+        click_text(page, 'Не згадав'); page.wait_for_timeout(150)
+        cur = page.evaluate('window.EW.current && window.EW.current.id')
+        r0 = page.evaluate('JSON.stringify(window.EW.log)')
+        assert page.evaluate('window.__srs[0].aborted === true'), 'мікрофон зупинено при переході далі'
+        page.evaluate("() => { const r = window.__srs[0]; r.onresult && r.onresult({ results: [[{ transcript: 'week' }]] }); r.onend && r.onend(); }")
+        page.wait_for_timeout(100)
+        assert page.evaluate('JSON.stringify(window.EW.log)') == r0, 'запізнілий результат не зарахував вправу ' + str(cur)
+        assert not visible(page, '.verdict.right'), 'нова вправа не позначена правильною сама'
+        # Омофон на слух: weak замість week — підказка значення, ще одна спроба без штрафу
+        page.evaluate("window.EW.force('sp-week', 'dictation')"); page.wait_for_timeout(150)
+        assert 'тиждень' in page.inner_text('#card .chip-hint'), 'омофон: показано значення'
+        page.fill('#card input.answer', 'weak'); click_text(page, 'Перевірити'); page.wait_for_timeout(100)
+        assert visible(page, '.alt-note') and 'слабкий' in page.inner_text('.alt-note'), 'пояснення омофона'
+        assert not page.is_disabled('#card input.answer'), 'можна виправити'
+        page.fill('#card input.answer', 'week'); click_text(page, 'Перевірити'); page.wait_for_timeout(100)
+        assert visible(page, '.verdict.right'), 'друга спроба зараховується'
+        # Синонім при друці: say замість tell
+        page.evaluate("""() => { const t = EWCore.dayNum(); EW.cards['sp-tell'] = { st: 'review', s: 5, d: 5, last: t - 5, due: t, reps: 2, lapses: 0, first: t - 9 }; EW.force('sp-tell', 'type_en'); }""")
+        page.wait_for_timeout(150)
+        page.fill('#card input.answer', 'say'); click_text(page, 'Перевірити'); page.wait_for_timeout(100)
+        assert visible(page, '.alt-note') and 'інше слово' in page.inner_text('.alt-note'), 'синонім: ще спроба'
+        page.fill('#card input.answer', 'tell'); click_text(page, 'Перевірити'); page.wait_for_timeout(100)
+        assert visible(page, '.verdict.right')
+        shot(page, 'light-synonym-retry')
         ctx.close()
         b.close()
 finally:

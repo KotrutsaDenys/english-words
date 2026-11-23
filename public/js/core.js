@@ -591,6 +591,59 @@
   CONFUSABLE.forEach(([a, b]) => { (CONF_MAP[a] = CONF_MAP[a] || []).push(b); (CONF_MAP[b] = CONF_MAP[b] || []).push(a); });
   function confusables(id) { return CONF_MAP[id] || []; }
 
+  /* ---------- Варіанти, які не можна ставити поруч в одному тесті ----------
+     Якщо в двох слів спільний сенс перекладу (say / tell: «казати»), однакове слово (lift / a lift)
+     або вони однаково звучать (week / weak), то правильних відповідей дві і людину карають ні за що. */
+  // Омофони зі словника: tools/find_homophones.py (espeak en-gb + CMU), оновлювати після нових слів
+  const HOMOPHONES = [
+    ['b2-ad', 'b1-add'], ['b3-adviser', 'b5-advisor'], ['tk-aye', 'sp-eye'], ['fd-berry', 'b3-bury'],
+    ['sp-board', 'feel-bored'], ['sp-cell', 'sp-sell'], ['b3-cite', 'b2-sight', 'site-site'], ['b2-council', 'b3-counsel'],
+    ['b2-draft', 'hm-draught'], ['b1-draw', 'hm-drawer'], ['sp-few', 'tk-phew'], ['fd-flour', 'b2-flower'],
+    ['fd-grate', 'sp-great'], ['sp-hole', 'sp-whole'], ['b2-mail', 'b1-male'], ['b2-meat', 'sp-meet'], ['hm-meter', 'b3-metre'],
+    ['b5-miner', 'b2-minor'], ['b2-pair', 'fd-pear'], ['sp-peace', 'sp-piece'], ['b2-plain', 'sp-plane'],
+    ['b2-principal', 'b2-principle'], ['sp-read', 'sp-red'], ['sp-right', 'sp-write'], ['b1-role', 'sp-roll'],
+    ['b2-root', 'b2-route'], ['b3-sail', 'b1-sale'], ['fd-sauce', 'b1-source'], ['sp-sea', 'sp-see'], ['sp-son', 'sp-sun'],
+    ['b3-stair', 'b3-stare'], ['b3-stake', 'fd-steak'], ['sp-steal', 'b3-steel'], ['b3-tail', 'b3-tale'], ['b5-thai', 'b2-tie'],
+    ['hl-waist', 'sp-waste'], ['sp-wait', 'b1-weight'], ['sp-way', 'b3-weigh'], ['b2-weak', 'sp-week'],
+    ['b2-weather', 'sp-whether'], ['irish-yoke', 'fd-yolk']
+  ];
+  const HOMO = {};
+  HOMOPHONES.forEach(g => g.forEach(a => { HOMO[a] = (HOMO[a] || []).concat(g.filter(b => b !== a)); }));
+  function homophones(id) { return HOMO[id] || []; }
+  // Сенси перекладу: «позичати (у когось), брати в борг» → [[позичати, у когось], [брати в борг, '']].
+  // Кома всередині дужок сенсів не ділить; «(ім.)», «(мн.)» — граматичні позначки, не уточнення.
+  const QUAL_SKIP = /^(ім|дієсл|прикм|присл|мн|розм|амер|брит|ірл|скор|ірл\. розм)\.?$/;
+  const SENSE_CACHE = new Map();
+  function senses(uk) {
+    const key = String(uk || '');
+    if (SENSE_CACHE.has(key)) return SENSE_CACHE.get(key);
+    const parts = [];
+    let depth = 0, cur = '';
+    for (const ch of key.toLowerCase().replace(/[’`]/g, "'")) {
+      if (ch === '(') depth++;
+      if (ch === ')') depth = Math.max(0, depth - 1);
+      if (depth === 0 && (ch === ',' || ch === ';' || ch === '/')) { parts.push(cur); cur = ''; } else cur += ch;
+    }
+    parts.push(cur);
+    const out = parts.map(x => {
+      const q = (x.match(/\(([^)]*)\)/g) || []).map(y => y.slice(1, -1).trim()).filter(y => !QUAL_SKIP.test(y)).join(' ');
+      const bare = x.replace(/\([^)]*\)/g, ' ').replace(/[«»"!?.…]/g, ' ').replace(/\s+/g, ' ').trim();
+      return [bare, q];
+    }).filter(([b]) => b.length >= 2);
+    SENSE_CACHE.set(key, out);
+    return out;
+  }
+  // Спільний сенс: однаковий переклад, якщо лише не уточнено по-різному в обох (позичати (комусь) ≠ позичати (у когось))
+  function shareSense(ukA, ukB) {
+    const B = senses(ukB);
+    return senses(ukA).some(([x, qx]) => B.some(([y, qy]) => x === y && !(qx && qy && qx !== qy)));
+  }
+  function headOf(w) { return norm(baseForm(w)); }
+  function optionClash(a, b) {
+    if (!a || !b || a.id === b.id) return false;
+    return headOf(a) === headOf(b) || homophones(a.id).includes(b.id) || shareSense(a.uk, b.uk);
+  }
+
   /* ---------- Варіанти відповіді для тестів ---------- */
   /* Перший сенс перекладу для варіантів: «отримати; дістатися; ставати» → «отримати». Варіанти стають
      однакової довжини й читаються з одного погляду; повний переклад лишається у відповіді й словнику. */
@@ -637,7 +690,7 @@
     const out = [];
     for (const [, w] of pool) {
       const k = norm(w[field]);
-      if (seen.has(k)) continue;
+      if (seen.has(k) || optionClash(word, w)) continue;
       seen.add(k); out.push(w);
       if (out.length >= n) break;
     }
@@ -653,6 +706,7 @@
   const LEARN_STEPS = 3;            // після знайомства: впізнати, вибрати англійське, згадати самому
   const STEP_GAP = [0, 2, 3, 5];    // скільки інших вправ до наступного кроку
   const LEECH = 4;
+  const DAY_MISS = 5;               // стільки помилок в одному слові за день — і досить, повернемося завтра
 
   function newCard(today) { return { st: 'learn', step: 1, miss: 0, hint: 0, reps: 0, lapses: 0, first: today, due: today }; }
   function knownCard(today, retention, rng) {
@@ -690,6 +744,9 @@
     const today = env.today, retention = env.retention || 0.9, rng = env.rng;
     const c = Object.assign({}, card);
     c.seen = today;
+    // Помилки за сьогодні: слово, яке не йде, не крутиться в занятті без кінця (втома, а не навчання)
+    const missToday = () => { if (c.md !== today) { c.md = today; c.mt = 0; } c.mt = (c.mt || 0) + 1; return c.mt; };
+    const rest = () => { c.due = today + 1; return { card: c, done: true, again: false, wrong: true, rest: true }; };
     if (c.st === 'learn') {
       if (g >= 2) {
         if (g === 2) c.hint = (c.hint || 0) + 1;
@@ -698,7 +755,7 @@
           const first = g === 4 && c.step <= 2 && !c.miss ? 4 : (c.miss || 0) === 0 && !(c.hint) ? 3 : (c.miss || 0) <= 1 ? 2 : 1;
           const s = F.init(first);
           Object.assign(c, { st: 'review', s: s.s, d: s.d, last: today, due: today + F.interval(s.s, retention, rng), reps: 1 });
-          delete c.step; delete c.miss; delete c.hint;
+          delete c.step; delete c.miss; delete c.hint; delete c.md; delete c.mt;
           return { card: c, done: true, again: false, graduated: true };
         }
         c.due = today;
@@ -706,6 +763,7 @@
       }
       c.miss = (c.miss || 0) + 1;
       c.step = Math.max(1, (c.step || 1) - 1);
+      if (missToday() >= DAY_MISS) { c.step = 1; return rest(); }
       c.due = today;
       return { card: c, done: false, again: true, gap: 2, wrong: true };
     }
@@ -713,9 +771,10 @@
       if (g >= 2) {
         c.st = 'review';
         c.due = today + F.interval(c.s, retention, rng);
-        delete c.step;
+        delete c.step; delete c.md; delete c.mt;
         return { card: c, done: true, again: false };
       }
+      if (missToday() >= DAY_MISS) return rest();
       return { card: c, done: false, again: true, gap: 3, wrong: true };
     }
     // review
@@ -724,6 +783,7 @@
     c.s = n.s; c.d = n.d; c.last = today; c.reps = (c.reps || 0) + 1;
     if (g === 1) {
       c.lapses = (c.lapses || 0) + 1;
+      missToday();
       c.st = 'relearn'; c.step = 1; c.due = today;
       return { card: c, done: false, again: true, gap: 3, wrong: true, lapse: true };
     }
@@ -1304,8 +1364,8 @@
     paceAdvice,
     dayNum, dayKey, fmtDate, plural, norm, expand, levenshtein, diffMarks, checkAnswer, answerTargets,
     wordForms, clozeTarget, clozeIn, phraseTargets, baseForm, spellTarget, ctxTarget, tokens, canBuildPhrase, canBuildSentence, canSaySentence, canType, canDictate, isPhrase,
-    EXERCISES, pickExercise, eligible, distractors, posClass, shortSense, optionLabels, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
-    LEARN_STEPS, LEECH, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
+    EXERCISES, pickExercise, eligible, distractors, optionClash, shareSense, senses, homophones, HOMOPHONES, posClass, shortSense, optionLabels, shuffle, CONFUSABLE, confusables, exampleFor, withExample, sprintPool,
+    LEARN_STEPS, LEECH, DAY_MISS, newCard, knownCard, isLeech, strength, statusOf, previewIntervals, applyGrade,
     migrateV2, orderNew, Session, SOUND_EXERCISES, streakInfo, lemmaCandidates, lookupIndex, backlogLimit, grammarMatch, taskKey, dayShuffle, taskSrs, practiceDue, pickPractice, pickMistakes, pickTopicPractice, pickTasks, grammarSchedule, pickSectionTasks
   };
   root.EWCore = api;

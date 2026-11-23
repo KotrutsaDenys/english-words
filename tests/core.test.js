@@ -165,9 +165,11 @@ test('Місяць навчання: стабільність росте, про
     });
     for (const id in env.cards) {
       const c = env.cards[id];
-      assert.ok(c.st === 'review', 'end of day ' + day + ' ' + id + ' ' + c.st);
+      // Слово з п'ятьма помилками за день відкладається на завтра, не довчене
+      const rested = c.md === env.today && c.mt >= C.DAY_MISS && c.due === env.today + 1;
+      assert.ok(c.st === 'review' || rested, 'end of day ' + day + ' ' + id + ' ' + c.st);
       assert.ok(c.due > env.today, 'due in future');
-      assert.ok(c.d >= 1 && c.d <= 10 && c.s > 0);
+      if (c.st !== 'learn') assert.ok(c.d >= 1 && c.d <= 10 && c.s > 0);
     }
   }
   const cards = Object.values(env.cards);
@@ -800,6 +802,53 @@ test('Завдання дня, календар місяця, карта акт�
   const days = new Set([1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15].map(x => 1000 + x));
   assert.strictEqual(C.bestStreak(d => days.has(d), 1000, 1016), 13, 'вихідні раз на 7 днів не обривають');
   assert.strictEqual(C.bestStreak(d => days.has(d) && d !== 1008, 1000, 1016), 6, 'другий пропуск за тиждень обриває');
+});
+
+test('Варіанти тесту: без синонімів, того самого слова й омофонів', () => {
+  const by = new Map(WORDS.map(w => [w.id, w]));
+  const get = id => by.get(id);
+  assert.ok(C.optionClash(get('sp-say'), get('sp-tell')), 'say / tell: обидва «казати»');
+  assert.ok(!C.optionClash(get('talk-borrow'), get('talk-lend')), 'позичати (у когось) ≠ позичати (комусь)');
+  assert.ok(!C.optionClash(get('travel-arrivals'), get('travel-departures')), 'кома в дужках не ділить сенс');
+  assert.ok(C.optionClash(get('talk-lift'), get('b2-lift')), 'lift / a lift — те саме слово');
+  assert.ok(C.optionClash(get('b2-weak'), get('sp-week')), 'week / weak звучать однаково');
+  assert.deepStrictEqual(C.senses('високий (про людей, дерева); (ім.) висота'), [['високий', 'про людей, дерева'], ['висота', '']]);
+  for (const g of C.HOMOPHONES) for (const id of g) assert.ok(by.has(id), 'омофон ' + id + ' є у словнику');
+  // Плутанки йдуть першими серед варіантів, тож якраз їх і перевіряємо
+  for (const id of ['sp-say', 'sp-tell', 'sp-learn', 'sp-teach', 'b2-weak', 'sp-week', 'b2-lift', 'sp-speak', 'b3-shadow']) {
+    const w = get(id);
+    for (const field of ['uk', 'en']) for (const close of [true, false]) for (let k = 1; k <= 5; k++) {
+      const ds = C.distractors(w, WORDS, field, 3, seeded(k), close);
+      assert.strictEqual(ds.length, 3);
+      ds.forEach(d => assert.ok(!C.optionClash(w, d), id + ': варіант ' + d.id + ' теж правильний'));
+    }
+  }
+});
+
+test('Слово, яке не йде: після п\'ятої помилки за день — до завтра, а не по колу', () => {
+  let c = C.newCard(100);
+  let res;
+  for (let k = 1; k <= C.DAY_MISS; k++) {
+    res = C.applyGrade(c, 1, { today: 100, retention: 0.9 });
+    c = res.card;
+    if (k < C.DAY_MISS) assert.ok(res.again && !res.done, 'помилка ' + k + ' повертає слово');
+  }
+  assert.ok(res.rest && res.done && !res.again, 'п\'ята помилка — досить на сьогодні');
+  assert.strictEqual(c.due, 101);
+  assert.strictEqual(c.st, 'learn');
+  // Завтра лічильник з нуля
+  res = C.applyGrade(c, 1, { today: 101, retention: 0.9 });
+  assert.ok(res.again && !res.rest);
+  // Після випускного слова лічильника вже немає
+  for (let k = 0; k < 4; k++) c = C.applyGrade(res.card, 3, { today: 101, retention: 0.9 }).card, res = { card: c };
+  assert.strictEqual(c.st, 'review');
+  assert.ok(!('mt' in c) && !('md' in c));
+  // Перенавчання: так само
+  let r = Object.assign({}, c, { st: 'review', last: 90, due: 101 });
+  r = C.applyGrade(r, 1, { today: 101, retention: 0.9 }).card;   // провал: перша помилка за день
+  for (let k = 2; k < C.DAY_MISS; k++) r = C.applyGrade(r, 1, { today: 101, retention: 0.9 }).card;
+  const last = C.applyGrade(r, 1, { today: 101, retention: 0.9 });
+  assert.ok(last.rest && last.card.st === 'relearn' && last.card.due === 102);
 });
 
 test('Стилі й скрипти в index.html мають актуальні ?v= (python3 tools/stamp.py)', () => {

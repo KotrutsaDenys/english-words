@@ -80,12 +80,13 @@ if (!cards) {
 
 let index = null;
 let peekIdx = null;     // пошук слова з прикладу (будується при першому дотику)
+let headIdx = null;     // слова за написанням: чи не написав людина синонім або омофон
 function allWords() { return custom.concat(BASE); }
 function byId(id) {
   if (!index) index = new Map(allWords().map(w => [w.id, w]));
   return index.get(id);
 }
-function reindex() { index = null; peekIdx = null; }
+function reindex() { index = null; peekIdx = null; headIdx = null; }
 function todayLog() {
   const k = C.dayKey(today());
   if (!log[k]) log[k] = { n: 0, r: 0, a: 0, c: 0, x: 0, ms: 0 };
@@ -407,6 +408,8 @@ function sayBtn(w, kind, small, label) {
 
 /* ---------- Розпізнавання мовлення (Safari, не в режимі програми на екрані) ---------- */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let liveRec = null;     // розпізнавання, що ще слухає: зупиняємо при переході до наступної вправи
+function stopRec() { if (liveRec) { const r = liveRec; liveRec = null; try { r.abort(); } catch (e) { try { r.stop(); } catch (e2) {} } } }
 const standalone = navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
 let recBroken = false;
 function canRecognize() { return !!SR && !standalone && !recBroken; }
@@ -1014,10 +1017,25 @@ function endSession(manual) {
   mode = null; sess = null;
   if (fromDict) showTab('dict'); else renderLearn();
 }
+/* Заняття перейшло північ: план, журнал і серія мають бути вже сьогоднішні. Без цього відповіді після
+   опівночі писались у вчорашній день (сьогодні «не займався», серія могла обірватися), а сьогоднішні
+   повторення не потрапляли в заняття */
+function rollDay() {
+  if (!session || session.env.today === today()) return false;
+  lastDay = today();
+  itemHistory = [];
+  if (session.practice) { session.env.today = today(); session.env.log = todayLog(); session.history = []; return false; }
+  session = new C.Session(envFor(null, !!session.env.reviewOnly, session.limit || undefined));
+  const l = todayLog();
+  sess = Object.assign({}, sess, { r: l.r || 0, a: l.a || 0, n: l.n || 0, k: l.k || 0, ms: l.ms || 0, miss: (l.miss || []).slice(), pct: 0 });
+  return true;
+}
 function nextItem() {
   cancelAuto();
   stopAudio();
+  stopRec();
   if (!session) return;
+  rollDay();
   current = session.next();
   if (!current) { endSession(false); return; }
   show(current);
@@ -1539,6 +1557,7 @@ function details(w, opts) {
 function nextInfo() {
   const r = ui && ui.res;
   if (!r || !session || session.practice) return '';
+  if (r.rest) return 'На сьогодні цього слова досить: повернемося до нього завтра.';
   if (r.done && r.card && r.card.due != null) return 'Наступне повторення ' + inDays(r.card.due - today()) + '.';
   if (r.wrong) return 'Повернемося до цього слова за кілька вправ.';
   if (r.again) return 'Ще раз за кілька вправ.';
@@ -1893,6 +1912,8 @@ function typing(item, kind) {
   } else if (kind === 'dictation') {
     listenPrompt(body, w);
     body.appendChild(el('p', 'prompt-sub', 'Напиши англійською, що почув'));
+    // week / weak звучать однаково: без значення написати правильно неможливо
+    if (C.homophones(w.id).length) { const r = el('div'); r.appendChild(el('span', 'chip-hint', 'значення: ' + C.shortSense(w.uk))); body.appendChild(r); }
     targets = C.answerTargets(w.en);
     display = w.en;
   } else {
@@ -1941,7 +1962,7 @@ function typing(item, kind) {
     input.disabled = true;
     input.blur();
     let g;
-    if (res === 'exact') { g = ui.hints ? 2 : 3; input.classList.add('right'); }
+    if (res === 'exact') { g = ui.hints || ui.altTried ? 2 : 3; input.classList.add('right'); }
     else if (res === 'typo') { g = 2; input.classList.add('typo'); }
     else { g = 1; input.classList.add('wrong'); }
     finish(g);
@@ -1973,7 +1994,7 @@ function typing(item, kind) {
       }
     }
     let v;
-    if (res === 'exact') v = verdict('right', 'Правильно', ui.hints ? ' з підказкою' : '');
+    if (res === 'exact') v = verdict('right', 'Правильно', ui.hints ? ' з підказкою' : ui.altTried ? ' з другої спроби' : '');
     else if (res === 'typo') v = verdict('typo', 'Майже, перевір написання', null, null, yours);
     else if (close) v = verdict('wrong', 'Неправильно', null, null, yours);
     else v = verdict('wrong', value ? 'Ні, правильно:' : 'Правильна відповідь:', null, enSpan(display), yours);
@@ -1991,13 +2012,36 @@ function typing(item, kind) {
     }
     setFoot(btns, btns.length === 2 ? 2 : 0, v);
     keys = { enter: () => next.click() };
-    if (res === 'exact' && !ui.hints) startAuto(next);
+    if (res === 'exact' && !ui.hints && !ui.altTried) startAuto(next);
   };
   const check = () => {
     if (ui.answered) return;
     const value = input.value.trim();
     if (!value) { input.focus(); toast('Напиши відповідь або натисни «Не знаю»'); return; }
-    result(C.checkAnswer(value, targets), value);
+    let res = C.checkAnswer(value, targets);
+    const others = res.result === 'exact' ? [] : otherWords(value, w);
+    if (others.length) {
+      const clash = others.find(o => C.optionClash(w, o));
+      const sound = clash && C.homophones(w.id).includes(clash.id);
+      // adviser / advisor: те саме слово іншим написанням — правильно
+      if (sound && C.shareSense(w.uk, clash.uk)) res = { result: 'exact', target: value, dist: 0 };
+      // Написав інше слово з тим самим значенням (huge замість enormous) або те, що так само звучить
+      // (weak замість week): це не помилка в знанні, тож ще одна спроба без штрафу
+      else if (clash && !ui.altTried && (kind === 'type' || kind === 'dictation')) {
+        ui.altTried = true;
+        const note = el('p', 'prompt-sub alt-note', sound
+          ? '«' + clash.en + '» звучить так само, але означає «' + C.shortSense(clash.uk) + '». Тут інше слово, спробуй ще раз'
+          : '«' + C.baseForm(clash) + '» теж «' + C.shortSense(clash.uk) + '», але тут інше слово. Спробуй ще раз');
+        const old = $('card').querySelector('.alt-note'); if (old) old.remove();
+        input.before(note);
+        haptic('wrong');
+        input.select();
+        return;
+      }
+      // quite замість quiet — не описка, а інше слово: так плутанку й ловимо
+      else if (res.result === 'typo') res = Object.assign({}, res, { result: 'wrong' });
+    }
+    result(res, value);
   };
   setFoot([
     button('Не знаю', 'btn-quiet', () => { if (!ui.answered) result({ result: 'wrong' }, ''); }),
@@ -2006,6 +2050,19 @@ function typing(item, kind) {
   ], 3);
   keys = {};
   try { input.focus({ preventScroll: true }); } catch (e) {}
+}
+/* Інші слова словника, які людина написала точно: синонім, омофон чи просто інше слово (quite / quiet) */
+function otherWords(value, w) {
+  if (!headIdx) {
+    headIdx = new Map();
+    allWords().forEach(o => { const h = C.norm(C.baseForm(o)); if (!headIdx.has(h)) headIdx.set(h, []); headIdx.get(h).push(o); });
+  }
+  const v = C.norm(value), out = [];
+  const mine = C.norm(C.baseForm(w));
+  for (const k of new Set([v, v.replace(/^to /, ''), v.replace(/^(the|a|an) /, '')])) for (const o of headIdx.get(k) || []) {
+    if (o.id !== w.id && C.norm(C.baseForm(o)) !== mine && !out.includes(o) && C.checkAnswer(value, C.answerTargets(o.en)).result === 'exact') out.push(o);
+  }
+  return out;
 }
 RENDER.type_en = item => typing(item, 'type');
 RENDER.cloze = item => typing(item, 'cloze');
@@ -2206,6 +2263,8 @@ function matchPartners(w, n) {
   const pool = C.shuffle(ids).map(byId).filter(Boolean);
   for (const o of pool.filter(o => C.posClass(o) === pos).concat(pool.filter(o => C.posClass(o) !== pos))) {
     if (uks.has(o.uk.toLowerCase()) || ens.has(o.en.toLowerCase()) || o.uk.length > 34 || o.en.length > 26) continue;
+    // Дві пари зі спільним перекладом (huge / enormous) у сітці — і правильних з'єднань стає два
+    if ([w].concat(out).some(x => C.optionClash(x, o))) continue;
     uks.add(o.uk.toLowerCase()); ens.add(o.en.toLowerCase());
     out.push(o);
     if (out.length >= n) break;
@@ -2378,6 +2437,7 @@ RENDER.speak = item => {
   const selfGrade = heard => {
     if (ui.revealed) return;
     ui.revealed = true;
+    stopRec();
     sayWord(w, 'w');
     const v = heard ? verdict('info', 'Почула: «' + heard + '»', ' порівняй з правильним', pair(w)) : verdict('info', 'Порівняй зі своєю відповіддю', null, pair(w));
     $('card').appendChild(details(w, { uk: false }));
@@ -2398,20 +2458,24 @@ RENDER.speak = item => {
     mic.append(ic, label);
     $('card').appendChild(mic);
     let rec = null;
+    const mine = ui;   // результат, що прийшов уже після переходу далі, не стосується нової вправи
     mic.addEventListener('click', () => {
       if (ui.revealed || ui.answered) return;
       if (rec) { try { rec.stop(); } catch (e) {} return; }
       stopAudio();
       try {
-        rec = new SR();
+        rec = liveRec = new SR();
         rec.lang = 'en-GB';
         rec.interimResults = false;
         rec.maxAlternatives = 5;
       } catch (e) { recBroken = true; selfGrade(''); return; }
       mic.classList.add('on'); label.textContent = 'Слухаю…';
       rec.onresult = ev => {
+        if (ui !== mine || ui.answered || ui.revealed) return;
         const alts = Array.from(ev.results[0] || []).map(a => a.transcript);
-        const targets = C.answerTargets(w.say || w.en).concat(C.answerTargets(w.en));
+        // Однаково звучать (week / weak): розпізнавач не вгадає написання, зараховуємо
+        const targets = C.answerTargets(w.say || w.en).concat(C.answerTargets(w.en))
+          .concat(...C.homophones(w.id).map(byId).filter(Boolean).map(o => C.answerTargets(o.en)));
         const hit = alts.some(a => {
           const r = C.checkAnswer(a, targets).result;
           return r !== 'wrong' || C.norm(a).includes(C.norm(w.en.replace(/^to /i, '')));
@@ -2424,10 +2488,11 @@ RENDER.speak = item => {
         } else selfGrade(alts[0] || '');
       };
       rec.onerror = ev => {
+        if (ui !== mine) return;
         if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'audio-capture') { recBroken = true; toast('Мікрофон недоступний, перевір себе сам'); }
         if (!ui.answered) selfGrade('');
       };
-      rec.onend = () => { mic.classList.remove('on'); label.textContent = 'Натисни й говори'; rec = null; };
+      rec.onend = () => { mic.classList.remove('on'); label.textContent = 'Натисни й говори'; if (liveRec === rec) liveRec = null; rec = null; };
       try { rec.start(); } catch (e) { recBroken = true; selfGrade(''); }
     });
     setFoot([button('Не знаю', 'btn-quiet', () => { if (!ui.answered && !ui.revealed) { finish(1); sayWord(w, 'w'); $('card').appendChild(details(w, { uk: false, wrong: true })); nextButton(verdict('wrong', 'Правильно:', null, pair(w))); } }), button('Показати відповідь', '', () => selfGrade(''))], 2);
