@@ -1551,3 +1551,4 @@ h2.word a.yg{text-decoration-thickness:3px;text-underline-offset:7px}
 a.yg.link-btn{color:var(--accent-text);text-decoration:underline;text-decoration-style:solid;text-decoration-color:color-mix(in srgb,var(--accent-text) 40%,transparent)}
 .peek-acts{display:flex;gap:6px;margin:8px 0 2px}
 .peek-acts.peek-all{padding-top:8px;border-top:1px solid var(--line)}
+.details .word-links{margin:-2px 0 8px}

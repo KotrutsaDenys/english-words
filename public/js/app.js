@@ -277,8 +277,13 @@ function miniLink(label, href, title) {
   a.addEventListener('click', e => e.stopPropagation());
   return a;
 }
+/* PlayPhrase.me: нарізка сцен з фільмів підряд, де звучить саме ця фраза — для фраз (Clip.cafe лише для окремих слів) */
+function playphraseUrl(t) { return 'https://www.playphrase.me/#/search?q=' + encodeURIComponent(cleanPhrase(t)) + '&language=en'; }
 function ygMini(query, label) { return miniLink(label || 'YouGlish', youglishUrl(query), 'Відео, де носії це кажуть'); }
-function clipMini(query, label) { return miniLink(label || 'Clip.cafe', clipUrl(query), 'Уривки з фільмів з цим'); }
+function clipMini(query, label) { return miniLink(label || 'Clip.cafe', clipUrl(query), 'Уривки з фільмів з цим словом'); }
+function ppMini(query, label) { return miniLink(label || 'PlayPhrase', playphraseUrl(query), 'Сцени з фільмів з цією фразою'); }
+// Окреме слово — Clip.cafe, фраза з кількох слів — PlayPhrase
+function filmMini(query) { return C.tokens(cleanPhrase(query)).length > 1 ? ppMini(query) : clipMini(query); }
 /* Блок фраз: 5 коротких сполучень зі словом, кожна з озвучкою і відео, де її кажуть */
 function phraseBlock(w, open) {
   const list = PHRASES[w.id];
@@ -302,7 +307,7 @@ function phraseBlock(w, open) {
     const en = el('span', 'phrase-en'); en.appendChild(ygLink(p[0], p[0]));
     text.append(en, el('span', 'phrase-uk', p[1]));
     const acts = el('div', 'phrase-acts');
-    acts.append(clipMini(p[0]));
+    acts.append(ygMini(p[0]), ppMini(p[0]));
     text.appendChild(acts);
     row.append(play, text);
     body.appendChild(row);
@@ -1406,7 +1411,7 @@ function openPeek(span) {
     row.append(txt, say);
     box.appendChild(row);
     const yl = el('div', 'peek-acts');
-    yl.append(ygMini(w.gloss ? w.en : C.baseForm(w)), clipMini(w.gloss ? w.en : C.baseForm(w)));
+    yl.append(ygMini(w.gloss ? w.en : C.baseForm(w)), filmMini(w.gloss ? w.en : C.baseForm(w)));
     box.appendChild(yl);
     if (w.gloss) return;
     const c = cards[w.id];
@@ -1453,7 +1458,7 @@ function openPeek(span) {
   const nw = C.tokens(sent).length;
   if (nw >= 2 && nw <= 8) {
     const all = el('div', 'peek-acts peek-all');
-    all.append(ygMini(sent, 'Фраза в YouGlish'), clipMini(sent, 'у Clip.cafe'));
+    all.append(ygMini(sent, 'Фраза в YouGlish'), ppMini(sent, 'у PlayPhrase'));
     box.appendChild(all);
   }
   document.body.appendChild(box);
@@ -1560,8 +1565,12 @@ function details(w, opts) {
   const d = el('div', 'details');
   if (opts.en !== false) {
     const t = el('p', 'trans en');
-    t.append(ygLink(w.en, C.baseForm(w)), sayBtn(w, 'w', true), clipMini(C.baseForm(w)));
+    t.append(ygLink(w.en, C.baseForm(w)), sayBtn(w, 'w', true));
     d.appendChild(t);
+    // Відео з цим словом: кнопками, окремим рядком, щоб довгий вираз не виштовхнув їх за край
+    const vl = el('div', 'phrase-acts word-links');
+    vl.append(ygMini(C.baseForm(w)), filmMini(C.baseForm(w)));
+    d.appendChild(vl);
   }
   if (opts.uk !== false) d.appendChild(el('p', 'trans', w.uk));
   if (w.ex && opts.ex !== false) {
@@ -5778,7 +5787,10 @@ function itemBody(w, c, t) {
   };
   act('Послухати', () => sayWord(w, 'w'));
   { const a = ygLink('YouGlish', C.baseForm(w), 'link-btn'); a.title = 'Відео, де носії кажуть це слово'; acts.appendChild(a); }
-  { const a = el('a', 'link-btn yg', 'Clip.cafe'); a.href = clipUrl(C.baseForm(w)); a.target = '_blank'; a.rel = 'noopener'; a.title = 'Уривки з фільмів з цим словом'; acts.appendChild(a); }
+  { const one = C.tokens(C.baseForm(w)).length === 1;
+    const a = el('a', 'link-btn yg', one ? 'Clip.cafe' : 'PlayPhrase');
+    a.href = one ? clipUrl(C.baseForm(w)) : playphraseUrl(C.baseForm(w));
+    a.target = '_blank'; a.rel = 'noopener'; a.title = 'Сцени з фільмів з цим'; acts.appendChild(a); }
   if (!c) {
     const isPri = (meta.priority || []).includes(w.id);
     act(isPri ? 'Не першим' : 'Вчити першим', () => {

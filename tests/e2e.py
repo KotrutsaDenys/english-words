@@ -1069,19 +1069,29 @@ try:
         page.click('.details .phrases-head'); page.wait_for_timeout(100)
         ph = page.evaluate("[...document.querySelectorAll('.details .phrase-en a.yg')].map(a => [a.textContent, a.href])")
         assert len(ph) == 5 and all('youglish.com/pronounce/' in h and '/english/uk' in h for _, h in ph), ph
-        acts = page.evaluate("[...document.querySelectorAll('.details .phrase-acts a')].map(a => a.href)")
-        assert len(acts) == 5 and all(h.startswith('https://clip.cafe/s/') for h in acts), acts
-        assert ' ' not in acts[0] and '+' in acts[0], ('слова через +', acts[0])
+        acts = page.evaluate("[...document.querySelectorAll('.details .phrases .phrase-acts a')].map(a => a.href)")
+        yg = [h for h in acts if h.startswith('https://youglish.com/pronounce/')]
+        pp = [h for h in acts if h.startswith('https://www.playphrase.me/#/search?q=') and h.endswith('&language=en')]
+        assert len(yg) == 5 and len(pp) == 5 and len(acts) == 10, acts
+        assert not page.locator('.phrases a[href*="clip.cafe"]').count(), 'фрази — у PlayPhrase, не в Clip.cafe'
         assert page.locator('a[href*="youtube"]').count() == 0, 'YouTube прибрано'
         page.locator('.details .ex .tw').first.click(); page.wait_for_timeout(100)
-        assert page.locator('.peek a.mini[href*="youglish.com"]').count() >= 1 and page.locator('.peek a.mini[href*="clip.cafe/s/"]').count() >= 1, 'бульбашка перекладу'
+        assert page.locator('.peek a.mini[href*="youglish.com"]').count() >= 1, 'бульбашка перекладу'
+        assert page.locator('.peek .peek-all a[href*="playphrase.me"]').count() + page.locator('.peek a[href*="clip.cafe/s/"]').count() >= 1
         shot(page, 'light-youglish-peek')
         page.mouse.click(5, 300); page.wait_for_timeout(80)
         # Розбір після відповіді: слово → YouGlish, поруч Clip.cafe
         page.evaluate("window.EW.force('core-cheap', 'mcq_uk_en')"); page.wait_for_timeout(100)
         page.click('.opt-btn[data-id="core-cheap"]'); page.wait_for_timeout(100)
         assert page.get_attribute('.details .trans.en a.yg', 'href') == 'https://youglish.com/pronounce/cheap/english/uk', 'слово в розборі'
-        assert page.get_attribute('.details .trans.en a.mini', 'href') == 'https://clip.cafe/s/cheap'
+        assert page.evaluate("[...document.querySelectorAll('.details .word-links a.mini')].map(a => a.href)") == ['https://youglish.com/pronounce/cheap/english/uk', 'https://clip.cafe/s/cheap'], 'окреме слово — Clip.cafe'
+        click_text(page, 'Далі'); page.wait_for_timeout(100)
+        # Вираз з кількох слів: замість Clip.cafe — PlayPhrase
+        mid = page.evaluate("() => { const w = window.WORDS.find(w => w.id.startsWith('pv-') && EWCore.tokens(EWCore.baseForm(w)).length === 2); const t = EWCore.dayNum(); EW.cards[w.id] = EWCore.knownCard(t, 0.9, Math.random); EW.force(w.id, 'mcq_uk_en'); return w.id; }")
+        page.wait_for_timeout(100)
+        page.click(f'.opt-btn[data-id="{mid}"]'); page.wait_for_timeout(100)
+        links = page.evaluate("[...document.querySelectorAll('.details .word-links a.mini')].map(a => a.href)")
+        assert links[0].startswith('https://youglish.com/pronounce/') and links[1].startswith('https://www.playphrase.me/#/search?q=') and '%20' in links[1], links
         shot(page, 'light-youglish-details')
         page.evaluate("window.EW.endSession()"); page.wait_for_timeout(100)
         # Спринт з таймером — без посилання
