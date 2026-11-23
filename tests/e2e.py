@@ -293,10 +293,10 @@ try:
                     assert page.locator('.phrase').count() == 5, 'phrases in dictionary'
                     links = page.locator('.phrase .mini')
                     assert links.count() == 10
-                    yg = links.nth(0).get_attribute('href'); yt = links.nth(1).get_attribute('href')
+                    yg = links.nth(0).get_attribute('href'); pp = links.nth(1).get_attribute('href')
                     assert yg.startswith('https://youglish.com/pronounce/') and yg.endswith('/english/uk'), yg
-                    assert yt.startswith('https://m.youtube.com/results?search_query=%22'), yt
-                    print(scheme, 'phrase links:', yg, '|', yt)
+                    assert pp.startswith('https://www.playphrase.me/#/search?q=') and pp.endswith('&language=en'), pp
+                    print(scheme, 'phrase links:', yg, '|', pp)
                 shot(page, f'{scheme}-{tab}')
                 if SHOTS:
                     page.screenshot(path=os.path.join(SHOTS, f'{scheme}-{tab}-full.png'), full_page=True)
