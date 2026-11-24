@@ -292,11 +292,10 @@ try:
                     page.wait_for_timeout(150)
                     assert page.locator('.phrase').count() == 5, 'phrases in dictionary'
                     links = page.locator('.phrase .mini')
-                    assert links.count() == 10
-                    yg = links.nth(0).get_attribute('href'); pp = links.nth(1).get_attribute('href')
+                    assert links.count() == 5, 'біля фрази лише YouGlish'
+                    yg = links.nth(0).get_attribute('href')
                     assert yg.startswith('https://youglish.com/pronounce/') and yg.endswith('/english/uk'), yg
-                    assert pp.startswith('https://www.playphrase.me/#/search?q=') and pp.endswith('&language=en'), pp
-                    print(scheme, 'phrase links:', yg, '|', pp)
+                    print(scheme, 'phrase links:', yg)
                 shot(page, f'{scheme}-{tab}')
                 if SHOTS:
                     page.screenshot(path=os.path.join(SHOTS, f'{scheme}-{tab}-full.png'), full_page=True)
@@ -1070,14 +1069,13 @@ try:
         ph = page.evaluate("[...document.querySelectorAll('.details .phrase-en a.yg')].map(a => [a.textContent, a.href])")
         assert len(ph) == 5 and all('youglish.com/pronounce/' in h and '/english/uk' in h for _, h in ph), ph
         acts = page.evaluate("[...document.querySelectorAll('.details .phrases .phrase-acts a')].map(a => a.href)")
-        yg = [h for h in acts if h.startswith('https://youglish.com/pronounce/')]
-        pp = [h for h in acts if h.startswith('https://www.playphrase.me/#/search?q=') and h.endswith('&language=en')]
-        assert len(yg) == 5 and len(pp) == 5 and len(acts) == 10, acts
-        assert not page.locator('.phrases a[href*="clip.cafe"]').count(), 'фрази — у PlayPhrase, не в Clip.cafe'
+        assert len(acts) == 5 and all(h.startswith('https://youglish.com/pronounce/') for h in acts), ('біля фраз лише YouGlish', acts)
+        assert page.locator('.phrases a[href*="clip.cafe"]').count() == 0, 'фраза — не в Clip.cafe'
+        assert page.locator('a[href*="playphrase"]').count() == 0, 'PlayPhrase прибрано'
         assert page.locator('a[href*="youtube"]').count() == 0, 'YouTube прибрано'
         page.locator('.details .ex .tw').first.click(); page.wait_for_timeout(100)
         assert page.locator('.peek a.mini[href*="youglish.com"]').count() >= 1, 'бульбашка перекладу'
-        assert page.locator('.peek .peek-all a[href*="playphrase.me"]').count() + page.locator('.peek a[href*="clip.cafe/s/"]').count() >= 1
+        assert page.locator('.peek a[href*="playphrase"]').count() == 0
         shot(page, 'light-youglish-peek')
         page.mouse.click(5, 300); page.wait_for_timeout(80)
         # Розбір після відповіді: слово → YouGlish, поруч Clip.cafe
@@ -1086,12 +1084,12 @@ try:
         assert page.get_attribute('.details .trans.en a.yg', 'href') == 'https://youglish.com/pronounce/cheap/english/uk', 'слово в розборі'
         assert page.evaluate("[...document.querySelectorAll('.details .word-links a.mini')].map(a => a.href)") == ['https://youglish.com/pronounce/cheap/english/uk', 'https://clip.cafe/s/cheap'], 'окреме слово — Clip.cafe'
         click_text(page, 'Далі'); page.wait_for_timeout(100)
-        # Вираз з кількох слів: замість Clip.cafe — PlayPhrase
+        # Вираз з кількох слів: лише YouGlish (Clip.cafe — тільки для окремих слів)
         mid = page.evaluate("() => { const w = window.WORDS.find(w => w.id.startsWith('pv-') && EWCore.tokens(EWCore.baseForm(w)).length === 2); const t = EWCore.dayNum(); EW.cards[w.id] = EWCore.knownCard(t, 0.9, Math.random); EW.force(w.id, 'mcq_uk_en'); return w.id; }")
         page.wait_for_timeout(100)
         page.click(f'.opt-btn[data-id="{mid}"]'); page.wait_for_timeout(100)
         links = page.evaluate("[...document.querySelectorAll('.details .word-links a.mini')].map(a => a.href)")
-        assert links[0].startswith('https://youglish.com/pronounce/') and links[1].startswith('https://www.playphrase.me/#/search?q=') and '%20' in links[1], links
+        assert len(links) == 1 and links[0].startswith('https://youglish.com/pronounce/'), links
         shot(page, 'light-youglish-details')
         page.evaluate("window.EW.endSession()"); page.wait_for_timeout(100)
         # Спринт з таймером — без посилання
